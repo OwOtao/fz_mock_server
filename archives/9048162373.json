@@ -1,0 +1,2758 @@
+{
+  "dataVer": 86,
+  "record": {
+    "jingMaxRecord": {
+      "part": {
+        "baseValue": 494,
+        "qiXiJingMaxAddValue": 0,
+        "qiYuCountAddValue": 1100,
+        "qiyuCount": 11,
+        "xingZhenAddValue": 0,
+        "yueKaAddValue": 0
+      },
+      "value": 1594
+    }
+  },
+  "role": {
+    "AsleepBuff": [],
+    "DispatchTask": [],
+    "DreamTalent": [],
+    "Homeland": {
+      "dinner": [],
+      "dq": [],
+      "fq": {
+        "fqId": "yangzhou002",
+        "houseName": "HIY简屋(壹)NOR",
+        "id": "fq100",
+        "isDispose": true,
+        "isRename": false,
+        "location": "扬州城外西郊杏花村2号",
+        "mapId": "fb10",
+        "mid": 14750,
+        "name": "HIY简屋(壹)NOR",
+        "roomnum": 9,
+        "status": 1,
+        "type": "房契"
+      },
+      "plant": [],
+      "prIdIndex": 0,
+      "prnum": 0,
+      "roomnum": 0,
+      "yq": []
+    },
+    "Is_Lose": false,
+    "PrepareTalent": [],
+    "_ItemOnlyId": 5425,
+    "__isNotSerializable": false,
+    "_currKeTouTime": 1787284245.4658,
+    "_dayFlags": {
+      "flags": {
+        "guanYingHongDian": 0,
+        "拜访任务每日限制": 4,
+        "江湖怪客列表": [
+          {
+            "id": 1903,
+            "name": "牧虎"
+          },
+          {
+            "id": 2002,
+            "name": "褚源"
+          },
+          {
+            "id": 2102,
+            "name": "令狐坚"
+          }
+        ]
+      },
+      "time": 1787551824.6067
+    },
+    "_flags": {
+      "PVP战斗状态": "离线模式",
+      "PVP活动状态": "空闲中",
+      "currLiLianTaskId": 1,
+      "fb01": 1601384236.4333,
+      "fb02": 1608635631.9332,
+      "fb03": 1787284204.168,
+      "fb04": 1600345961.4997,
+      "fb05": 1601445337.0332,
+      "fb06": 1600346131.9996,
+      "fb07": 1600346261.5333,
+      "fb08": 1600346545.433,
+      "fb09": 1600347597.2997,
+      "fb10": 1787208299.1164,
+      "fb11": 1608635572.1665,
+      "fb12": 1600503421.4662,
+      "fb13": 1600504344.0997,
+      "fb14": 1601211330.7993,
+      "fb15": 1601384316.7,
+      "fb16": 1601269176.5665,
+      "fb17": 1601212010.1999,
+      "fb18": 1601429604.2995,
+      "fb19": 1601375414.0998,
+      "fb20": 1601379424.5664,
+      "fb205": 1601269654.0333,
+      "fb209": 1601269473.1665,
+      "fb20cqxz": 1,
+      "fb21": 1601440964.3329,
+      "fb301": 1601375588.833,
+      "fb302": 1601375484.7997,
+      "fb619": 1787212840.4678,
+      "isShowAgreement": true,
+      "itemRecordTime": 1609933652.0666,
+      "pop_login": 1602552772.8667,
+      "quest08": 1,
+      "resetActiveZhaos": 1,
+      "task16": 5,
+      "task20": 1,
+      "taskRewardFlag": 1,
+      "visitTaskTalk": 1,
+      "xinggongsan": 0,
+      "主动任务物品": "nil",
+      "主动切磋中": false,
+      "五毒教": "false",
+      "传送孤家集": 1,
+      "内力回复时间": 1787552610.5394,
+      "冲穴真气": 32,
+      "副本状态": "空闲中",
+      "十大美女": 0,
+      "华山": "false",
+      "华山村": "false",
+      "南阳": "false",
+      "历练": "task16",
+      "历练随机任务名": "飞贼横行",
+      "历练随机任务已完成次数": 0,
+      "古墓": "false",
+      "商城物品使用限制": 0,
+      "四川唐门": "false",
+      "坐等平复": 0,
+      "大理城": "false",
+      "奇遇道具使用时间": 1787284196.5537,
+      "少林寺": "false",
+      "峨眉山": "false",
+      "嵩山": "false",
+      "平复真气": 0,
+      "当前位置": "离开副本",
+      "慕容山庄": "false",
+      "战斗脱离时间": 1787208293.5332,
+      "扬州城": "false",
+      "梅庄": "false",
+      "欧冶子出现时间": 1601440755.0331,
+      "武功修炼类型": "jianfa",
+      "武功镇": "false",
+      "武当山": "false",
+      "气血回复时间": 1787552610.5394,
+      "气血最大值回复时间": 1787552610.5394,
+      "汝州": "false",
+      "游戏时间": 1787552614.0691,
+      "牛家村": "false",
+      "疲劳值刷新时间": 1787552101.6633,
+      "百花谷": "false",
+      "磕头时间": 1787284240.6919,
+      "磕头次数": "3",
+      "神兵": "Y",
+      "精力回复时间": 1787552583.2423,
+      "精力开始回复时间": 1786000750.5767,
+      "终南山": "false",
+      "经验潜能服用时间": 1787284195.7491,
+      "经验潜能次数": 18,
+      "绝情谷": "false",
+      "缉拿任务": 0,
+      "苏州城": "false",
+      "荆州城南": "false",
+      "获取奖励时间": 1787551499.5764,
+      "衡阳刘府": "false",
+      "襄阳城": "false",
+      "追击任务": 0,
+      "逍遥林": "false",
+      "邮箱检查": 1,
+      "金牛武馆": "false",
+      "金陵城": "false",
+      "锻造状态": "空闲",
+      "长安城": "false",
+      "长生诀时间": 0,
+      "限制消耗品服用时间": 1787284195.7491,
+      "隐藏孝敬按钮": 1,
+      "青城山": "false",
+      "黄沙寨": "false",
+      "黄河帮": "false",
+      "黑市商人出现时间": 1787274907.1861
+    },
+    "_inherit_flags": {
+      "14章日月重光完": 1,
+      "18章日月重光完": 1,
+      "2020gaokao": 1,
+      "2020jsbj1": 2,
+      "2020znqcdccbj03": 1,
+      "2020znqcdccbj08": 0,
+      "2020znqjscc0": 1,
+      "2020znqrwcc1": 7,
+      "2020znqrwccbj1": 0,
+      "2020znqrwccbj2": -1,
+      "21章日月重光完": 1,
+      "QiXi_JingMax": 0,
+      "__repairRoleSkillData": 3,
+      "_logIndex": 33,
+      "bagCkCount": 1,
+      "fb16zm1": 0,
+      "fb19zm1": 0,
+      "fb301zm1": 0,
+      "fb304zm1": 0,
+      "fb32zm1": 0,
+      "fistsfeetmapwc": 0,
+      "gszxbaodijiangli": 1,
+      "haveGj": 0,
+      "itemRecordNum": 2188,
+      "item_changshengjueshengji2": true,
+      "item_changshengjueshengji3": true,
+      "item_changshengjueshengji4": true,
+      "item_changshengjueshengji5": true,
+      "item_changshengjueyang": 0,
+      "item_changshengjueyinoryang": true,
+      "item_shuye93": true,
+      "jhhyl1": 0,
+      "jhhyl10": 0,
+      "jhhyl11": 0,
+      "jhhyl12": 0,
+      "jhhyl13": 0,
+      "jhhyl14": 0,
+      "jhhyl15": 0,
+      "jhhyl16": 0,
+      "jhhyl17": 0,
+      "jhhyl18": 0,
+      "jhhyl19": 0,
+      "jhhyl2": 0,
+      "jhhyl20": 0,
+      "jhhyl21": 0,
+      "jhhyl22": 0,
+      "jhhyl23": 0,
+      "jhhyl24": 0,
+      "jhhyl25": 0,
+      "jhhyl26": 0,
+      "jhhyl27": 1,
+      "jhhyl28": 0,
+      "jhhyl29": 0,
+      "jhhyl3": 0,
+      "jhhyl30": 0,
+      "jhhyl31": 0,
+      "jhhyl32": 0,
+      "jhhyl33": 0,
+      "jhhyl34": 0,
+      "jhhyl35": 0,
+      "jhhyl36": 0,
+      "jhhyl4": 0,
+      "jhhyl5": 0,
+      "jhhyl6": 1,
+      "jhhyl7": 1,
+      "jhhyl8": 0,
+      "jhhyl9": 0,
+      "lyhs": 2,
+      "practiceroom": 1,
+      "rep_cxgys": 1,
+      "rep_czxf_dxxf": 1,
+      "repairHiddenMeridianData": 1,
+      "repairPrepareSkill": 1,
+      "roleStateChange": 1,
+      "shouyiren_start": 1,
+      "stopOldLianGong": 1,
+      "stopOldXiuLian": 1,
+      "szjcgwc": 0,
+      "talent_buff_count": 1,
+      "weekbgsq_gameTimes": 1,
+      "weekhztc_gameTimes": 6,
+      "weekhztcjz1": 1,
+      "weekhztcjz2": 0,
+      "weekhztcjz3": 1,
+      "weekhztcjz4": 1,
+      "weekhztcjzb1": 0,
+      "weekhztcjzb2": 1,
+      "weekhztcjzb3": 1,
+      "weekslcd_gameTimes": 2,
+      "weekxqdm_gameTimes": 6,
+      "weekxzzy_gameTimes": 1,
+      "zhongqiu_dengmiquan": 1,
+      "zqmfcc": 0,
+      "七夕情书随机副本id": 0,
+      "七夕情缘称号奖励": 0,
+      "与王魏对话": 1,
+      "两人已死": 1,
+      "可进入苏州水底": 1,
+      "周活钓鱼玩法结果": {
+        "104": 1,
+        "105": 5
+      },
+      "唐不武给予": 1,
+      "完成神兵任务": 1,
+      "家园引导": 2,
+      "已转换称号相关结构": 2,
+      "开启神功系统": 0,
+      "开始神兵任务": 2,
+      "新手引导": 4,
+      "日月重光引导完": 1,
+      "欧冶子给予": 1,
+      "毒打魏": 1,
+      "毒药系统": 2,
+      "江湖情报前置": 0,
+      "江湖情报开启": 0,
+      "神兵锻造": 0,
+      "给予百毒谱": 1,
+      "给忘三生": 1,
+      "给甘草": 1,
+      "轩辕夏已死": 1,
+      "送密令": 1,
+      "送礼机关师": 0,
+      "送给欧冶子": 0,
+      "铁块给予": 1,
+      "长生诀阳": 1,
+      "长生诀阴": 1
+    },
+    "_mapIsInited": false,
+    "_mapRoomStates": {
+      "fb01": [],
+      "fb02": {
+        "fb02_12": [],
+        "fb02_20": []
+      },
+      "fb03": [],
+      "fb05": [],
+      "fb09": [],
+      "fb10": {
+        "fb10_19": []
+      },
+      "fb11": {
+        "fb11_22": [
+          1
+        ]
+      },
+      "fb12": {
+        "fb12_04": [],
+        "fb12_09": []
+      },
+      "fb15": [],
+      "fb16": [],
+      "fb18": [],
+      "fb19": {
+        "fb19_24": [
+          1
+        ],
+        "fb19_36": []
+      },
+      "fb20": {
+        "fb20_12": []
+      },
+      "fb209": [],
+      "user_fb_14750": []
+    },
+    "_mapStates": {
+      "fb01": {
+        "isCompleted": true
+      },
+      "fb02": {
+        "isCompleted": true
+      },
+      "fb03": {
+        "isCompleted": true
+      },
+      "fb04": {
+        "isCompleted": true
+      },
+      "fb05": {
+        "isCompleted": true
+      },
+      "fb06": {
+        "isCompleted": true
+      },
+      "fb07": {
+        "isCompleted": true
+      },
+      "fb08": {
+        "isCompleted": true
+      },
+      "fb09": {
+        "isCompleted": true
+      },
+      "fb10": {
+        "isCompleted": true
+      },
+      "fb11": {
+        "isCompleted": true
+      },
+      "fb12": {
+        "isCompleted": true
+      },
+      "fb13": {
+        "isCompleted": true
+      },
+      "fb14": {
+        "isCompleted": true
+      },
+      "fb15": {
+        "isCompleted": true
+      },
+      "fb16": {
+        "isCompleted": true
+      },
+      "fb17": {
+        "isCompleted": true
+      },
+      "fb18": {
+        "isCompleted": true
+      },
+      "fb19": {
+        "isCompleted": true
+      },
+      "fb20": {
+        "isCompleted": true
+      },
+      "fb21": {
+        "isCompleted": true
+      },
+      "fb22": {
+        "isCompleted": false
+      },
+      "fb23": {
+        "isCompleted": false
+      },
+      "fb24": {
+        "isCompleted": false
+      },
+      "fb25": {
+        "isCompleted": false
+      },
+      "fb26": {
+        "isCompleted": false
+      },
+      "fb27": {
+        "isCompleted": false
+      },
+      "fb28": {
+        "isCompleted": false
+      },
+      "fb29": {
+        "isCompleted": false
+      },
+      "fb30": {
+        "isCompleted": false
+      },
+      "fb31": {
+        "isCompleted": false
+      },
+      "fb32": {
+        "isCompleted": false
+      },
+      "fb33": {
+        "isCompleted": false
+      },
+      "fb34": {
+        "isCompleted": false
+      },
+      "fb35": {
+        "isCompleted": false
+      },
+      "fb36": {
+        "isCompleted": false
+      },
+      "fb37": {
+        "isCompleted": false
+      },
+      "fb40": {
+        "isCompleted": false
+      }
+    },
+    "_timeLimitFlags": {
+      "bf1015": {
+        "startTime": 1787551500.1373,
+        "timeLimit": 900,
+        "value": 1
+      }
+    },
+    "accountId": 1430104,
+    "activeZhaos": {
+      "huiyanfeiwu": {
+        "exp": 94.334763948498,
+        "id": "huiyanfeiwu"
+      },
+      "hunyuanwuji": {
+        "exp": 34.334763948498,
+        "id": "hunyuanwuji"
+      },
+      "jianzhangwulianhuan": {
+        "exp": 1041.6170353252,
+        "id": "jianzhangwulianhuan"
+      },
+      "kuangfengershiyishi": {
+        "exp": 36.787247087676,
+        "id": "kuangfengershiyishi"
+      },
+      "leidongjiutian": {
+        "exp": 34.334763948498,
+        "id": "leidongjiutian"
+      },
+      "leitingpili": {
+        "exp": 36.787247087676,
+        "id": "leitingpili"
+      },
+      "pozhao": {
+        "exp": 585.83690987124,
+        "id": "pozhao"
+      },
+      "shenyou": {
+        "exp": 1084.820132657,
+        "id": "shenyou"
+      },
+      "xiayingjiuxiao": {
+        "exp": 1137.5021459227,
+        "id": "xiayingjiuxiao"
+      },
+      "yikuaidakuai": {
+        "exp": 87.836909871245,
+        "id": "yikuaidakuai"
+      },
+      "zixiahuti": {
+        "exp": 1069.5021459227,
+        "id": "zixiahuti"
+      }
+    },
+    "age": 20,
+    "appearance": "waiguan0",
+    "armorScore": 490,
+    "atkRate": 1,
+    "bagShenBingNumLimit": 1,
+    "baseCkLimit": 80,
+    "basicTitleData": {
+      "titleId": "50169",
+      "titleList": [
+        "50169",
+        "50112",
+        "50113",
+        "50171",
+        "50114",
+        "50172",
+        "50115",
+        "50116",
+        "50124",
+        "50117",
+        "40014",
+        "40029"
+      ]
+    },
+    "blackMarket": [],
+    "borderShowList": [],
+    "borderVer": 1,
+    "breathVal": 35108,
+    "buffEffects": [],
+    "buffs": [],
+    "candyData": [],
+    "ckLimit": 80,
+    "ckUpCount": 10,
+    "ckitems": [
+      {
+        "count": 20,
+        "id": 1827,
+        "index": 1,
+        "itemId": "menpaicanye4"
+      },
+      {
+        "count": 20,
+        "id": 1852,
+        "index": 4,
+        "itemId": "jingxinwan"
+      },
+      {
+        "count": 3,
+        "id": 2170,
+        "index": 9,
+        "itemId": "homemoney200"
+      },
+      {
+        "count": 77,
+        "id": 2785,
+        "index": 4,
+        "itemId": "duanzaoranliao4"
+      },
+      {
+        "count": 3,
+        "id": 2799,
+        "index": 14,
+        "itemId": "menpaicanye1"
+      },
+      {
+        "count": 99,
+        "id": 3224,
+        "index": 8,
+        "itemId": "jingmai103"
+      },
+      {
+        "count": 1,
+        "id": 3229,
+        "itemId": "jiu108"
+      },
+      {
+        "count": 2,
+        "id": 4557,
+        "index": 18,
+        "itemId": "jiu107"
+      },
+      {
+        "count": 1,
+        "id": 5118,
+        "itemId": "menpaicanye2"
+      },
+      {
+        "count": 2,
+        "id": 5201,
+        "itemId": "liuyunganlu"
+      },
+      {
+        "count": 99,
+        "id": 5251,
+        "index": 13,
+        "itemId": "jingmai102"
+      },
+      {
+        "count": 32,
+        "id": 5269,
+        "index": 18,
+        "itemId": "duanzaoranliao1"
+      },
+      {
+        "count": 64,
+        "id": 7707,
+        "index": 18,
+        "itemId": "jingmai103"
+      },
+      {
+        "count": 32,
+        "id": 8003,
+        "itemId": "jingmai101"
+      },
+      {
+        "count": 99,
+        "id": 8009,
+        "index": 24,
+        "itemId": "jingmai102"
+      },
+      {
+        "count": 7,
+        "id": 8015,
+        "itemId": "jingmai102"
+      },
+      {
+        "count": 43,
+        "id": 8451,
+        "itemId": "jingmai105"
+      },
+      {
+        "count": 99,
+        "id": 1460,
+        "index": 24,
+        "itemId": "fenshenfu"
+      },
+      {
+        "count": 99,
+        "id": 1466,
+        "itemId": "fenshenfu"
+      },
+      {
+        "count": 1,
+        "id": 1953,
+        "itemId": "shuang11wup1"
+      },
+      {
+        "count": 1,
+        "id": 2015,
+        "itemId": "shuang11daoju8"
+      },
+      {
+        "count": 71,
+        "id": 2105,
+        "itemId": "wabaojiangli4"
+      },
+      {
+        "count": 3,
+        "id": 2111,
+        "itemId": "ybritem8"
+      },
+      {
+        "count": 2,
+        "id": 2117,
+        "itemId": "ybritem7"
+      },
+      {
+        "count": 23,
+        "id": 2568,
+        "itemId": "fuyuandan"
+      },
+      {
+        "count": 95,
+        "id": 2746,
+        "itemId": "shuang11daoju1"
+      },
+      {
+        "count": 16,
+        "id": 2752,
+        "itemId": "shenbingbox1"
+      }
+    ],
+    "collectScore": 2980,
+    "con": 37,
+    "createTime": 1600236281,
+    "currCon": 87,
+    "currDex": 68,
+    "currInt": 33,
+    "currMapId": "user_fb_14750",
+    "currStr": 71,
+    "currencyVersion": 12,
+    "cwCount": 0,
+    "cwItems": [],
+    "dataVer": 86,
+    "dead": 0,
+    "deadReason": 0,
+    "decorative": [
+      {
+        "count": 1,
+        "id": 7907,
+        "itemId": "mianju1000",
+        "portraitType": "mask"
+      },
+      {
+        "count": 1,
+        "id": 2334,
+        "itemId": "mianju1010",
+        "portraitType": "mask"
+      },
+      {
+        "count": 1,
+        "id": 5175,
+        "itemId": "mianju1206",
+        "portraitType": "mask"
+      }
+    ],
+    "decorativeLimit": 20,
+    "dex": 28,
+    "dr_params": [],
+    "dsc": "",
+    "emotion": [],
+    "equips": {
+      "belt": {
+        "id": 6792,
+        "itemId": "eq2020zhd08"
+      },
+      "cloth": {
+        "id": 5640,
+        "itemId": "eq2020cp06"
+      },
+      "hand": {
+        "id": 6590,
+        "itemId": "eq2020zhd04"
+      },
+      "head": {
+        "id": 6076,
+        "itemId": "eq2020cp09"
+      },
+      "necklace": {
+        "id": 4349,
+        "itemId": "2020zhounian06"
+      },
+      "pants": {
+        "id": 6356,
+        "itemId": "eq2020cp10"
+      },
+      "ring": {
+        "id": 5080,
+        "itemId": "eq2020cp05"
+      },
+      "shoes": {
+        "id": 4914,
+        "itemId": "eq2020cp04"
+      },
+      "weapon": {
+        "id": 8891,
+        "itemId": "weapon_8"
+      },
+      "yaozhui": {
+        "id": 5673,
+        "itemId": "eq2020cp07"
+      }
+    },
+    "equipsBox": [],
+    "exp": 18644543.217943,
+    "expIncrementSpeed": 0,
+    "family": {
+      "level": 2,
+      "name": "huashan"
+    },
+    "fenpei": 0,
+    "fenpeiList": {
+      "con": 0,
+      "dex": 0,
+      "int": 0,
+      "str": 0
+    },
+    "firstCompleteMap": false,
+    "forgeCount": 9,
+    "forgeSkill": [],
+    "gamingTime": 3443867.6812522,
+    "gold": 31495,
+    "gongxiandian": 0,
+    "guanqiaLimit": 12,
+    "hangUpTasks": {
+      "__currHangUpTaskId": "10100",
+      "__tasks": {
+        "10001": {
+          "currType": 3,
+          "dCount": 2,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787276767.5089,
+          "status": 1
+        },
+        "10010": {
+          "currType": 3,
+          "dCount": 1,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787274883.5502,
+          "status": 0
+        },
+        "10020": {
+          "currType": 3,
+          "dCount": 1,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787274884.0262,
+          "status": 1
+        },
+        "10030": {
+          "currType": 3,
+          "dCount": 1,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787274885.372,
+          "status": 1
+        },
+        "10040": {
+          "currType": 3,
+          "dCount": 1,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787274885.7824,
+          "status": 1
+        },
+        "10050": {
+          "currType": 3,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787187627.5288,
+          "status": 0
+        },
+        "10060": {
+          "currType": 3,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787187628.0347,
+          "status": 0
+        },
+        "10070": {
+          "currType": 3,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787211529.762,
+          "status": 0
+        },
+        "10080": {
+          "currType": 3,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787211530.3032,
+          "status": 0
+        },
+        "10090": {
+          "currType": 3,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 1787211531.6296,
+          "status": 0
+        },
+        "10100": {
+          "currType": 2,
+          "dCount": 0,
+          "extraLuck": 5,
+          "finishTime": 1787470737,
+          "isUseYaShi": 0,
+          "kongfu": 449.66666666667,
+          "luck": 45,
+          "shiSiZhenValue": 0,
+          "startTime": 1787211537,
+          "status": 1
+        },
+        "10110": {
+          "currType": 0,
+          "dCount": 0,
+          "finishTime": 0,
+          "isUseYaShi": 0,
+          "kongfu": -1,
+          "luck": -1,
+          "shiSiZhenValue": 0,
+          "startTime": 0,
+          "status": 0
+        }
+      },
+      "__ver": 7
+    },
+    "hiddenMeridianData": {
+      "acupointActivateFinishTime": 0,
+      "acupointActivateState": false,
+      "acupointMap": [],
+      "breakThroughFinishTime": 0,
+      "breakThroughState": false,
+      "buffMap": [],
+      "currHiddenMeridianChartId": "minditem1",
+      "version": 0,
+      "yuQiBuffActiveEffects": [],
+      "yuQiBuffAttrs": [],
+      "yuQiBuffIds": [],
+      "yuQiState": false
+    },
+    "http_vercode": "0",
+    "id": "wanjia",
+    "inherit": {
+      "addAttr": 0,
+      "age": 0,
+      "desc": "",
+      "endurance": 100,
+      "enduranceMax": 100,
+      "eventCount": 1,
+      "intimacy": 0,
+      "isFinish": false,
+      "isSetName": false,
+      "isSetSex": false,
+      "morality": 0,
+      "moralityMax": 100,
+      "name": "继承者",
+      "noema": 0,
+      "noemaMax": 100,
+      "physique": 0,
+      "physiqueMax": 100,
+      "sex": "男",
+      "temperament": 0,
+      "temperamentMax": 100,
+      "type": 1,
+      "zhengqi": 0
+    },
+    "inheritConsultCount": 0,
+    "inheritCount": 1,
+    "inheritHistory": [
+      {
+        "inheritName": "和风无声",
+        "inheritTime": 1600236217.1331,
+        "parentDsc": "WHT他曾经看起来约二十来岁，他WHT生得HIG一派神人气度，仙风道骨，举止出尘WHT。$NWHT他的武功看来RED精深奥妙WHT，出手似乎HIG极重WHT。$NWHT他看起来HIG气血充盈，并没有受伤。$N",
+        "parentName": "骜殛",
+        "parentSkills": [
+          {
+            "exp": 1,
+            "id": "zhengaoxuanjing"
+          },
+          {
+            "exp": 676505,
+            "id": "takongxubu"
+          },
+          {
+            "exp": 9334,
+            "id": "wuxingdunfa"
+          }
+        ],
+        "retireMap": 5,
+        "zhengqiState": 1
+      }
+    ],
+    "int": 15,
+    "isChangeName": false,
+    "isEncrypted": true,
+    "isHaveOrphan": false,
+    "isWhiteList": 0,
+    "items": [
+      {
+        "count": 1,
+        "id": 4458,
+        "itemId": "fq100"
+      },
+      {
+        "count": 1,
+        "id": 8891,
+        "itemId": "weapon_8",
+        "type": "神兵"
+      },
+      {
+        "count": 1,
+        "id": 3601,
+        "itemId": "year2jifen2",
+        "name": "HIC斩钢剑NOR"
+      },
+      {
+        "count": 1,
+        "id": 6076,
+        "itemId": "eq2020cp09"
+      },
+      {
+        "count": 1,
+        "id": 5640,
+        "itemId": "eq2020cp06"
+      },
+      {
+        "count": 1,
+        "id": 6356,
+        "itemId": "eq2020cp10"
+      },
+      {
+        "count": 1,
+        "id": 6792,
+        "itemId": "eq2020zhd08",
+        "name": "HIM缚虎索NOR"
+      },
+      {
+        "count": 1,
+        "id": 5673,
+        "itemId": "eq2020cp07"
+      },
+      {
+        "count": 1,
+        "id": 4914,
+        "itemId": "eq2020cp04"
+      },
+      {
+        "count": 1,
+        "id": 4349,
+        "itemId": "2020zhounian06",
+        "name": "HIY长天链NOR"
+      },
+      {
+        "count": 1,
+        "id": 6590,
+        "itemId": "eq2020zhd04",
+        "name": "HIM犀革缠裹NOR"
+      },
+      {
+        "count": 1,
+        "id": 5080,
+        "itemId": "eq2020cp05"
+      },
+      {
+        "count": 1,
+        "id": 725,
+        "itemId": "xie104"
+      },
+      {
+        "count": 1,
+        "id": 726,
+        "itemId": "shou105"
+      },
+      {
+        "count": 92,
+        "id": 1440,
+        "index": 15,
+        "itemId": "zhounianqidaoju4",
+        "name": "HIG天香玉露(10瓶)NOR"
+      },
+      {
+        "count": 99,
+        "id": 1689,
+        "itemId": "zhounianqidaoju3",
+        "name": "HIB静心丸(10瓶)NOR"
+      },
+      {
+        "count": 99,
+        "id": 5138,
+        "index": 23,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 99,
+        "id": 5137,
+        "index": 21,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 99,
+        "id": 5136,
+        "index": 17,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 99,
+        "id": 1439,
+        "index": 19,
+        "itemId": "zhounianqidaoju1",
+        "name": "HIY潜能丹(5颗)NOR"
+      },
+      {
+        "count": 99,
+        "id": 1688,
+        "index": 22,
+        "itemId": "zhounianqidaoju1",
+        "name": "HIY潜能丹(5颗)NOR"
+      },
+      {
+        "count": 99,
+        "id": 5135,
+        "index": 20,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 99,
+        "id": 5134,
+        "index": 18,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 62,
+        "id": 5139,
+        "index": 24,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 1,
+        "id": 728,
+        "itemId": "zhitiao"
+      },
+      {
+        "count": 1,
+        "id": 3191,
+        "itemId": "zhiqianlibao1"
+      },
+      {
+        "count": 1,
+        "id": 3190,
+        "itemId": "xinshoulibao1"
+      },
+      {
+        "count": 99,
+        "id": 2418,
+        "index": 29,
+        "itemId": "xinggongsan"
+      },
+      {
+        "count": 87,
+        "id": 5131,
+        "index": 30,
+        "itemId": "xinggongsan"
+      },
+      {
+        "count": 1,
+        "id": 5141,
+        "itemId": "szjdj2"
+      },
+      {
+        "count": 99,
+        "id": 5161,
+        "itemId": "shuang11daoju5"
+      },
+      {
+        "count": 15,
+        "downTemp": 0,
+        "id": 7450,
+        "index": 26,
+        "itemId": "putizi1",
+        "itemmelting": 10,
+        "melting": 100,
+        "temperature": 0,
+        "upTemp": 15000
+      },
+      {
+        "count": 11,
+        "id": 4656,
+        "index": 26,
+        "itemId": "menpaicanye4"
+      },
+      {
+        "count": 60,
+        "id": 587,
+        "index": 28,
+        "itemId": "menpaicanye3"
+      },
+      {
+        "count": 1,
+        "id": 1229,
+        "itemId": "menpaicanye1"
+      },
+      {
+        "count": 17,
+        "id": 5162,
+        "index": 18,
+        "itemId": "juejinchan"
+      },
+      {
+        "count": 1,
+        "id": 2022,
+        "itemId": "jiu108"
+      },
+      {
+        "count": 3,
+        "downTemp": 0,
+        "id": 5658,
+        "index": 31,
+        "itemId": "jiu107",
+        "itemmelting": 5,
+        "melting": 100,
+        "temperature": 0,
+        "upTemp": 15000
+      },
+      {
+        "count": 10,
+        "id": 3950,
+        "index": 31,
+        "itemId": "jiu106"
+      },
+      {
+        "count": 8,
+        "downTemp": 0,
+        "id": 5474,
+        "index": 33,
+        "itemId": "jingxinwan",
+        "itemmelting": 10,
+        "melting": 100,
+        "temperature": 0,
+        "upTemp": 15000
+      },
+      {
+        "count": 2,
+        "id": 3882,
+        "itemId": "jingmai102"
+      },
+      {
+        "count": 4,
+        "id": 1136,
+        "index": 31,
+        "itemId": "jingmai100"
+      },
+      {
+        "count": 1,
+        "id": 4643,
+        "itemId": "jiaren005"
+      },
+      {
+        "count": 1,
+        "id": 3192,
+        "itemId": "jianghubuuchangli1"
+      },
+      {
+        "count": 1,
+        "id": 1687,
+        "itemId": "item20_03"
+      },
+      {
+        "count": 91,
+        "id": 3988,
+        "index": 37,
+        "itemId": "huashan4"
+      },
+      {
+        "count": 7,
+        "id": 8831,
+        "index": 37,
+        "itemId": "fuelbox1",
+        "name": "RED燧人氏煤炭箱NOR"
+      },
+      {
+        "count": 99,
+        "id": 1443,
+        "index": 52,
+        "itemId": "fenshenfu",
+        "name": "分身符"
+      },
+      {
+        "count": 99,
+        "id": 139,
+        "index": 53,
+        "itemId": "fenshenfu",
+        "name": "分身符"
+      },
+      {
+        "count": 11,
+        "downTemp": 0,
+        "id": 528,
+        "index": 54,
+        "itemId": "fenshenfu",
+        "itemmelting": 10,
+        "melting": 100,
+        "name": "分身符",
+        "temperature": 0,
+        "upTemp": 15000
+      },
+      {
+        "count": 80,
+        "downTemp": 0,
+        "id": 1878,
+        "index": 36,
+        "itemId": "dundifu",
+        "itemmelting": 10,
+        "melting": 100,
+        "temperature": 0,
+        "upTemp": 15000
+      },
+      {
+        "count": 42,
+        "id": 2734,
+        "itemId": "duanzaoranliao3"
+      },
+      {
+        "count": 10,
+        "downTemp": 800,
+        "id": 8804,
+        "index": 35,
+        "itemId": "duanzaoranliao2",
+        "itemmelting": 0,
+        "temperature": 100,
+        "upTemp": 1600
+      },
+      {
+        "count": 2,
+        "id": 3184,
+        "itemId": "cglingpai2"
+      },
+      {
+        "count": 13,
+        "id": 1441,
+        "index": 44,
+        "itemId": "canyebaoxiang223",
+        "name": "神游残页宝箱"
+      },
+      {
+        "count": 1,
+        "id": 4993,
+        "itemId": "20dxcjjiaju01"
+      },
+      {
+        "count": 13,
+        "id": 3856,
+        "index": 31,
+        "itemId": "2020zhdchip03"
+      },
+      {
+        "count": 1,
+        "id": 3861,
+        "index": 36,
+        "itemId": "2020weekhztc4"
+      },
+      {
+        "count": 1,
+        "id": 2779,
+        "itemId": "2020weekhztc3"
+      },
+      {
+        "count": 1,
+        "id": 4600,
+        "index": 39,
+        "itemId": "2020weekhztc1"
+      }
+    ],
+    "jiaLi": 375,
+    "jiaRenData": [],
+    "jiaozi": 0,
+    "jindu": 0,
+    "jing": 1594,
+    "jingMax": 494,
+    "kill": 74,
+    "killPlayer": 0,
+    "kongfu": 455.88888888889,
+    "leftRightFightExp": 0,
+    "letterTime": 0,
+    "literaryBox": [
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 1885,
+        "itemId": "yeshushuji89",
+        "literaryId": "yeshushuji89"
+      },
+      {
+        "count": 2,
+        "exp": 1,
+        "id": 2157,
+        "index": 2,
+        "itemId": "yeshushuji26",
+        "literaryId": "sanguozhi"
+      },
+      {
+        "count": 4,
+        "exp": 1,
+        "id": 2296,
+        "index": 3,
+        "itemId": "yeshushuji5",
+        "literaryId": "chunqiu"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 2508,
+        "itemId": "yeshushuji2",
+        "literaryId": "daxue"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 3035,
+        "itemId": "yeshushuji20",
+        "literaryId": "hanfeizi"
+      },
+      {
+        "count": 2,
+        "exp": 1,
+        "id": 3698,
+        "index": 6,
+        "itemId": "yeshushuji23",
+        "literaryId": "shiji"
+      },
+      {
+        "count": 2,
+        "exp": 1,
+        "id": 4085,
+        "index": 7,
+        "itemId": "duanzaotupu17",
+        "literaryId": "duanzaotupu17"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 4527,
+        "itemId": "yeshushuji84",
+        "literaryId": "yeshushuji84"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 4622,
+        "itemId": "yeshushuji25",
+        "literaryId": "chajing"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 5000,
+        "itemId": "yeshushuji82",
+        "literaryId": "yeshushuji82"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 5131,
+        "itemId": "yeshushuji22",
+        "literaryId": "litaibaiji"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 6063,
+        "itemId": "yeshushuji51",
+        "literaryId": "yeshushuji51"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 6300,
+        "itemId": "yeshushuji28",
+        "literaryId": "lvshichunqiu"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 7219,
+        "itemId": "yeshushuji56",
+        "literaryId": "yeshushuji56"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 7649,
+        "itemId": "jianghudushu1",
+        "literaryId": "jianghudushu1"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 7672,
+        "itemId": "duanzaotupu1",
+        "literaryId": "duanzaotupu1"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 7847,
+        "itemId": "yeshushuji18",
+        "literaryId": "huangdineijing"
+      },
+      {
+        "count": 4,
+        "exp": 1,
+        "id": 8605,
+        "index": 18,
+        "itemId": "duanzaotupu27",
+        "literaryId": "duanzaotupu27"
+      },
+      {
+        "count": 2,
+        "exp": 1,
+        "id": 8626,
+        "index": 19,
+        "itemId": "duanzaotupu19",
+        "literaryId": "duanzaotupu19"
+      },
+      {
+        "count": 6,
+        "exp": 1,
+        "id": 8859,
+        "index": 20,
+        "itemId": "duanzaotupu28",
+        "literaryId": "duanzaotupu28"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 744,
+        "itemId": "yeshushuji21",
+        "literaryId": "shishuoxinyu"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 755,
+        "itemId": "duanzaotupu6",
+        "literaryId": "duanzaotupu6"
+      },
+      {
+        "count": 1,
+        "exp": 1,
+        "id": 1580,
+        "itemId": "yeshushuji19",
+        "literaryId": "hanshu"
+      }
+    ],
+    "looks": 30,
+    "luck": 40,
+    "lunhui": 0,
+    "lv": 567,
+    "mSkillUseRecord": {
+      "firstUseTime": 0,
+      "time": 0
+    },
+    "m_meridianImprintings": {
+      "_MERIDATACOVERTVER_": 1,
+      "mCurrPage": 1,
+      "mImprintingMap": {
+        "fuyuanyin": []
+      },
+      "mPageList": {
+        "1": [
+          "fuyuanyin"
+        ]
+      }
+    },
+    "m_volume": {
+      "volume_1": true,
+      "volume_2": true,
+      "volume_3": true,
+      "volume_4": true,
+      "volume_5": true,
+      "volume_6": false,
+      "volume_7": false,
+      "volume_8": true
+    },
+    "mapNodeFlag": [],
+    "mapNpcAttrModify": [],
+    "mapStore": [],
+    "medicinalBox": [
+      {
+        "count": 2,
+        "id": 7655,
+        "index": 1,
+        "itemId": "duyaoyc002"
+      }
+    ],
+    "meili": 0,
+    "mengjing": 0,
+    "meridian": {
+      "acupointCount": 6,
+      "acupointState": 1,
+      "alreadyDisease": 0,
+      "alreadyDisorder": 1,
+      "attrList": [
+        {
+          "acupointIndex": 1,
+          "meridianIndex": 1,
+          "selectNum": 1
+        },
+        {
+          "acupointIndex": 2,
+          "meridianIndex": 1,
+          "selectNum": 3
+        },
+        {
+          "acupointIndex": 3,
+          "meridianIndex": 1,
+          "selectNum": 3
+        },
+        {
+          "acupointIndex": 4,
+          "meridianIndex": 1,
+          "selectNum": 3
+        },
+        {
+          "acupointIndex": 5,
+          "meridianIndex": 1,
+          "selectNum": 3
+        },
+        {
+          "acupointIndex": 6,
+          "meridianIndex": 1,
+          "selectNum": 3
+        }
+      ],
+      "attrTotal": {
+        "atk": 100,
+        "damage": 0,
+        "def": 20,
+        "dodge": 0,
+        "neiLiLimit": 0,
+        "protect": 1,
+        "qiMax": 0
+      },
+      "failCount": 1,
+      "meridianCount": 0
+    },
+    "meridianExp": 16000,
+    "money": 5779950.275176,
+    "monthFenShenFu": "N",
+    "name": "和风无声",
+    "neiLiLimit": 14577.5,
+    "neili": 29140,
+    "neiliMax": 14570,
+    "nodeRewards": [],
+    "notice_version": 1285,
+    "officialAchievement": 0,
+    "officialType": 0,
+    "onlyId": 1565,
+    "openMark": "",
+    "openVisitTaskByMap": false,
+    "openVisitTaskTime": 1787551500.1373,
+    "panshi": 0,
+    "pijuan": 200,
+    "poison": [],
+    "polymorph": {
+      "_yirongSelectList": [],
+      "age": 0,
+      "cdTime": 0,
+      "endTime": 0,
+      "keepTime": 0,
+      "lastLooks": 0,
+      "pLooks": 0,
+      "qi": 100,
+      "sex": "男"
+    },
+    "portrait": {
+      "id": "mianju1010",
+      "lv": 1
+    },
+    "pot": 2264628,
+    "prayRoomId": "",
+    "prepareWeapon": {
+      "id": 3601,
+      "itemId": "year2jifen2"
+    },
+    "preparedActiveZhao": {
+      "bingqi": {
+        "zhaoshi1": "xiayingjiuxiao",
+        "zhaoshi2": "shenyou",
+        "zhaoshi3": "zixiahuti",
+        "zhaoshi4": "yikuaidakuai"
+      },
+      "quanjiao": {
+        "zhaoshi1": "xiayingjiuxiao",
+        "zhaoshi2": "shenyou",
+        "zhaoshi3": "zixiahuti"
+      }
+    },
+    "preparedZhaos": [
+      "huiyanfeiwu",
+      "jianzhangwulianhuan",
+      "xiayingjiuxiao",
+      "shenyou",
+      "zixiahuti",
+      "leitingpili",
+      "kuangfengershiyishi",
+      "yikuaidakuai"
+    ],
+    "primeryKey": "a7046b3d91160b9b0e832db7dab21ff4",
+    "qaCollect": [],
+    "qi": 7494.668,
+    "qiMax": 7494.668,
+    "qiPercent": 1,
+    "qianNengDanRecords": {
+      "qnd1000use": 878.35665927111,
+      "qndolduse": 860.35665927111,
+      "qndolduselv": 550,
+      "qndoldusetime": 1786000750.5767,
+      "version": 2
+    },
+    "qiyujingCount": 11,
+    "read_book": [],
+    "repairShenBing": 1,
+    "repairShenShu": 4,
+    "repairXuanBingDong": 9,
+    "roleCurrState": {
+      "3": true
+    },
+    "role_is_cheat": false,
+    "sCk_ver": {
+      "cangyige": "49e4bd4339fa37a02702272f8e030d50",
+      "homeland": 1,
+      "xuanbingdong": "f60bf899cd0d0edf0b7b097159b07f71"
+    },
+    "saveDataTime": 1787552614.1357,
+    "secCon": 50,
+    "secDex": 40,
+    "secInt": 18,
+    "secStr": 41,
+    "seeSkills": [
+      "jibenqinfa",
+      "jibenquanjiao",
+      "jibenzhaojia",
+      "jibenanqi",
+      "jibengunfa",
+      "jibendaofa",
+      "jibenjianfa",
+      "jibenqinggong",
+      "jibenbianfa",
+      "jibenneigong",
+      "jibenshuangchi",
+      "tiezhangzhangfa",
+      "duanyunfu",
+      "lingxubu",
+      "taixuangong",
+      "songfengjianfa",
+      "chuanhuaraoshu",
+      "bawangqiangfa",
+      "liangyijianfa",
+      "bingxuexinfa",
+      "lieyandao",
+      "qiugeqidao",
+      "feifengbian",
+      "dasongyangzhang",
+      "fuguanglueying",
+      "luohuashisanjian",
+      "youlongshenfa",
+      "fengshenjue",
+      "luohanquan",
+      "shaolinshenfa",
+      "hunyuanyiqigong",
+      "weituogun",
+      "xueshanjianfa",
+      "qixingjianfa",
+      "huashanjianfa",
+      "tianchangzhangfa",
+      "zhuihunduomingbiao",
+      "shaolinzuigun",
+      "murongdaofa",
+      "taijishengong",
+      "hunyuanzhang",
+      "lingshezhangfa",
+      "kuangfengkuaijian",
+      "chuanyuntui",
+      "mantianhuayu",
+      "hujiadaofa",
+      "panyangzhang",
+      "huifengfuliujian",
+      "wuxingdunfa",
+      "takongxubu",
+      "dushushizi",
+      "raozhiroujianfa",
+      "changshengjue",
+      "shenmenshisanjian",
+      "tiyunzong",
+      "paiyuntuishou",
+      "daoxuexinfa",
+      "daojianguizhen",
+      "bingweimoquan",
+      "daluoyanshou",
+      "yanxingdaofa",
+      "hujiaquanfa",
+      "yunvjianfa",
+      "souguyingzhuagong",
+      "fengmozhangfa",
+      "pilibiao",
+      "baishengdaofa",
+      "liehuojian",
+      "luaoyuanmingliuquanshu",
+      "heqidao",
+      "wuxingdong",
+      "shayixinfa",
+      "taizuchangquan",
+      "yixingbufa",
+      "pomopimajianfa",
+      "qinnashou",
+      "chilianshenzhang",
+      "dushazhang",
+      "xuanyuanfufa",
+      "shuishangpiao",
+      "guiyuantunafa",
+      "feiyanhuixiang",
+      "huashanneigong",
+      "yiqigong",
+      "longxingboji",
+      "hengshanjianfa",
+      "biluozhang",
+      "yinyangdaoluanrenfa",
+      "mizongdashouyin",
+      "kunlunzhang",
+      "ruanhongzhusuo",
+      "yuanyanglianhuantui",
+      "geludaofa",
+      "jiugongliuhezhang",
+      "yanyunpiaomiaobufa",
+      "meihuashengong",
+      "songshanjianfa",
+      "wudangmianzhang",
+      "sanyinwugongzhua",
+      "yangjiaqiangfa",
+      "shexingdiaoshou",
+      "kongmingquan",
+      "wushashenzhang",
+      "liuxingganyuebiao",
+      "sanhuazhang",
+      "lanyeshenzhang2",
+      "jiuyinbaguzhua",
+      "meinvquan",
+      "suxinjianfa",
+      "tongbiliuhezhang",
+      "wuxingquan",
+      "sheyao",
+      "biyesuifengwu",
+      "qiulinshiye",
+      "biyunxinfa",
+      "tiangangzhixuefa",
+      "zhutianhuashenbu",
+      "linjishierzhuang",
+      "luorishenquan",
+      "qingchengliuhedao",
+      "qixingfentianshou",
+      "quanzhenjianfa",
+      "jinyangong",
+      "xiantianqigong",
+      "qingshejianfa",
+      "xingyiquanfa",
+      "jinchuibashi",
+      "xunleijianfa",
+      "baniaochaofengqiang",
+      "dingzibu",
+      "bixuexinfa",
+      "chongguangqing",
+      "chongguangnei",
+      "xianluoji",
+      "taiquan2",
+      "mizhijianfa",
+      "mizhizhangfa",
+      "fuhuquan",
+      "weituochu",
+      "mangfutiequan",
+      "suolian",
+      "hanbingmianzhang",
+      "xiuluodao",
+      "liuhezhang",
+      "jubaoquan",
+      "kuaihuojianfa",
+      "xuanfengsaoyetui",
+      "youmingguizhua",
+      "wuhuduanmendao",
+      "lingxiyizhi",
+      "kuihuadafa",
+      "hualingliushuizhang",
+      "taijijian",
+      "tiancantuifa",
+      "pixiejianfa",
+      "tianmozhi",
+      "xiaolifeidao",
+      "tianmodafa",
+      "yidaoliu",
+      "wuchangjiasuoshou",
+      "chijiayangshagong",
+      "guiyoushenfa",
+      "xuantianwuqingzhi",
+      "dagoubangfa",
+      "fengjuancanyungong",
+      "xiaoyaoyou",
+      "chansiqinnashou",
+      "longwujiutianshou",
+      "shilikuangdao",
+      "yiyangzhi"
+    ],
+    "selfCreatedSkillData": [],
+    "serverActionSystem": {
+      "dataVersion": 86,
+      "requestId": 45
+    },
+    "sex": "男",
+    "shenBingItems": [
+      {
+        "bType": "刺剑",
+        "canEquip": 1,
+        "cuilian": [],
+        "cuilianCount": 0,
+        "cuilianFailedCount": 0,
+        "cuilianitems": [],
+        "damage": 50,
+        "desc": "这是一把镔铁打造的刺剑，重约七斤，不甚锋利，韧性颇佳，攻势凌厉，令人心生胆怯。",
+        "duanzaoitems": {
+          "itemId": "duanzaocailiao2",
+          "num": 1
+        },
+        "effct1": "special049",
+        "effct2": "",
+        "effct3": "",
+        "effctNum": 24,
+        "equipDescId": "jianmiaoshu23",
+        "getoffDesc": "",
+        "id": "weapon_3",
+        "name": "紫霞剑",
+        "nameColor": "CYN",
+        "rendu": 61,
+        "status": 3,
+        "type": "剑",
+        "typeDesc": "这是一把镔铁打造的刺剑",
+        "useNeiLi": 0,
+        "wanhaodu": 100,
+        "weaponLookId": "",
+        "weight": 9,
+        "wpType": "神兵",
+        "yindu": 37
+      },
+      {
+        "bType": "刺剑",
+        "canEquip": 1,
+        "cuilian": [],
+        "cuilianCount": 85,
+        "cuilianFailedCount": 0,
+        "cuilianitems": [],
+        "damage": 176,
+        "desc": "这是一把镔铁打造的刺剑，重约九斤，略显钝挫，颇为坚韧，攻势凌厉，令人心生胆怯，若是刺中，可重伤敌人。",
+        "duanzaoitems": {
+          "itemId": "duanzaocailiao2",
+          "num": 1
+        },
+        "effct1": "special049",
+        "effct2": "special050",
+        "effct3": "",
+        "effctNum": 122.75,
+        "equipDescId": "jianmiaoshu23",
+        "getoffDesc": "",
+        "id": "weapon_8",
+        "name": "青鸿海丝剑",
+        "nameColor": "CYN",
+        "rendu": 81.25,
+        "status": 3,
+        "type": "剑",
+        "typeDesc": "这是一把镔铁打造的刺剑",
+        "useNeiLi": 0,
+        "wanhaodu": 100,
+        "weaponLookId": "",
+        "weight": 10.275,
+        "wpType": "神兵",
+        "yindu": 24.25
+      }
+    ],
+    "shenBingNumLimit": 10,
+    "shenShuSongLiInfo": {
+      "npcList": [],
+      "startTime": -1
+    },
+    "shenShuTask": {
+      "allCount": 0,
+      "count": 0,
+      "startTime": -1,
+      "task": {
+        "bookDropInfoList": [],
+        "startTime": -1
+      }
+    },
+    "shuxiang": [
+      {
+        "count": 1,
+        "id": 2352,
+        "itemId": "shuye60"
+      },
+      {
+        "count": 1,
+        "id": 2353,
+        "itemId": "shuye61"
+      },
+      {
+        "count": 1,
+        "id": 2354,
+        "itemId": "shuye62"
+      },
+      {
+        "count": 1,
+        "id": 2355,
+        "itemId": "shuye63"
+      },
+      {
+        "count": 1,
+        "id": 6291,
+        "itemId": "shuye87"
+      },
+      {
+        "count": 1,
+        "id": 6319,
+        "itemId": "changshengjueyin"
+      },
+      {
+        "count": 1,
+        "id": 6383,
+        "itemId": "zhuiyingsuifengqiang4"
+      },
+      {
+        "count": 1,
+        "id": 7276,
+        "itemId": "xinbawangqiangfa1"
+      },
+      {
+        "count": 1,
+        "id": 7277,
+        "itemId": "xinbawangqiangfa2"
+      },
+      {
+        "count": 1,
+        "id": 7278,
+        "itemId": "xinbawangqiangfa3"
+      },
+      {
+        "count": 1,
+        "id": 7279,
+        "itemId": "xinbawangqiangfa4"
+      },
+      {
+        "count": 1,
+        "id": 7280,
+        "itemId": "xinbawangqiangfa5"
+      },
+      {
+        "count": 1,
+        "id": 9110,
+        "itemId": "lingxiyizhi1"
+      },
+      {
+        "count": 1,
+        "id": 9111,
+        "itemId": "lingxiyizhi2"
+      },
+      {
+        "count": 1,
+        "id": 9112,
+        "itemId": "lingxiyizhi3"
+      },
+      {
+        "count": 1,
+        "id": 9113,
+        "itemId": "lingxiyizhi4"
+      },
+      {
+        "count": 1,
+        "id": 9114,
+        "itemId": "lingxiyizhi5"
+      },
+      {
+        "count": 1,
+        "id": 9120,
+        "itemId": "tiancantuifa1"
+      },
+      {
+        "count": 1,
+        "id": 9121,
+        "itemId": "tiancantuifa2"
+      },
+      {
+        "count": 1,
+        "id": 9122,
+        "itemId": "tiancantuifa3"
+      },
+      {
+        "count": 1,
+        "id": 9123,
+        "itemId": "tiancantuifa4"
+      },
+      {
+        "count": 1,
+        "id": 9124,
+        "itemId": "tiancantuifa5"
+      },
+      {
+        "count": 1,
+        "id": 5207,
+        "itemId": "kwTransform1"
+      },
+      {
+        "count": 1,
+        "id": 5208,
+        "itemId": "kwTransform2"
+      },
+      {
+        "count": 1,
+        "id": 5209,
+        "itemId": "kwTransform3"
+      },
+      {
+        "count": 1,
+        "id": 5210,
+        "itemId": "kwTransform4"
+      },
+      {
+        "count": 1,
+        "id": 5211,
+        "itemId": "kwTransform5"
+      },
+      {
+        "count": 1,
+        "id": 5242,
+        "itemId": "zouxueshisijing1"
+      },
+      {
+        "count": 1,
+        "id": 5243,
+        "itemId": "zouxueshisijing2"
+      }
+    ],
+    "skillBreakData": [],
+    "skillPrepare": {
+      "jianfa": "dugujiujian",
+      "neigong": "zixiashengong",
+      "qinggong": "huaxuyin",
+      "quanjiao1": "hunyuanzhang",
+      "zhaojia": "dugujiujian"
+    },
+    "skillSysVer": 1,
+    "skills": {
+      "changshengjueyang": {
+        "exp": 3411684.3279073,
+        "id": "changshengjueyang"
+      },
+      "duanzaozhishu": {
+        "exp": 60930,
+        "id": "duanzaozhishu"
+      },
+      "dugujiujian": {
+        "exp": 496189.25,
+        "id": "dugujiujian"
+      },
+      "dushushizi": {
+        "exp": 98779,
+        "id": "dushushizi"
+      },
+      "feiyanhuixiang": {
+        "exp": 207361,
+        "id": "feiyanhuixiang"
+      },
+      "huashanjianfa": {
+        "exp": 1366876,
+        "id": "huashanjianfa"
+      },
+      "huashanneigong": {
+        "exp": 960001,
+        "id": "huashanneigong"
+      },
+      "huaxuyin": {
+        "exp": 791520.23879714,
+        "id": "huaxuyin"
+      },
+      "hunyuanzhang": {
+        "exp": 92163,
+        "id": "hunyuanzhang"
+      },
+      "innatePointSwitch": {
+        "exp": 1,
+        "id": "innatePointSwitch"
+      },
+      "jianghudushu": {
+        "exp": 61,
+        "id": "jianghudushu"
+      },
+      "jibendaofa": {
+        "exp": 16,
+        "id": "jibendaofa"
+      },
+      "jibenjianfa": {
+        "exp": 1557346,
+        "id": "jibenjianfa"
+      },
+      "jibenneigong": {
+        "exp": 1875001,
+        "id": "jibenneigong"
+      },
+      "jibenqinggong": {
+        "exp": 960001,
+        "id": "jibenqinggong"
+      },
+      "jibenquanjiao": {
+        "exp": 1033816,
+        "id": "jibenquanjiao"
+      },
+      "jibenzhaojia": {
+        "exp": 960001,
+        "id": "jibenzhaojia"
+      },
+      "kuangfengkuaijian": {
+        "exp": 960001,
+        "id": "kuangfengkuaijian"
+      },
+      "pishipoyuquan": {
+        "exp": 50626,
+        "id": "pishipoyuquan"
+      },
+      "wuxingdunfa": {
+        "exp": 5585,
+        "id": "wuxingdunfa"
+      },
+      "zhengaoxuanjing": {
+        "exp": 1,
+        "id": "zhengaoxuanjing"
+      },
+      "zhengqijue": {
+        "exp": 1875001,
+        "id": "zhengqijue"
+      },
+      "zixiashengong": {
+        "exp": 1875001,
+        "id": "zixiashengong"
+      }
+    },
+    "smeltBox": [
+      {
+        "count": 3,
+        "id": 2119,
+        "index": 1,
+        "itemId": "cuiliancailiao9",
+        "melting": 100
+      },
+      {
+        "count": 3,
+        "id": 2475,
+        "index": 2,
+        "itemId": "cuiliancailiao6",
+        "melting": 100
+      },
+      {
+        "count": 3,
+        "id": 3030,
+        "index": 3,
+        "itemId": "cuiliancailiao15",
+        "melting": 100
+      },
+      {
+        "count": 2,
+        "id": 3248,
+        "index": 4,
+        "itemId": "cuiliancailiao13",
+        "melting": 100
+      },
+      {
+        "count": 2,
+        "id": 3249,
+        "index": 5,
+        "itemId": "cuiliancailiao10",
+        "melting": 100
+      },
+      {
+        "count": 1,
+        "id": 3250,
+        "itemId": "cuiliancailiao5",
+        "melting": 100
+      },
+      {
+        "count": 37,
+        "id": 3251,
+        "index": 7,
+        "itemId": "cuiliancailiao2",
+        "melting": 100
+      },
+      {
+        "count": 161,
+        "id": 3418,
+        "index": 8,
+        "itemId": "cuiliancailiao1",
+        "melting": 100
+      },
+      {
+        "count": 359,
+        "id": 3419,
+        "index": 9,
+        "itemId": "cuiliancailiao3",
+        "melting": 100
+      },
+      {
+        "count": 1,
+        "id": 3859,
+        "itemId": "cuiliancailiao18",
+        "melting": 100
+      },
+      {
+        "count": 3,
+        "id": 3908,
+        "index": 11,
+        "itemId": "cuiliancailiao7",
+        "melting": 100
+      },
+      {
+        "count": 3,
+        "id": 4601,
+        "index": 12,
+        "itemId": "cuiliancailiao8",
+        "melting": 100
+      },
+      {
+        "count": 1,
+        "id": 5104,
+        "itemId": "cuiliancailiao12",
+        "melting": 100
+      },
+      {
+        "count": 1,
+        "id": 6283,
+        "itemId": "duanzaocailiao9",
+        "melting": 1700
+      },
+      {
+        "count": 1,
+        "id": 6286,
+        "itemId": "duanzaocailiao5",
+        "melting": 1200
+      },
+      {
+        "count": 3,
+        "id": 8792,
+        "index": 16,
+        "itemId": "duanzaocailiao2",
+        "melting": 1100
+      },
+      {
+        "count": 2,
+        "id": 8821,
+        "itemId": "cuilianruyi"
+      }
+    ],
+    "species": "人",
+    "storage": {
+      "RewardManager": {
+        "mapSchemeStateMap": {
+          "fb11": {
+            "szcuiliandiaoluo": {
+              "dayTimes": 1,
+              "times": 7,
+              "updateTime": 1608635560.2999
+            }
+          },
+          "version": 1
+        },
+        "schemeStateMap": {
+          "fzcuiliandiaoluo": {
+            "dayTimes": 0,
+            "times": 0,
+            "updateTime": 1608635597.9999
+          },
+          "szcuiliandiaoluo": {
+            "dayTimes": 1,
+            "times": 7,
+            "updateTime": 1608635560.2999
+          },
+          "version": 1
+        }
+      }
+    },
+    "str": 30,
+    "taskTimes": [],
+    "tasks": {
+      "task1": {
+        "dCount": 1,
+        "startTime": 1609933615.6,
+        "state": 3,
+        "zCount": 23
+      },
+      "task10": {
+        "dCount": 1,
+        "startTime": 1609933620.0333,
+        "state": 3,
+        "zCount": 1
+      },
+      "task11": {
+        "state": 3
+      },
+      "task12": {
+        "state": 2
+      },
+      "task15": {
+        "cCount": 5,
+        "dCount": 0,
+        "endTime": 1601269186.9331,
+        "roleLv": 246,
+        "startTime": 1601269186.9331,
+        "state": 6,
+        "zCount": 1
+      },
+      "task16": {
+        "cCount": 20,
+        "dCount": 0,
+        "endTime": 1608635660.7331,
+        "startTime": 1608635660.7331,
+        "state": 3
+      },
+      "task17": {
+        "cCount": 3,
+        "dCount": 0,
+        "endTime": 1608635573.3332,
+        "startTime": 1608635573.3332,
+        "state": 3,
+        "zCount": 4
+      },
+      "task18": {
+        "state": 3
+      },
+      "task19": {
+        "cCount": 20,
+        "dCount": 0,
+        "state": 3
+      },
+      "task2": {
+        "dCount": 1,
+        "startTime": 1609933616.2333,
+        "state": 3,
+        "zCount": 30
+      },
+      "task20": {
+        "cCount": 20,
+        "dCount": 0,
+        "endTime": 1608635575.4665,
+        "startTime": 1608635575.4665,
+        "state": 3,
+        "zCount": 1
+      },
+      "task21": {
+        "state": 2
+      },
+      "task22": {
+        "dCount": 0,
+        "endTime": 0,
+        "startTime": 0,
+        "state": 3,
+        "zCount": 0
+      },
+      "task3": {
+        "dCount": 23,
+        "startTime": 1609933616.5,
+        "state": 3,
+        "zCount": 23
+      },
+      "task4": {
+        "dCount": 19,
+        "startTime": 1609933616.8333,
+        "state": 3,
+        "zCount": 19
+      },
+      "task5": {
+        "dCount": 17,
+        "startTime": 1609933617.5667,
+        "state": 3,
+        "zCount": 17
+      },
+      "task6": {
+        "dCount": 14,
+        "startTime": 1609933617.9667,
+        "state": 3,
+        "zCount": 14
+      },
+      "task7": {
+        "dCount": 13,
+        "startTime": 1609933618.2667,
+        "state": 3,
+        "zCount": 13
+      },
+      "task8": {
+        "dCount": 11,
+        "startTime": 1609933619.3667,
+        "state": 3,
+        "zCount": 11
+      },
+      "task9": {
+        "dCount": 6,
+        "startTime": 1609933619.7333,
+        "state": 3,
+        "zCount": 6
+      }
+    },
+    "teacherGuaJiTask": {
+      "mission1001": {
+        "basicAwards": "3,640;9,30000",
+        "condition": 0,
+        "extraAward": "zhudongcanyecelue2",
+        "family": 0,
+        "id": "mission1001",
+        "knowlege": {
+          "changshengjueyang": true,
+          "wuxingdunfa": true,
+          "zhengqijue": true
+        },
+        "menkeType": 0,
+        "needItem": 0,
+        "needTime": 57600,
+        "refreshType": 1,
+        "showAward": "师门声望，碎银",
+        "state": 6,
+        "steps": "mission1001step1,mission1001step2,mission1001step3",
+        "taskName": "古怪剑谱",
+        "taskText": "intro101",
+        "taskText1": "word1078"
+      }
+    },
+    "teacherGuaJiTaskCount": {
+      "mission008": 1
+    },
+    "teacherId": "wuminglaozhe",
+    "teacherName": "无名老者",
+    "teacherTask": {
+      "ContributionPoint": 0,
+      "appointCount": 0,
+      "appointRefreshCount": 0,
+      "count": 0,
+      "dCount": 0,
+      "date": 20260824,
+      "giveUpTime": 1787536122.2431,
+      "isAppoint": "N",
+      "isComplete": "N",
+      "receiveTask": 0,
+      "refreshCount": 0
+    },
+    "tempAttrList": [],
+    "tili": 100,
+    "tiliMax": 100,
+    "title_id": 114,
+    "title_type": 1,
+    "titles": {
+      "extraTitle": {
+        "20": [
+          1
+        ],
+        "21": [
+          1
+        ]
+      }
+    },
+    "totalPoint": 0,
+    "totalYuanBao": 0,
+    "userid": 9048162373,
+    "viewingHallInfo": {
+      "privilege_expired_time": 0,
+      "privilege_remaining_watches": 0
+    },
+    "visitTaskId": "bf1015",
+    "vtNpcId": "xflnpc5",
+    "wUpCount": 8,
+    "wantedInterval": 0,
+    "wantedTime": 0,
+    "weaponScore": 2490,
+    "weight": 70,
+    "weiwang": 62,
+    "wuZangScoreRepair": 1,
+    "xingzhen": {
+      "effectsCount": []
+    },
+    "xiuLianData": {
+      "endTime": 1602230536.6998,
+      "fid": 246377,
+      "jjId": "jiaren001",
+      "startTime": 1602309491.0333
+    },
+    "yaShi": 0,
+    "yinpiao": 0,
+    "yuanbao": 16900,
+    "yueKaValid": "N",
+    "yuekaTime": 0,
+    "yueli": 6855,
+    "zhaoBreakData": [],
+    "zhaoShuXiang": [
+      {
+        "count": 36,
+        "id": 120,
+        "index": 1,
+        "itemId": "yitiantulongcanye"
+      },
+      {
+        "count": 35,
+        "id": 541,
+        "index": 2,
+        "itemId": "shuiyuzhengfengcanye"
+      },
+      {
+        "count": 29,
+        "id": 558,
+        "index": 3,
+        "itemId": "chunyangneijincanye"
+      },
+      {
+        "count": 2,
+        "id": 711,
+        "itemId": "tiyunzongcanye",
+        "name": "梯云纵残页"
+      },
+      {
+        "count": 28,
+        "id": 1366,
+        "index": 5,
+        "itemId": "yuntaijicanye"
+      },
+      {
+        "count": 14,
+        "id": 1371,
+        "index": 6,
+        "itemId": "sanhuantaoyuecanye"
+      },
+      {
+        "count": 29,
+        "id": 1376,
+        "index": 7,
+        "itemId": "mianzijuecanye"
+      },
+      {
+        "count": 12,
+        "id": 1936,
+        "index": 8,
+        "itemId": "niekongbucanye"
+      },
+      {
+        "count": 1,
+        "id": 6329,
+        "itemId": "yijianxilaicanye"
+      },
+      {
+        "count": 1,
+        "id": 6388,
+        "itemId": "fengdingtiannancanye"
+      },
+      {
+        "count": 80,
+        "id": 7271,
+        "index": 11,
+        "itemId": "libashanxicanye"
+      },
+      {
+        "count": 20,
+        "id": 9137,
+        "index": 12,
+        "itemId": "xinyantongcanye"
+      },
+      {
+        "count": 20,
+        "id": 9148,
+        "index": 13,
+        "itemId": "tiancandiquecanye"
+      },
+      {
+        "count": 1,
+        "id": 1,
+        "itemId": "hunyuanwujicanye",
+        "name": "混元无极残页"
+      },
+      {
+        "count": 9,
+        "id": 2,
+        "index": 15,
+        "itemId": "leitingpilicanye",
+        "name": "雷霆霹雳残页"
+      },
+      {
+        "count": 4,
+        "id": 182,
+        "index": 16,
+        "itemId": "kuangfengershiyishicanye"
+      },
+      {
+        "count": 8,
+        "id": 188,
+        "index": 17,
+        "itemId": "xiayingjiuxiaocanye"
+      },
+      {
+        "count": 3,
+        "id": 199,
+        "index": 19,
+        "itemId": "pozhaocanye"
+      },
+      {
+        "count": 5,
+        "id": 448,
+        "index": 20,
+        "itemId": "yikuaidakuaicanye"
+      },
+      {
+        "count": 5,
+        "id": 504,
+        "index": 20,
+        "itemId": "sanfahunyuancanye"
+      },
+      {
+        "count": 8,
+        "id": 1488,
+        "index": 21,
+        "itemId": "shenyoucanye"
+      },
+      {
+        "count": 3,
+        "id": 1838,
+        "index": 22,
+        "itemId": "zixiahuticanye"
+      },
+      {
+        "count": 4,
+        "id": 4606,
+        "itemId": "MindSwordAsOnecanye"
+      }
+    ],
+    "zhengqi": 9116
+  },
+  "schema": "fzjh.role_archive.v1",
+  "updated_at": 1787555098,
+  "upload": {
+    "cheatType": "3",
+    "uType": "kaishi",
+    "updated_at": 1787555098
+  },
+  "userid": 9048162373
+}

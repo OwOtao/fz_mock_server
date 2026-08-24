@@ -1,0 +1,24 @@
+{
+  "dataVer": 1,
+  "record": {
+    "loginCount": 1
+  },
+  "role": {
+    "dataVer": 1,
+    "name": "残档",
+    "primeryKey": "1000000001",
+    "serverActionSystem": {
+      "dataVersion": 1,
+      "requestId": 1
+    },
+    "userid": 1000000001
+  },
+  "schema": "fzjh.role_archive.v1",
+  "updated_at": 1787034140,
+  "upload": {
+    "cheatType": "3",
+    "uType": "kaishi",
+    "updated_at": 1787027961
+  },
+  "userid": 1000000001
+}

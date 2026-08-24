@@ -1,0 +1,2372 @@
+{
+  "accounts": {
+    "1000000001": {
+      "created_at": 1787027961,
+      "email": "",
+      "updated_at": 1787027961,
+      "userid": 1000000001
+    },
+    "1000000009": {
+      "created_at": 1787027961,
+      "email": "",
+      "updated_at": 1787027961,
+      "userid": 1000000009
+    },
+    "9048162373": {
+      "created_at": 1787028266,
+      "currencies": {
+        "yinpiao": 3512
+      },
+      "currency_version": 12,
+      "email": "123123@qq.com",
+      "has_archive": true,
+      "name": "和风无声",
+      "updated_at": 1787555102,
+      "userid": 9048162373,
+      "yuanbao": 16900
+    },
+    "9048162374": {
+      "created_at": 1787034175,
+      "device_uuid": null,
+      "email": "",
+      "has_archive": false,
+      "password_hash": null,
+      "source": "register",
+      "status": "active",
+      "updated_at": 1787034175,
+      "userid": 9048162374,
+      "username": "new"
+    }
+  },
+  "active_archive": {
+    "verify-1": {
+      "updated_at": 1787034226,
+      "userid": 9048162373
+    }
+  },
+  "activities": {},
+  "activity_users": {},
+  "archives": {},
+  "biwu": {},
+  "biwu_fights": {},
+  "black_market": {},
+  "daily_tasks": {
+    "9048162373": {
+      "claimed": {},
+      "daily_point": 70,
+      "day": "2026-08-21",
+      "done": {
+        "liangong": true
+      },
+      "updated_at": 1787281676
+    }
+  },
+  "devices": {
+    "9048162373": {
+      "bound": true,
+      "email": "123123@qq.com",
+      "is_logout": false,
+      "last_event_type": "bind",
+      "phone": "",
+      "updated_at": 1787283849,
+      "userid": 9048162373,
+      "verify_code": "manual",
+      "verify_expires_at": 0
+    }
+  },
+  "devote": {
+    "9048162373": {
+      "day": "2026-08-21",
+      "dev_point": 0,
+      "today_point": 0
+    }
+  },
+  "email_users": {
+    "123123@qq.com": 9048162373
+  },
+  "fist": {
+    "9048162373": {
+      "accpoint": 0,
+      "branchInfo": {
+        "10010": {
+          "characterInUse": [],
+          "characterUnused": [],
+          "costTechnique": 0,
+          "exp": 0,
+          "techniqueList": {}
+        },
+        "10020": {
+          "characterInUse": [],
+          "characterUnused": [],
+          "costTechnique": 0,
+          "exp": 0,
+          "techniqueList": {}
+        },
+        "10030": {
+          "characterInUse": [],
+          "characterUnused": [],
+          "costTechnique": 0,
+          "exp": 0,
+          "techniqueList": {}
+        },
+        "10040": {
+          "characterInUse": [],
+          "characterUnused": [],
+          "costTechnique": 0,
+          "exp": 0,
+          "techniqueList": {}
+        },
+        "10050": {
+          "characterInUse": [],
+          "characterUnused": [],
+          "costTechnique": 0,
+          "exp": 0,
+          "techniqueList": {}
+        }
+      },
+      "characterPoint": 0,
+      "feelPoint": 0,
+      "guajiInfo": {},
+      "reflectExp": 0,
+      "updated_at": 1787274880
+    }
+  },
+  "hang_up": {
+    "9048162373": {
+      "clicks": [
+        {
+          "extra": {
+            "startExp": 1
+          },
+          "reward": {
+            "exp": 10
+          },
+          "task_id": "task1",
+          "ts": 1787187577
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187620
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187622
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187624
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187624
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187626
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187626
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187627
+        },
+        {
+          "extra": {},
+          "reward": {},
+          "task_id": null,
+          "ts": 1787187628
+        },
+        {
+          "extra": {
+            "aftExp": 18515947.945958,
+            "rewardTime": 1787200171.5764,
+            "startExp": 18515747.945958
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787200172
+        },
+        {
+          "extra": {
+            "aftExp": 18516227.945958,
+            "rewardTime": 1787200172.1212,
+            "startExp": 18515947.945958
+          },
+          "reward": {
+            "exp": 280,
+            "pot": 280
+          },
+          "task_id": "10010",
+          "ts": 1787200172
+        },
+        {
+          "extra": {
+            "aftExp": 18516727.945958,
+            "rewardTime": 1787200172.5358,
+            "startExp": 18516227.945958
+          },
+          "reward": {
+            "exp": 500,
+            "pot": 500
+          },
+          "task_id": "10020",
+          "ts": 1787200173
+        },
+        {
+          "extra": {
+            "aftExp": 18516927.945958,
+            "rewardTime": 1787201512.4435,
+            "startExp": 18516727.945958
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787201512
+        },
+        {
+          "extra": {
+            "aftExp": 18517207.945958,
+            "rewardTime": 1787207127.657,
+            "startExp": 18516927.945958
+          },
+          "reward": {
+            "exp": 280,
+            "pot": 280
+          },
+          "task_id": "10010",
+          "ts": 1787207128
+        },
+        {
+          "extra": {
+            "aftExp": 18517407.945958,
+            "rewardTime": 1787207128.1323,
+            "startExp": 18517207.945958
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787207129
+        },
+        {
+          "extra": {
+            "aftExp": 18517607.945958,
+            "rewardTime": 1787211524.8924,
+            "startExp": 18517407.945958
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787211525
+        },
+        {
+          "extra": {
+            "aftExp": 18517887.945958,
+            "rewardTime": 1787211525.3024,
+            "startExp": 18517607.945958
+          },
+          "reward": {
+            "exp": 280,
+            "pot": 280
+          },
+          "task_id": "10010",
+          "ts": 1787211525
+        },
+        {
+          "extra": {
+            "aftExp": 18518387.945958,
+            "rewardTime": 1787211525.8255,
+            "startExp": 18517887.945958
+          },
+          "reward": {
+            "exp": 500,
+            "pot": 500
+          },
+          "task_id": "10020",
+          "ts": 1787211526
+        },
+        {
+          "extra": {
+            "aftExp": 18519887.945958,
+            "rewardTime": 1787211527.4049,
+            "startExp": 18518387.945958
+          },
+          "reward": {
+            "exp": 1500,
+            "pot": 1500
+          },
+          "task_id": "10030",
+          "ts": 1787211527
+        },
+        {
+          "extra": {
+            "aftExp": 18521887.945958,
+            "rewardTime": 1787211528.0593,
+            "startExp": 18519887.945958
+          },
+          "reward": {
+            "exp": 2000,
+            "pot": 2000
+          },
+          "task_id": "10040",
+          "ts": 1787211528
+        },
+        {
+          "extra": {
+            "aftExp": 18527887.945958,
+            "rewardTime": 1787211529.762,
+            "startExp": 18521887.945958
+          },
+          "reward": {
+            "exp": 6000,
+            "pot": 6000
+          },
+          "task_id": "10070",
+          "ts": 1787211530
+        },
+        {
+          "extra": {
+            "aftExp": 18535887.945958,
+            "rewardTime": 1787211530.3032,
+            "startExp": 18527887.945958
+          },
+          "reward": {
+            "exp": 8000,
+            "pot": 8000
+          },
+          "task_id": "10080",
+          "ts": 1787211530
+        },
+        {
+          "extra": {
+            "aftExp": 18545887.945958,
+            "rewardTime": 1787211531.6296,
+            "startExp": 18535887.945958
+          },
+          "reward": {
+            "exp": 10000,
+            "pot": 10000
+          },
+          "task_id": "10090",
+          "ts": 1787211532
+        },
+        {
+          "extra": {
+            "aftExp": 18640063.217943,
+            "rewardTime": 1787274883.0754,
+            "startExp": 18639863.217943
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787274883
+        },
+        {
+          "extra": {
+            "aftExp": 18640343.217943,
+            "rewardTime": 1787274883.5502,
+            "startExp": 18640063.217943
+          },
+          "reward": {
+            "exp": 280,
+            "pot": 280
+          },
+          "task_id": "10010",
+          "ts": 1787274883
+        },
+        {
+          "extra": {
+            "aftExp": 18640843.217943,
+            "rewardTime": 1787274884.0262,
+            "startExp": 18640343.217943
+          },
+          "reward": {
+            "exp": 500,
+            "pot": 500
+          },
+          "task_id": "10020",
+          "ts": 1787274884
+        },
+        {
+          "extra": {
+            "aftExp": 18642343.217943,
+            "rewardTime": 1787274885.372,
+            "startExp": 18640843.217943
+          },
+          "reward": {
+            "exp": 1500,
+            "pot": 1500
+          },
+          "task_id": "10030",
+          "ts": 1787274885
+        },
+        {
+          "extra": {
+            "aftExp": 18644343.217943,
+            "rewardTime": 1787274885.7824,
+            "startExp": 18642343.217943
+          },
+          "reward": {
+            "exp": 2000,
+            "pot": 2000
+          },
+          "task_id": "10040",
+          "ts": 1787274886
+        },
+        {
+          "extra": {
+            "aftExp": 18644543.217943,
+            "rewardTime": 1787276767.5089,
+            "startExp": 18644343.217943
+          },
+          "reward": {
+            "exp": 200,
+            "pot": 200
+          },
+          "task_id": "10001",
+          "ts": 1787276767
+        }
+      ],
+      "current": {
+        "client_version": 5,
+        "extra": {
+          "extraLuck": 5,
+          "inheritAddition": 0.05,
+          "isUseYaShi": false,
+          "kongfu": 449.66666666667,
+          "luck": 45,
+          "shiSiZhenValue": 0,
+          "startExp": 18639863.217943
+        },
+        "start_time": 1787211537,
+        "task_id": "10100",
+        "version": 7
+      },
+      "last_stop": {
+        "extra": {
+          "aftExp": 18639863.217943,
+          "calFinishTime": 1787211534,
+          "calStartTime": 1787200122,
+          "yaShiActiveTime": 0,
+          "yaShiTimeList": []
+        },
+        "reward": {
+          "exp": 93975.271985423,
+          "money": 24298.05,
+          "pot": 37659.807559524
+        },
+        "stopped_at": 1787211535,
+        "task_id": "10100",
+        "version": 6
+      },
+      "version": 7,
+      "yashi": {
+        "create_time": 0,
+        "expired_time": 0
+      }
+    }
+  },
+  "homeland": {
+    "dp_owners": {},
+    "mid_owners": {
+      "14750": 9048162373
+    },
+    "next_mid": 14751,
+    "users": {
+      "9048162373": {
+        "dispatch": {},
+        "employee_lists": {},
+        "employees": {},
+        "furniture": [],
+        "house": {
+          "fqId": "yangzhou002",
+          "houseName": "普通房屋",
+          "id": "fq100",
+          "isDispose": true,
+          "isRename": false,
+          "location": "扬州城外西郊杏花村2号",
+          "mapId": "fb10",
+          "mid": 14750,
+          "name": "HIY简屋(壹)NOR",
+          "roomnum": 9,
+          "status": 1,
+          "type": "房契"
+        },
+        "lands": {},
+        "rooms": [
+          {
+            "desc": "庭院",
+            "fjId": "room_1",
+            "mapHide": 0,
+            "name": "庭院",
+            "roomType": "tsfangjian004"
+          },
+          {
+            "desc": "正厅",
+            "fjId": "room_2",
+            "mapHide": 0,
+            "name": "正厅",
+            "roomType": "tsfangjian001"
+          },
+          {
+            "desc": "卧房",
+            "fjId": "room_3",
+            "mapHide": 0,
+            "name": "卧房",
+            "roomType": "tsfangjian002"
+          },
+          {
+            "desc": "书房",
+            "fjId": "room_4",
+            "mapHide": 0,
+            "name": "书房",
+            "roomType": "tsfangjian003"
+          },
+          {
+            "desc": "厨房",
+            "fjId": "room_5",
+            "mapHide": 0,
+            "name": "厨房",
+            "roomType": "tsfangjian005"
+          },
+          {
+            "desc": "杂物间",
+            "fjId": "room_6",
+            "mapHide": 0,
+            "name": "杂物间",
+            "roomType": "tsfangjian006"
+          },
+          {
+            "desc": "客房",
+            "fjId": "room_7",
+            "mapHide": 0,
+            "name": "客房",
+            "roomType": "tsfangjian002"
+          },
+          {
+            "desc": "练功房",
+            "fjId": "room_8",
+            "mapHide": 0,
+            "name": "练功房",
+            "roomType": "tsfangjian007"
+          },
+          {
+            "desc": "库房",
+            "fjId": "room_9",
+            "mapHide": 0,
+            "name": "库房",
+            "roomType": "tsfangjian006"
+          }
+        ],
+        "updated_at": 1787304547,
+        "version": 1
+      }
+    }
+  },
+  "inventory_items": {
+    "9048162373": {
+      "200050": 1,
+      "innatePointSwitchbox": 1,
+      "jiu106": 5,
+      "kwTransform": 1,
+      "mianju1206": 1,
+      "szjdj2": 1,
+      "zhounianqidaoju1": 594,
+      "zouxuezhenfa1": 1,
+      "易天诀": 1
+    }
+  },
+  "mail": {
+    "9048162373": [
+      {
+        "claimed": true,
+        "content": "这是一封测试邮件，请在江湖邮驿中查看。",
+        "created_at": 1787218157,
+        "deleted": true,
+        "expired_time": 1789810157,
+        "mail_id": "mail-1",
+        "read": true,
+        "request_id": "manual-test-20260820-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 10,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "jiu106",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 5,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787218157,
+        "sender": "系统测试",
+        "state": 1,
+        "title": "测试邮件"
+      },
+      {
+        "claimed": true,
+        "content": "请打开这封邮件查看附件内容。",
+        "created_at": 1787219633,
+        "deleted": true,
+        "expired_time": 1789811633,
+        "mail_id": "mail-2",
+        "read": true,
+        "request_id": "manual-test-20260820-002",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 10,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "jiu106",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 5,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787219633,
+        "sender": "系统测试",
+        "state": 2,
+        "title": "附件显示测试"
+      },
+      {
+        "claimed": true,
+        "content": "请领取后检查背包和货币是否到账。",
+        "created_at": 1787277143,
+        "deleted": true,
+        "expired_time": 1789869143,
+        "mail_id": "mail-3",
+        "read": true,
+        "request_id": "manual-credit-20260821-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 20,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "jiu106",
+              "num": 3,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 7,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787277143,
+        "sender": "系统测试",
+        "state": 2,
+        "title": "到账验证奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过Reqable发送的测试邮件，请领取附件。",
+        "created_at": 1787278465,
+        "deleted": true,
+        "expired_time": 1789870465,
+        "mail_id": "mail-4",
+        "read": true,
+        "request_id": "reqable-test-20260821-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "innatePointSwitchbox",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            },
+            {
+              "id": "kwTransform",
+              "num": 1,
+              "onlyId": "net_items-2",
+              "state": 0
+            },
+            {
+              "id": "mianju1206",
+              "num": 1,
+              "onlyId": "net_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-9",
+              "state": 0
+            },
+            {
+              "id": "zouxuezhenfa1",
+              "num": 1,
+              "onlyId": "net_items-10",
+              "state": 0
+            },
+            {
+              "id": "szjdj2",
+              "num": 1,
+              "onlyId": "net_items-11",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787278465,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "Reqable测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "请在客户端领取此邮件，验证附件领取兼容性。",
+        "created_at": 1787279318,
+        "deleted": true,
+        "expired_time": 1789871318,
+        "mail_id": "mail-5",
+        "read": true,
+        "request_id": "reqable-format-verify-20260821-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "jiu106",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [],
+          "title_items": []
+        },
+        "send_time": 1787279318,
+        "sender": "系统测试",
+        "state": 2,
+        "title": "附件格式修复验证"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过Reqable发送的测试邮件，请领取附件。",
+        "created_at": 1787279622,
+        "deleted": true,
+        "expired_time": 1789871622,
+        "mail_id": "mail-6",
+        "read": true,
+        "request_id": "reqable-test-20260821-002",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "innatePointSwitchbox",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            },
+            {
+              "id": "kwTransform",
+              "num": 1,
+              "onlyId": "net_items-2",
+              "state": 0
+            },
+            {
+              "id": "mianju1206",
+              "num": 1,
+              "onlyId": "net_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "net_items-9",
+              "state": 0
+            },
+            {
+              "id": "zouxuezhenfa1",
+              "num": 1,
+              "onlyId": "net_items-10",
+              "state": 0
+            },
+            {
+              "id": "szjdj2",
+              "num": 1,
+              "onlyId": "net_items-11",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787279622,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "Reqable测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过Reqable发送的测试邮件，请领取附件。",
+        "created_at": 1787279831,
+        "deleted": true,
+        "expired_time": 1789871831,
+        "mail_id": "mail-7",
+        "read": true,
+        "request_id": "reqable-test-20260821-003",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "200050",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787279831,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "Reqable测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过Reqable发送的测试邮件，请领取附件。",
+        "created_at": 1787279870,
+        "deleted": true,
+        "expired_time": 1789871870,
+        "mail_id": "mail-8",
+        "read": true,
+        "request_id": "reqable-test-20260821-004",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [
+            {
+              "id": "易天诀",
+              "num": 1,
+              "onlyId": "net_items-1",
+              "state": 0
+            }
+          ],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787279870,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "Reqable测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "该附件已按客户端本地物品格式发送，请领取后检查背包。",
+        "created_at": 1787280505,
+        "deleted": true,
+        "expired_time": 1789872505,
+        "mail_id": "mail-9",
+        "read": true,
+        "request_id": "reqable-innate-local-20260821-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "innatePointSwitchbox",
+              "num": 1,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [],
+          "net_items": [],
+          "new_currencys": [],
+          "title_items": []
+        },
+        "send_time": 1787280505,
+        "sender": "物品后台",
+        "state": 2,
+        "title": "易天诀道具修复验证"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787280896,
+        "deleted": true,
+        "expired_time": 1789872896,
+        "mail_id": "mail-10",
+        "read": true,
+        "request_id": "reqable-test-20260821-005",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "xinggongsan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "kwTransform",
+              "num": 1,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "mianju1206",
+              "num": 1,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-9",
+              "state": 0
+            },
+            {
+              "id": "zouxuezhenfa1",
+              "num": 1,
+              "onlyId": "loc_items-10",
+              "state": 0
+            },
+            {
+              "id": "szjdj2",
+              "num": 1,
+              "onlyId": "loc_items-11",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787280896,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281320,
+        "deleted": true,
+        "expired_time": 1789873320,
+        "mail_id": "mail-11",
+        "read": true,
+        "request_id": "reqable-test-20260821-006",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "xinggongsan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "shuang11daoju5",
+              "num": 99,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "fuyuandan",
+              "num": 199,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-9",
+              "state": 0
+            },
+            {
+              "id": "duzhijiasu",
+              "num": 9999,
+              "onlyId": "loc_items-10",
+              "state": 0
+            },
+            {
+              "id": "xiyanshui",
+              "num": 99,
+              "onlyId": "loc_items-11",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281320,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281355,
+        "deleted": true,
+        "expired_time": 1789873355,
+        "mail_id": "mail-12",
+        "read": true,
+        "request_id": "reqable-test-20260821-007",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "xinggongsan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "shuang11daoju5",
+              "num": 99,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "fuyuandan",
+              "num": 199,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-9",
+              "state": 0
+            },
+            {
+              "id": "duzhijiasu",
+              "num": 999,
+              "onlyId": "loc_items-10",
+              "state": 0
+            },
+            {
+              "id": "xiyanshui",
+              "num": 99,
+              "onlyId": "loc_items-11",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281355,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281422,
+        "deleted": true,
+        "expired_time": 1789873422,
+        "mail_id": "mail-13",
+        "read": true,
+        "request_id": "reqable-test-20260821-008",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "xinggongsan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "shuang11daoju5",
+              "num": 99,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "fuyuandan",
+              "num": 199,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-5",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-6",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-7",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-8",
+              "state": 0
+            },
+            {
+              "id": "zhounianqidaoju1",
+              "num": 99,
+              "onlyId": "loc_items-9",
+              "state": 0
+            },
+            {
+              "id": "duzhijiasu",
+              "num": 999,
+              "onlyId": "loc_items-10",
+              "state": 0
+            },
+            {
+              "id": "xiyanshui",
+              "num": 99,
+              "onlyId": "loc_items-11",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281422,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281442,
+        "deleted": true,
+        "expired_time": 1789873442,
+        "mail_id": "mail-14",
+        "read": true,
+        "request_id": "reqable-test-20260821-009",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "xinggongsan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281442,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281463,
+        "deleted": true,
+        "expired_time": 1789873463,
+        "mail_id": "mail-15",
+        "read": true,
+        "request_id": "reqable-test-20260821-010",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "shuang11daoju5",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281463,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787281602,
+        "deleted": true,
+        "expired_time": 1789873602,
+        "mail_id": "mail-16",
+        "read": true,
+        "request_id": "reqable-test-20260821-011",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "fuyuandan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787281602,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "该邮件用于验证单封删除接口。",
+        "created_at": 1787282295,
+        "deleted": true,
+        "expired_time": 1787368695,
+        "mail_id": "mail-17",
+        "read": false,
+        "request_id": "delete-api-verify-20260821-001",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [],
+          "net_attrs": [],
+          "net_items": [],
+          "new_currencys": [],
+          "title_items": []
+        },
+        "send_time": 1787282295,
+        "sender": "系统测试",
+        "state": 0,
+        "title": "删除接口验证邮件"
+      }
+    ]
+  },
+  "mail_deliveries": {
+    "delete-api-verify-20260821-001": {
+      "created_at": 1787282295,
+      "mail_id": "mail-17",
+      "request_id": "delete-api-verify-20260821-001",
+      "userid": 9048162373
+    },
+    "manual-credit-20260821-001": {
+      "created_at": 1787277143,
+      "mail_id": "mail-3",
+      "request_id": "manual-credit-20260821-001",
+      "userid": 9048162373
+    },
+    "manual-test-20260820-001": {
+      "created_at": 1787218157,
+      "mail_id": "mail-1",
+      "request_id": "manual-test-20260820-001",
+      "userid": 9048162373
+    },
+    "manual-test-20260820-002": {
+      "created_at": 1787219633,
+      "mail_id": "mail-2",
+      "request_id": "manual-test-20260820-002",
+      "userid": 9048162373
+    },
+    "reqable-format-verify-20260821-001": {
+      "created_at": 1787279318,
+      "mail_id": "mail-5",
+      "request_id": "reqable-format-verify-20260821-001",
+      "userid": 9048162373
+    },
+    "reqable-innate-local-20260821-001": {
+      "created_at": 1787280505,
+      "mail_id": "mail-9",
+      "request_id": "reqable-innate-local-20260821-001",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-001": {
+      "created_at": 1787278465,
+      "mail_id": "mail-4",
+      "request_id": "reqable-test-20260821-001",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-002": {
+      "created_at": 1787279622,
+      "mail_id": "mail-6",
+      "request_id": "reqable-test-20260821-002",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-003": {
+      "created_at": 1787279831,
+      "mail_id": "mail-7",
+      "request_id": "reqable-test-20260821-003",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-004": {
+      "created_at": 1787279870,
+      "mail_id": "mail-8",
+      "request_id": "reqable-test-20260821-004",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-005": {
+      "created_at": 1787280896,
+      "mail_id": "mail-10",
+      "request_id": "reqable-test-20260821-005",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-006": {
+      "created_at": 1787281320,
+      "mail_id": "mail-11",
+      "request_id": "reqable-test-20260821-006",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-007": {
+      "created_at": 1787281355,
+      "mail_id": "mail-12",
+      "request_id": "reqable-test-20260821-007",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-008": {
+      "created_at": 1787281422,
+      "mail_id": "mail-13",
+      "request_id": "reqable-test-20260821-008",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-009": {
+      "created_at": 1787281442,
+      "mail_id": "mail-14",
+      "request_id": "reqable-test-20260821-009",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-010": {
+      "created_at": 1787281463,
+      "mail_id": "mail-15",
+      "request_id": "reqable-test-20260821-010",
+      "userid": 9048162373
+    },
+    "reqable-test-20260821-011": {
+      "created_at": 1787281602,
+      "mail_id": "mail-16",
+      "request_id": "reqable-test-20260821-011",
+      "userid": 9048162373
+    }
+  },
+  "next_ids": {
+    "fight_id": 1,
+    "mail_id": 18,
+    "order_id": 31,
+    "userid": 9048162375
+  },
+  "orders": {
+    "trans-10": {
+      "client_trans_id": "trans178719790890481623734",
+      "created_at": 1787197909,
+      "item_id": "jiu106",
+      "order_id": "order-9",
+      "payload": {
+        "client_trans_id": "trans178719790890481623734",
+        "discount": 0,
+        "id": "300003",
+        "isOpenPay": true,
+        "itemId": "jiu106",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "300003",
+      "status": "success",
+      "total_yuanbao": 9994,
+      "trans_id": "trans-10",
+      "updated_at": 1787197909,
+      "userid": 9048162373
+    },
+    "trans-12": {
+      "client_trans_id": "trans178719794590481623735",
+      "created_at": 1787197945,
+      "item_id": "jiaren005",
+      "order_id": "order-11",
+      "payload": {
+        "client_trans_id": "trans178719794590481623735",
+        "discount": 0,
+        "id": "300257",
+        "isOpenPay": true,
+        "itemId": "jiaren005",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "300257",
+      "status": "success",
+      "total_yuanbao": 9993,
+      "trans_id": "trans-12",
+      "updated_at": 1787197945,
+      "userid": 9048162373
+    },
+    "trans-14": {
+      "client_trans_id": "trans178719794890481623736",
+      "created_at": 1787197948,
+      "item_id": "menpaicanye4",
+      "order_id": "order-13",
+      "payload": {
+        "client_trans_id": "trans178719794890481623736",
+        "discount": 0,
+        "id": "500579",
+        "isOpenPay": true,
+        "itemId": "menpaicanye4",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9992,
+      "trans_id": "trans-14",
+      "updated_at": 1787197948,
+      "userid": 9048162373
+    },
+    "trans-16": {
+      "client_trans_id": "trans178720001890481623731",
+      "created_at": 1787200018,
+      "item_id": "jiu106",
+      "order_id": "order-15",
+      "payload": {
+        "client_trans_id": "trans178720001890481623731",
+        "discount": 0,
+        "id": "300003",
+        "isOpenPay": true,
+        "itemId": "jiu106",
+        "quantity": 10
+      },
+      "quantity": 10,
+      "remove_yuanbao": 10,
+      "shop_id": "300003",
+      "status": "success",
+      "total_yuanbao": 9982,
+      "trans_id": "trans-16",
+      "updated_at": 1787200018,
+      "userid": 9048162373
+    },
+    "trans-18": {
+      "client_trans_id": "trans178720003490481623732",
+      "created_at": 1787200034,
+      "item_id": "jiaren005",
+      "order_id": "order-17",
+      "payload": {
+        "client_trans_id": "trans178720003490481623732",
+        "discount": 0,
+        "id": "300257",
+        "isOpenPay": true,
+        "itemId": "jiaren005",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "300257",
+      "status": "success",
+      "total_yuanbao": 9981,
+      "trans_id": "trans-18",
+      "updated_at": 1787200034,
+      "userid": 9048162373
+    },
+    "trans-2": {
+      "client_trans_id": "trans_test_1",
+      "created_at": 1787193188,
+      "item_id": "menpaicanye4",
+      "order_id": "order-1",
+      "payload": {
+        "client_trans_id": "trans_test_1",
+        "discount": 0,
+        "id": "500579",
+        "itemId": "menpaicanye4",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9998,
+      "trans_id": "trans-2",
+      "updated_at": 1787193188,
+      "userid": 9048162373
+    },
+    "trans-20": {
+      "client_trans_id": "trans178720003890481623733",
+      "created_at": 1787200038,
+      "item_id": "menpaicanye4",
+      "order_id": "order-19",
+      "payload": {
+        "client_trans_id": "trans178720003890481623733",
+        "discount": 0,
+        "id": "500579",
+        "isOpenPay": true,
+        "itemId": "menpaicanye4",
+        "quantity": 99
+      },
+      "quantity": 99,
+      "remove_yuanbao": 99,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9882,
+      "trans_id": "trans-20",
+      "updated_at": 1787200038,
+      "userid": 9048162373
+    },
+    "trans-22": {
+      "client_trans_id": "trans178720713890481623731",
+      "created_at": 1787207139,
+      "item_id": "jiaren005",
+      "order_id": "order-21",
+      "payload": {
+        "client_trans_id": "trans178720713890481623731",
+        "discount": 0,
+        "id": "300257",
+        "isOpenPay": true,
+        "itemId": "jiaren005",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "300257",
+      "status": "success",
+      "total_yuanbao": 9881,
+      "trans_id": "trans-22",
+      "updated_at": 1787207139,
+      "userid": 9048162373
+    },
+    "trans-24": {
+      "client_trans_id": "trans178720717390481623732",
+      "created_at": 1787207174,
+      "item_id": "menpaicanye4",
+      "order_id": "order-23",
+      "payload": {
+        "client_trans_id": "trans178720717390481623732",
+        "discount": 0,
+        "id": "500579",
+        "isOpenPay": true,
+        "itemId": "menpaicanye4",
+        "quantity": 10
+      },
+      "quantity": 10,
+      "remove_yuanbao": 10,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9871,
+      "trans_id": "trans-24",
+      "updated_at": 1787207174,
+      "userid": 9048162373
+    },
+    "trans-26": {
+      "client_trans_id": "trans178721083390481623733",
+      "created_at": 1787210834,
+      "item_id": "menpaicanye4",
+      "order_id": "order-25",
+      "payload": {
+        "client_trans_id": "trans178721083390481623733",
+        "discount": 0,
+        "id": "500579",
+        "isOpenPay": true,
+        "itemId": "menpaicanye4",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9870,
+      "trans_id": "trans-26",
+      "updated_at": 1787210834,
+      "userid": 9048162373
+    },
+    "trans-28": {
+      "created_at": 1787207662,
+      "order_id": "order-27",
+      "payload": {},
+      "status": "pending",
+      "trans_id": "trans-28",
+      "updated_at": 1787207662,
+      "userid": 9048162373
+    },
+    "trans-30": {
+      "client_trans_id": "trans178727685390481623731",
+      "created_at": 1787276854,
+      "item_id": "jiu106",
+      "order_id": "order-29",
+      "payload": {
+        "client_trans_id": "trans178727685390481623731",
+        "discount": 0,
+        "id": "300003",
+        "isOpenPay": true,
+        "itemId": "jiu106",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "300003",
+      "status": "success",
+      "total_yuanbao": 9879,
+      "trans_id": "trans-30",
+      "updated_at": 1787276854,
+      "userid": 9048162373
+    },
+    "trans-4": {
+      "client_trans_id": "trans_form_1",
+      "created_at": 1787193740,
+      "item_id": "menpaicanye4",
+      "order_id": "order-3",
+      "payload": {
+        "client_trans_id": "trans_form_1",
+        "discount": "0",
+        "id": "500579",
+        "itemId": "menpaicanye4",
+        "quantity": "1"
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9997,
+      "trans_id": "trans-4",
+      "updated_at": 1787193740,
+      "userid": 9048162373
+    },
+    "trans-6": {
+      "client_trans_id": "trans_status_200",
+      "created_at": 1787195716,
+      "item_id": "menpaicanye4",
+      "order_id": "order-5",
+      "payload": {
+        "client_trans_id": "trans_status_200",
+        "discount": "0",
+        "id": "500579",
+        "itemId": "menpaicanye4",
+        "quantity": "1"
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9996,
+      "trans_id": "trans-6",
+      "updated_at": 1787195716,
+      "userid": 9048162373
+    },
+    "trans-8": {
+      "client_trans_id": "trans_cipher_eq",
+      "created_at": 1787197324,
+      "item_id": "menpaicanye4",
+      "order_id": "order-7",
+      "payload": {
+        "client_trans_id": "trans_cipher_eq",
+        "discount": 0,
+        "id": "500579",
+        "itemId": "menpaicanye4",
+        "quantity": 1
+      },
+      "quantity": 1,
+      "remove_yuanbao": 1,
+      "shop_id": "500579",
+      "status": "success",
+      "total_yuanbao": 9995,
+      "trans_id": "trans-8",
+      "updated_at": 1787197324,
+      "userid": 9048162373
+    }
+  },
+  "practice": {
+    "9048162373": {
+      "itemMap": {
+        "minditem1": {
+          "count": 995
+        },
+        "minditem2": {
+          "count": 999
+        },
+        "minditem3": {
+          "count": 999
+        },
+        "minditem4": {
+          "count": 995
+        }
+      },
+      "lianGong": {
+        "startAction": null,
+        "state": 0,
+        "updated_at": 1787281676,
+        "useXgsCount": 13
+      },
+      "tiLi": {
+        "curr": 56,
+        "max": 100
+      },
+      "unlock_records": [
+        {
+          "expired_time": 0,
+          "jid": "t1",
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20001,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20028,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20002,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 1,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20006,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20016,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20008,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20004,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20014,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20022,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20018,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20013,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20030,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20012,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 20010,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 1001,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 5000,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 11,
+          "values": 1
+        },
+        {
+          "expired_time": 0,
+          "jid": 5501,
+          "values": 1
+        }
+      ],
+      "xinShen": {
+        "curr": 1232,
+        "level": 10,
+        "max": 1232,
+        "recoverStartTime": 1787296282,
+        "upgradeRequests": {
+          "15": {
+            "curr": 86,
+            "dataVer": 14,
+            "level": 2,
+            "max": 120,
+            "time": 1787209235
+          },
+          "16": {
+            "curr": 86,
+            "dataVer": 15,
+            "level": 3,
+            "max": 130,
+            "time": 1787209235
+          },
+          "17": {
+            "curr": 86,
+            "dataVer": 16,
+            "level": 4,
+            "max": 140,
+            "time": 1787209235
+          },
+          "18": {
+            "curr": 86,
+            "dataVer": 17,
+            "level": 5,
+            "max": 150,
+            "time": 1787209235
+          },
+          "19": {
+            "curr": 86,
+            "dataVer": 18,
+            "level": 6,
+            "max": 160,
+            "time": 1787209235
+          },
+          "20": {
+            "curr": 86,
+            "dataVer": 19,
+            "level": 7,
+            "max": 170,
+            "time": 1787209235
+          },
+          "24": {
+            "curr": 7,
+            "dataVer": 23,
+            "level": 8,
+            "max": 180,
+            "time": 1787209235
+          },
+          "25": {
+            "curr": 7,
+            "dataVer": 24,
+            "level": 9,
+            "max": 190,
+            "time": 1787209235
+          },
+          "26": {
+            "curr": 7,
+            "dataVer": 25,
+            "level": 10,
+            "max": 200,
+            "time": 1787209235
+          }
+        },
+        "useItemRequests": {
+          "28:minditem1": {
+            "count": 995,
+            "curr": 200,
+            "dataVer": 30,
+            "max": 200,
+            "time": 1787209235
+          },
+          "30:minditem4": {
+            "count": 998,
+            "curr": 700,
+            "dataVer": 31,
+            "max": 1232,
+            "time": 1787209235
+          },
+          "31:minditem4": {
+            "count": 997,
+            "curr": 1200,
+            "dataVer": 32,
+            "max": 1232,
+            "time": 1787209235
+          },
+          "32:minditem4": {
+            "count": 996,
+            "curr": 1232,
+            "dataVer": 33,
+            "max": 1232,
+            "time": 1787209235
+          },
+          "64:minditem4": {
+            "count": 995,
+            "curr": 509,
+            "dataVer": 71,
+            "max": 1232,
+            "time": 1787209235
+          }
+        }
+      },
+      "xiuLian": {
+        "startAction": null,
+        "state": 0,
+        "useXgsCount": 0
+      }
+    }
+  },
+  "prestige": {
+    "9048162373": {
+      "title": [],
+      "today": 0,
+      "total": 0,
+      "upper": false
+    }
+  },
+  "rankings": {},
+  "teacher_build": {
+    "9048162373": {
+      "families": {
+        "huashan": {
+          "buildList": [
+            {
+              "buildLv": 0,
+              "buildTeacherExp": 0,
+              "buildTypeId": "100",
+              "state": 0
+            }
+          ],
+          "buildState": 0,
+          "day": "2026-08-24",
+          "diligent": 0,
+          "donate": 0,
+          "familyId": "huashan",
+          "familyStates": [],
+          "featscount": 0,
+          "gbpoint": 0,
+          "guajiInfo": {},
+          "prepareSkillLimit": 0,
+          "renown": 0,
+          "renownLimit": 0,
+          "reputation": 0,
+          "reputationLv": 0,
+          "sgbpoint": 0,
+          "speedUp": 0,
+          "speedUpLimit": 0,
+          "taskNumDay": 0,
+          "taskNumLimit": 0,
+          "updated_at": 1787536402
+        }
+      }
+    }
+  },
+  "version": 3
+}

@@ -1,0 +1,26 @@
+{
+  "dataVer": 4,
+  "record": {
+    "jingMaxRecord": {
+      "value": 1
+    }
+  },
+  "role": {
+    "dataVer": 4,
+    "name": "和风无声",
+    "primeryKey": "9048162373",
+    "serverActionSystem": {
+      "dataVersion": 4,
+      "requestId": 1
+    },
+    "userid": 9048162373
+  },
+  "schema": "fzjh.role_archive.v1",
+  "updated_at": 1787034984,
+  "upload": {
+    "cheatType": "3",
+    "uType": "kaishi",
+    "updated_at": 1787034984
+  },
+  "userid": 9048162373
+}

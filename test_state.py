@@ -1,0 +1,754 @@
+# -*- coding: utf-8 -*-
+
+import json
+import os
+import tempfile
+import threading
+import unittest
+from unittest import mock
+
+import config
+
+from handlers.basic import (
+    add_devote_point,
+    admin_send_email,
+    challengemap_unfinished,
+    delete_email,
+    delete_processed_emails,
+    get_devote_list,
+    get_devote_point,
+    get_email_info,
+    get_email_reward,
+    get_spring_festival_list,
+    get_group_rank,
+    get_user_group,
+    read_email,
+    upgrade_user_bag,
+)
+from handlers.practice import get_xin_shen_value, recover_xin_shen_value
+from handlers.homeland import (
+    add_employee,
+    delete_employee,
+    get_employee_data,
+    get_employee_list,
+    get_affair_list,
+    get_home_switch,
+    get_house_info,
+    get_user_map,
+    update_employee_extra,
+)
+from handlers.system import (
+    create_account,
+    download_user_file_2,
+    get_game_user_info_2,
+    login_device,
+    send_email,
+)
+from handlers.teacher_build import (
+    get_teacher_build_info,
+    get_teacher_build_items,
+    get_teacher_build_list,
+)
+from state import StateStore
+
+
+class StateStoreTest(unittest.TestCase):
+    def test_account_archive_isolation_and_copying(self):
+        store = StateStore()
+        account = store.ensure_account()
+        userid = account["userid"]
+        archive = store.put_archive(userid, {"name": "角色", "exp": 10})
+        archive["exp"] = 99
+        self.assertEqual(store.get_archive(userid)["exp"], 10)
+        other = store.ensure_account()
+        self.assertIsNone(store.get_archive(other["userid"]))
+
+    def test_device_email_and_order(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.set_email_code(userid, " Test@Example.COM ", "123456", "bind")
+        self.assertEqual(store.get_email(userid)["email"], "")
+        store.validate_email_code(userid, "test@example.com", "123456")
+        device = store.bind_device(userid, "TEST@example.com", "123456")
+        self.assertTrue(device["bound"])
+        self.assertEqual(store.get_email(userid)["email"], "test@example.com")
+        self.assertEqual(store.get_account(userid)["email"], "test@example.com")
+        self.assertEqual(store.get_userid_by_email(" test@EXAMPLE.com "), userid)
+        order = store.create_order(userid, {"item_id": "item-1"})
+        self.assertEqual(store.get_order(order["trans_id"])["status"], "pending")
+        updated = store.update_order(order["order_id"], {"status": "success"})
+        self.assertEqual(updated["status"], "success")
+
+    def test_email_binding_is_unique(self):
+        store = StateStore()
+        first = store.ensure_account()["userid"]
+        second = store.ensure_account()["userid"]
+        store.bind_device(first, "User@Example.com")
+        store.unbind_device(first)
+        self.assertEqual(store.get_userid_by_email("user@example.com"), first)
+        with self.assertRaisesRegex(ValueError, "email already bound"):
+            store.bind_device(second, " user@example.COM ")
+
+    def test_verify_code_checks_target_and_expiry(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.set_email_code(userid, "user@example.com", "123456", "login", expires_at=100)
+        with self.assertRaisesRegex(ValueError, "invalid verify target"):
+            store.validate_email_code(userid, "other@example.com", "123456", now=99)
+        with self.assertRaisesRegex(ValueError, "invalid verify code"):
+            store.validate_email_code(userid, "user@example.com", "000000", now=99)
+        with self.assertRaisesRegex(ValueError, "verify code expired"):
+            store.validate_email_code(userid, "user@example.com", "123456", now=100)
+
+    def test_sending_code_does_not_change_bound_email(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.bind_device(userid, "old@example.com")
+        response = send_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"email": " New@Example.COM ", "event_type": 1},
+        })
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(store.get_email(userid)["email"], "old@example.com")
+        self.assertEqual(store.get_account(userid)["email"], "old@example.com")
+        store.validate_email_code(userid, "new@example.com", "123456")
+
+    def test_legacy_device_email_binding_is_migrated(self):
+        initial = {
+            "version": 2,
+            "accounts": {"42": {"userid": 42}},
+            "devices": {
+                "42": {
+                    "userid": 42,
+                    "email": " Legacy@Example.COM ",
+                    "bound": True,
+                }
+            },
+        }
+        store = StateStore(initial=initial)
+        self.assertEqual(store.get_userid_by_email("legacy@example.com"), 42)
+        self.assertEqual(store.get_email(42)["email"], "legacy@example.com")
+        self.assertEqual(store.snapshot()["version"], StateStore.VERSION)
+
+    def test_email_login_maps_uuid_for_download(self):
+        store = StateStore()
+        original = store.ensure_account()["userid"]
+        current = store.ensure_account()["userid"]
+        store.put_archive(original, {"userid": original, "name": "原角色"})
+        store.put_archive(current, {"userid": current, "name": "当前角色"})
+        store.bind_device(original, "user@example.com")
+        store.set_email_code(current, " USER@example.com ", "123456", "2")
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(current), "uuid": "device-1"},
+            "body": {"email": "User@Example.com", "verify_code": "123456"},
+        })
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["userid"], original)
+        download = download_user_file_2({
+            "state": store,
+            "headers": {"userid": str(current), "uuid": "device-1"},
+        })
+        self.assertEqual(download["data"][0]["userid"], original)
+
+    def test_admin_mail_delivery_and_reward_claim_are_idempotent(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        body = {
+            "request_id": "grant-20260820-1",
+            "userid": userid,
+            "title": "后台奖励",
+            "content": "请领取附件",
+            "rewards": {
+                "loc_items": [{"id": "huashancanye", "num": 1}],
+                "net_items": [{"id": "jiu106", "num": 2}],
+                "net_attrs": [{"id": "yuanbao", "num": 100}],
+                "new_currencys": [{"id": "yinpiao", "num": 50}],
+            },
+        }
+        ctx = {"state": store, "headers": {}, "body": body}
+        sent = admin_send_email(ctx)
+        replay = admin_send_email(ctx)
+        self.assertEqual(sent["errcode"], 0)
+        self.assertEqual(replay["data"]["mail_id"], sent["data"]["mail_id"])
+        self.assertTrue(replay["data"]["replayed"])
+        self.assertEqual(len(store.list_mail(userid)), 1)
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(email["state"], 1)
+        self.assertEqual(email["is_get"], 1)
+        self.assertEqual(email["loc_items"][0]["state"], 0)
+        self.assertTrue(email["loc_items"][0]["onlyId"])
+        self.assertEqual(email["net_items"][0]["id"], "jiu106")
+        detail = read_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": email["id"]},
+        })
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["contents"], "请领取附件")
+        self.assertEqual(detail["data"]["is_get"], 1)
+        self.assertEqual(detail["data"]["net_items"][0]["name"], "jiu106")
+        self.assertEqual(detail["data"]["net_attrs"][0]["state"], 0)
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "id": email["id"],
+                "retrievables": [email["loc_items"][0]["onlyId"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        }
+        claimed = get_email_reward(claim_ctx)
+        claimed_again = get_email_reward(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertTrue(claimed_again["data"]["replayed"])
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 2)
+        account = store.get_account(userid)
+        self.assertEqual(
+            account["yuanbao"],
+            100,
+        )
+        self.assertEqual(
+            account["currencies"]["yinpiao"],
+            50,
+        )
+        archive = store.get_archive(userid)
+        jiu = next(item for item in archive["items"] if item["itemId"] == "jiu106")
+        self.assertEqual(jiu["count"], 2)
+        self.assertEqual(archive["yuanbao"], 100)
+        self.assertEqual(archive["yinpiao"], 50)
+        self.assertEqual(archive["currencyVersion"], claimed["data"]["currencyVersion"])
+        self.assertEqual(archive["dataVer"], claimed["data"]["dataVer"])
+        self.assertEqual(
+            claimed["data"]["is_get"],
+            2,
+        )
+        self.assertIn("dataVer", claimed["data"])
+        self.assertIn("currencyVersion", claimed["data"])
+
+    def test_mail_reward_accepts_empty_retrievables_for_server_rewards(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-empty-retrievables",
+                "userid": userid,
+                "title": "网络附件",
+                "content": "领取",
+                "rewards": {
+                    "net_items": [{"id": "jiu106", "num": 2}],
+                    "net_attrs": [{"id": "yuanbao", "num": 3}],
+                },
+            },
+        })
+        mail_id = sent["data"]["mail_id"]
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(email["is_get"], 1)
+        self.assertIsInstance(email["net_items"][0]["state"], int)
+        self.assertTrue(email["net_items"][0]["onlyId"])
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": mail_id, "retrievables": []},
+        })
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(store.get_archive(userid)["items"][0]["count"], 2)
+
+    def test_admin_mail_requires_configured_token(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        body = {
+            "request_id": "grant-token-1",
+            "userid": userid,
+            "title": "后台奖励",
+            "content": "请领取附件",
+        }
+        with mock.patch.object(config, "ADMIN_API_TOKEN", "secret"):
+            denied = admin_send_email({"state": store, "headers": {}, "body": body})
+            allowed = admin_send_email({
+                "state": store,
+                "headers": {"x-admin-token": "secret"},
+                "body": body,
+            })
+        self.assertEqual(denied["errcode"], 403)
+        self.assertEqual(allowed["errcode"], 0)
+
+    def test_mail_activity_ranking_and_biwu(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        empty_response = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(empty_response["data"]["emailList"], [])
+        self.assertEqual(empty_response["data"]["emailMaxNum"], 50)
+        mail = store.add_mail(userid, {"title": "奖励"})
+        response = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(response["data"]["emailList"][0]["id"], mail["mail_id"])
+        self.assertEqual(response["data"]["emailList"][0]["is_read"], 0)
+        self.assertEqual(response["data"]["emailList"][0]["is_get"], 0)
+        self.assertEqual(response["data"]["emailList"][0]["expired_time"], 0)
+        self.assertFalse(store.list_mail(userid)[0]["read"])
+        self.assertTrue(store.update_mail(userid, mail["mail_id"], {"read": True})["read"])
+        store.put_activity("a1", {"type": 2, "enabled": True})
+        self.assertEqual(len(store.get_activities(2)), 1)
+        store.update_activity_user(userid, "a1", {"point": 5})
+        store.upsert_ranking("default", userid, {"name": "角色", "score": 20})
+        self.assertEqual(store.get_rankings()["list"][0]["userid"], userid)
+        fight = store.add_biwu_fight(userid, {"status": "finished"})
+        self.assertEqual(store.list_biwu_fights(userid)[0]["fight_id"], fight["fight_id"])
+
+    def test_delete_single_and_processed_emails(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        plain = store.add_mail(userid, {"title": "普通邮件"})
+        claimed = store.add_mail(userid, {
+            "title": "已领取邮件",
+            "claimed": True,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 1}]},
+        })
+        pending = store.add_mail(userid, {
+            "title": "未领取邮件",
+            "rewards": {"loc_items": [{"id": "innatePointSwitchbox", "num": 1}]},
+        })
+        single = delete_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": [pending["mail_id"]],
+        })
+        self.assertEqual(single["errcode"], 0)
+        self.assertTrue(store.get_mail(userid, pending["mail_id"])["deleted"])
+        result = delete_processed_emails({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(
+            result["data"]["delete_ids"],
+            [plain["mail_id"], claimed["mail_id"]],
+        )
+        visible = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(visible["data"]["emailList"], [])
+
+    def test_upgrade_bag_and_warehouse_capacity(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "money": 1000000,
+            "weight": 30,
+            "wUpCount": 0,
+            "baseCkLimit": 30,
+            "ckLimit": 40,
+            "ckUpCount": 0,
+            "dataVer": 5,
+        }, data_ver=5)
+        bag = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 1, "level": 1001},
+        })
+        self.assertEqual(bag["errcode"], 0)
+        self.assertEqual(bag["data"]["currency"], 1)
+        self.assertEqual(bag["data"]["count"], 12000)
+        role = store.get_archive(userid)
+        self.assertEqual(role["weight"], 35)
+        self.assertEqual(role["wUpCount"], 1)
+        self.assertEqual(role["money"], 988000)
+        warehouse = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 2, "level": 1001},
+        })
+        self.assertEqual(warehouse["errcode"], 0)
+        role = store.get_archive(userid)
+        self.assertEqual(role["baseCkLimit"], 35)
+        self.assertEqual(role["ckLimit"], 45)
+        self.assertEqual(role["ckUpCount"], 1)
+        self.assertEqual(role["money"], 982000)
+        conflict = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 1, "level": 1001},
+        })
+        self.assertEqual(conflict["errcode"], 409)
+        self.assertEqual(store.get_archive(userid)["money"], 982000)
+
+    def test_json_persistence_and_corrupt_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            archives_dir = os.path.join(directory, "archives")
+            first = StateStore(path, archives_dir=archives_dir)
+            userid = first.ensure_account()["userid"]
+            first.put_archive(userid, {"userid": userid, "name": "持久化", "lv": 1})
+            self.assertTrue(os.path.isfile(os.path.join(archives_dir, "%d.json" % userid)))
+            second = StateStore(path, archives_dir=archives_dir)
+            self.assertEqual(second.get_archive(userid)["name"], "持久化")
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write("{")
+            third = StateStore(path, archives_dir=archives_dir)
+            self.assertIsNone(third.get_account(userid))
+            # 账号索引丢了, 但分文件存档仍可回放
+            self.assertEqual(third.get_archive(userid)["name"], "持久化")
+
+    def test_register_account_is_empty_by_default(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            account = store.register_account(
+                username="demo",
+                password_hash="x",
+                email=" User@Example.COM ",
+            )
+            self.assertFalse(account["has_archive"])
+            self.assertEqual(account["email"], "user@example.com")
+            self.assertEqual(store.get_userid_by_email("USER@example.com"), account["userid"])
+            self.assertIsNone(store.get_archive(account["userid"]))
+
+    def test_create_account_accepts_optional_email(self):
+        store = StateStore()
+        response = create_account({
+            "state": store,
+            "headers": {},
+            "body": {"userid": 0, "email": " New@Example.COM "},
+        })
+        userid = response["data"]["userid"]
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(store.get_account(userid)["email"], "new@example.com")
+        self.assertEqual(store.get_userid_by_email("NEW@example.com"), userid)
+
+    def test_create_account_rejects_duplicate_email(self):
+        store = StateStore()
+        store.register_account(email="user@example.com")
+        response = create_account({
+            "state": store,
+            "headers": {},
+            "body": {"userid": 0, "email": " User@Example.COM "},
+        })
+        self.assertEqual(response["errcode"], 409)
+        self.assertEqual(len(store.snapshot()["accounts"]), 1)
+
+    def test_seed_import_and_switch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            seed = os.path.join(directory, "RoleData.json")
+            with open(seed, "w", encoding="utf-8") as handle:
+                json.dump({"userid": 9048162373, "name": "和风无声", "lv": 550, "serverActionSystem": {"dataVersion": 2, "requestId": 1}}, handle, ensure_ascii=False)
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            doc = store.import_seed_roledata(seed, overwrite=False)
+            self.assertEqual(doc["userid"], 9048162373)
+            self.assertEqual(store.get_archive(9048162373)["name"], "和风无声")
+            store.set_active_archive("uuid-1", 9048162373)
+            self.assertEqual(store.get_active_archive("uuid-1")["userid"], 9048162373)
+            self.assertEqual(store.list_archives()[0]["name"], "和风无声")
+
+    def test_snapshot_and_reset(self):
+        store = StateStore()
+        store.ensure_account()
+        snapshot = store.snapshot()
+        snapshot["accounts"].clear()
+        self.assertEqual(len(store.snapshot()["accounts"]), 1)
+        store.reset()
+        self.assertEqual(store.snapshot()["accounts"], {})
+        self.assertEqual(store.ensure_account()["userid"], StateStore.DEFAULT_USER_ID)
+
+    def test_missing_api_contracts(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        challenge = challengemap_unfinished(dict(base_ctx))
+        self.assertEqual(challenge["data"], {"status": 0})
+        spring = get_spring_festival_list(dict(base_ctx))
+        self.assertEqual(spring["data"], [])
+
+        info_ctx = dict(base_ctx, body={"familyId": "huashan"})
+        info = get_teacher_build_info(info_ctx)
+        self.assertEqual(info["data"]["guajiInfo"], {})
+        builds = get_teacher_build_list(info_ctx)
+        self.assertIsInstance(builds["data"], list)
+        self.assertEqual(builds["data"][0]["state"], 0)
+        items = get_teacher_build_items(info_ctx)
+        self.assertEqual(items["data"], [])
+
+        added = add_devote_point(dict(base_ctx, body={"type": 5, "point": 100}))
+        self.assertEqual(added["data"]["get_point"], 100)
+        self.assertEqual(added["data"]["dev_point"], 100)
+        current = get_devote_point(dict(base_ctx))
+        self.assertEqual(current["data"]["dev_point"], 100)
+        devote_list = get_devote_list(dict(base_ctx, body={"type": 1, "menpai": "huashan"}))
+        self.assertTrue(devote_list["data"]["list"])
+        self.assertEqual(devote_list["data"]["list"][0]["status"], 0)
+        group = get_user_group(dict(base_ctx, body={
+            "userid": userid,
+            "tid": "fenglao",
+            "menpai": "huashan",
+            "isCache": 0,
+        }))
+        self.assertEqual(group["errcode"], 0)
+        self.assertEqual(group["data"][0]["userid"], userid)
+        self.assertEqual(group["data"][0]["name"], "玩家%s" % userid)
+        rank = get_group_rank(dict(base_ctx))
+        self.assertEqual(rank["errcode"], 0)
+        self.assertIsInstance(rank["data"], list)
+        self.assertEqual(rank["data"][0]["userid"], userid)
+        self.assertEqual(rank["data"][0]["kongfu"], 0)
+        self.assertEqual(rank["data"][0]["prestige"], 100)
+
+    def test_legacy_teacher_build_idle_state_is_normalized(self):
+        store = StateStore(initial={
+            "accounts": {"42": {"userid": 42}},
+            "teacher_build": {
+                "42": {
+                    "families": {
+                        "huashan": {
+                            "familyId": "huashan",
+                            "guajiInfo": {"status": 0},
+                        }
+                    }
+                }
+            },
+        })
+        response = get_teacher_build_info({
+            "state": store,
+            "headers": {"userid": "42"},
+            "body": {"familyId": "huashan"},
+        })
+        self.assertEqual(response["data"]["guajiInfo"], {})
+
+    def test_xin_shen_query_settles_recovery_every_300_seconds(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.time.time", return_value=1601):
+            response = get_xin_shen_value(ctx)
+        self.assertEqual(response["data"]["curr"], 120)
+        self.assertEqual(response["data"]["max"], 400)
+        self.assertEqual(response["data"]["time"], 1600)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        self.assertEqual(xin["curr"], 120)
+        self.assertEqual(xin["recoverStartTime"], 1600)
+
+    def test_xin_shen_query_caps_at_max_and_resets_recovery_time(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 395,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            response = get_xin_shen_value(ctx)
+        self.assertEqual(response["data"]["curr"], 400)
+        self.assertEqual(response["data"]["time"], 1300)
+
+    def test_recover_xin_shen_rejects_unsafe_client_values(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        base = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"codeVer": 1, "dataVer": 1, "value": 10, "time": 1300},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            too_large = recover_xin_shen_value(dict(base, body=dict(base["body"], value=999999)))
+            stale_time = recover_xin_shen_value(dict(base, body=dict(base["body"], time=999)))
+        self.assertEqual(too_large["errcode"], 400)
+        self.assertEqual(stale_time["errcode"], 400)
+        self.assertEqual(store.snapshot()["practice"][str(userid)]["xinShen"]["curr"], 100)
+
+    def test_recover_xin_shen_accepts_one_due_server_verified_tick(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"codeVer": 1, "dataVer": 3, "value": 10, "time": 1300},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            response = recover_xin_shen_value(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["curr"], 110)
+        self.assertEqual(response["data"]["time"], 1300)
+        self.assertEqual(response["data"]["dataVer"], 4)
+
+    def test_homeland_house_employee_and_dispatch_state_persist(self):
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        self.assertEqual(mid, 14750)
+
+        user_info = get_game_user_info_2(ctx)
+        self.assertEqual(user_info["errcode"], 0)
+        self.assertIs(user_info["data"]["jiayuantch"], True)
+
+        home_switch = get_home_switch(ctx)
+        self.assertEqual(home_switch["errcode"], 0)
+        self.assertIs(home_switch["data"]["open"], True)
+        self.assertIs(type(home_switch["data"]["yinpiao"]), int)
+
+        steward = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "guanjia_test_1",
+                "mid": mid,
+                "npcId": 0,
+                "push_data": {},
+            },
+        })
+        self.assertEqual(steward["errcode"], 0)
+        self.assertEqual(steward["data"]["jobType"], "guanjia001")
+
+        employee = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_test_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四"},
+            },
+        })
+        self.assertEqual(employee["errcode"], 0)
+        self.assertEqual(employee["data"]["rwId"], "puren_test_1")
+
+        updated = update_employee_extra({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "up_data": [{
+                "rwId": "puren_test_1",
+                "extra": {"stay_room_time": 4102444800},
+            }]},
+        })
+        self.assertEqual(updated["errcode"], 0)
+
+        mapped = get_user_map({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "userid": userid, "ver": 0},
+        })
+        self.assertEqual(mapped["errcode"], 0)
+        self.assertEqual(mapped["data"]["usermap"]["hxId"], "huxing002")
+        self.assertEqual(mapped["data"]["usermap"]["dirMark"], 0)
+        room_by_id = {
+            room["fjId"]: room
+            for room in mapped["data"]["maproom"]
+        }
+        self.assertEqual(room_by_id["room_1"]["up"], "room_2")
+        self.assertEqual(room_by_id["room_2"]["roomType"], "tsfangjian011")
+        affairs = get_affair_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"biz_type": 3, "mid": mid},
+            "route_tail": ["5"],
+        })
+        self.assertEqual(affairs["errcode"], 0)
+        self.assertEqual(affairs["data"], [])
+        self.assertEqual(
+            [person["rwId"] for person in mapped["data"]["roomperson"]],
+            ["guanjia_test_1"],
+        )
+
+        detail = get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "objId": "puren_test_1"},
+        })
+        self.assertEqual(detail["data"]["extra"]["stay_room_time"], 4102444800)
+        listed = get_employee_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["1", str(mid)],
+        })
+        self.assertEqual(listed["errcode"], 0)
+
+        deleted = delete_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "objId": "puren_test_1"},
+        })
+        self.assertEqual(deleted["errcode"], 0)
+
+    def test_concurrent_account_ids_are_unique(self):
+        store = StateStore()
+        values = []
+        lock = threading.Lock()
+
+        def create():
+            value = store.ensure_account()["userid"]
+            with lock:
+                values.append(value)
+
+        threads = [threading.Thread(target=create) for _ in range(20)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        self.assertEqual(len(values), len(set(values)))
+
+
+if __name__ == "__main__":
+    unittest.main()
