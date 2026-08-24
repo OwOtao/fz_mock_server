@@ -1,0 +1,1 @@
+return {["消耗设定"]={yuanbao={id="yuanbao",minlimit=200,maxlimit=2000,multiple=3,rewards={{"1",25},{"2",75}},icon="Image/UI/SignInUI/yuanbao-5.png"}}}00000

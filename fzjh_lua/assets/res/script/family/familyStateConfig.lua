@@ -1,0 +1,1 @@
+return {["1"]={["10000"]={id="10000",conditionType=1,conditionValue=3,name="奋发而上",text="由于本门发展落后，门派长老纷纷召回弟子对师门大兴土木，本周每个建筑都获得更高修筑度的捐献方式。",iconId="mpbs1",refreshType=2}}}00

@@ -1,0 +1,6 @@
+return {["award"]={["1"]={["awardid"]=[[nczcelue9]],["awardname"]=[[一萼红]],["dec"]=[[一个精美绝伦的雕花木箱，看起来品质不凡。
+可获得：YEL螺钿紫檀琵琶NOR×1、醉梦生×1、10000碎银]],["id"]=1,["paperNeed"]=[[101,1]],["space"]=1},["2"]={["awardid"]=[[nczcelue10]],["awardname"]=[[杨柳枝]],["dec"]=[[一个精致的丝绸包裹，上面绣有江山千里，渔舟唱晚。
+可获得：YEL金鳞玄重衣NOR×1、10000碎银]],["id"]=2,["paperNeed"]=[[102,1]],["space"]=1},["3"]={["awardid"]=[[nczcelue11]],["awardname"]=[[南柯子]],["dec"]=[[一个精巧的长匣，匣子外头用锦缎包裹，看起来价格不菲。
+可获得：YEL虹栖剑NOR×1、10000碎银]],["id"]=3,["paperNeed"]=[[103,1]],["space"]=1},["4"]={["awardid"]=[[nczcelue12]],["awardname"]=[[小重山]],["dec"]=[[一个小秀囊，里头沉甸甸的，不知道装着什么。
+可获得：10000碎银]],["id"]=4,["paperNeed"]=[[104,1]],["space"]=1},["5"]={["awardid"]=[[nczcelue13]],["awardname"]=[[捣练子]],["dec"]=[[一个小巧的布袋，也无什么绣花，看起来普普通通。
+可获得：100碎银]],["id"]=5,["paperNeed"]=[[105,1]],["space"]=1}},["paper"]={["101"]={["id"]=101,["paperName"]=[[YEL红签NOR]],["paperRatio"]=2},["102"]={["id"]=102,["paperName"]=[[MAG紫签NOR]],["paperRatio"]=6},["103"]={["id"]=103,["paperName"]=[[BLU蓝签NOR]],["paperRatio"]=8},["104"]={["id"]=104,["paperName"]=[[CYN青签NOR]],["paperRatio"]=24},["105"]={["id"]=105,["paperName"]=[[WHT白签NOR]],["paperRatio"]=60}}}00000000000

@@ -1,0 +1,1 @@
+return {Sheet1={[1]={id=1,goodsId="100203",rewards={{"400002",33}},rewardsdays=7,begintime=20250201,finishtime=20250501,limit=12},[2]={id=2,goodsId="100214",rewards={{"400001",35}},rewardsdays=7,begintime=20250701,finishtime=20251001,limit=14},[3]={id=3,goodsId="100227",rewards={{"400005",300}},rewardsdays=7,begintime=20260101,finishtime=20260401,limit=13}}}00000000

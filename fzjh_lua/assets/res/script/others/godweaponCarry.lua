@@ -1,0 +1,1 @@
+return {Sheet1={["1"]={id="1",bagcount=1,currency=0,count=0},["2"]={id="2",bagcount=2,currency=2,count=800},["3"]={id="3",bagcount=3,currency=2,count=1800},["4"]={id="4",bagcount=4,currency=2,count=3300},["5"]={id="5",bagcount=5,currency=2,count=3950},["6"]={id="6",bagcount=6,currency=2,count=4650}}}000

@@ -1,3 +1,11 @@
 __pycache__/
 *.py[cod]
 *.log
+
+# Captured network / binary artifacts (not source)
+so/
+*.har
+get_game_config_raw.bin
+
+# Runtime state
+state.json

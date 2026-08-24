@@ -1,0 +1,1 @@
+return {["1"]={[1]={talentid=1,unlock=1,cost=0},[2]={talentid=2,unlock=2,cost=100},[3]={talentid=3,unlock=2,cost=100},[4]={talentid=4,unlock=2,cost=100},[5]={talentid=5,unlock=2,cost=100},[6]={talentid=6,unlock=2,cost=100},[7]={talentid=7,unlock=2,cost=100}}}0000000000000

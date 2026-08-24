@@ -1,0 +1,1 @@
+return {["npcOldAttrBoss"]=require("script.challengeMap.oldFightNpcAttr.npcOldAttrBoss"),["npcOldAttrElite"]=require("script.challengeMap.oldFightNpcAttr.npcOldAttrElite"),["npcOldAttrTest"]=require("script.challengeMap.oldFightNpcAttr.npcOldAttrTest"),}00

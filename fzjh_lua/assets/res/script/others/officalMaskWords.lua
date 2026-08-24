@@ -1,0 +1,1 @@
+return {["Sheet1"] = {["1"] = require("res.script.others.officalMaskWords1")["Sheet1"],["2"] = require("res.script.others.officalMaskWords2")["Sheet1"],["3"] = require("res.script.others.officalMaskWords3")["Sheet1"],}}  000

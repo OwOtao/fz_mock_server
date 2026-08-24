@@ -1,0 +1,1 @@
+return {Sheet1={[1]={id=1,gift={"400011",2},condition=20},[2]={id=2,gift={"500007",4},condition=40},[3]={id=3,gift={"100241",1},condition=66},[4]={id=4,gift={"400044",3000},condition=130},[5]={id=5,gift={"200099",1},condition=222},[6]={id=6,gift={"400044",6600},condition=266}}}0000000000

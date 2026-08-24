@@ -1,0 +1,1 @@
+return {["1"]={["100"]={id="100",conditionlv=1,count=1,mcmrestrict=1,unlockcondition={{"dmartial",96},{"amartial",2160},{"bmartial",240}}},["101"]={id="101",conditionlv=2,count=1,mcmrestrict=70,unlockcondition={{"dmartial",112},{"amartial",2520},{"bmartial",280}}}}}000000

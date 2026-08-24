@@ -1,0 +1,1 @@
+return {["挂机通用参数"]={["inheritCountAdd"]={["content"]=[[0#0|1#0.05|2#0.1|3#0.15|4#0.2|5#0.2]],["id"]=[[inheritCountAdd]]},["yaShiAwardExpAdd"]={["content"]=0.15,["id"]=[[yaShiAwardExpAdd]]}}}000000

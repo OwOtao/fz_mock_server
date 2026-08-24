@@ -1,0 +1,1 @@
+return {["图标"]={mpbs1={id="mpbs1",iconRes="Image/UI/iconui/mpbs1.png"}}}0000

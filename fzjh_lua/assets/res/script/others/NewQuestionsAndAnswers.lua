@@ -1,0 +1,1 @@
+return {["Sheet1"]={["lanternRiddles"]={["amount"]=10,["awardid"]=[[wulinrewardlv4]],["countDown"]=30,["endAmount"]=7,["endTime"]=[[20210723;00;00]],["id"]=[[lanternRiddles]],["integral"]=1,["integralCount"]=30,["name"]=[[周年灯谜会]],["questionList"]=[[questionListA]],["rewardCount"]=1,["startTime"]=[[20210612;00;00]],["waitingTime"]=3}}}000000

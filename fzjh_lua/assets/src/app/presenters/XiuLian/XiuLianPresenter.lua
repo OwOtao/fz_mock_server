@@ -1,0 +1,1071 @@
+local XiuLianPresenter = class("XiuLianPresenter", cc.Layer)
+
+local Role = require("app.models.role.Role")
+
+function XiuLianPresenter:create()
+    local p = XiuLianPresenter.new()
+    p:__init()
+    return p
+end
+
+function XiuLianPresenter:__init()
+    self.__ui = require("app.views.ui.LianGongUI.LianGongUI"):create()
+
+    self.__ui:addTo(self)
+end
+
+function XiuLianPresenter:showLayer(skillId,dummy)
+    self.__xiuLianSystem = User:getRole():getXiuLianSystem()
+
+    self._player = self.__xiuLianSystem:getPlayer()
+
+    self._playerLv = self._player:getLv()
+
+    self._skillId = skillId
+
+    self._skill = Skill:getSkill(skillId)
+
+    self._skillLv = self._player:getSkillLv(skillId)
+
+    self._exp = self._player:getSkillExp(skillId)
+
+    self._skillLvLimit = self._player:getSkillLvLimit(self._skill.id)
+
+    self.__xiuLianSystem:setStartExp(self._exp)
+
+    self.__xiuLianSystem:setStartLvLimit(self._skillLvLimit)
+
+    self.__xiuLianSystem:setPlayerLv(self._playerLv)
+
+    self.__callback = nil
+
+    self._touchTime = 0
+
+    self._dummy = dummy
+
+    self.__xiuLianSystem:setDummy({durable = dummy.durable,jjId = dummy.jjId,fid = dummy.fid})
+
+    self.__xiuLianSystem:setXinShen(self._xinshen)
+
+    self.__xiuLianSystem:setSkillId(skillId)
+    
+    self.__xiuLianSystem:setVariates(
+        {
+            csjLv = self._player:getSkillLv("changshengjueyang"),
+            inheritCount = self._player:getAttr("inheritCount"),
+            dsszLv = self._player:getSkillLv("dushushizi"),
+            int = self._player:getFinalAttr("int")
+        }
+    )
+
+    --@desc 提升后的武学等级
+    self._afterSkillLv = self.__xiuLianSystem:calXiuLianLvLimit(self._jibenSkillLv)
+
+    --@desc 选择提升到的武学等级
+    self._addSelectSkillLv = self._afterSkillLv
+
+    self.__xiuLianSystem:setSelectLv(self._addSelectSkillLv)
+
+    self._selectJing = self:getJingMax()
+    
+    self.__xiuLianSystem:setSelectJing(self._selectJing)
+
+    self._selectTiLi = 0
+
+    self.__xiuLianSystem:setSelectTiLi(self._selectTiLi)
+
+    self:setTextTitle()
+
+    self:setTextSubTitle1()
+
+    self:setTextSubTitle2()
+
+    self:setTextSubTitle3()
+
+    self:setTextXinShenNum()
+
+    self:setTextTiLiNum()
+
+    self:setTextTiLiNum()
+
+    self:setButtonConfirm()
+
+    self:setButtonBack()
+
+    self:setButtonXinShen()
+    
+    self:refreshButtonLv()
+
+    self:refreshButtonJing()
+
+    self:refreshButtonTiLi()
+
+    self:setSelectLvText()
+
+    self:setSelectJingNum()
+
+    self:setSelectTiLiNum()
+
+    self:setListView()
+
+    self.__ui:showUI()
+end
+
+function XiuLianPresenter:setXinShen(xinshen)
+    self._xinshen = xinshen
+end
+
+function XiuLianPresenter:setXinShenMax(xinshenMax)
+    self._xinshenMax = xinshenMax
+end
+
+function XiuLianPresenter:setTiLi(tili)
+    self._tili = tili
+end
+
+function XiuLianPresenter:setTiLiMax(tiliMax)
+    self._tiliMax = tiliMax
+end
+
+function XiuLianPresenter:setJiBenSkillLv(jibenSkillLv)
+    self._jibenSkillLv = jibenSkillLv
+end
+
+function XiuLianPresenter:setCallBack(callback)
+    self.__callback = callback
+end
+
+function XiuLianPresenter:refreshButtonLv()
+    self:setButtonLv1()
+
+    self:setButtonLv2()
+
+    self:setButtonLv3()
+
+    self:setButtonLv4()
+end
+
+function XiuLianPresenter:refreshButtonJing()
+    self:setButtonJing1()
+
+    self:setButtonJing2()
+
+    self:setButtonJing3()
+
+    self:setButtonJing4()
+end
+
+function XiuLianPresenter:refreshButtonTiLi()
+    self:setButtonTiLi1()
+
+    self:setButtonTiLi2()
+
+    self:setButtonTiLi3()
+
+    self:setButtonTiLi4()
+end
+
+function XiuLianPresenter:getTiLiName()
+    return Role:getCHAttrName("lianGongTiLi")
+end
+
+function XiuLianPresenter:setTextTitle()
+    self.__ui:setTextTitle("修炼准备")
+end
+
+function XiuLianPresenter:setTextSubTitle1()
+    self.__ui:setTextSubTitle1("请选择修炼武学目标等级：")
+end
+
+function XiuLianPresenter:setTextSubTitle2()
+    self.__ui:setTextSubTitle2("请选择加速修炼消耗精力：")
+end
+
+function XiuLianPresenter:setTextSubTitle3()
+    self.__ui:setTextSubTitle3("请选择加速修炼消耗"..self:getTiLiName().."：")
+end
+
+function XiuLianPresenter:setTextXinShenNum()
+    self.__ui:setTextXinShenNum("心神："..self._xinshen.."/"..self._xinshenMax)
+end
+
+function XiuLianPresenter:setTextTiLiNum()
+    self.__ui:setTextTiLiNum(self:getTiLiName().."：" .. self._tili .. "/" .. self._tiliMax)
+end
+
+function XiuLianPresenter:getJingMax()
+    return math.floor(math.min(self.__xiuLianSystem:getCanSelectJingMax(),self._player:getAttr("jing")))
+end
+
+function XiuLianPresenter:getTiLiMax()
+    return math.floor(math.min(self.__xiuLianSystem:getCanSelectTiLiMax(),self._tili))
+end
+
+function XiuLianPresenter:setListView()
+    local retArray = {}
+
+    table.insert(retArray,{title = "心神：",content = self._xinshen.."→"..math.max(self._xinshen - self.__xiuLianSystem:getCostXinShen(),0)})
+
+    table.insert(retArray,{title = "精力：",content = math.floor(self._player:getAttr("jing")).."→"..math.floor(self._player:getAttr("jing")) - self._selectJing})
+
+    table.insert(retArray, {title = self:getTiLiName().."：", content = self._tili .. "→" .. self._tili - self._selectTiLi})
+
+    local durableText = ""
+
+    if self.__xiuLianSystem:checkDummyDurableIsUnlimit() then 
+        durableText = "不损耗耐久"
+    else
+        durableText = math.floor(self._dummy.durable).."→"..math.floor(self._dummy.durable) - self.__xiuLianSystem:getPredictCostDurable()
+    end
+
+    table.insert(retArray,{title = "假人耐久：",content = durableText})
+
+    local hour,min,sec = Helper:sec2timeDsc(self.__xiuLianSystem:calXiuLianTime())
+
+    table.insert(retArray,{title = "修炼时间：",content = hour.."小时"..min.."分钟"..sec.."秒"})
+
+    hour,min,sec = Helper:sec2timeDsc(self.__xiuLianSystem:getXiuLianSpeedUpTime())
+
+    table.insert(retArray,{title = "节省时间：",content = hour.."小时"..min.."分钟"..sec.."秒",tipVisible = true,tipText = "修炼节省时间构成：\n1、精力加速节省时间\n2、长生诀(阳)节省时间\n3、家具假人节省时间\n4、"..self:getTiLiName().."加速节省时间"})
+
+    table.insert(retArray,{title = "修炼武学：",content = self._skill.name})
+
+    table.insert(retArray,{title = "等级变化：",content = self._skillLv.."→"..self._player:getSkillLv(self._skillId, self.__xiuLianSystem:getPredictExp())})
+
+    table.insert(retArray,{title = "增加经验：",content = self.__xiuLianSystem:getPredictExp()})
+
+    self.__ui:setListView(retArray)
+end
+
+function XiuLianPresenter:setSelectLvText()
+    self.__ui:setSelectLvText(tostring(self._addSelectSkillLv))
+end
+
+function XiuLianPresenter:setSelectJingNum()
+    self.__ui:setSelectJingNum(self._selectJing)
+end
+
+function XiuLianPresenter:setSelectTiLiNum()
+    self._selectTiLi = math.min(self._selectTiLi,self:getTiLiMax())
+
+    self.__ui:setSelectTiLiNum(tostring(self._selectTiLi))
+end
+
+function XiuLianPresenter:changeLvResfesh()
+    self.__xiuLianSystem:setSelectLv(self._addSelectSkillLv)
+
+    self:setSelectLvText()
+
+    self:refreshButtonLv()
+end
+
+function XiuLianPresenter:setMaxJing()
+	self._selectJing = self:getJingMax()
+end
+
+function XiuLianPresenter:changeJingResfesh()
+    self._selectJing = math.min(self._selectJing,self:getJingMax())
+
+    self.__xiuLianSystem:setSelectJing(self._selectJing)
+
+    self:setSelectJingNum()
+
+    self:refreshButtonJing()
+end
+
+function XiuLianPresenter:changeTiLiResfesh()
+    self._selectTiLi = math.min(self._selectTiLi,self:getTiLiMax())
+
+    self.__xiuLianSystem:setSelectTiLi(self._selectTiLi)
+
+    self:setSelectTiLiNum()
+
+    self:refreshButtonTiLi()
+end
+
+function XiuLianPresenter:createBeganFunc(callback)
+    local function retFunc()
+        local currTime = GetTime()
+
+        if currTime - self._touchTime < 0.3 then
+            return
+        end
+
+        self._touchTime = currTime
+
+        self:clearHandle()
+
+        local total_time = 0
+
+        self._handle =
+            self:schedule(
+            function(ft)
+                total_time = total_time + ft
+                if total_time > 1.25 then
+                   callback()
+                end
+            end
+        )
+    end
+    return retFunc
+end
+
+function XiuLianPresenter:clearHandle()
+    if self._handle ~= nil then
+        self:unschedule(self._handle)
+        self._handle = nil
+    end
+end
+
+function XiuLianPresenter:setButtonLv1()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "-10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("距武学目标最小值不足10级")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+    if self._addSelectSkillLv - 10 >= self.__xiuLianSystem:getXiuLianSelectMinLv(self._jibenSkillLv) then
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._addSelectSkillLv - 10 < self.__xiuLianSystem:getXiuLianSelectMinLv(self._jibenSkillLv) then
+                self:clearHandle()
+                return
+            end
+
+            self._addSelectSkillLv = self._addSelectSkillLv - 10
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._addSelectSkillLv = self._addSelectSkillLv - 10
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonLv1(retData)
+end
+
+function XiuLianPresenter:setButtonLv2()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "-1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("已达武学目标最小值")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+    if self._addSelectSkillLv - 1 >= self.__xiuLianSystem:getXiuLianSelectMinLv(self._jibenSkillLv) then
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._addSelectSkillLv - 1 < self.__xiuLianSystem:getXiuLianSelectMinLv(self._jibenSkillLv) then
+                self:clearHandle()
+                return
+            end
+
+            self._addSelectSkillLv = self._addSelectSkillLv - 1
+            
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._addSelectSkillLv = self._addSelectSkillLv - 1
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+		end
+    end
+
+    self.__ui:setButtonLv2(retData)
+end
+
+function XiuLianPresenter:checkAddLv(addLv,isPopText)
+    if self._addSelectSkillLv + addLv > self._skillLvLimit then
+        if isPopText then
+            PopText("武学等级达到上限，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    local dummyLv = self.__xiuLianSystem:getDummyBreakLvBuff()
+    if self._jibenSkillLv == nil or self._addSelectSkillLv + addLv > self._jibenSkillLv + 1 + dummyLv then
+        if isPopText then
+            PopText("基本功火候未到，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    if self._addSelectSkillLv + addLv > self._player:getLv() then
+        if isPopText then
+            PopText("实战经验不足，无法提升武学目标等级")
+        end
+        return false
+    end
+    
+    if self.__xiuLianSystem:getXinShenTime() < self.__xiuLianSystem:getXiuLianMinTimeByLv(self._addSelectSkillLv + addLv) then
+        if isPopText then
+            PopText("心神不足，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    if self.__xiuLianSystem:getDummyCanXiuLianTime() < self.__xiuLianSystem:getXiuLianMinTimeByLv(self._addSelectSkillLv + addLv) then
+        if isPopText then
+            PopText("假人耐久不足，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    if self.__xiuLianSystem:getXiuLianMinTimeByLv(self._addSelectSkillLv + addLv) > self.__xiuLianSystem:getXiuLianTimeLimit() then
+        if isPopText then
+            PopText("已达修炼最长时间，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    if self._addSelectSkillLv + addLv > self._afterSkillLv then
+        if isPopText then
+            PopText("已达本次修炼目标等级最大值，无法提升武学目标等级")
+        end
+        return false
+    end
+
+    return true
+end
+
+function XiuLianPresenter:setButtonLv3()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "+1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            self:checkAddLv(1,true)
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+    if self:checkAddLv(1,false) then
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self:checkAddLv(1,true) == false then
+                self:clearHandle()
+                return
+            end
+
+            self._addSelectSkillLv = self._addSelectSkillLv + 1
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._addSelectSkillLv = self._addSelectSkillLv + 1
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonLv3(retData)
+end
+
+function XiuLianPresenter:setButtonLv4()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "+10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            self:checkAddLv(10,true)
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+    if self:checkAddLv(10,false) then
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self:checkAddLv(10,true) == false then
+                self:clearHandle()
+                return
+            end
+
+            self._addSelectSkillLv = self._addSelectSkillLv + 10
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._addSelectSkillLv = self._addSelectSkillLv + 10
+
+            self:changeLvResfesh()
+
+			self:setMaxJing()
+
+            self:changeJingResfesh()
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonLv4(retData)
+end
+
+function XiuLianPresenter:setButtonJing1()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "-10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("距精力消耗最小值不足10")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectJing - 10 >= 0 then
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._selectJing - 10 < 0 then
+                self:clearHandle()
+                return
+            end
+
+            self._selectJing = self._selectJing - 10
+
+            self:changeJingResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._selectJing = self._selectJing - 10
+
+            self:changeJingResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonJing1(retData)
+end
+
+function XiuLianPresenter:setButtonJing2()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "-1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("已达精力消耗最小值")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectJing - 1 >= 0 then
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._selectJing - 1 < 0 then
+                self:clearHandle()
+                return
+            end
+
+            self._selectJing = self._selectJing - 1
+
+            self:changeJingResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._selectJing = self._selectJing - 1
+
+            self:changeJingResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonJing2(retData)
+end
+
+function XiuLianPresenter:setButtonJing3()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "+1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+    if self._selectJing + 1 > self._player:getAttr("jing") then
+        retData["endedFunc"] = function()
+            PopText("精力不足，无法增加精力消耗")
+        end
+    elseif self._selectJing + 1 > self.__xiuLianSystem:getCanSelectJingMax() then
+        retData["endedFunc"] = function()
+            PopText("消耗已达当前修炼时长上限，无法增加精力消耗")
+        end
+    else
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._selectJing + 1 > self:getJingMax() then
+                self:clearHandle()
+                return
+            end
+
+            self._selectJing = self._selectJing + 1
+
+            self:changeJingResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._selectJing = self._selectJing + 1
+
+            self:changeJingResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonJing3(retData)
+end
+
+function XiuLianPresenter:setButtonJing4()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "+10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectJing + 10 > self._player:getAttr("jing") then
+        retData["endedFunc"] = function()
+            PopText("精力不足，无法增加精力消耗")
+        end
+    elseif self._selectJing + 10 > self.__xiuLianSystem:getCanSelectJingMax() then
+        retData["endedFunc"] = function()
+            PopText("消耗已达当前修炼时长上限，无法增加精力消耗")
+        end
+     
+    else
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] = self:createBeganFunc(function()
+            if self._selectJing + 10 > self:getJingMax() then
+                self:clearHandle()
+                return
+            end
+
+            self._selectJing = self._selectJing + 10
+
+            self:changeJingResfesh()
+
+            self:setListView()
+        end)
+
+        retData["endedFunc"] = function()
+			self._selectJing = self._selectJing + 10
+
+            self:changeJingResfesh()
+
+            self:setListView()
+
+			self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+			self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonJing4(retData)
+end
+
+function XiuLianPresenter:setButtonConfirm()
+    self.__ui:setButtonConfirm("开始修炼",function()
+        if self.__callback then
+            self.__callback()
+        end
+
+        self:hideLayer()
+    end)
+end
+
+function XiuLianPresenter:setButtonBack()
+    self.__ui:setButtonBack(
+        function()
+            self:hideLayer()
+        end
+    )
+end
+
+
+function XiuLianPresenter:setButtonXinShen()
+    self.__ui:setButtonXinShen(
+        "回复心神",
+        function()
+            self._player:getXinShenSystem():getItemMap(function(ok, xinShenData)
+                if ok then
+                    self._player:getXinShenSystem():getXinShenRecoverStartTime(function(ok, recoverData)
+                        if ok then
+                            HttpManagerEx:getTime(function(status, errcode, errmsg, data, isEncrypted)
+                                if status == 200 and errcode == 0 and data.time ~= nil then
+                                    SetTime(tonumber(data.time))
+                                    PopupLayerController:showLayer("XinShenRecoveryPresenter",function(layer)
+                                        layer:setXinShen(self._xinshen)
+                                        layer:setXinShenMax(self._xinshenMax)
+                                        layer:setRecoverTime(recoverData.time)
+                                        layer:setRecoverItemMap(xinShenData.itemMap)
+                                        layer:setCallBack(function(xinshenNum)
+                                            self:setXinShen(xinshenNum)
+                                            self.__xiuLianSystem:setXinShen(xinshenNum)
+                                            self:setTextXinShenNum()
+                                            self._afterSkillLv = self.__xiuLianSystem:calXiuLianLvLimit(self._jibenSkillLv)
+                                            self:setListView()
+                                            self:refreshButtonLv()
+                                        end)
+                                        layer:showLayer()
+                                    end)   
+                                else
+                                    PopText(errmsg)
+                                end
+                            end)
+                        else
+                            local msg = recoverData
+                            PopText(msg)
+                        end
+                    end)
+                else
+                    PopText(data)
+                end
+            end)
+        end
+    )
+end
+
+function XiuLianPresenter:hideLayer()
+    PopupLayerController:hideLayer(
+        "XiuLianPresenter",
+        function(layer)
+            self.__ui:hideUI()
+        end
+    )
+end
+
+function XiuLianPresenter:setButtonTiLi1()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "-10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("距"..self:getTiLiName().."消耗最小值不足10")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectTiLi - 10 >= 0 then
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] =
+            self:createBeganFunc(
+            function()
+                if self._selectTiLi - 10 < 0 then
+                    self:clearHandle()
+                    return
+                end
+
+                self._selectTiLi = self._selectTiLi - 10
+
+                self:changeTiLiResfesh()
+
+                self:setListView()
+            end
+        )
+
+        retData["endedFunc"] = function()
+            self._selectTiLi = self._selectTiLi - 10
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+            self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+            self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonTiLi1(retData)
+end
+
+function XiuLianPresenter:setButtonTiLi2()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "-1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+            PopText("已达"..self:getTiLiName().."消耗最小值")
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectTiLi - 1 >= 0 then
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] =
+            self:createBeganFunc(
+            function()
+                if self._selectTiLi - 1 < 0 then
+                    self:clearHandle()
+                    return
+                end
+
+                self._selectTiLi = self._selectTiLi - 1
+
+                self:changeTiLiResfesh()
+
+                self:setListView()
+            end
+        )
+
+        retData["endedFunc"] = function()
+            self._selectTiLi = self._selectTiLi - 1
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+            self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+            self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonTiLi2(retData)
+end
+
+function XiuLianPresenter:setButtonTiLi3()
+    local retData = {
+        image = "Image/UI/AttrUI/leftgrey.png",
+        title = "+1",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectTiLi + 1 > self._tili then
+        retData["endedFunc"] = function()
+            PopText(self:getTiLiName().."不足，无法增加"..self:getTiLiName().."消耗")
+        end
+    elseif self._selectTiLi + 1 > self.__xiuLianSystem:getCanSelectTiLiMax() then
+        retData["endedFunc"] = function()
+            PopText("消耗已达当前修炼时长上限，无法增加"..self:getTiLiName().."消耗")
+        end
+    else
+        retData["image"] = "Image/UI/AttrUI/leftbright.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] =
+            self:createBeganFunc(
+            function()
+                if self._selectTiLi + 1 > self:getTiLiMax() then
+                    self:clearHandle()
+                    return
+                end
+
+                self._selectTiLi = self._selectTiLi + 1
+
+                self:changeTiLiResfesh()
+
+                self:setListView()
+            end
+        )
+
+        retData["endedFunc"] = function()
+            self._selectTiLi = self._selectTiLi + 1
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+            self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+            self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonTiLi3(retData)
+end
+
+function XiuLianPresenter:setButtonTiLi4()
+    local retData = {
+        image = "Image/UI/AttrUI/jiali02b.png",
+        title = "+10",
+        titleColor = {r = 255, g = 255, b = 255},
+        beganFunc = EMPTY_FUNC,
+        endedFunc = function()
+        end,
+        canceledFunc = EMPTY_FUNC
+    }
+
+    if self._selectTiLi + 10 > self._tili then
+        retData["endedFunc"] = function()
+            PopText(self:getTiLiName().."不足，无法增加"..self:getTiLiName().."消耗")
+        end
+    elseif self._selectTiLi + 10 > self.__xiuLianSystem:getCanSelectTiLiMax() then
+        retData["endedFunc"] = function()
+            PopText("消耗已达当前修炼时长上限，无法增加"..self:getTiLiName().."消耗")
+        end
+    else
+        retData["image"] = "Image/UI/AttrUI/jiali02.png"
+        retData["titleColor"] = {r = 19, g = 227, b = 30}
+        retData["beganFunc"] =
+            self:createBeganFunc(
+            function()
+                if self._selectTiLi + 10 > self:getTiLiMax() then
+                    self:clearHandle()
+                    return
+                end
+
+                self._selectTiLi = self._selectTiLi + 10
+
+                self:changeTiLiResfesh()
+
+                self:setListView()
+            end
+        )
+
+        retData["endedFunc"] = function()
+            self._selectTiLi = self._selectTiLi + 10
+
+            self:changeTiLiResfesh()
+
+            self:setListView()
+
+            self:clearHandle()
+        end
+        retData["canceledFunc"] = function()
+            self:clearHandle()
+        end
+    end
+
+    self.__ui:setButtonTiLi4(retData)
+end
+
+Helper:classDefNodeGetInstance(XiuLianPresenter)
+return XiuLianPresenter
+000000000000

@@ -1,0 +1,175 @@
+-- local SkillInfoTabBarUI = require("app.views.ui.SkillUI.SkillInfoTabBarUI")
+-- local SkillPrepareItemUI = require("app.views.ui.SkillUI.SkillPrepareItemUI")
+-- local SkillPreparePopLayer = require("app.views.layer.SkillLayer.SkillPreparePopLayer")
+
+-- local ActiveZhaoPrepareLayer = class("ActiveZhaoPrepareLayer", LayerEx)
+
+-- function ActiveZhaoPrepareLayer:create()
+-- 	local p = ActiveZhaoPrepareLayer:new()
+-- 	p:init()
+-- 	return p
+-- end
+
+-- function ActiveZhaoPrepareLayer:init()
+-- 	self._UI = require("Layer/SkillUI/ActiveZhaoPrepareUI.lua").create()['root']
+-- 	self._UI:addTo(self)
+
+-- 	Helper:convertUI(self) -- 获得所有子节点
+-- 	self:crateZhaoList()
+-- end
+
+-- -----------------------------------------------------------------------------------------------------------
+-- -- @author XiaoZhiWei
+-- -- @time 2017/01/10 09:57:02
+-- -- @desc 设置tab切换栏
+-- function ActiveZhaoPrepareLayer:setChangeTab(index)
+-- 	local items = self.ListView_tab:getItems()
+-- 	local list = 
+-- 	{
+-- 		{
+-- 			name = "兵器",
+-- 			zhaoType = "bingqi"
+-- 		},
+-- 		{
+-- 			name = "拳脚",
+-- 			zhaoType = "quanjiao"
+-- 		}
+-- 	}
+-- 	if MapIsEmpty(items) == true then
+-- 		for i,v in ipairs(list) do
+-- 			local item = SkillInfoTabBarUI:create()
+-- 			item:setName(v.name)
+-- 			self.ListView_tab:pushBackCustomItem(item)
+-- 			item:releaseFunc(function()
+-- 				self:changeLight(i)
+-- 				self:initZhaoList(v.zhaoType) -- 初始化
+-- 			end)
+-- 			-- 第一次出来的时候 只亮第一个
+-- 			if i ~= 1 then
+-- 			else
+-- 				self:changeLight(i)
+-- 				self:initZhaoList(v.zhaoType) -- 默认初始化 是兵器
+-- 			end
+-- 		end
+-- 	else
+-- 		self:changeLight(index)
+-- 		self:initZhaoList(list[index].zhaoType)
+-- 	end
+-- end
+
+-- -----------------------------------------------------------------------------------------------------------
+-- -- @author XiaoZhiWei
+-- -- @time 2017/01/10 10:29:38
+-- -- @desc 设置切换栏的 亮或黑
+-- function ActiveZhaoPrepareLayer:changeLight(index)
+-- 	if index == nil then
+-- 		return
+-- 	end
+-- 	local items = self.ListView_tab:getItems()
+-- 	for i, item in ipairs(items) do
+-- 		if i == index then
+-- 			item:light()
+-- 		else
+-- 			item:dark()
+-- 		end
+-- 	end
+-- end
+
+-- -----------------------------------------------------------------------------------------------------------
+-- -- @author XiaoZhiWei
+-- -- @time 2017/01/10 10:41:35
+-- -- @desc 创建招式列表
+-- function ActiveZhaoPrepareLayer:crateZhaoList()
+-- 	for i=1,6 do
+-- 		local item = SkillPrepareItemUI:create()
+-- 		self.ListView_prepare:pushBackCustomItem(item)
+-- 	end
+-- end
+
+-- -----------------------------------------------------------------------------------------------------------
+-- -- @author XiaoZhiWei
+-- -- @time 2017/01/11 10:49:11
+-- -- @desc 初始化招式列表
+-- function ActiveZhaoPrepareLayer:initZhaoList(zhaoType)
+-- 	local role = User:getRole()
+-- 	local list = role:getZhaoPrepareListWithZhaoType(zhaoType)
+-- 	local items = self.ListView_prepare:getItems()
+-- 	for i,item in ipairs(items) do
+-- 		item.Text_name:setString("招式"..tostring(i))
+-- 		item.Image_selectSkillTextBack:setVisible(false)
+-- 		item.Text_stageDsc:setVisible(false)
+-- 		local prepareList = {} 
+-- 		if list["zhaoshi"..tostring(i)] ~= nil then
+-- 			-- 获取当前装备的招式的属性
+-- 			item.Text_lv:setVisible(true)
+-- 			item.Text_selectSkill:enableOutline(cc.c4b(17, 18, 18, 255), 5)
+-- 			item.Text_selectSkill:setTextColor({r = 255, g = 255, b = 255})
+-- 			item.Text_selectSkill:setFontSize(48)
+-- 			item.Text_selectSkill:setString(list["zhaoshi"..tostring(i)])
+-- 			item.Text_lv:setString(tostring(i).."重")
+-- 			prepareList = self:getCanPrepareZhaoList(role, zhaoType, list["zhaoshi"..tostring(i)])
+-- 		else
+-- 			item:setButtonText("点击可装备招式")
+-- 			item.Text_selectSkill:enableOutline(cc.c4b(213, 213, 213, 213), 0)
+-- 			item.Text_selectSkill:setTextColor({r = 0, g = 0, b = 0})
+-- 			item.Text_selectSkill:setFontSize(42)
+-- 			item.Text_lv:setVisible(false)
+-- 			prepareList = self:getCanPrepareZhaoList(role, zhaoType)
+-- 		end
+		
+-- 		item.Button_selectSkill:releaseFunc(function()
+-- 			-- 获取可准备技能的列表
+-- 			PopupLayerController:showLayer("SkillPreparePopLayer", function(layer)
+-- 				layer.skillPrepareLayer = self
+-- 				layer:updatePrepareZhaoList(prepareList, switch(zhaoType, {bingqi = "兵器", quanjiao = "拳脚"}), i)
+-- 				layer:showWithFade(true, 100)	
+-- 			end)
+-- 		end)
+-- 	end
+-- end
+
+-- -----------------------------------------------------------------------------------------------------------
+-- -- @author XiaoZhiWei
+-- -- @time 2017/01/11 11:23:46
+-- -- @desc 获取可装备招式的列表 参数: 角色, 招式类型, 当前招式Id
+-- function ActiveZhaoPrepareLayer:getCanPrepareZhaoList(role, zhaoType, currZhaoId)
+-- 	-- 轻功招式列表,内功招式列表,武功招式列表
+-- 	local qgZhaoList, ngZhaoList, wgZhaoList = {}, {}, {}
+-- 	local prepareSkills = role:getSkillPrepare() -- 获取当前准备招式的列表
+-- 	local retList = {}
+
+-- 	-- 获取当前装备的兵器
+-- 	local currWeaponType = role:getCurrTypeByWeapon()
+
+-- 	-- 如果准备的武功列表是空的, 或者  内功,轻功,拳脚,当前装备的兵器所对应的武功都未准备 
+-- 	if MapIsEmpty(prepareSkills) == true or (prepareSkills.qinggong == nil and prepareSkills.neigong == nil and prepareSkills.quanjiao1 == nil and prepareSkills[currWeaponType] == nil) then
+-- 		PopText("您还没有准备任何武功,请先准备好武功再来准备招式")
+-- 		return
+-- 	else
+-- 		-- 获取准备的武功所对应的招式
+-- 		qgZhaoList = role:getSkillZhaoList(prepareSkills.qinggong)
+-- 		ngZhaoList = role:getSkillZhaoList(prepareSkills.neigong)
+-- 		wgZhaoList = {}
+-- 		if currWeaponType == "quanjiao" then
+-- 			wgZhaoList = role:getSkillZhaoList(prepareSkills.quanjiao1)
+-- 			wgZhaoList = table.mergeMap(wgZhaoList, role:getSkillZhaoList(prepareSkills.quanjiao2))
+-- 		else
+-- 			wgZhaoList = role:getSkillZhaoList(prepareSkills[currWeaponType])
+-- 		end
+
+-- 		retList = table.mergeMap(wgZhaoList, ngZhaoList)
+-- 		retList = table.mergeMap(retList, qgZhaoList)
+-- 	end
+-- 	-- 排除当前已准备的招式
+-- 	if retList[currZhaoId] ~= nil then
+-- 		retList[currZhaoId] = nil
+-- 	end
+	
+-- 	return retList
+-- end
+
+-- function ActiveZhaoPrepareLayer:onResume()
+-- 	self:setChangeTab(1) 
+-- end
+
+-- return ActiveZhaoPrepareLayer0000000000
