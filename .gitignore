@@ -3,7 +3,6 @@ __pycache__/
 *.log
 
 # Captured network / binary artifacts (not source)
-so/
 *.har
 get_game_config_raw.bin
 
