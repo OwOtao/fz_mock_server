@@ -27,15 +27,16 @@ SKIP_SIGN_URLS = ["get_time", "get_token", "report_cheat", "getWebConfig"]
 # 服务端签名与客户端校验必须使用同一个值
 T_TOKEN = "mock_fzjh_token_2026"
 
-# 存档/账号落盘路径。None 表示仅内存; 默认写到 mock_server/state.json
+# 存档/账号落盘路径。None 表示仅内存; 运行时数据统一写入 mock_server/data
 import os as _os
 _ROOT = _os.path.dirname(_os.path.abspath(__file__))
-STATE_JSON_PATH = _os.path.join(_ROOT, "state.json")
+DATA_DIR = _os.path.join(_ROOT, "data")
+STATE_JSON_PATH = _os.path.join(DATA_DIR, "state.json")
 STATE_AUTOSAVE = True
 # 真实 RoleData 按 userid 分文件落盘
-ARCHIVES_DIR = _os.path.join(_ROOT, "archives")
+ARCHIVES_DIR = _os.path.join(DATA_DIR, "archives")
 # 启动时可导入的种子档(真实本地 RoleData.json); 仅在对应 userid 文件不存在时导入
-SEED_ROLEDATA_PATH = _os.path.join(_ROOT, "..", "frida", "local_save", "RoleData.json")
+SEED_ROLEDATA_PATH = _os.path.join(DATA_DIR, "seed", "RoleData.json")
 SEED_IMPORT_ON_START = True
 # 后续注册账号扩展预留: 新注册默认空号(不克隆种子档)
 REGISTER_CLONE_SEED = False

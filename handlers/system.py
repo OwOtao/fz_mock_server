@@ -42,6 +42,65 @@ def _header_userid(ctx):
         return 0
 
 
+def _seed_userid(state):
+    """无本地档启动时回落到 source=seed 的 RoleData, 避免空 userid 新开号。"""
+    snapshot = state.snapshot()
+    accounts = snapshot.get("accounts") or {}
+    for key, account in accounts.items():
+        if not isinstance(account, dict):
+            continue
+        if account.get("source") != "seed":
+            continue
+        try:
+            userid = int(account.get("userid") or key)
+        except (TypeError, ValueError):
+            continue
+        try:
+            if state.get_archive(userid) is not None:
+                return userid
+        except ValueError:
+            continue
+    return None
+
+
+def _bind_active_archive(ctx, userid):
+    device_uuid = ctx.get("headers", {}).get("uuid")
+    if not device_uuid or userid is None:
+        return
+    try:
+        ctx["state"].set_active_archive(device_uuid, userid)
+    except (KeyError, ValueError):
+        pass
+
+
+def _fallback_archive_userid(ctx, userid):
+    device_uuid = ctx.get("headers", {}).get("uuid")
+    active = ctx["state"].get_active_archive(device_uuid) if device_uuid else None
+    if active:
+        try:
+            mapped = int(active.get("userid") or 0)
+        except (TypeError, ValueError):
+            mapped = 0
+        if mapped > 0:
+            try:
+                if ctx["state"].get_archive(mapped) is not None:
+                    return mapped
+            except ValueError:
+                pass
+    if userid is not None and userid > 0:
+        try:
+            if ctx["state"].get_archive(userid) is not None:
+                return userid
+        except ValueError:
+            pass
+    seed = _seed_userid(ctx["state"])
+    if seed:
+        return seed
+    if userid is not None and userid > 0:
+        return userid
+    return None
+
+
 def _body_dict(ctx):
     body = ctx.get("body")
     return body if isinstance(body, dict) else {}
@@ -55,13 +114,14 @@ def _route_tail(ctx, index=0, default=""):
 @route(["POST"], "create_account")
 def create_account(ctx):
     """errcode=0 开始游戏; 1 上传并删除; 2 覆盖档案; 201 公告。
-    本地有档但 userid 无效时, 客户端会带 userid=-1/-3, 需分配新号。"""
+    无本地档时客户端会带 userid=0/-1, 回落到种子档; 带 email 的注册仍开新号。"""
     requested = _requested_userid(ctx)
     userid = requested if requested > 0 else None
     body = ctx.get("body")
     item = _first_dict(body)
     email = item.get("email")
     if email is None:
+        userid = _fallback_archive_userid(ctx, userid)
         account = ctx["state"].ensure_account(userid)
     else:
         try:
@@ -76,6 +136,7 @@ def create_account(ctx):
         archive["userid"] = userid
         archive.setdefault("dataVer", 1)
         ctx["state"].put_archive(userid, archive)
+    _bind_active_archive(ctx, userid)
     return build_response_body({"userid": userid})
 
 
@@ -91,17 +152,11 @@ def create_role(ctx):
 
 @route(["GET"], "download_user_file_2")
 def download_user_file_2(ctx):
-    userid = _header_userid(ctx)
-    device_uuid = ctx.get("headers", {}).get("uuid")
-    active = ctx["state"].get_active_archive(device_uuid) if device_uuid else None
-    if active:
-        try:
-            userid = int(active.get("userid") or userid)
-        except (TypeError, ValueError):
-            pass
-    archive = ctx["state"].get_archive(userid) if userid > 0 else None
+    userid = _fallback_archive_userid(ctx, _header_userid(ctx))
+    archive = ctx["state"].get_archive(userid) if userid and userid > 0 else None
     if archive is None:
         return build_response_body([], errcode=404, errmsg="user archive not found")
+    _bind_active_archive(ctx, userid)
     return build_response_body([dict(archive)])
 
 

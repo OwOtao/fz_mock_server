@@ -535,6 +535,56 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(response["errcode"], 0)
         self.assertEqual(store.get_account(userid)["email"], "new@example.com")
         self.assertEqual(store.get_userid_by_email("NEW@example.com"), userid)
+        self.assertNotEqual(userid, 9048162373)
+
+    def test_empty_login_falls_back_to_seed_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            seed = os.path.join(directory, "RoleData.json")
+            with open(seed, "w", encoding="utf-8") as handle:
+                json.dump(
+                    {
+                        "userid": 9048162373,
+                        "name": "和风无声",
+                        "lv": 550,
+                        "serverActionSystem": {"dataVersion": 2, "requestId": 1},
+                    },
+                    handle,
+                    ensure_ascii=False,
+                )
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            store.import_seed_roledata(seed, overwrite=False)
+            created = create_account({
+                "state": store,
+                "headers": {"userid": "0", "uuid": "device-empty"},
+                "body": {},
+            })
+            self.assertEqual(created["errcode"], 0)
+            self.assertEqual(created["data"]["userid"], 9048162373)
+            empty = store.ensure_account(None)
+            self.assertNotEqual(empty["userid"], 9048162373)
+            recovered = create_account({
+                "state": store,
+                "headers": {"userid": str(empty["userid"])},
+                "body": {},
+            })
+            self.assertEqual(recovered["data"]["userid"], 9048162373)
+            download = download_user_file_2({
+                "state": store,
+                "headers": {"userid": str(empty["userid"])},
+            })
+            self.assertEqual(download["errcode"], 0)
+            self.assertEqual(download["data"][0]["userid"], 9048162373)
+            self.assertEqual(download["data"][0]["name"], "和风无声")
+            registered = create_account({
+                "state": store,
+                "headers": {"userid": "0"},
+                "body": {"userid": 0, "email": "new@example.com"},
+            })
+            self.assertEqual(registered["errcode"], 0)
+            self.assertNotEqual(registered["data"]["userid"], 9048162373)
 
     def test_create_account_rejects_duplicate_email(self):
         store = StateStore()

@@ -33,7 +33,7 @@ def request(method, path, payload=None, headers=None, encrypt=True):
 
 
 def main():
-    seed = json.loads((ROOT.parent / "frida" / "local_save" / "RoleData.json").read_text(encoding="utf-8"))
+    seed = json.loads(Path(config.SEED_ROLEDATA_PATH).read_text(encoding="utf-8"))
     userid = int(seed["userid"])
 
     listed = request("GET", "get_archive_list", headers={"userid": userid, "uuid": "verify-1"})
@@ -65,7 +65,7 @@ def main():
     )
     print("upload", uploaded)
 
-    archived = json.loads((ROOT / "archives" / ("%d.json" % userid)).read_text(encoding="utf-8"))
+    archived = json.loads((Path(config.ARCHIVES_DIR) / ("%d.json" % userid)).read_text(encoding="utf-8"))
     print("disk_schema", archived.get("schema"), "disk_name", archived.get("role", {}).get("name"), "disk_dataVer", archived.get("dataVer"))
 
 
