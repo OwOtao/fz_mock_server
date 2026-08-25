@@ -9,9 +9,9 @@ from server import route
 
 
 PUBLIC_KEYS = [
-    {"k": "07818f3a34e8165227b0dc6b7e69ea57", "h": "FZJH02"},
-    {"k": "26549f871287ba9e838a057a7ffac1bc", "h": "FZJH03", "i": "PcIQIZifRalhZ88n"},
-    {"k": "07818f3a34e8165227b0dc6b7e69ea57", "h": "FXXF03"},
+    {"k": "0228482afef78be8b948ad8b08b24da7", "h": "FZJH02"},
+    {"k": "880e42c8075b8f400cd72f21451c0866", "h": "FZJH03", "i": "PcIQIZifRalhZ88n"},
+    {"k": "0228482afef78be8b948ad8b08b24da7", "h": "FXXF03"},
 ]
 
 # get_game_config 的 data 字段: 客户端 createGetResponseFunction 会对

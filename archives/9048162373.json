@@ -1,6 +1,18 @@
 {
-  "dataVer": 92,
-  "record": {},
+  "dataVer": 117,
+  "record": {
+    "jingMaxRecord": {
+      "part": {
+        "baseValue": 494,
+        "qiXiJingMaxAddValue": 0,
+        "qiYuCountAddValue": 1100,
+        "qiyuCount": 11,
+        "xingZhenAddValue": 0,
+        "yueKaAddValue": 0
+      },
+      "value": 1594
+    }
+  },
   "role": {
     "AsleepBuff": [],
     "DispatchTask": [],
@@ -30,22 +42,24 @@
     },
     "Is_Lose": false,
     "PrepareTalent": [],
-    "_ItemOnlyId": 5425,
+    "_ItemOnlyId": 5442,
     "__isNotSerializable": false,
     "_currKeTouTime": 1787284245.4658,
     "_dayFlags": {
       "flags": {
         "guanYingHongDian": 0,
-        "拜访任务每日限制": 2,
+        "isUpdateTime": true,
+        "拜访任务每日限制": 6,
         "江湖怪客列表": [
           {
             "id": 2103,
             "name": "雷雅"
           }
         ],
-        "第一次管家交谈": 1
+        "第一次管家交谈": 1,
+        "飞贼人数": 3
       },
-      "time": 1787630219.8972
+      "time": 1787644330.1183
     },
     "_flags": {
       "PVP战斗状态": "离线模式",
@@ -65,7 +79,7 @@
       "fb12": 1600503421.4662,
       "fb13": 1600504344.0997,
       "fb14": 1601211330.7993,
-      "fb15": 1601384316.7,
+      "fb15": 1787638145.4676,
       "fb16": 1601269176.5665,
       "fb17": 1601212010.1999,
       "fb18": 1601429604.2995,
@@ -77,7 +91,7 @@
       "fb21": 1601440964.3329,
       "fb301": 1601375588.833,
       "fb302": 1601375484.7997,
-      "fb619": 1787212840.4678,
+      "fb619": 1787637764.888,
       "isShowAgreement": true,
       "itemRecordTime": 1609933652.0666,
       "pop_login": 1602552772.8667,
@@ -86,14 +100,14 @@
       "task16": 5,
       "task20": 1,
       "taskRewardFlag": 1,
-      "user_fb_14750": 1787630880.1346,
+      "user_fb_14750": 1787644570.3284,
       "visitTaskTalk": 1,
       "xinggongsan": 0,
       "主动任务物品": "nil",
       "主动切磋中": false,
       "五毒教": "false",
       "传送孤家集": 1,
-      "内力回复时间": 1787630874.6656,
+      "内力回复时间": 1787647372.4493,
       "冲穴真气": 32,
       "副本状态": "空闲中",
       "十大美女": 0,
@@ -113,7 +127,7 @@
       "峨眉山": "false",
       "嵩山": "false",
       "平复真气": 0,
-      "当前位置": "进入副本",
+      "当前位置": "离开副本",
       "慕容山庄": "false",
       "战斗脱离时间": 1787208293.5332,
       "扬州城": "false",
@@ -122,26 +136,26 @@
       "武功修炼类型": "jianfa",
       "武功镇": "false",
       "武当山": "false",
-      "气血回复时间": 1787630874.6656,
-      "气血最大值回复时间": 1787630874.6656,
+      "气血回复时间": 1787647372.4493,
+      "气血最大值回复时间": 1787647372.4493,
       "汝州": "false",
-      "游戏时间": 1787630879.6575,
+      "游戏时间": 1787647375.1879,
       "牛家村": "false",
-      "疲劳值刷新时间": 1787630877.6396,
+      "疲劳值刷新时间": 1787647333.8288,
       "百花谷": "false",
       "磕头时间": 1787284240.6919,
       "磕头次数": "3",
       "神兵": "Y",
-      "精力回复时间": 1787630818.9182,
+      "精力回复时间": 1787647230.1951,
       "精力开始回复时间": 1786000750.5767,
       "终南山": "false",
-      "经验潜能服用时间": 1787284195.7491,
-      "经验潜能次数": 18,
+      "经验潜能服用时间": 1787638137.7558,
+      "经验潜能次数": 0,
       "绝情谷": "false",
       "缉拿任务": 0,
       "苏州城": "false",
       "荆州城南": "false",
-      "获取奖励时间": 1787630182.1319,
+      "获取奖励时间": 1787644719.1519,
       "衡阳刘府": "false",
       "襄阳城": "false",
       "追击任务": 0,
@@ -152,7 +166,7 @@
       "锻造状态": "空闲",
       "长安城": "false",
       "长生诀时间": 0,
-      "限制消耗品服用时间": 1787284195.7491,
+      "限制消耗品服用时间": 1787638137.7558,
       "隐藏孝敬按钮": 1,
       "青城山": "false",
       "黄沙寨": "false",
@@ -173,7 +187,7 @@
       "21章日月重光完": 1,
       "QiXi_JingMax": 0,
       "__repairRoleSkillData": 3,
-      "_logIndex": 33,
+      "_logIndex": 34,
       "bagCkCount": 1,
       "fb16zm1": 0,
       "fb19zm1": 0,
@@ -183,7 +197,7 @@
       "fistsfeetmapwc": 0,
       "gszxbaodijiangli": 1,
       "haveGj": 1,
-      "itemRecordNum": 2188,
+      "itemRecordNum": 2192,
       "item_changshengjueshengji2": true,
       "item_changshengjueshengji3": true,
       "item_changshengjueshengji4": true,
@@ -279,6 +293,7 @@
       "给予百毒谱": 1,
       "给忘三生": 1,
       "给甘草": 1,
+      "腊八施粥": 0,
       "轩辕夏已死": 1,
       "送密令": 1,
       "送礼机关师": 0,
@@ -322,6 +337,7 @@
         "fb20_12": []
       },
       "fb209": [],
+      "fb619": [],
       "user_fb_14750": []
     },
     "_mapStates": {
@@ -441,10 +457,10 @@
       }
     },
     "_timeLimitFlags": {
-      "bf2006": {
-        "startTime": 0,
-        "timeLimit": 0,
-        "value": 0
+      "bf2092": {
+        "startTime": 1787644328.0346,
+        "timeLimit": 900,
+        "value": 1
       }
     },
     "accountId": 1430104,
@@ -679,14 +695,14 @@
     "con": 37,
     "createTime": 1600236281,
     "currCon": 87,
-    "currDex": 68,
+    "currDex": 78,
     "currInt": 33,
     "currMapId": "user_fb_14750",
-    "currStr": 71,
-    "currencyVersion": 14,
+    "currStr": 80,
+    "currencyVersion": 15,
     "cwCount": 0,
     "cwItems": [],
-    "dataVer": 92,
+    "dataVer": 117,
     "dead": 0,
     "deadReason": 0,
     "decorative": [
@@ -757,7 +773,7 @@
       }
     },
     "equipsBox": [],
-    "exp": 18644543.217943,
+    "exp": 20804370.292579,
     "expIncrementSpeed": 0,
     "family": {
       "level": 2,
@@ -773,7 +789,7 @@
     "firstCompleteMap": false,
     "forgeCount": 9,
     "forgeSkill": [],
-    "gamingTime": 3522133.2696461,
+    "gamingTime": 3538628.8000674,
     "gold": 31495,
     "gongxiandian": 0,
     "guanqiaLimit": 12,
@@ -788,8 +804,8 @@
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787276767.5089,
-          "status": 1
+          "startTime": 1787632599.9418,
+          "status": 0
         },
         "10010": {
           "currType": 3,
@@ -799,8 +815,8 @@
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787274883.5502,
-          "status": 0
+          "startTime": 1787632600.4165,
+          "status": 1
         },
         "10020": {
           "currType": 3,
@@ -810,7 +826,7 @@
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787274884.0262,
+          "startTime": 1787632600.7928,
           "status": 1
         },
         "10030": {
@@ -821,7 +837,7 @@
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787274885.372,
+          "startTime": 1787632601.7123,
           "status": 1
         },
         "10040": {
@@ -832,30 +848,30 @@
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787274885.7824,
+          "startTime": 1787632602.0914,
           "status": 1
         },
         "10050": {
           "currType": 3,
-          "dCount": 0,
+          "dCount": 1,
           "finishTime": 0,
           "isUseYaShi": 0,
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787187627.5288,
-          "status": 0
+          "startTime": 1787632602.5668,
+          "status": 1
         },
         "10060": {
           "currType": 3,
-          "dCount": 0,
+          "dCount": 1,
           "finishTime": 0,
           "isUseYaShi": 0,
           "kongfu": -1,
           "luck": -1,
           "shiSiZhenValue": 0,
-          "startTime": 1787187628.0347,
-          "status": 0
+          "startTime": 1787632603.3453,
+          "status": 1
         },
         "10070": {
           "currType": 3,
@@ -894,12 +910,12 @@
           "currType": 2,
           "dCount": 0,
           "extraLuck": 5,
-          "finishTime": 1787470737,
+          "finishTime": 1787891797,
           "isUseYaShi": 0,
-          "kongfu": 449.66666666667,
+          "kongfu": 462.88888888889,
           "luck": 45,
           "shiSiZhenValue": 0,
-          "startTime": 1787211537,
+          "startTime": 1787632597,
           "status": 1
         },
         "10110": {
@@ -914,7 +930,7 @@
           "status": 0
         }
       },
-      "__ver": 7
+      "__ver": 9
     },
     "hiddenMeridianData": {
       "acupointActivateFinishTime": 0,
@@ -1078,12 +1094,6 @@
       },
       {
         "count": 99,
-        "id": 5138,
-        "index": 23,
-        "itemId": "zhounianqidaoju1"
-      },
-      {
-        "count": 99,
         "id": 5137,
         "index": 21,
         "itemId": "zhounianqidaoju1"
@@ -1092,6 +1102,12 @@
         "count": 99,
         "id": 5136,
         "index": 17,
+        "itemId": "zhounianqidaoju1"
+      },
+      {
+        "count": 99,
+        "id": 5138,
+        "index": 23,
         "itemId": "zhounianqidaoju1"
       },
       {
@@ -1137,6 +1153,11 @@
         "itemId": "zhiqianlibao1"
       },
       {
+        "count": 3,
+        "id": 5429,
+        "itemId": "yuandan4"
+      },
+      {
         "count": 1,
         "id": 3190,
         "itemId": "xinshoulibao1"
@@ -1162,6 +1183,21 @@
         "count": 99,
         "id": 5161,
         "itemId": "shuang11daoju5"
+      },
+      {
+        "count": 1,
+        "id": 5426,
+        "itemId": "putuan012"
+      },
+      {
+        "count": 1,
+        "id": 5427,
+        "itemId": "putuan012"
+      },
+      {
+        "count": 1,
+        "id": 5428,
+        "itemId": "putuan012"
       },
       {
         "count": 15,
@@ -1263,6 +1299,11 @@
         "itemId": "huashan4"
       },
       {
+        "count": 99,
+        "id": 5430,
+        "itemId": "fuyuandan"
+      },
+      {
         "count": 7,
         "id": 8831,
         "index": 37,
@@ -1296,10 +1337,10 @@
         "upTemp": 15000
       },
       {
-        "count": 80,
+        "count": 79,
         "downTemp": 0,
         "id": 1878,
-        "index": 36,
+        "index": 51,
         "itemId": "dundifu",
         "itemmelting": 10,
         "melting": 100,
@@ -1370,7 +1411,7 @@
     "jingMax": 494,
     "kill": 74,
     "killPlayer": 0,
-    "kongfu": 455.88888888889,
+    "kongfu": 475.66666666667,
     "leftRightFightExp": 0,
     "letterTime": 0,
     "literaryBox": [
@@ -1546,7 +1587,7 @@
     "looks": 30,
     "luck": 40,
     "lunhui": 0,
-    "lv": 567,
+    "lv": 588,
     "mSkillUseRecord": {
       "firstUseTime": 0,
       "time": 0
@@ -1636,10 +1677,10 @@
       "meridianCount": 0
     },
     "meridianExp": 16000,
-    "money": 5779950.275176,
+    "money": 36277.275176,
     "monthFenShenFu": "N",
     "name": "和风无声",
-    "neiLiLimit": 14577.5,
+    "neiLiLimit": 14720,
     "neili": 29140,
     "neiliMax": 14570,
     "nodeRewards": [],
@@ -1649,7 +1690,7 @@
     "onlyId": 1565,
     "openMark": "",
     "openVisitTaskByMap": false,
-    "openVisitTaskTime": 1787628475.1327,
+    "openVisitTaskTime": 1787644328.0346,
     "panshi": 0,
     "pijuan": 200,
     "poison": [],
@@ -1668,7 +1709,7 @@
       "id": "mianju1010",
       "lv": 1
     },
-    "pot": 2264628,
+    "pot": 568284,
     "prayRoomId": "",
     "prepareWeapon": {
       "id": 3601,
@@ -1699,8 +1740,8 @@
     ],
     "primeryKey": "a7046b3d91160b9b0e832db7dab21ff4",
     "qaCollect": [],
-    "qi": 7494.668,
-    "qiMax": 7494.668,
+    "qi": 7512.224,
+    "qiMax": 7512.224,
     "qiPercent": 1,
     "qianNengDanRecords": {
       "qnd1000use": 878.35665927111,
@@ -1723,11 +1764,11 @@
       "homeland": "c4ca4238a0b923820dcc509a6f75849b",
       "xuanbingdong": "f60bf899cd0d0edf0b7b097159b07f71"
     },
-    "saveDataTime": 1787630876.8657,
+    "saveDataTime": 1787647371.835,
     "secCon": 50,
-    "secDex": 40,
+    "secDex": 50,
     "secInt": 18,
-    "secStr": 41,
+    "secStr": 50,
     "seeSkills": [
       "jibenqinfa",
       "jibenquanjiao",
@@ -1905,7 +1946,7 @@
     ],
     "selfCreatedSkillData": [],
     "serverActionSystem": {
-      "dataVersion": 92,
+      "dataVersion": 117,
       "requestId": 45
     },
     "sex": "男",
@@ -2148,6 +2189,10 @@
     },
     "skillSysVer": 1,
     "skills": {
+      "ViewOfHeart": {
+        "exp": 16,
+        "id": "ViewOfHeart"
+      },
       "changshengjueyang": {
         "exp": 3411684.3279073,
         "id": "changshengjueyang"
@@ -2197,7 +2242,7 @@
         "id": "jibendaofa"
       },
       "jibenjianfa": {
-        "exp": 1557346,
+        "exp": 1875001,
         "id": "jibenjianfa"
       },
       "jibenneigong": {
@@ -2205,15 +2250,15 @@
         "id": "jibenneigong"
       },
       "jibenqinggong": {
-        "exp": 960001,
+        "exp": 1875001,
         "id": "jibenqinggong"
       },
       "jibenquanjiao": {
-        "exp": 1033816,
+        "exp": 1875001,
         "id": "jibenquanjiao"
       },
       "jibenzhaojia": {
-        "exp": 960001,
+        "exp": 1875001,
         "id": "jibenzhaojia"
       },
       "kuangfengkuaijian": {
@@ -2227,6 +2272,10 @@
       "wuxingdunfa": {
         "exp": 5585,
         "id": "wuxingdunfa"
+      },
+      "xiyuesanshenjian": {
+        "exp": 16,
+        "id": "xiyuesanshenjian"
       },
       "zhengaoxuanjing": {
         "exp": 1,
@@ -2369,6 +2418,11 @@
           "version": 1
         },
         "schemeStateMap": {
+          "bfcelue3": {
+            "dayTimes": 1,
+            "times": 1,
+            "updateTime": 1787638150.5816
+          },
           "fzcuiliandiaoluo": {
             "dayTimes": 0,
             "times": 0,
@@ -2567,14 +2621,14 @@
       "privilege_expired_time": 0,
       "privilege_remaining_watches": 0
     },
-    "visitTaskId": "bf2006",
-    "vtNpcId": "bfnpc6",
-    "wUpCount": 8,
+    "visitTaskId": "bf2092",
+    "vtNpcId": "bfnpc92",
+    "wUpCount": 17,
     "wantedInterval": 0,
     "wantedTime": 0,
     "weaponScore": 2490,
-    "weight": 70,
-    "weiwang": 62,
+    "weight": 115,
+    "weiwang": 70,
     "wuZangScoreRepair": 1,
     "xingzhen": {
       "effectsCount": []
@@ -2586,8 +2640,8 @@
       "startTime": 1602309491.0333
     },
     "yaShi": 0,
-    "yinpiao": 1000,
-    "yuanbao": 18900,
+    "yinpiao": 0,
+    "yuanbao": 16900,
     "yueKaValid": "N",
     "yuekaTime": 0,
     "yueli": 6855,
@@ -2733,7 +2787,11 @@
     "zhengqi": 9116
   },
   "schema": "fzjh.role_archive.v1",
-  "updated_at": 1787632185,
-  "upload": {},
+  "updated_at": 1787647377,
+  "upload": {
+    "cheatType": "3",
+    "uType": "Account",
+    "updated_at": 1787647377
+  },
   "userid": 9048162373
 }

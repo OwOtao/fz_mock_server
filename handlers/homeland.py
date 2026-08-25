@@ -4,9 +4,12 @@ import copy
 import hashlib
 import time
 
+from handlers.basic import _currency_balance, _set_currency_balance
 from handlers.familytype_data import HX_TABLE
 from protocol import build_response_body
 from server import route
+
+_GIVE_DAILY_LIMIT = 1
 
 
 # 房间方向链接字段, 与真实服务端 get_user_map.maproom 一致(缺省用空串而非缺键)
@@ -546,6 +549,30 @@ def update_employee_extra(ctx):
     return build_response_body({})
 
 
+def _employee_extra(employee):
+    extra = employee.get("extra")
+    if not isinstance(extra, dict):
+        extra = {}
+        employee["extra"] = extra
+    return extra
+
+
+def _give_count_today(employee, today):
+    extra = _employee_extra(employee)
+    if str(extra.get("give_date") or "") != today:
+        return 0
+    return max(_int(extra.get("give_count"), 0), 0)
+
+
+def _mark_give_today(employee, today):
+    extra = _employee_extra(employee)
+    if str(extra.get("give_date") or "") != today:
+        extra["give_date"] = today
+        extra["give_count"] = 1
+        return
+    extra["give_count"] = max(_int(extra.get("give_count"), 0), 0) + 1
+
+
 @route(["POST"], "update_employee_data")
 def update_employee_data(ctx):
     userid = _userid(ctx)
@@ -559,11 +586,29 @@ def update_employee_data(ctx):
     employee = bucket.get("employees", {}).get(obj_id)
     if not isinstance(employee, dict):
         return build_response_body({}, errcode=404, errmsg="employee not found")
-    employee["defaultZhongCheng"] = max(0, _int(employee.get("defaultZhongCheng"), 0) + _int(body.get("zc_val"), 0))
+    zc_type = str(body.get("zc_type") or "").strip()
+    zc_val = _int(body.get("zc_val"), 0)
+    if zc_type == "give":
+        today = time.strftime("%Y-%m-%d", time.localtime())
+        if _give_count_today(employee, today) >= _GIVE_DAILY_LIMIT:
+            return build_response_body({}, errcode=2, errmsg="你今日已经赏赐够多了，还是明日再说吧")
+        cost = max(_int(body.get("currency"), 0), 0)
+        balance = _currency_balance(ctx, userid, "yinpiao")
+        if cost > balance:
+            return build_response_body({"number": balance}, errcode=1, errmsg="银票不足")
+        _set_currency_balance(ctx, userid, "yinpiao", balance - cost)
+        _mark_give_today(employee, today)
+    employee["defaultZhongCheng"] = max(0, _int(employee.get("defaultZhongCheng"), 0) + zc_val)
     with ctx["state"]._lock:
         ctx["state"]._changed()
     spec, _stale = _ensure_layout(bucket)
-    return build_response_body(_employee_payload(employee, _default_employee_fjid(spec)))
+    payload = _employee_payload(employee, _default_employee_fjid(spec))
+    payload.setdefault("trait", {})
+    payload.setdefault("activity", {})
+    if zc_type == "chat":
+        payload.setdefault("day_limit", 0)
+        payload.setdefault("level_up", 0)
+    return build_response_body(payload)
 
 
 @route(["POST"], "delete_employee")

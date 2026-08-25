@@ -16,11 +16,14 @@
   其中 get_time/get_token/report_cheat/getWebConfig 不校验签名
 """
 
+import gzip
 import hashlib
 import json
 import random
+import re
 import string
 import time
+import zlib
 
 import config
 
@@ -74,14 +77,46 @@ def _decrypt_text_to_plain(text):
     return None
 
 
+def _maybe_decompress(body_bytes):
+    if not body_bytes:
+        return body_bytes
+    if body_bytes[:2] == b"\x1f\x8b":
+        try:
+            return gzip.decompress(body_bytes)
+        except Exception:
+            return body_bytes
+    if body_bytes[:2] in (b"\x78\x01", b"\x78\x9c", b"\x78\xda"):
+        try:
+            return zlib.decompress(body_bytes)
+        except Exception:
+            return body_bytes
+    return body_bytes
+
+
+def _decode_text(body_bytes):
+    if not body_bytes:
+        return ""
+    if body_bytes[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        try:
+            return body_bytes.decode("utf-16")
+        except UnicodeDecodeError:
+            pass
+    if len(body_bytes) >= 4 and body_bytes[1:2] == b"\x00" and body_bytes[3:4] == b"\x00":
+        try:
+            return body_bytes.decode("utf-16-le")
+        except UnicodeDecodeError:
+            pass
+    try:
+        return body_bytes.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return body_bytes.decode("latin-1")
+
+
 def decode_request_body(body_bytes):
     """解析请求体: 返回 (明文str, 是否加密)。按魔数自动识别密钥组。"""
     if not body_bytes:
         return "", False
-    try:
-        text = body_bytes.decode("utf-8")
-    except UnicodeDecodeError:
-        text = body_bytes.decode("latin-1")
+    text = _decode_text(_maybe_decompress(body_bytes))
     # 常规密文, 或密文被 Content-Type=form 且尾部带 '='
     plain = _decrypt_text_to_plain(text)
     if plain is not None:
@@ -126,6 +161,70 @@ def _try_parse_form_value(value):
     return text
 
 
+def _strip_json_wrappers(text):
+    if not isinstance(text, str):
+        return ""
+    text = text.lstrip("\ufeff").strip()
+    if text.startswith(")]}',"):
+        text = text[5:].lstrip("\ufeff").strip()
+    if text.startswith("for (;;);"):
+        text = text[9:].lstrip("\ufeff").strip()
+    match = re.match(r"^[A-Za-z_$][\w.$]*\(\s*([\s\S]*)\s*\)\s*;?\s*$", text)
+    if match:
+        text = match.group(1).lstrip("\ufeff").strip()
+    return text
+
+
+def _try_load_json(text):
+    if not isinstance(text, str):
+        return None
+    text = _strip_json_wrappers(text)
+    if not text:
+        return None
+    candidates = [text]
+    trimmed = text.rstrip().rstrip(",;").rstrip()
+    if trimmed not in candidates:
+        candidates.append(trimmed)
+    repaired = re.sub(r",\s*([}\]])", r"\1", trimmed)
+    if repaired not in candidates:
+        candidates.append(repaired)
+    start = trimmed.find("{")
+    end = trimmed.rfind("}")
+    if start >= 0 and end > start:
+        snippet = re.sub(r",\s*([}\]])", r"\1", trimmed[start:end + 1])
+        if snippet not in candidates:
+            candidates.append(snippet)
+    for candidate in candidates:
+        try:
+            return json.loads(candidate)
+        except (ValueError, TypeError):
+            continue
+    return None
+
+
+def _normalize_loaded_json(value, depth=0):
+    if depth > 2:
+        return value
+    if isinstance(value, str):
+        nested = _try_load_json(_strip_json_wrappers(value))
+        if nested is not None:
+            return _normalize_loaded_json(nested, depth + 1)
+        return value
+    if isinstance(value, list) and len(value) == 1 and isinstance(value[0], (dict, list, str)):
+        return _normalize_loaded_json(value[0], depth + 1)
+    if isinstance(value, dict) and len(value) == 1:
+        only_value = next(iter(value.values()))
+        if isinstance(only_value, str):
+            nested = _try_load_json(_strip_json_wrappers(only_value))
+            if isinstance(nested, dict):
+                return _normalize_loaded_json(nested, depth + 1)
+        elif isinstance(only_value, dict):
+            inner_keys = set(only_value)
+            if inner_keys & {"request_id", "requestId", "userid", "user_id", "title", "content", "contents"}:
+                return _normalize_loaded_json(only_value, depth + 1)
+    return value
+
+
 def parse_request_json(body_text, content_type=""):
     """把请求体转成 Python 对象(dict/list)。
 
@@ -135,18 +234,21 @@ def parse_request_json(body_text, content_type=""):
       3) form 值内嵌加密串或 JSON
       4) 整包密文被 Content-Type 标成 form, 甚至变成 cipher=
     """
-    body_text = (body_text or "").strip()
+    body_text = _strip_json_wrappers(body_text)
     if not body_text:
         return {}
     # 0) 整包密文优先解密
     plain = _decrypt_text_to_plain(body_text)
     if plain is not None:
-        body_text = plain.strip()
-    # 1) JSON 优先
-    try:
-        return json.loads(body_text)
-    except (ValueError, TypeError):
-        pass
+        body_text = _strip_json_wrappers(plain)
+    # 1) JSON 优先; 解开双编码/单层包裹, 避免 663 字节明文变成 {}
+    loaded = _try_load_json(body_text)
+    if loaded is not None:
+        loaded = _normalize_loaded_json(loaded)
+        if isinstance(loaded, (dict, list)):
+            return loaded
+        if isinstance(loaded, str) and loaded.strip():
+            body_text = loaded.strip()
     # 2) form-urlencoded
     if _looks_like_form(body_text, content_type):
         from urllib.parse import parse_qs

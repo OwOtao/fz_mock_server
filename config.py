@@ -64,17 +64,17 @@ KEY_GROUPS = {
     },
     "FZJH03": {
         "magic": b"FZJH03",
-        "key":   b"26549f871287ba9e838a057a7ffac1bc",
+        "key":   b"880e42c8075b8f400cd72f21451c0866",
         "iv":    b"PcIQIZifRalhZ88n",
     },
     "FZJH02": {
         "magic": b"FZJH02",
-        "key":   b"07818f3a34e8165227b0dc6b7e69ea57",
+        "key":   b"0228482afef78be8b948ad8b08b24da7",
         "iv":    b"34857d973953e44a",
     },
     "FXXF03": {
         "magic": b"FXXF03",
-        "key":   b"07818f3a34e8165227b0dc6b7e69ea57",
+        "key":   b"0228482afef78be8b948ad8b08b24da7",
         "iv":    b"PcIQIZifRalhZ88n",
     },
 }

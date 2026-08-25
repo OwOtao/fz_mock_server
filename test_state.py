@@ -8,6 +8,7 @@ import unittest
 from unittest import mock
 
 import config
+import protocol
 
 from handlers.basic import (
     add_devote_point,
@@ -24,6 +25,7 @@ from handlers.basic import (
     get_user_group,
     read_email,
     upgrade_user_bag,
+    view_currency_by_type,
 )
 from handlers.practice import get_xin_shen_value, recover_xin_shen_value
 from handlers.familytype_data import HX_TABLE
@@ -37,6 +39,7 @@ from handlers.homeland import (
     get_home_switch,
     get_house_info,
     get_user_map,
+    update_employee_data,
     update_employee_extra,
 )
 from handlers.system import (
@@ -280,6 +283,107 @@ class StateStoreTest(unittest.TestCase):
             })
         self.assertEqual(denied["errcode"], 403)
         self.assertEqual(allowed["errcode"], 0)
+
+    def test_parse_request_json_accepts_wrapped_and_messy_payloads(self):
+        payload = {
+            "request_id": "grant-messy-1",
+            "userid": 9048162373,
+            "title": "测试奖励",
+            "content": "请领取附件",
+        }
+        dumped = json.dumps(payload, ensure_ascii=False)
+        cases = [
+            protocol.parse_request_json("\ufeff" + dumped + ",", content_type="application/json"),
+            protocol.parse_request_json('callback(%s);' % dumped, content_type="application/json"),
+            protocol.parse_request_json(json.dumps(dumped, ensure_ascii=False), content_type="application/json"),
+            protocol.parse_request_json(json.dumps({"data": dumped}, ensure_ascii=False), content_type="application/json"),
+        ]
+        utf16 = protocol.parse_request_json(
+            protocol.decode_request_body(dumped.encode("utf-16"))[0],
+            content_type="application/json",
+        )
+        cases.append(utf16)
+        for parsed in cases:
+            self.assertEqual(parsed.get("request_id"), "grant-messy-1")
+            self.assertEqual(parsed.get("userid"), 9048162373)
+        trailing = protocol.parse_request_json(
+            '{\n'
+            '  "request_id": "<<$timestamp>>",\n'
+            '  "userid": 9048162373,\n'
+            '  "title": "测试奖励",\n'
+            '  "content": "这是一封通过发送的测试邮件，请领取附件。",\n'
+            '  "sender": "后台测试",\n'
+            '  "expire_days": 30,\n'
+            '  "rewards": {\n'
+            '    "loc_items": [\n'
+            '      {\n'
+            '        "id": "fuyuandan",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "xiyanshui",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "shenlisan",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "qingshenyao",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '    ],\n'
+            '    "net_attrs": [\n'
+            '      {\n'
+            '        "id": "yuanbao",\n'
+            '        "num": 1000\n'
+            '      }\n'
+            '    ],\n'
+            '    "new_currencys": [\n'
+            '      {\n'
+            '        "id": "yinpiao",\n'
+            '        "num": 500\n'
+            '      }\n'
+            '    ]\n'
+            '  }\n'
+            '}',
+            content_type="application/json",
+        )
+        self.assertEqual(trailing.get("request_id"), "<<$timestamp>>")
+        self.assertEqual(trailing.get("userid"), 9048162373)
+        self.assertEqual(len(trailing["rewards"]["loc_items"]), 4)
+
+    def test_admin_send_email_accepts_aliases_and_wrapped_body(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {"content-type": "application/json"},
+            "query": {},
+            "body": {},
+            "raw_body": json.dumps({
+                "data": {
+                    "requestId": "grant-alias-1",
+                    "user_id": userid,
+                    "subject": "别名邮件",
+                    "contents": "请领取附件",
+                }
+            }, ensure_ascii=False),
+        })
+        self.assertEqual(sent["errcode"], 0)
+        self.assertEqual(sent["data"]["userid"], userid)
+        wrapped = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "requestId": "grant-alias-2",
+                "uid": userid,
+                "title": "第二封",
+                "text": "内容",
+            },
+        })
+        self.assertEqual(wrapped["errcode"], 0)
+        self.assertEqual(len(store.list_mail(userid)), 2)
 
     def test_mail_activity_ranking_and_biwu(self):
         store = StateStore()
@@ -871,6 +975,247 @@ class StateStoreTest(unittest.TestCase):
         self.assertIn(steward["fjId"], room_ids)
         extra = steward.get("extra") or {}
         self.assertNotIn("stay_room_time", extra)
+
+    def test_view_currency_by_type_reads_archive_balance(self):
+        userid = 9048162377
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "currencies": {"mingbi": 8}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 321, "zongheng": 12}},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao", "currencyVersion": 1},
+        }
+        response = view_currency_by_type(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["number"], 321)
+        self.assertEqual(response["data"]["costYb"], 10)
+
+        zongheng = view_currency_by_type(dict(ctx, body={"currency_type": "zongheng"}))
+        self.assertEqual(zongheng["errcode"], 0)
+        self.assertEqual(zongheng["data"]["number"], 12)
+        self.assertEqual(zongheng["data"]["limitNumber"], 9999)
+
+        mingbi = view_currency_by_type(dict(ctx, body={"currency_type": "mingbi"}))
+        self.assertEqual(mingbi["data"]["number"], 8)
+
+        missing = view_currency_by_type(dict(ctx, body={"currency_type": "spcl"}))
+        self.assertEqual(missing["data"]["number"], 0)
+
+        empty = view_currency_by_type({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {"currency_type": "yinpiao"},
+        })
+        self.assertEqual(empty["errcode"], 0)
+        self.assertEqual(empty["data"]["number"], 0)
+        self.assertEqual(empty["data"]["costYb"], 10)
+
+    def test_view_currency_by_type_follows_email_reward_balances(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-view-currency",
+                "userid": userid,
+                "title": "货币奖励",
+                "content": "领取",
+                "rewards": {
+                    "net_attrs": [{"id": "yuanbao", "num": 100}],
+                    "new_currencys": [{"id": "yinpiao", "num": 50}],
+                },
+            },
+        })
+        self.assertEqual(sent["errcode"], 0)
+        mail_id = sent["data"]["mail_id"]
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": mail_id, "dataVer": 1, "currencyVersion": 1},
+        })
+        self.assertEqual(claimed["errcode"], 0)
+
+        yinpiao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        yuanbao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yuanbao"},
+        })
+        self.assertEqual(yinpiao["data"]["number"], 50)
+        self.assertEqual(yuanbao["data"]["number"], 100)
+
+        stale = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "yuanbao": 100, "currencies": {"yinpiao": 50}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 0, "yuanbao": 0}},
+        }, autosave=False)
+        stale_yinpiao = view_currency_by_type({
+            "state": stale,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        stale_yuanbao = view_currency_by_type({
+            "state": stale,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yuanbao"},
+        })
+        self.assertEqual(stale_yinpiao["data"]["number"], 50)
+        self.assertEqual(stale_yuanbao["data"]["number"], 100)
+
+    def test_update_employee_data_give_limits_and_rejects_negative_yinpiao(self):
+        userid = 9048162378
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "currencies": {"yinpiao": 80}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 0}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        obj_id = "guanjia1001"
+        employee = get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"objId": obj_id, "mid": mid},
+        })
+        self.assertEqual(employee["errcode"], 0)
+        loyalty = employee["data"]["defaultZhongCheng"]
+
+        first = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 10,
+                "currency": 30,
+            },
+        })
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["defaultZhongCheng"], loyalty + 10)
+        self.assertEqual(first["data"]["trait"], {})
+        yinpiao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        self.assertEqual(yinpiao["data"]["number"], 50)
+        self.assertEqual(store.get_account(userid)["currencies"]["yinpiao"], 50)
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 50)
+
+        second = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 10,
+                "currency": 30,
+            },
+        })
+        self.assertEqual(second["errcode"], 2)
+        self.assertEqual(
+            get_employee_data({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"objId": obj_id, "mid": mid},
+            })["data"]["defaultZhongCheng"],
+            loyalty + 10,
+        )
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+
+        chat = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "chat",
+                "zc_val": 5,
+                "currency": 0,
+            },
+        })
+        self.assertEqual(chat["errcode"], 0)
+        self.assertEqual(chat["data"]["defaultZhongCheng"], loyalty + 15)
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+
+        servant = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四", "defaultZhongCheng": 100},
+            },
+        })
+        self.assertEqual(servant["errcode"], 0)
+        overspend = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 20,
+                "currency": 999,
+            },
+        })
+        self.assertEqual(overspend["errcode"], 1)
+        self.assertEqual(overspend["errmsg"], "银票不足")
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+        self.assertGreaterEqual(
+            view_currency_by_type({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"currency_type": "yinpiao"},
+            })["data"]["number"],
+            0,
+        )
+        self.assertEqual(get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"objId": "puren_give_1", "mid": mid},
+        })["data"]["defaultZhongCheng"], 100)
+
+        spend_all = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 8,
+                "currency": 50,
+            },
+        })
+        self.assertEqual(spend_all["errcode"], 0)
+        self.assertEqual(spend_all["data"]["defaultZhongCheng"], 108)
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 0)
 
     def test_concurrent_account_ids_are_unique(self):
         store = StateStore()

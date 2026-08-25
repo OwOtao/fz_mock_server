@@ -15,15 +15,15 @@
     "9048162373": {
       "created_at": 1787028266,
       "currencies": {
-        "yinpiao": 4512
+        "yinpiao": 4862
       },
-      "currency_version": 14,
+      "currency_version": 15,
       "email": "123123@qq.com",
       "has_archive": true,
       "name": "和风无声",
-      "updated_at": 1787632672,
+      "updated_at": 1787647377,
       "userid": 9048162373,
-      "yuanbao": 18900
+      "yuanbao": 19900
     },
     "9048162374": {
       "created_at": 1787034175,
@@ -613,8 +613,10 @@
           "guanjia1001": {
             "age": 50,
             "character": "xingge004",
-            "defaultZhongCheng": 697,
+            "defaultZhongCheng": 1139,
             "extra": {
+              "give_count": 1,
+              "give_date": "2026-08-25",
               "naoshi": 0,
               "shenshi_status": 0
             },
@@ -1865,6 +1867,7 @@
         "claimed": true,
         "content": "这是一封通过发送的测试邮件，请领取附件。",
         "created_at": 1787631956,
+        "deleted": true,
         "expired_time": 1790223956,
         "mail_id": "mail-19",
         "read": true,
@@ -1907,6 +1910,7 @@
         "claimed": true,
         "content": "这是一封通过发送的测试邮件，请领取附件。",
         "created_at": 1787632140,
+        "deleted": true,
         "expired_time": 1790224140,
         "mail_id": "mail-20",
         "read": true,
@@ -1944,6 +1948,306 @@
         "sender": "后台测试",
         "state": 2,
         "title": "测试奖励"
+      },
+      {
+        "claimed": false,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787643481,
+        "deleted": true,
+        "expired_time": 1790235481,
+        "mail_id": "mail-21",
+        "read": true,
+        "request_id": "1787643481552",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "fuyuandan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "xiyanshui",
+              "num": 99,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "shenlisan",
+              "num": 99,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "qingshenyao",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787643481,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": false,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787644279,
+        "deleted": true,
+        "expired_time": 1790236279,
+        "mail_id": "mail-22",
+        "read": true,
+        "request_id": "1787644279392",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "fuyuandan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            },
+            {
+              "id": "xiyanshui",
+              "num": 99,
+              "onlyId": "loc_items-2",
+              "state": 0
+            },
+            {
+              "id": "shenlisan",
+              "num": 99,
+              "onlyId": "loc_items-3",
+              "state": 0
+            },
+            {
+              "id": "qingshenyao",
+              "num": 99,
+              "onlyId": "loc_items-4",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787644279,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": true,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787644309,
+        "deleted": true,
+        "expired_time": 1790236309,
+        "mail_id": "mail-23",
+        "read": true,
+        "request_id": "1787644309647",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "fuyuandan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787644309,
+        "sender": "后台测试",
+        "state": 2,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": false,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787644566,
+        "deleted": true,
+        "expired_time": 1790236566,
+        "mail_id": "mail-24",
+        "read": true,
+        "request_id": "1787644566415",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "shenlisan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787644566,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": false,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787645343,
+        "deleted": true,
+        "expired_time": 1790237343,
+        "mail_id": "mail-25",
+        "read": true,
+        "request_id": "1787645343678",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "money",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787645343,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
+      },
+      {
+        "claimed": false,
+        "content": "这是一封通过发送的测试邮件，请领取附件。",
+        "created_at": 1787645458,
+        "deleted": true,
+        "expired_time": 1790237458,
+        "mail_id": "mail-26",
+        "read": true,
+        "request_id": "1787645458918",
+        "rewards": {
+          "loc_attrs": [],
+          "loc_items": [
+            {
+              "id": "shenlisan",
+              "num": 99,
+              "onlyId": "loc_items-1",
+              "state": 0
+            }
+          ],
+          "net_attrs": [
+            {
+              "id": "yuanbao",
+              "num": 1000,
+              "onlyId": "net_attrs-1",
+              "state": 0
+            }
+          ],
+          "net_items": [],
+          "new_currencys": [
+            {
+              "id": "yinpiao",
+              "num": 500,
+              "onlyId": "new_currencys-1",
+              "state": 0
+            },
+            {
+              "id": "money",
+              "num": 500,
+              "onlyId": "new_currencys-2",
+              "state": 0
+            }
+          ],
+          "title_items": []
+        },
+        "send_time": 1787645458,
+        "sender": "后台测试",
+        "state": 1,
+        "title": "测试奖励"
       }
     ]
   },
@@ -1964,6 +2268,42 @@
       "created_at": 1787632140,
       "mail_id": "mail-20",
       "request_id": "1787632140343",
+      "userid": 9048162373
+    },
+    "1787643481552": {
+      "created_at": 1787643481,
+      "mail_id": "mail-21",
+      "request_id": "1787643481552",
+      "userid": 9048162373
+    },
+    "1787644279392": {
+      "created_at": 1787644279,
+      "mail_id": "mail-22",
+      "request_id": "1787644279392",
+      "userid": 9048162373
+    },
+    "1787644309647": {
+      "created_at": 1787644309,
+      "mail_id": "mail-23",
+      "request_id": "1787644309647",
+      "userid": 9048162373
+    },
+    "1787644566415": {
+      "created_at": 1787644566,
+      "mail_id": "mail-24",
+      "request_id": "1787644566415",
+      "userid": 9048162373
+    },
+    "1787645343678": {
+      "created_at": 1787645343,
+      "mail_id": "mail-25",
+      "request_id": "1787645343678",
+      "userid": 9048162373
+    },
+    "1787645458918": {
+      "created_at": 1787645458,
+      "mail_id": "mail-26",
+      "request_id": "1787645458918",
       "userid": 9048162373
     },
     "delete-api-verify-20260821-001": {
@@ -2071,7 +2411,7 @@
   },
   "next_ids": {
     "fight_id": 1,
-    "mail_id": 21,
+    "mail_id": 27,
     "order_id": 31,
     "userid": 9048162375
   },

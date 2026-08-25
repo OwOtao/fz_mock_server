@@ -21,6 +21,38 @@ def _body(ctx):
     return value if isinstance(value, dict) else {}
 
 
+def _first_present(source, keys):
+    for key in keys:
+        if key in source and source.get(key) not in (None, ""):
+            return source.get(key)
+    return None
+
+
+def _admin_mail_body(ctx):
+    body = dict(_body(ctx))
+    raw = ctx.get("raw_body")
+    if not body and isinstance(raw, str) and raw.strip():
+        from protocol import parse_request_json
+        parsed = parse_request_json(raw, content_type=str(ctx.get("headers", {}).get("content-type") or ""))
+        if isinstance(parsed, dict):
+            body = dict(parsed)
+    for key in ("data", "payload", "params", "mail"):
+        inner = body.get(key)
+        if isinstance(inner, str) and inner.strip():
+            from protocol import parse_request_json
+            inner = parse_request_json(inner)
+        if isinstance(inner, dict):
+            merged = dict(body)
+            merged.update(inner)
+            body = merged
+            break
+    query = ctx.get("query")
+    if isinstance(query, dict):
+        for key, value in query.items():
+            body.setdefault(key, value)
+    return body
+
+
 def _tail(ctx, index=0, default=""):
     values = ctx.get("route_tail", [])
     return values[index] if len(values) > index else default
@@ -309,6 +341,69 @@ def get_yuanbao(ctx):
     userid = _userid(ctx)
     yuanbao = _get_yuanbao_balance(ctx, userid) if userid > 0 else DEFAULT_YUANBAO
     return _ok({"yuanbao": yuanbao})
+
+
+_CURRENCY_LIMITS = {
+    "zongheng": 9999,
+}
+_YINPIAO_EXCHANGE_COST_YB = 10
+
+
+def _currency_balance(ctx, userid, currency_type):
+    currency_type = str(currency_type or "").strip()
+    if not currency_type:
+        return 0
+    if currency_type == "yuanbao":
+        return _get_yuanbao_balance(ctx, userid) if userid > 0 else DEFAULT_YUANBAO
+    archive_value = 0
+    account_value = 0
+    if userid > 0:
+        archive = ctx["state"].get_archive(userid)
+        if isinstance(archive, dict):
+            archive_value = max(_as_int(archive.get(currency_type), 0), 0)
+        account = ctx["state"].get_account(userid) or {}
+        currencies = account.get("currencies")
+        if isinstance(currencies, dict):
+            account_value = max(_as_int(currencies.get(currency_type), 0), 0)
+    return max(archive_value, account_value)
+
+
+def _set_currency_balance(ctx, userid, currency_type, value):
+    currency_type = str(currency_type or "").strip()
+    value = max(_as_int(value, 0), 0)
+    if not currency_type or userid <= 0:
+        return value
+    if currency_type == "yuanbao":
+        return _set_yuanbao_balance(ctx, userid, value)
+    ctx["state"].ensure_account(userid)
+    with ctx["state"]._lock:
+        account = ctx["state"]._state.setdefault("accounts", {}).setdefault(str(userid), {})
+        currencies = account.get("currencies")
+        if not isinstance(currencies, dict):
+            currencies = {}
+            account["currencies"] = currencies
+        currencies[currency_type] = value
+        account["updated_at"] = int(time.time())
+        ctx["state"]._changed()
+    archive = ctx["state"].get_archive(userid)
+    if isinstance(archive, dict):
+        archive[currency_type] = value
+        ctx["state"].put_archive(userid, archive)
+    return value
+
+
+@route(["POST"], "view_currency_by_type")
+def view_currency_by_type(ctx):
+    userid = _userid(ctx)
+    body = _body(ctx)
+    currency_type = str(body.get("currency_type") or body.get("cType") or "").strip()
+    number = _currency_balance(ctx, userid, currency_type)
+    data = {"number": number, "currency_type": currency_type}
+    if currency_type in _CURRENCY_LIMITS:
+        data["limitNumber"] = _CURRENCY_LIMITS[currency_type]
+    if currency_type == "yinpiao":
+        data["costYb"] = _YINPIAO_EXCHANGE_COST_YB
+    return _ok(data)
 
 
 @route(["GET", "POST"], "get_goods")
@@ -684,11 +779,11 @@ def get_email_reward(ctx):
 def admin_send_email(ctx):
     if not _mail_admin_authorized(ctx):
         return build_response_body({}, errcode=403, errmsg="forbidden")
-    body = _body(ctx)
-    request_id = str(body.get("request_id") or "").strip()
-    userid = _as_int(body.get("userid"), 0)
-    title = str(body.get("title") or "").strip()
-    content = str(body.get("content") or "").strip()
+    body = _admin_mail_body(ctx)
+    request_id = str(_first_present(body, ("request_id", "requestId", "requestid", "req_id", "reqId")) or "").strip()
+    userid = _as_int(_first_present(body, ("userid", "user_id", "userId", "uid", "user")), 0)
+    title = str(_first_present(body, ("title", "subject", "mail_title")) or "").strip()
+    content = str(_first_present(body, ("content", "contents", "text", "message", "desc", "description")) or "").strip()
     if not request_id or userid <= 0 or not title or not content:
         return build_response_body({}, errcode=400, errmsg="request_id, userid, title and content are required")
     with ctx["state"]._lock:

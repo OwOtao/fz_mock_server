@@ -127,6 +127,9 @@ class Handler(BaseHTTPRequestHandler):
             log.info("[%s] %s %s encrypted=%s userid=%s cl=%s te=%s ct=%s body=%s",
                      method, path, matched, encrypted,
                      headers.get("userid"), length, transfer_encoding, content_type, body_preview)
+            if length and (not isinstance(body, dict) or not body):
+                log.warning("empty parsed body path=%s cl=%s ct=%s raw=%r",
+                            path, length, content_type, (raw_body or "")[:300])
         if "upload_user_file" in (matched or ""):
             magic = body_bytes[:16]
             log.info("upload_raw path=%s bytes=%s magic=%r head_hex=%s",
