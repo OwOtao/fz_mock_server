@@ -1,5 +1,5 @@
 {
-  "dataVer": 86,
+  "dataVer": 87,
   "record": {
     "jingMaxRecord": {
       "part": {
@@ -48,7 +48,7 @@
     "_dayFlags": {
       "flags": {
         "guanYingHongDian": 0,
-        "拜访任务每日限制": 4,
+        "拜访任务每日限制": 5,
         "江湖怪客列表": [
           {
             "id": 1903,
@@ -64,7 +64,7 @@
           }
         ]
       },
-      "time": 1787551824.6067
+      "time": 1787555106.3529
     },
     "_flags": {
       "PVP战斗状态": "离线模式",
@@ -91,7 +91,7 @@
       "fb19": 1601375414.0998,
       "fb20": 1601379424.5664,
       "fb205": 1601269654.0333,
-      "fb209": 1601269473.1665,
+      "fb209": 1787555127.4973,
       "fb20cqxz": 1,
       "fb21": 1601440964.3329,
       "fb301": 1601375588.833,
@@ -111,7 +111,7 @@
       "主动切磋中": false,
       "五毒教": "false",
       "传送孤家集": 1,
-      "内力回复时间": 1787552610.5394,
+      "内力回复时间": 1787555122.5167,
       "冲穴真气": 32,
       "副本状态": "空闲中",
       "十大美女": 0,
@@ -140,17 +140,17 @@
       "武功修炼类型": "jianfa",
       "武功镇": "false",
       "武当山": "false",
-      "气血回复时间": 1787552610.5394,
-      "气血最大值回复时间": 1787552610.5394,
+      "气血回复时间": 1787555122.5167,
+      "气血最大值回复时间": 1787555122.5167,
       "汝州": "false",
-      "游戏时间": 1787552614.0691,
+      "游戏时间": 1787555127.5631,
       "牛家村": "false",
-      "疲劳值刷新时间": 1787552101.6633,
+      "疲劳值刷新时间": 1787555102.324,
       "百花谷": "false",
       "磕头时间": 1787284240.6919,
       "磕头次数": "3",
       "神兵": "Y",
-      "精力回复时间": 1787552583.2423,
+      "精力回复时间": 1787555102.324,
       "精力开始回复时间": 1786000750.5767,
       "终南山": "false",
       "经验潜能服用时间": 1787284195.7491,
@@ -159,7 +159,7 @@
       "缉拿任务": 0,
       "苏州城": "false",
       "荆州城南": "false",
-      "获取奖励时间": 1787551499.5764,
+      "获取奖励时间": 1787555101.695,
       "衡阳刘府": "false",
       "襄阳城": "false",
       "追击任务": 0,
@@ -460,7 +460,7 @@
     },
     "_timeLimitFlags": {
       "bf1015": {
-        "startTime": 1787551500.1373,
+        "startTime": 1787555101.1402,
         "timeLimit": 900,
         "value": 1
       }
@@ -699,12 +699,12 @@
     "currCon": 87,
     "currDex": 68,
     "currInt": 33,
-    "currMapId": "user_fb_14750",
+    "currMapId": "fb209",
     "currStr": 71,
     "currencyVersion": 12,
     "cwCount": 0,
     "cwItems": [],
-    "dataVer": 86,
+    "dataVer": 87,
     "dead": 0,
     "deadReason": 0,
     "decorative": [
@@ -791,7 +791,7 @@
     "firstCompleteMap": false,
     "forgeCount": 9,
     "forgeSkill": [],
-    "gamingTime": 3443867.6812522,
+    "gamingTime": 3446381.1752867,
     "gold": 31495,
     "gongxiandian": 0,
     "guanqiaLimit": 12,
@@ -1667,7 +1667,7 @@
     "onlyId": 1565,
     "openMark": "",
     "openVisitTaskByMap": false,
-    "openVisitTaskTime": 1787551500.1373,
+    "openVisitTaskTime": 1787555101.1402,
     "panshi": 0,
     "pijuan": 200,
     "poison": [],
@@ -1738,10 +1738,10 @@
     "role_is_cheat": false,
     "sCk_ver": {
       "cangyige": "49e4bd4339fa37a02702272f8e030d50",
-      "homeland": 1,
+      "homeland": "c4ca4238a0b923820dcc509a6f75849b",
       "xuanbingdong": "f60bf899cd0d0edf0b7b097159b07f71"
     },
-    "saveDataTime": 1787552614.1357,
+    "saveDataTime": 1787555127.5631,
     "secCon": 50,
     "secDex": 40,
     "secInt": 18,
@@ -1920,7 +1920,7 @@
     ],
     "selfCreatedSkillData": [],
     "serverActionSystem": {
-      "dataVersion": 86,
+      "dataVersion": 87,
       "requestId": 45
     },
     "sex": "男",
@@ -2583,7 +2583,7 @@
       "privilege_remaining_watches": 0
     },
     "visitTaskId": "bf1015",
-    "vtNpcId": "xflnpc5",
+    "vtNpcId": "xflnpc2",
     "wUpCount": 8,
     "wantedInterval": 0,
     "wantedTime": 0,
@@ -2748,11 +2748,11 @@
     "zhengqi": 9116
   },
   "schema": "fzjh.role_archive.v1",
-  "updated_at": 1787555098,
+  "updated_at": 1787623179,
   "upload": {
     "cheatType": "3",
     "uType": "kaishi",
-    "updated_at": 1787555098
+    "updated_at": 1787623179
   },
   "userid": 9048162373
 }

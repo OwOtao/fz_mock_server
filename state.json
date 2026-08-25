@@ -21,7 +21,7 @@
       "email": "123123@qq.com",
       "has_archive": true,
       "name": "和风无声",
-      "updated_at": 1787555102,
+      "updated_at": 1787623182,
       "userid": 9048162373,
       "yuanbao": 16900
     },
@@ -521,70 +521,86 @@
         "lands": {},
         "rooms": [
           {
-            "desc": "庭院",
-            "fjId": "room_1",
+            "desc": "这里是屋外，是一片小小的开阔地",
+            "fjId": "fb320_01",
             "mapHide": 0,
-            "name": "庭院",
-            "roomType": "tsfangjian004"
+            "name": "屋外",
+            "roomType": "tsfangjian002",
+            "up": "fb320_02"
           },
           {
-            "desc": "正厅",
-            "fjId": "room_2",
+            "desc": "宅院门前",
+            "down": "fb320_01",
+            "fjId": "fb320_02",
             "mapHide": 0,
-            "name": "正厅",
-            "roomType": "tsfangjian001"
+            "name": "门前",
+            "roomType": "tsfangjian003",
+            "up": "fb320_03"
           },
           {
-            "desc": "卧房",
-            "fjId": "room_3",
+            "desc": "宅院大门",
+            "down": "fb320_02",
+            "fjId": "fb320_03",
             "mapHide": 0,
-            "name": "卧房",
-            "roomType": "tsfangjian002"
+            "name": "大门",
+            "roomType": "tsfangjian004",
+            "up": "fb320_05"
           },
           {
-            "desc": "书房",
-            "fjId": "room_4",
+            "desc": "卧室",
+            "fjId": "fb320_04",
             "mapHide": 0,
-            "name": "书房",
-            "roomType": "tsfangjian003"
+            "name": "卧室",
+            "right": "fb320_05",
+            "roomType": "tsfangjian011"
           },
           {
-            "desc": "厨房",
-            "fjId": "room_5",
+            "desc": "这是一条普通的长廊，没有什么奇特之处。",
+            "down": "fb320_03",
+            "fjId": "fb320_05",
+            "left": "fb320_04",
             "mapHide": 0,
-            "name": "厨房",
-            "roomType": "tsfangjian005"
+            "name": "长廊",
+            "roomType": "ptfangjian001",
+            "up": "fb320_06"
           },
           {
-            "desc": "杂物间",
-            "fjId": "room_6",
+            "desc": "这是一条普通的长廊，没有什么奇特之处。",
+            "down": "fb320_05",
+            "fjId": "fb320_06",
             "mapHide": 0,
-            "name": "杂物间",
-            "roomType": "tsfangjian006"
-          },
-          {
-            "desc": "客房",
-            "fjId": "room_7",
-            "mapHide": 0,
-            "name": "客房",
-            "roomType": "tsfangjian002"
+            "name": "长廊",
+            "roomType": "ptfangjian001",
+            "up": "fb320_08"
           },
           {
             "desc": "练功房",
-            "fjId": "room_8",
+            "fjId": "fb320_07",
             "mapHide": 0,
             "name": "练功房",
-            "roomType": "tsfangjian007"
+            "right": "fb320_08",
+            "roomType": "tsfangjian009"
           },
           {
-            "desc": "库房",
-            "fjId": "room_9",
+            "desc": "这是一条普通的长廊，没有什么奇特之处。",
+            "down": "fb320_06",
+            "fjId": "fb320_08",
+            "left": "fb320_07",
             "mapHide": 0,
-            "name": "库房",
-            "roomType": "tsfangjian006"
+            "name": "长廊",
+            "right": "fb320_09",
+            "roomType": "ptfangjian001"
+          },
+          {
+            "desc": "仓库",
+            "fjId": "fb320_09",
+            "left": "fb320_08",
+            "mapHide": 0,
+            "name": "仓库",
+            "roomType": "tsfangjian005"
           }
         ],
-        "updated_at": 1787304547,
+        "updated_at": 1787622842,
         "version": 1
       }
     }
@@ -2345,7 +2361,7 @@
             }
           ],
           "buildState": 0,
-          "day": "2026-08-24",
+          "day": "2026-08-25",
           "diligent": 0,
           "donate": 0,
           "familyId": "huashan",
@@ -2363,7 +2379,7 @@
           "speedUpLimit": 0,
           "taskNumDay": 0,
           "taskNumLimit": 0,
-          "updated_at": 1787536402
+          "updated_at": 1787623181
         }
       }
     }

@@ -58,17 +58,50 @@ DEFAULT_HOUSE = {
     "type": "房契",
 }
 
+# huxing002(简屋小户) 官方户型布局, 与 assets/res/script/others/familytype.lua
+# 的 ["huxing002"] 房间连接及 ["户型总览"][2] 的 mapAppearance/mapAppearanceIndex 一致。
+# roomType 映射来自 familylist.lua: 屋外=tsfangjian002 门前=tsfangjian003
+# 大门=tsfangjian004 卧室=tsfangjian011 仓库=tsfangjian005 练功房=tsfangjian009
+# 长廊=ptfangjian001
 DEFAULT_ROOMS = [
-    {"fjId": "room_1", "name": "庭院", "desc": "庭院", "roomType": "tsfangjian004", "mapHide": 0, "up": "room_2"},
-    {"fjId": "room_2", "name": "门前", "desc": "宅院门前", "roomType": "tsfangjian011", "mapHide": 0, "down": "room_1", "right": "room_3"},
-    {"fjId": "room_3", "name": "正厅", "desc": "正厅", "roomType": "tsfangjian001", "mapHide": 0, "left": "room_2", "right": "room_4"},
-    {"fjId": "room_4", "name": "卧房", "desc": "卧房", "roomType": "tsfangjian002", "mapHide": 0, "left": "room_3", "right": "room_5"},
-    {"fjId": "room_5", "name": "书房", "desc": "书房", "roomType": "tsfangjian003", "mapHide": 0, "left": "room_4", "right": "room_6"},
-    {"fjId": "room_6", "name": "厨房", "desc": "厨房", "roomType": "tsfangjian005", "mapHide": 0, "left": "room_5", "right": "room_7"},
-    {"fjId": "room_7", "name": "客房", "desc": "客房", "roomType": "tsfangjian002", "mapHide": 0, "left": "room_6", "right": "room_8"},
-    {"fjId": "room_8", "name": "练功房", "desc": "练功房", "roomType": "tsfangjian009", "mapHide": 0, "left": "room_7", "right": "room_9"},
-    {"fjId": "room_9", "name": "仓库", "desc": "仓库", "roomType": "tsfangjian005", "mapHide": 0, "left": "room_8"},
+    {"fjId": "fb320_01", "name": "屋外", "desc": "这里是屋外，是一片小小的开阔地", "roomType": "tsfangjian002", "mapHide": 0, "up": "fb320_02"},
+    {"fjId": "fb320_02", "name": "门前", "desc": "宅院门前", "roomType": "tsfangjian003", "mapHide": 0, "down": "fb320_01", "up": "fb320_03"},
+    {"fjId": "fb320_03", "name": "大门", "desc": "宅院大门", "roomType": "tsfangjian004", "mapHide": 0, "down": "fb320_02", "up": "fb320_05"},
+    {"fjId": "fb320_04", "name": "卧室", "desc": "卧室", "roomType": "tsfangjian011", "mapHide": 0, "right": "fb320_05"},
+    {"fjId": "fb320_05", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_03", "left": "fb320_04", "up": "fb320_06"},
+    {"fjId": "fb320_06", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_05", "up": "fb320_08"},
+    {"fjId": "fb320_07", "name": "练功房", "desc": "练功房", "roomType": "tsfangjian009", "mapHide": 0, "right": "fb320_08"},
+    {"fjId": "fb320_08", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_06", "left": "fb320_07", "right": "fb320_09"},
+    {"fjId": "fb320_09", "name": "仓库", "desc": "仓库", "roomType": "tsfangjian005", "mapHide": 0, "left": "fb320_08"},
 ]
+
+# 以下三个字段原样抠自 familytype.lua ["户型总览"]["2"] (huxing002 简屋小户),
+# 已脚本逐字节比对一致, 与真实服务端行为相同(服务端即照抄该表下发)。勿手改。
+HX_MAP_APPEARANCE = "\n".join([
+    "房间—长廊—房间",
+    "　　　　▏",
+    "　　　长廊",
+    "　　　　▏",
+    "房间—长廊",
+    "　　　　▏",
+    "　　　大门",
+    "　　　　▏",
+    "　　　门前",
+    "　　　　▏",
+    "　　　屋外",
+])
+HX_MAP_APPEARANCE_INDEX = "\n".join([
+    "fb320_07,fb320_08,fb320_09",
+    "fb320_06",
+    "fb320_04,fb320_05",
+    "fb320_03",
+    "fb320_02",
+    "fb320_01",
+])
+HX_ENTRY_ROOM = "fb320_02"
+
+# huxing002 布局下合法的房间 ID 前缀(含扩建生成的新房间)
+_HX_ROOM_PREFIX = "fb320_"
 
 
 def _userid(ctx):
@@ -154,7 +187,7 @@ def _employee_payload(employee):
     value = copy.deepcopy(employee)
     value.setdefault("rwId", value.get("objId"))
     value.setdefault("objId", value.get("rwId"))
-    value.setdefault("fjId", "room_1")
+    value.setdefault("fjId", "fb320_04")
     value.setdefault("job", value.get("jobType", "puren001"))
     value.setdefault("jobType", value.get("job", "puren001"))
     value.setdefault("modal", "moban001")
@@ -175,8 +208,23 @@ def _map_data(ctx, userid, bucket):
     house = bucket["house"]
     mid = _int(house.get("mid"), 0)
     rooms = copy.deepcopy(bucket.get("rooms") or DEFAULT_ROOMS)
-    if not any(isinstance(room, dict) and room.get("up") for room in rooms):
+    # 迁移: bucket 里持久化的房间若不是当前 huxing002 布局(旧版 room_* 等),
+    # 与全图 mapAppearanceIndex 的 fb320_* ID 对不上, 直接重置为官方布局。
+    stale = not rooms or any(
+        not isinstance(room, dict)
+        or not str(room.get("fjId", "")).startswith(_HX_ROOM_PREFIX)
+        for room in rooms
+    )
+    if stale:
         rooms = copy.deepcopy(DEFAULT_ROOMS)
+        bucket["rooms"] = copy.deepcopy(DEFAULT_ROOMS)
+        # 雇员所在房间同步迁移到新布局(默认卧室 fb320_04)
+        for employee in bucket.get("employees", {}).values():
+            if isinstance(employee, dict) and not str(employee.get("fjId", "")).startswith(_HX_ROOM_PREFIX):
+                employee["fjId"] = "fb320_04"
+        bucket["updated_at"] = int(time.time())
+        with ctx["state"]._lock:
+            ctx["state"]._changed()
     # 补齐客户端移动/渲染所需的全部房间字段(含 stepMusic)
     rooms = [_normalize_room(room, mid, 690000 + i)
              for i, room in enumerate(rooms)]
@@ -214,10 +262,10 @@ def _map_data(ctx, userid, bucket):
             "uid": userid,
             "name": house.get("name") or house.get("houseName") or "家园",
             "desc": house.get("desc") or "",
-            "entryRoom": house.get("entryRoom") or "room_1",
+            "entryRoom": house.get("entryRoom") or HX_ENTRY_ROOM,
             "BGM": house.get("BGM") or "bgm001",
-            "mapAppearance": "庭院\n　▏\n门前—正厅—卧房—书房—厨房—客房—练功房—仓库",
-            "mapAppearanceIndex": "room_1\nroom_2,room_3,room_4,room_5,room_6,room_7,room_8,room_9",
+            "mapAppearance": house.get("mapAppearance") or HX_MAP_APPEARANCE,
+            "mapAppearanceIndex": house.get("mapAppearanceIndex") or HX_MAP_APPEARANCE_INDEX,
             "extra": {},
             "isChangeName": "N",
             "loc_mark": loc_mark,
@@ -402,7 +450,7 @@ def update_employee_extra(ctx):
         if not isinstance(employee, dict):
             return build_response_body({}, errcode=404, errmsg="employee not found")
         if update.get("fjId") is not None:
-            employee["fjId"] = str(update.get("fjId") or "room_1")
+            employee["fjId"] = str(update.get("fjId") or "fb320_04")
         extra = update.get("extra")
         if isinstance(extra, dict):
             employee.setdefault("extra", {}).update(copy.deepcopy(extra))
@@ -471,3 +519,75 @@ def get_all_persons(ctx):
     if error:
         return build_response_body({}, errcode=404, errmsg=error)
     return build_response_body({"list": [_employee_payload(v) for v in bucket.get("employees", {}).values()]})
+
+
+_GUAIKE_YINPIAO = 200
+_GUAIKE_GOLD = 100
+_GUAIKE_ITEMS = (
+    {"itemId": "qiannengdan", "num": 1},
+    {"itemId": "jingmai102", "num": 1},
+)
+
+
+def _grant_guaike_archive(state, userid, yinpiao, gold, items):
+    archive = state.get_archive(userid)
+    archive = copy.deepcopy(archive) if isinstance(archive, dict) else {}
+    archive["yinpiao"] = max(_int(archive.get("yinpiao"), 0), 0) + yinpiao
+    archive["gold"] = max(_int(archive.get("gold"), 0), 0) + gold
+    bag = archive.get("items")
+    if not isinstance(bag, list):
+        bag = []
+        archive["items"] = bag
+    for value in items:
+        item_id = str(value.get("itemId") or "")
+        amount = _int(value.get("num"), 0)
+        if not item_id or amount <= 0:
+            continue
+        found = None
+        for item in bag:
+            if isinstance(item, dict) and str(item.get("itemId")) == item_id:
+                found = item
+                break
+        if found is None:
+            next_id = max(
+                [_int(item.get("id"), 0) for item in bag if isinstance(item, dict)]
+                or [0]
+            ) + 1
+            bag.append({"id": next_id, "itemId": item_id, "count": amount})
+        else:
+            found["count"] = max(_int(found.get("count"), 0), 0) + amount
+    return state.put_archive(userid, archive)
+
+
+@route(["POST"], "get_guaike_reward")
+def get_guaike_reward(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body(ctx)
+    bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
+    if error:
+        return build_response_body({}, errcode=403, errmsg=error)
+
+    is_menke = _int(body.get("isMenKe"), 0)
+    menke_id = str(body.get("menKeId") or "")
+    default_zhongcheng = 0
+    if is_menke == 1 and menke_id:
+        employee = (bucket.get("employees") or {}).get(menke_id)
+        if isinstance(employee, dict):
+            default_zhongcheng = _int(employee.get("defaultZhongCheng"), 0)
+
+    activity_items = [copy.deepcopy(item) for item in _GUAIKE_ITEMS]
+    _grant_guaike_archive(
+        ctx["state"], userid, _GUAIKE_YINPIAO, _GUAIKE_GOLD, activity_items
+    )
+    return build_response_body({
+        "yinpiao": _GUAIKE_YINPIAO,
+        "yueli": 0,
+        "weiwang": 0,
+        "gold": _GUAIKE_GOLD,
+        "activityItems": activity_items,
+        "defaultZhongCheng": default_zhongcheng,
+        "level_up": False,
+        "trait": {},
+    })

@@ -32,6 +32,7 @@ from handlers.homeland import (
     get_employee_data,
     get_employee_list,
     get_affair_list,
+    get_guaike_reward,
     get_home_switch,
     get_house_info,
     get_user_map,
@@ -697,8 +698,14 @@ class StateStoreTest(unittest.TestCase):
             room["fjId"]: room
             for room in mapped["data"]["maproom"]
         }
-        self.assertEqual(room_by_id["room_1"]["up"], "room_2")
-        self.assertEqual(room_by_id["room_2"]["roomType"], "tsfangjian011")
+        self.assertEqual(room_by_id["fb320_01"]["up"], "fb320_02")
+        self.assertEqual(room_by_id["fb320_02"]["roomType"], "tsfangjian003")
+        # huxing002 布局与 familytype.lua 对齐: 全图房间数与入口
+        self.assertEqual(len(room_by_id), 9)
+        self.assertEqual(mapped["data"]["usermap"]["entryRoom"], "fb320_02")
+        self.assertEqual(
+            mapped["data"]["usermap"]["mapAppearanceIndex"].count("fb320_"), 9
+        )
         affairs = get_affair_list({
             "state": store,
             "headers": {"userid": str(userid)},
@@ -731,6 +738,62 @@ class StateStoreTest(unittest.TestCase):
             "body": {"mid": mid, "objId": "puren_test_1"},
         })
         self.assertEqual(deleted["errcode"], 0)
+
+    def test_get_guaike_reward_grants_yinpiao_gold_and_items(self):
+        userid = 9048162374
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 10, "gold": 5, "items": []}},
+        }, autosave=False)
+        house = get_house_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {},
+        })
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        employee = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_gk_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四", "defaultZhongCheng": 700},
+            },
+        })
+        self.assertEqual(employee["errcode"], 0)
+
+        response = get_guaike_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "isMenKe": 1,
+                "menKeId": "puren_gk_1",
+                "mid": mid,
+                "guaikeLv": 2,
+            },
+        })
+        self.assertEqual(response["errcode"], 0)
+        data = response["data"]
+        self.assertEqual(data["yinpiao"], 200)
+        self.assertEqual(data["gold"], 100)
+        self.assertEqual(data["yueli"], 0)
+        self.assertEqual(data["weiwang"], 0)
+        self.assertEqual(data["level_up"], False)
+        self.assertEqual(data["trait"], {})
+        self.assertEqual(data["defaultZhongCheng"], 700)
+        self.assertEqual(data["activityItems"], [
+            {"itemId": "qiannengdan", "num": 1},
+            {"itemId": "jingmai102", "num": 1},
+        ])
+
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["yinpiao"], 210)
+        self.assertEqual(archive["gold"], 105)
+        item_counts = {item["itemId"]: item["count"] for item in archive["items"]}
+        self.assertEqual(item_counts["qiannengdan"], 1)
+        self.assertEqual(item_counts["jingmai102"], 1)
 
     def test_concurrent_account_ids_are_unique(self):
         store = StateStore()
