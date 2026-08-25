@@ -1,9 +1,3 @@
---[[
-Descripttion: 
-version: 
-Author: LvBin
-Date: 2025-02-11 16:47:18
---]]
 local ChallengeMapRoleInfoUI = class("ChallengeMapRoleInfoUI", LayerEx)
 
 function ChallengeMapRoleInfoUI:create()
@@ -111,4 +105,4 @@ end
 
 Helper:classDefNodeGetInstance(ChallengeMapRoleInfoUI)
 return ChallengeMapRoleInfoUI
-000
+0000

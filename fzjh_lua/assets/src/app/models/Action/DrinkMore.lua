@@ -254,24 +254,14 @@ function DrinkMore:__initShowRewardList(list)
 end
 
 function DrinkMore:checkCanGetReward(rewards)
-    local isTrue, searchInfo = ActionRewardsHelper:checkRewardsCanBuy(rewards, self.__role)
-    local msg = nil
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self.__role, rewards)
 
-    if isTrue == false then
-        PopText(searchInfo.msg)
-        return false
-    end
+    return not isDuplicate, searchInfo
+end
 
-    if isTrue then
-        isTrue, msg = ActionRewardsHelper:checkBagCanGetRewards(rewards, self.__role)
-    end
-
-    if isTrue == false then
-        PopText(msg)
-        return false
-    end
-
-    return true
+function DrinkMore:checkBagCanGetReward(rewards)
+    local isTrue, msg = ActionRewardsHelper:checkBagCanGetRewards(rewards, self.__role)
+    return isTrue, msg
 end
 
 function DrinkMore:doReward(rewardId, giftId, callback)
@@ -321,4 +311,4 @@ function DrinkMore:__initDriveAwayInfo(list)
 end
 
 return class("DrinkMore", {}, DrinkMore)
-00000
+0000000000000

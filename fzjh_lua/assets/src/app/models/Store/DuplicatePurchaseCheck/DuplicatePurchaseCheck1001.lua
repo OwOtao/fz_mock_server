@@ -15,13 +15,12 @@ function DuplicatePurchaseCheck1001:checkDuplicatePurchase(role)
     local searchValue = self._res:getSearchvalue()
 
     if searchValue == "hiddenMeridianSystem" then
-        local value = role:getHiddenMeridianSystem():isUnlocked() == true and 1 or 0
+        local isUnlocked = role:getHiddenMeridianSystem():isUnlocked() == true
+        local value = isUnlocked and 1 or 0
 
         if self:_compareValue(value) then
             result = true
-            if msg == nil then
-                msg = "不满足购买条件，无法购买!"
-            end
+            msg = (isUnlocked and "已开启" or "未开启") .. "隐脉系统"
         end
     end
     
@@ -29,4 +28,4 @@ function DuplicatePurchaseCheck1001:checkDuplicatePurchase(role)
 end
 
 return newClass("DuplicatePurchaseCheck1001", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck1001)
-00000000000000
+000000

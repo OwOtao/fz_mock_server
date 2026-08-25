@@ -621,11 +621,12 @@ function Inherit:doInherit(inheritImprintingData)
                 function()
                     Audio:stopMusic()
 
-					HttpManagerEx:canInherit(function(status, errcode, errmsg, data)
+					local currencyVersion = User:getRole():getCurrencyVersion()
+
+					HttpManagerEx:canInherit(currencyVersion,function(status, errcode, errmsg, data)
 						if status == 200 and errcode == 0 then
 							local userId = User:getUserId()
 							local dataVer = User:getRole():getServerActionSystem():getDataVersion()
-							local currencyVersion = User:getRole():getCurrencyVersion()
 
 							IS_ABLE_TO_SAVE_DATA = false
 							DataBase:resetRoleData()

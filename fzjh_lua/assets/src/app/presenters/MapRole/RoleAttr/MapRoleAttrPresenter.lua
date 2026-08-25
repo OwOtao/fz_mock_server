@@ -321,9 +321,9 @@ function MapRoleAttrPresenter:__refreshHuiFuButtonPercent()
 end
 
 function MapRoleAttrPresenter:__refreshCsjButtonPercent()
-	if self.__role:getFlag("长生诀时间") > 0 then
-        local buttonIndex = 2
+	local buttonIndex = 2
 
+	if self.__role:getFlag("长生诀时间") > 0 then
 		local currTime = GetTime()
         
 		local needTime = currTime - self.__role:getFlag("长生诀时间")
@@ -335,6 +335,8 @@ function MapRoleAttrPresenter:__refreshCsjButtonPercent()
 		if percent == 100 then
 			self.__role:setFlag("长生诀时间",0)
 		end
+	else
+        self.__ui:setButtonPercent(buttonIndex, 100)
 	end
 end
 
@@ -398,4 +400,4 @@ function MapRoleAttrPresenter:popText(text)
 end
 
 return class("MapRoleAttrPresenter", {}, MapRoleAttrPresenter)
-0
+00000000000

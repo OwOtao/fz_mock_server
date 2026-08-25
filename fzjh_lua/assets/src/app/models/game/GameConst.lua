@@ -11,6 +11,7 @@ local defaultList = {
     bafangyouli_dengmenxiebao = "weekdmxb",
 	bafangyouli_xiazongzhiyuan = "weekhztc",
     bafangyouli_wujianhuiwu = "weekwjhl",
+    bafangyouli_huizitiancheng = "weekxzzy",
     teacherGuidance_dsc = "每天师门会派出长老对你进行指点，指点的次数与效果与你的师门名衔有关。"
 }
 
@@ -29,4 +30,4 @@ function GameConst:getDefaultValue(key)
 end
 
 
-return GameConst000000
+return GameConst00000000

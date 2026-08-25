@@ -273,16 +273,20 @@ function JiangHuZhenPinGe:exchangeItem(reward, exchangeNum, successCallback)
         function(status, errcode, errmsg, data)
             if status == 200 then
                 if errcode == 0 then
-                    local goodsList = {}
-
                     local rewardInfo = data.reward
 
-                    table.insert(goodsList, rewardInfo)
+                    local isEmail = false
 
-                    GoodsHelper:fromNetworkGrantGoods(self._role,GrantGoodRequest:create({goodsList = goodsList, dataVersion = data.dataVer, currencyVersion = data.currencyVersion}))
+                    if MapIsEmpty(rewardInfo) == false then
+                        local goodsList = {}
+
+                        table.insert(goodsList, rewardInfo)
+
+                        GoodsHelper:fromNetworkGrantGoods(self._role,GrantGoodRequest:create({goodsList = goodsList, dataVersion = data.dataVer, currencyVersion = data.currencyVersion}))
+                    end
 
                     if data.msg then
-                        PopText(data.msg)
+                        isEmail = true
                     end
 
                     reward.exchangeCount = Helper:getRange(reward.exchangeCount - exchangeNum, 0)
@@ -290,13 +294,20 @@ function JiangHuZhenPinGe:exchangeItem(reward, exchangeNum, successCallback)
                     self:setExchangeCurrencyCount(data.exchangeCurrencyCount)
 
                     if successCallback then
-                        local goods = GoodsHelper:getGoodsResClass(rewardInfo.id)
                         local info = {
                             need = reward.need * exchangeNum,
                             thankText = reward.thankText,
-                            name = goods:getName(),
-                            number = rewardInfo.num
+                            name = nil,
+                            number = nil,
+                            msg = data.msg
                         }
+
+                        if isEmail == false then
+                            local goods = GoodsHelper:getGoodsResClass(rewardInfo.id)
+                            info.name = goods:getName()
+                            info.number = rewardInfo.num
+                        end
+                        
                         successCallback(info)
                     end
                 else
@@ -311,7 +322,9 @@ function JiangHuZhenPinGe:exchangeItem(reward, exchangeNum, successCallback)
 end
 
 function JiangHuZhenPinGe:checkCanBuy(rewards)
-    return ActionRewardsHelper:checkRewardsCanBuy(rewards, self._role)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self._role, rewards)
+
+    return not isDuplicate, searchInfo
 end
 
 function JiangHuZhenPinGe:checkCanGetReward(rewards)
@@ -319,4 +332,4 @@ function JiangHuZhenPinGe:checkCanGetReward(rewards)
 end
 
 return class("JiangHuZhenPinGe", {}, JiangHuZhenPinGe)
-0000000000
+000

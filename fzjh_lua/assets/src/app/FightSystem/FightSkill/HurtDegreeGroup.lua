@@ -4,6 +4,18 @@ local ZhaoHurtDegreeFactory = require("app.FightSystem.Factory.FightSkillFactory
 
 local HurtDegree = require("app.FightSystem.FightSkill.HurtDegree")
 
+local function getCharacterSkillLevel(character, skillId)
+    if skillId == nil or skillId == "" then
+        error("伤害强度：skilllv 动态变量属性ID不可为空")
+    end
+
+    if type(character.getSkillLevel) == "function" then
+        return character:getSkillLevel(skillId)
+    end
+
+    return 0
+end
+
 local HurtDegreeGroup = {__id = ""}
 
 function HurtDegreeGroup:create(id)
@@ -119,6 +131,10 @@ function HurtDegreeGroup:getHurtValue()
                                 error("伤害强度：id " .. hurtDegree:getId() .. " 动态变量类型variablesList中battle动态变量value_name未知或未定义：" .. tostring(value_name))
                             end
                         end,
+                        [HurtDegree.VAR_TYPE.SKILL_LEVEL] = function()
+                            local value = getCharacterSkillLevel(__owner, value_name)
+                            table.insert(__dynamicVarValues, value)
+                        end,
                         ["default"] = function()
                             error("伤害强度：id " .. hurtDegree:getId() .. " 动态变量类型variablesList未知或未定义：" .. tostring(value_type))
                         end
@@ -173,6 +189,10 @@ function HurtDegreeGroup:getHurtValue()
                                 error("伤害强度：id " .. hurtDegree:getId() .. " 动态变量类型variablesList中battle动态变量value_name未知或未定义：" .. tostring(value_name))
                             end
                         end,
+                        [HurtDegree.VAR_TYPE.SKILL_LEVEL] = function()
+                            local value = getCharacterSkillLevel(__target, value_name)
+                            table.insert(__targetDynamicVars, value)
+                        end,
                         ["default"] = function()
                             error("伤害强度：id " .. hurtDegree:getId() .. " 目标动态变量类型variablesListTarget未知或未定义：" .. tostring(value_type))
                         end
@@ -193,4 +213,4 @@ function HurtDegreeGroup:getHurtValue()
 end
 
 return newClass("HurtDegreeGroup", {}, HurtDegreeGroup)
-00000000000000
+0

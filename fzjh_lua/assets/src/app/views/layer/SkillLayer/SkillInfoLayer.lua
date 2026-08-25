@@ -86,6 +86,9 @@ function SkillInfoLayer:onEnable()
         end,
         0.1
     )
+	if self.__currSkillInfoPresenter then
+		self.__currSkillInfoPresenter:onEnable()
+	end
 end
 
 function SkillInfoLayer:onDisable()
@@ -171,4 +174,4 @@ end
 
 Helper:classDefNodeGetInstance(SkillInfoLayer)
 return SkillInfoLayer
-000
+000000000

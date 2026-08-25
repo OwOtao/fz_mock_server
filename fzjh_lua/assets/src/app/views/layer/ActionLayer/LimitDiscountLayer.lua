@@ -42,7 +42,6 @@ end
 
 function LimitDiscountLayer:hide()
 	self:setVisible(false)
-	PopupLayerController:hideLayer("LimitDiscountLayer")
 end
 
 function LimitDiscountLayer:setImageKuang()
@@ -97,6 +96,7 @@ end
 function LimitDiscountLayer:setPanelBack()
 	self.Panel_back:releaseFunc(function()
 			self:hide()
+			self:destroyInstance()
 		end)
 end
 
@@ -151,4 +151,4 @@ end
 Helper:classDefNodeGetInstance(LimitDiscountLayer)
 
 return LimitDiscountLayer
-00000
+0

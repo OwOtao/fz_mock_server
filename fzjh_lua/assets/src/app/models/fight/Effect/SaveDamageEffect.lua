@@ -75,7 +75,7 @@ end
 --@time:2023-03-09 16:41:33
 --@value: 伤害值
 --@return
-function SaveDamageEffect:addActiveHurtSaveDamageValue(value)
+function SaveDamageEffect:__addActiveHurtSaveDamageValue(value)
     value = value * self.__activePercent * self.__basePercent
 
     value = math.abs(value)
@@ -88,7 +88,7 @@ end
 --@time:2023-03-09 16:41:33
 --@value: 伤害值
 --@return
-function SaveDamageEffect:addAutoHurtSaveDamageValue(value)
+function SaveDamageEffect:__addAutoHurtSaveDamageValue(value)
     value = value * self.__autoPercent * self.__basePercent
 
     value = math.abs(value)
@@ -112,6 +112,33 @@ function SaveDamageEffect:isAutoHurtSaveDamage()
     return self.__isAutoHurt
 end
 
+--@desc: 是否触发
+--@author:LvBin
+--@time:2026-07-14 16:44:36
+--@hurt: [src.app.models.fight.Hurt.BaseHurt#BaseHurt]
+--@return
+function SaveDamageEffect:isTrigger(hurt)
+	if hurt:isAutoHurt() and self:isAutoHurtSaveDamage() then
+		return true
+    elseif hurt:isActiveHurt() and self:isActiveHurtSaveDamage() then
+		return true
+	end
+	return false
+end  
+
+--@desc: 触发
+--@author:LvBin
+--@time:2026-07-14 17:02:14
+--@hurt: [src.app.models.fight.Hurt.BaseHurt#BaseHurt]
+--@return
+function SaveDamageEffect:trigger(hurt)
+	if hurt:isAutoHurt() then
+		self:__addAutoHurtSaveDamageValue(hurt:getValue())
+    elseif hurt:isActiveHurt() then
+		self:__addActiveHurtSaveDamageValue(hurt:getValue())
+	end
+end
+
 --@desc: 是否生效
 --@author:LvBin
 --@time:2023-03-10 16:31:32
@@ -127,4 +154,4 @@ function SaveDamageEffect:isTakeEffect()
 end
 
 return newClass("SaveDamageEffect", {BaseEffect}, SaveDamageEffect)
-00000000000000
+0

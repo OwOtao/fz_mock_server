@@ -39,7 +39,8 @@ HurtDegree.VAR_TYPE = {
     BUFF_ATTR = "buffclassnum",
     FISTFOOT = "foot",
     BUFFID_NUM = "buffidnum",
-    BATTLE = "battle"
+    BATTLE = "battle",
+    SKILL_LEVEL = "skilllv"
 }
 
 function HurtDegree:create()
@@ -900,4 +901,4 @@ function HurtDegree:getHurtValue()
 end
 
 return class("HurtDegree", {}, HurtDegree)
-0000000000
+000000000000

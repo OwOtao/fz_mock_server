@@ -4,7 +4,11 @@ local newClass = require("third.class.NewClass")
 local BaseHurt = {
     __type = nil,
 
-    __value= 0
+    __value = 0,
+
+	__isAutoHurt = false,
+
+	__isActiveHurt = false
 }
 
 function BaseHurt:create(type,value)
@@ -35,5 +39,13 @@ function BaseHurt:getValue()
     return self.__value
 end
 
+function BaseHurt:isAutoHurt()
+    return self.__isAutoHurt
+end
+
+function BaseHurt:isActiveHurt()
+    return self.__isActiveHurt
+end
+
 return newClass("BaseHurt", {Ihurt}, BaseHurt)
-00000000000000
+000000000

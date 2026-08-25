@@ -1,4 +1,5 @@
 
+local GoodsHelper = require("app.models.Store.GoodsHelper")
 
 local NianBeastPresenters = class("NianBeastPresenters", cc.Layer)
 
@@ -285,9 +286,15 @@ end
 
 function NianBeastPresenters:__doReward(rid, giftId, func)
     local goodsList = self.__interactor:getGoodsListByGiftId(giftId)
-    local isTrue = self.__interactor:checkCanGetReward(goodsList)
+    local isTrue, searchInfo = self.__interactor:checkCanGetReward(goodsList)
     if isTrue == false then
-        PopText("已达上限，领取失败")
+        GoodsHelper:handleDuplicatePurchaseSearchInfo(
+            searchInfo,
+            {
+                flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+            }
+        )
+
         return
     end
 

@@ -35,6 +35,7 @@ function LiLianMapZhaosLibraryPresenter:showLayer(skillId)
     self:showZhaosListView()
     self:setBackButton()
 
+	self._IZhaosLibraryOutput:setButtonRuleVisible(false)
     self._IZhaosLibraryOutput:setButtonCreateZhaoIsVisible(false)	
     self._IZhaosLibraryOutput:setButtonCompleteIsVisible(false)
     self._IZhaosLibraryOutput:setButtonPropIsVisible(false)
@@ -169,4 +170,4 @@ end
 
 isImplement(LiLianMapZhaosLibraryPresenter, IZhaosLibraryPresenterInput)
 return LiLianMapZhaosLibraryPresenter
-00000
+0000000000000

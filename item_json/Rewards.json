@@ -37984,10 +37984,409 @@
     "rwNumber": 1,
     "rwType": "物品"
   },
+  "9348": {
+    "calcType": "固定类",
+    "id": 9348,
+    "rwName": "2026dwequip01",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9349": {
+    "calcType": "固定类",
+    "id": 9349,
+    "rwName": "2026dwequip02",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9350": {
+    "calcType": "固定类",
+    "id": 9350,
+    "rwName": "2026dwequip03",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9351": {
+    "calcType": "固定类",
+    "id": 9351,
+    "rwName": "2026dwequip04",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9352": {
+    "calcType": "固定类",
+    "id": 9352,
+    "rwName": "2026dwequip05",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9353": {
+    "calcType": "固定类",
+    "id": 9353,
+    "rwName": "2026dwequip06",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9354": {
+    "calcType": "固定类",
+    "id": 9354,
+    "rwName": 40051,
+    "rwNumber": 1,
+    "rwType": "称号"
+  },
+  "9355": {
+    "calcType": "固定类",
+    "id": 9355,
+    "rwName": "eq2020qx05",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9356": {
+    "calcType": "固定类",
+    "id": 9356,
+    "rwName": "eq2020qx03",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9357": {
+    "calcType": "固定类",
+    "id": 9357,
+    "rwName": "eq2020qx04",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9360": {
+    "calcType": "固定类",
+    "id": 9360,
+    "rwName": "canghubu",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9361": {
+    "calcType": "固定类",
+    "id": 9361,
+    "rwName": "chb250note",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9362": {
+    "calcType": "固定类",
+    "id": 9362,
+    "rwName": "hucangcanye",
+    "rwNumber": 7,
+    "rwType": "物品"
+  },
+  "9363": {
+    "calcType": "固定类",
+    "id": 9363,
+    "rwName": "wulangbaguagunbox1",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9364": {
+    "calcType": "固定类",
+    "id": 9364,
+    "rwName": "wlbgg250note",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9365": {
+    "calcType": "固定类",
+    "id": 9365,
+    "rwName": "qibafangcanye",
+    "rwNumber": 16,
+    "rwType": "物品"
+  },
+  "9366": {
+    "calcType": "固定类",
+    "id": 9366,
+    "rwName": "yinfengzhuabox1",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9367": {
+    "calcType": "固定类",
+    "id": 9367,
+    "rwName": "khyz250note",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9368": {
+    "calcType": "固定类",
+    "id": 9368,
+    "rwName": "suotianlongdicanye",
+    "rwNumber": 12,
+    "rwType": "物品"
+  },
+  "9369": {
+    "calcType": "固定类",
+    "id": 9369,
+    "rwName": "qianhunlie",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9370": {
+    "calcType": "固定类",
+    "id": 9370,
+    "rwName": "qhl250note",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9371": {
+    "calcType": "固定类",
+    "id": 9371,
+    "rwName": "xiaogushacanye",
+    "rwNumber": 16,
+    "rwType": "物品"
+  },
+  "9372": {
+    "calcType": "固定类",
+    "id": 9372,
+    "rwName": "qinlonggong",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9373": {
+    "calcType": "固定类",
+    "id": 9373,
+    "rwName": "ylg250note",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9374": {
+    "calcType": "固定类",
+    "id": 9374,
+    "rwName": "canglongtuokuncanye",
+    "rwNumber": 9,
+    "rwType": "物品"
+  },
+  "9375": {
+    "calcType": "固定类",
+    "id": 9375,
+    "rwName": "2026znqequip12",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9376": {
+    "calcType": "固定类",
+    "id": 9376,
+    "rwName": "2026znqequip13",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9377": {
+    "calcType": "固定类",
+    "id": 9377,
+    "rwName": "2026znqequip14",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9378": {
+    "calcType": "固定类",
+    "id": 9378,
+    "rwName": "2026znqequip15",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9379": {
+    "calcType": "固定类",
+    "id": 9379,
+    "rwName": "2026znqequip16",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9380": {
+    "calcType": "固定类",
+    "id": 9380,
+    "rwName": "2026znqequip17",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9381": {
+    "calcType": "固定类",
+    "id": 9381,
+    "rwName": "2026znqequip18",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9382": {
+    "calcType": "固定类",
+    "id": 9382,
+    "rwName": 40052,
+    "rwNumber": 1,
+    "rwType": "称号"
+  },
+  "9383": {
+    "calcType": "固定类",
+    "id": 9383,
+    "rwName": "26znqmask",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9384": {
+    "calcType": "固定类",
+    "id": 9384,
+    "rwName": "21bqwuxuemiji",
+    "rwNumber": 3,
+    "rwType": "物品"
+  },
+  "9385": {
+    "calcType": "固定类",
+    "id": 9385,
+    "rwName": "21qjwuxuemiji",
+    "rwNumber": 3,
+    "rwType": "物品"
+  },
+  "9386": {
+    "calcType": "固定类",
+    "id": 9386,
+    "rwName": "21qnwuxuemiji",
+    "rwNumber": 3,
+    "rwType": "物品"
+  },
+  "9387": {
+    "calcType": "固定类",
+    "id": 9387,
+    "rwName": "drxiang03",
+    "rwNumber": 3,
+    "rwType": "物品"
+  },
+  "9388": {
+    "calcType": "固定类",
+    "id": 9388,
+    "rwName": "26znqmask",
+    "rwNumber": 2,
+    "rwType": "物品"
+  },
+  "9390": {
+    "calcType": "固定类",
+    "id": 9390,
+    "rwName": "eq2020qx08",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9391": {
+    "calcType": "固定类",
+    "id": 9391,
+    "rwName": "eq2020qx06",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9392": {
+    "calcType": "固定类",
+    "id": 9392,
+    "rwName": "eq2020qx07",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9395": {
+    "calcType": "固定类",
+    "id": 9395,
+    "rwName": "jianghuxinwulu1",
+    "rwNumber": 5,
+    "rwType": "物品"
+  },
   "94": {
     "calcType": "固定类",
     "id": 94,
     "rwName": "shuye1",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9400": {
+    "calcType": "固定类",
+    "id": 9400,
+    "rwName": "primBindAsceDrag1",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9401": {
+    "calcType": "固定类",
+    "id": 9401,
+    "rwName": "primBindAsceDrag2",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9402": {
+    "calcType": "固定类",
+    "id": 9402,
+    "rwName": "primBindAsceDrag3",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9403": {
+    "calcType": "固定类",
+    "id": 9403,
+    "rwName": "primBindAsceDrag4",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9404": {
+    "calcType": "固定类",
+    "id": 9404,
+    "rwName": "primBindAsceDrag5",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9405": {
+    "calcType": "固定类",
+    "id": 9405,
+    "rwName": "dragVeinRunsDeepcanye",
+    "rwNumber": 16,
+    "rwType": "物品"
+  },
+  "9406": {
+    "calcType": "固定类",
+    "id": 9406,
+    "rwName": "bloodSoakCangcanye",
+    "rwNumber": 16,
+    "rwType": "物品"
+  },
+  "9407": {
+    "calcType": "固定类",
+    "id": 9407,
+    "rwName": "swalVanish1",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9408": {
+    "calcType": "固定类",
+    "id": 9408,
+    "rwName": "swalVanish2",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9409": {
+    "calcType": "固定类",
+    "id": 9409,
+    "rwName": "swalVanish3",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9410": {
+    "calcType": "固定类",
+    "id": 9410,
+    "rwName": "swalVanish4",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9411": {
+    "calcType": "固定类",
+    "id": 9411,
+    "rwName": "swalVanish5",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9412": {
+    "calcType": "固定类",
+    "id": 9412,
+    "rwName": "swalTailGrazStreamcanye",
+    "rwNumber": 1,
+    "rwType": "物品"
+  },
+  "9413": {
+    "calcType": "固定类",
+    "id": 9413,
+    "rwName": "swalGlyphReturcanye",
     "rwNumber": 1,
     "rwType": "物品"
   },

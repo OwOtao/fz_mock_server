@@ -11,15 +11,10 @@ function ShenBingHurt:create(type,value)
 end
 
 function ShenBingHurt:ctor()
-end
-
-function ShenBingHurt:isActiveHurt()
-    return false
-end
-
-function ShenBingHurt:isAutoHurt()
-    return true
+	self.__isAutoHurt = true
+	
+	self.__isActiveHurt = false
 end
 
 return newClass("ShenBingHurt", {BaseHurt}, ShenBingHurt)
-000000000000000
+00000000000000

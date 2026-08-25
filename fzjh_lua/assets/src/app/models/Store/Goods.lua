@@ -40,7 +40,9 @@ Goods.Const = {
         --武学
         SKILL = 3,
         --宝箱
-        BOX = 4
+        BOX = 4,
+		-- 装备
+		EQUIP = 5
     }
 }
 
@@ -95,4 +97,4 @@ function Goods:getSearchcondition()
 end
 
 return newClass("Goods", {}, Goods)
-00000
+0000000000

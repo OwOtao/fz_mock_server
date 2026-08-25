@@ -43,9 +43,7 @@ function SkillBreakThroughPresent:showLayer()
     self:setTextWxxdCount()
 
     local titleLayer = MainControllLayer:getLayer("TitleLayer")
-    -- layer:setLocalZOrder(10)
-    titleLayer:setSetUpButtonName("技能突破")
-    titleLayer:setButton_setupFunc(function()
+    titleLayer:setCustomButton("技能突破",function()
         local ZhaoBreakThroughPresent = MainControllLayer:getLayer("ZhaoBreakThroughPresent")
         ZhaoBreakThroughPresent:setRole(self.__role)
         ZhaoBreakThroughPresent:initData(self.__martialData)
@@ -194,4 +192,4 @@ end
 
 Helper:classDefNodeGetInstance(SkillBreakThroughPresent)
 return SkillBreakThroughPresent
-00000000000
+0000

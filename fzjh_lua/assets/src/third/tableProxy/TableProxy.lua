@@ -15,8 +15,9 @@ table.getn = function(t)
         return rawget(t, "__getn")(t)
     end
 
-    if t and t.ignorePart then
-        return table.getn(t.ignorePart.tb)
+    local ignorePart = rawget(t, "ignorePart")
+    if type(ignorePart) == "table" and ignorePart.tb then
+        return table.getn(ignorePart.tb)
     else
         return #t
     end
@@ -71,14 +72,22 @@ function pairs(t, filter)
     end
 
     local k, v
-    if rawget(t, "ignorePart") then
-        return pairs(
-            rawget(t, "ignorePart").tb,
-            function(k, v)
-                t[k] = v
-                return k, v
+    local ignorePart = rawget(t, "ignorePart")
+    if type(ignorePart) == "table" and ignorePart.tt == TABLE_TYPE_SAFE then
+        local tb = ignorePart.tb
+        -- 用重写的 pairs 取 key, 让 tb 是 inherit/encrypted 等特殊 table 时走自己的 __pairs,
+        -- 避免 next 直接吐出内部 raw 字段(如 __inherit)
+        local iter, state, init = pairs(tb)
+        return function()
+            local nextKey = iter(state, init)
+            init = nextKey
+            if nextKey == nil then return nil end
+            local val = t[nextKey]  -- 通过 proxy.__index 读值, 触发防篡改校验
+            if filter then
+                return filter(nextKey, val)
             end
-        )
+            return nextKey, val
+        end
     else
         return old_pairs(t)
     end
@@ -96,12 +105,20 @@ function ipairs(t)
         return EncryptedTable.__ipairs(t)
     end
 
-    if rawget(t, "ignorePart") then
-        return ipairs(rawget(t, "ignorePart").tb)
+    local ignorePart = rawget(t, "ignorePart")
+    if type(ignorePart) == "table" and ignorePart.tt == TABLE_TYPE_SAFE then
+        local tb = ignorePart.tb
+        local function safeINext(_, prevIdx)
+            local nextIdx = prevIdx + 1
+            if tb[nextIdx] == nil then return nil end
+            return nextIdx, t[nextIdx]  -- 通过 proxy.__index 读值，触发防篡改校验
+        end
+        return safeINext, nil, 0
     else
         return old_ipairs(t)
     end
 end
+
 
 -----------------------------------------------------------------------------------------------------------
 -- @author TangJian
@@ -119,8 +136,9 @@ function clone(object, lookup_table)
 
         if rawget(object, "ignorePart") then
             -- 判断如果是safetable, 则直接克隆data部分
+            local ignorePart = rawget(object, "ignorePart")
             local newObject = {}
-            if rawget(object, "ignorePart").tt == TABLE_TYPE_SAFE then
+            if type(ignorePart) == "table" and ignorePart.tt == TABLE_TYPE_SAFE then
                 for key, value in pairs(object) do
                     if key ~= "ignoreCloneTb" then
                         newObject[_copy(key)] = _copy(value)
@@ -128,10 +146,10 @@ function clone(object, lookup_table)
                 end
                 newObject =
                     createSafeTable(
-                    rawget(object, "ignorePart").createSafeTableParams[1],
+                    ignorePart.createSafeTableParams[1],
                     newObject,
-                    rawget(object, "ignorePart").createSafeTableParams[3],
-                    rawget(object, "ignorePart").createSafeTableParams[4]
+                    ignorePart.createSafeTableParams[3],
+                    ignorePart.createSafeTableParams[4]
                 )
             end
             lookup_table[object] = newObject
@@ -170,7 +188,8 @@ end
 
 -- 创建防修改table
 function createSafeTable(tableName, t, cheatCallback, needRestoreChildMap)
-    if t and t.ignorePart then
+    local ignorePart = type(t) == "table" and rawget(t, "ignorePart") or nil
+    if type(ignorePart) == "table" and ignorePart.tt == TABLE_TYPE_SAFE then
         return t
     else
         -- local PRINT_MODE = 1
@@ -325,4 +344,4 @@ function TableProxy:createSafeTableRecursive(tableName, t, cheatCallback, needRe
 end
 
 return TableProxy
-00
+000000000

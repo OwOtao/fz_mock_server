@@ -5,6 +5,8 @@
 ]]
 local newClass = require("third.class.NewClass")
 
+local Skill = require("app.models.skill.Skill")
+
 --@SuperType [src.app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck#ADuplicatePurchaseCheck]
 local DuplicatePurchaseCheck301 = {}
 
@@ -22,11 +24,13 @@ function DuplicatePurchaseCheck301:checkDuplicatePurchase(role)
 
     if self:_compareValue(exp) then
         result = true
-        msg = "商品对应的主动技能，您已研习至超出此商品的可购买范围！"
+        local activeZhao = Skill:getActiveZhao(active_id)
+        local activeName = activeZhao.name or (activeZhao.getName and activeZhao:getName()) or active_id
+        msg = string.format("主动招式【%s】的熟练度已%s%s", tostring(activeName), self:_getCompareSymbolText(), tostring(self:_getJudgingValue()))
     end
 
     return result , msg
 end
 
 return newClass("DuplicatePurchaseCheck301", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck301)
-00
+00000000000000

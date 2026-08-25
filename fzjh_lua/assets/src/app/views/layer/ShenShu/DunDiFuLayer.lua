@@ -1,6 +1,6 @@
 local DunDiFuLayer = class("DunDiFuLayer", LayerEx)
 local ControllLayer = require("app.views.layer.ControllLayer")
-local DialogALayer = require("app.views.layer.DialogLayer.DialogALayer")
+
 function DunDiFuLayer:create()
 	local p = DunDiFuLayer:new()
 	p:init()
@@ -59,67 +59,18 @@ function DunDiFuLayer:showlayer(book)
 		end
 		self:createRichText(str)
 		self.Button_1:releaseFunc(function()
-			local item = Item:getOneItemByKey("dundifu")
-			if not item then
-				return
-			end
-			local role = User:getRole()
-			local item_count = role:getItemCount("dundifu")
-			local skill = role:getSkill("wuxingdunfa")
-			-- if item_count >= 1 and MapIsEmpty(skill) == false then
-				local dialog = DialogALayer:getInstance()
-				dialog:show("选择前往"..showStr.."的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）")
-				dialog:setBack(false)
-				dialog:setWeChatVisible(false)
-				dialog:setButton1("自行前往", function()
-					local jump_to_map_select = function()
-						local mapIndex = Map:getMapIndexById(book.mapId)
-						if MainControllLayer:getCurrLayer()=="MapLayer" then 
-							local mapLayer = MainControllLayer:getLayer("MapLayer")
-							mapLayer:quit()
-							mapLayer:setVisible(false)
-						end
-						self:setVisible(false)
-						MainControllLayer:pushLayer("SelectMapLayer")
-						local selectMapLayer = MainControllLayer:getLayer("SelectMapLayer")
-						selectMapLayer:setMap(book.mapId)
-					end
-
-					local RoleTaskControllor = require("app.views.layer.RoleLayer.RoleTaskControllor")
-					if RoleTaskControllor:clickMapLayer(role, jump_to_map_select) == false then
-						return
-					else
-						jump_to_map_select()
-					end
-				end)
-				dialog:setButton2("用遁地符", function()
+			local text = "选择前往"..showStr.."的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）"
+			local backClick = false
+			local callfunc = function(result, failureState)
+				if result == true then
 					self:setVisible(false)
-					item:useDunDiFu(role, book.mapId, book.randomRoom,EMPTY_FUNC,SKILL_ITEM_DUNDIFU_TYPE)
-				end)
-				if MapIsEmpty(skill) == false then
-					dialog:setButton3("五行遁法", function()
-						item:useDunDiFu(role, book.mapId, book.randomRoom, function(useResult)
-							if useResult == false then 
-								dialog:setVisible(true)
-							else
-								self:setVisible(false)
-							end
-						end,SKILL_ITEM_TYPE)
-					end)
 				end
-			-- elseif MapIsEmpty(skill) == false then
-			-- 	--@desc 直接使用五行遁法
-			-- 	item:useDunDiFu(role, book.mapId, book.randomRoom, function (useResult)
-			-- 		if useResult == false then 
-			-- 		else
-			-- 			self:setVisible(false)
-			-- 		end
-			-- 	end,SKILL_ITEM_TYPE)
-			-- else
-			-- 	self:setVisible(false)
-			-- 	item:useDunDiFu(role, book.mapId, book.randomRoom,EMPTY_FUNC,SKILL_ITEM_DUNDIFU_TYPE,true)
-			-- end
+			end
+
+			local JumpMapStylePrensenter = require("app.presenters.JumpMapStyle.JumpMapStylePrensenter"):create()
+			JumpMapStylePrensenter:showLayer(User:getRole(), book.mapId, book.randomRoom, text, backClick, callfunc)
 		end)
+
 end
 function DunDiFuLayer:createRichText(str)
 	local x, y = self.Image_kuang:getPosition()
@@ -162,12 +113,8 @@ function DunDiFuLayer:showXunBaolayer(list,func)
 	end)
 	self:createRichText(list.str)
 	self.Button_1:releaseFunc(function()
-		local item = Item:getOneItemByKey("dundifu")
-		if not item then
-			return
-		end
 		local role = User:getRole()
-		local map  = Map:getMapById(list.mapId)
+		local map = Map:getMapById(list.mapId)
 		local room 
 		for k,v in pairs(map["room"]) do 
 			if v.id == list.roomId then
@@ -175,48 +122,18 @@ function DunDiFuLayer:showXunBaolayer(list,func)
 			end
 		end
 
-		local showStr="HIY"..map.name..room.name.."NOR"
-		local item_count = role:getItemCount("dundifu")
-		local skill = role:getSkill("wuxingdunfa")
-			local dialog = DialogALayer:getInstance()
-			dialog:show("选择前往"..showStr.."的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）")
-			dialog:setBack(false)
-			dialog:setWeChatVisible(false)
-			dialog:setButton1("自行前往", function()
-				local jump_to_map_select = function()
-					if MainControllLayer:getCurrLayer() == "MapLayer" then
-						local mapLayer = MainControllLayer:getLayer("MapLayer")
-						mapLayer:quit()
-						mapLayer:setVisible(false)
-					end
-					self:setVisible(false)
-					MainControllLayer:pushLayer("SelectMapLayer")
-					local selectMapLayer = MainControllLayer:getLayer("SelectMapLayer")
-					selectMapLayer:setMap(list.mapId)
-				end
-				local RoleTaskControllor = require("app.views.layer.RoleLayer.RoleTaskControllor")
-				if RoleTaskControllor:clickMapLayer(role, jump_to_map_select) == false then
-					return
-				else
-					jump_to_map_select()
-				end
-			end)
-			dialog:setButton2("用遁地符", function()
+		local text = "选择前往HIY"..map.name..room.name.."NOR的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）"
+		local backClick = false
+		local callfunc = function(result, failureState)
+			if result == true then
 				self:setVisible(false)
-				item:useDunDiFu(role, list.mapId, list.roomId,EMPTY_FUNC,SKILL_ITEM_DUNDIFU_TYPE)
-			end)
-			if MapIsEmpty(skill) == false then
-				dialog:setButton3("五行遁法", function()
-					item:useDunDiFu(role, list.mapId, list.roomId, function(useResult)
-						if useResult == false then 
-							dialog:setVisible(true)
-						else
-							self:setVisible(false)
-						end
-					end,SKILL_ITEM_TYPE)
-				end)
 			end
+		end
+
+		local JumpMapStylePrensenter = require("app.presenters.JumpMapStyle.JumpMapStylePrensenter"):create()
+        JumpMapStylePrensenter:showLayer(User:getRole(), list.mapId, list.roomId, text, backClick, callfunc)
 	end)
+
 end
 Helper:classDefNodeGetInstance(DunDiFuLayer)
-return DunDiFuLayer000000
+return DunDiFuLayer000000000000

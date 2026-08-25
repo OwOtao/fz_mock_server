@@ -1219,6 +1219,11 @@ function ChallengeMapResults.oldchallenge(thread, input)
 	end
 
 	local winCallback = function()
+		local csjCD = player:getFlag("长生诀时间")
+		if csjCD > 0 then
+			player:setFlag("长生诀时间",math.max(csjCD - 10,0))
+		end
+
 		local newInput = inherit({}, input)
 	
 		newInput:setEventType(ChallengeMapConstant.EventType.ChallengeWin)
@@ -1285,6 +1290,11 @@ function ChallengeMapResults.oldduel(thread, input)
 	end
 
 	local winCallback = function()
+		local csjCD = player:getFlag("长生诀时间")
+		if csjCD > 0 then
+			player:setFlag("长生诀时间",math.max(csjCD - 10,0))
+		end
+		
 		local newInput = inherit({}, input)
 	
 		newInput:setEventType(ChallengeMapConstant.EventType.DuelWin)
@@ -1406,4 +1416,4 @@ function ChallengeMapResults.labelresult(thread, input)
 end
 
 return ChallengeMapResults
-00000000000000
+0000000000000000

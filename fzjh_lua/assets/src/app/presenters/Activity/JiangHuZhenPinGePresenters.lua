@@ -1,6 +1,5 @@
 local JiangHuZhenPinGePresenters = class("JiangHuZhenPinGePresenters", cc.Layer)
 local GoodsHelper = require("app.models.Store.GoodsHelper")
-local ActionRewardsHelper = require("app.models.Action.ActionRewardsHelper")
 
 function JiangHuZhenPinGePresenters:create()
     local p = JiangHuZhenPinGePresenters:new()
@@ -293,21 +292,13 @@ function JiangHuZhenPinGePresenters:exchangeReward()
     local isTrue, searchInfo = self._interactor:checkCanBuy({{id = exchangeRewardInfo.goodsId, num = 1}})
 
     if isTrue == false then
-        local msg = ""
+        GoodsHelper:handleDuplicatePurchaseSearchInfo(
+            searchInfo,
+            {
+                flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+            }
+        )
 
-        if searchInfo.searchType == "101" then
-            msg = "已学习对应武学，无需再次兑换！"
-        elseif searchInfo.searchType == "301" then
-            msg = "您该主动技能即将/已经达到熟练度上限，无需兑换！"
-        elseif searchInfo.searchType == "201" or searchInfo.searchType == "401" or searchInfo.searchType == "501" or searchInfo.searchType == "701" then
-            msg = "已达到商品可持有数量的限制，不可兑换！"
-        elseif searchInfo.searchType == "1001" or searchInfo.searchType == "1002" then
-            msg = "不满足兑换条件，无法兑换!"
-        elseif searchInfo.searchType == "701" then
-            msg = "您的等级不符合该礼包道具的最低使用要求，目前不能兑换！"
-        end
-
-        PopText(msg)
         return
     end
 
@@ -333,6 +324,8 @@ function JiangHuZhenPinGePresenters:exchangeReward()
 
                                         if rewardInfo.name then
                                             PopText("获得 " .. rewardInfo.name .. " x " .. rewardInfo.number)
+                                        else
+                                            PopText(rewardInfo.msg)
                                         end
                                     end
                                 )
@@ -457,4 +450,4 @@ end
 Helper:classDefNodeGetInstance(JiangHuZhenPinGePresenters)
 
 return JiangHuZhenPinGePresenters
-00000000000000
+00000000000

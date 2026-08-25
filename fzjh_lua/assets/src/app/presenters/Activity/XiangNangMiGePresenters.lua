@@ -1,4 +1,5 @@
 local XiangNangMiGePresenters = class("XiangNangMiGePresenters", cc.Layer)
+local GoodsHelper = require("app.models.Store.GoodsHelper")
 
 function XiangNangMiGePresenters:create()
     local p = XiangNangMiGePresenters:new()
@@ -173,53 +174,55 @@ function XiangNangMiGePresenters:__initUI()
     self._actionUI:setPanelInfoText(self._interactor:getHelpText())
 end
 
+function XiangNangMiGePresenters:__showExchangeConfirmDialog(reward)
+    local DialogALayer = require("app.views.layer.DialogLayer.DialogALayer")
+    local dialog = DialogALayer:getInstance()
+    dialog:show("是否消耗"..reward.price..self._interactor:getCurrencyName().."兑换当前奖励?")
+    dialog:setButton1("确定", function()
+        if self._interactor:checkCurrencyIsEnough(reward.price) == false then
+            PopText(self._interactor:getCurrencyName().."不足无法兑换")
+            return
+        end
+
+        local rewards = reward.rewards
+
+        local isEmail = self._interactor:checkBagIsEnough(rewards)
+        self._interactor:doReward(reward.id, isEmail,function()
+            self._selectRewardUI:hideUI()
+            self._interactor:init(
+                function()
+                    self:__initUI()
+                end
+            )
+        end)
+    end)
+
+    dialog:setButton2("取消", function()
+        dialog:hide()
+    end)
+
+    dialog:setWeChatVisible(false)
+end
+
 function XiangNangMiGePresenters:__doReward(reward)
     if MapIsEmpty(reward) == false then
         local isTrue, searchInfo = self._interactor:checkCanBuy(reward.rewards)
 
-        local msg = ""
-        
         if isTrue == false then
-            if searchInfo.searchType == "101" then
-                msg = "您已学习对应武学，继续兑换会获得对应残篇，使用后会增加相应的武学经验，"
-            elseif searchInfo.searchType == "301" then
-                msg = "您该主动技能即将/已经达到熟练度上限，继续兑换可能无法使用该道具，"
-            elseif searchInfo.searchType == "201" or searchInfo.searchType == "401" or searchInfo.searchType == "501" then
-                msg = "您已拥有礼包内其中一样道具，继续兑换会获得重复道具，"
-            elseif searchInfo.searchType == "1001" or searchInfo.searchType == "1002" or searchInfo.searchType == "601" then
-                msg = "您暂时不满足使用其中一样商品的条件，继续兑换可能无法使用该道具，"
-            elseif searchInfo.searchType == "701" then
-                msg = "您该道具即将/已经达到可持有上限，继续兑换将会溢出，邮件过期将无法领取，"
-            end
+            GoodsHelper:handleDuplicatePurchaseSearchInfo(
+                searchInfo,
+                {
+                    flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.CONTINUE,
+                    onConfirm = function()
+                        self:__showExchangeConfirmDialog(reward)
+                    end
+                }
+            )
+
+            return
         end
 
-        local DialogALayer = require("app.views.layer.DialogLayer.DialogALayer")
-        local dialog = DialogALayer:getInstance()
-        dialog:show(msg.."是否消耗"..reward.price..self._interactor:getCurrencyName().."兑换当前奖励?")
-        dialog:setButton1("确定", function()
-            if self._interactor:checkCurrencyIsEnough(reward.price) == false then
-                PopText(self._interactor:getCurrencyName().."不足无法兑换")
-                return
-            end
-
-            local rewards = reward.rewards
-
-            local isEmail = self._interactor:checkBagIsEnough(rewards)
-            self._interactor:doReward(reward.id, isEmail,function()
-                self._selectRewardUI:hideUI()
-                self._interactor:init(
-                    function()
-                        self:__initUI()
-                    end
-                )
-            end)
-        end)
-
-        dialog:setButton2("取消", function()
-            dialog:hide()
-        end)
-
-        dialog:setWeChatVisible(false)
+        self:__showExchangeConfirmDialog(reward)
     else
         error("当前奖励为空")
     end
@@ -268,4 +271,4 @@ end
 Helper:classDefNodeGetInstance(XiangNangMiGePresenters)
 
 return XiangNangMiGePresenters
-000000
+00

@@ -19,6 +19,10 @@ local CanNotLiaoShang = {
     NEILI = "内力不足，不能疗伤"
 }
 
+local CanNotUseCsj = {
+    QIMAX = "你现在气血充沛。"
+}
+
 function ChallengeMapRoleInfo:create()
     return ChallengeMapRoleInfo:new()
 end
@@ -216,5 +220,23 @@ function ChallengeMapRoleInfo:checkCanHuiFu()
     return true
 end
 
+function ChallengeMapRoleInfo:checkCanUseCsj()
+    if Helper:mathFloor(self._role:getNumAttr("qi")) == Helper:mathFloor(self._role:getFinalAttr("qiMax")) and 
+        self._role:getAttr("qiPercent") == 1 and
+        Helper:mathFloor(self._role:getNumAttr("neili")) >= Helper:mathFloor(self._role:getFinalAttr("neiliMax")) * 2 then
+    
+        return false, CanNotUseCsj.QIMAX
+    end
+
+    return true
+end
+
+function ChallengeMapRoleInfo:useCsj()
+    if self._role:getFlag("地图打坐") == true then
+        self._role:setFlag("地图打坐", nil)
+        self._role:stopDaZuo()
+    end
+end
+
 return class("ChallengeMapRoleInfo", {}, ChallengeMapRoleInfo)
-0000000
+000000000000000

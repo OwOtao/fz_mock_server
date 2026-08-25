@@ -4,6 +4,7 @@ local effectCreateSwitch = {
 	["储伤"] = require("app.models.fight.Effect.SaveDamageEffect"),
     ["监控角色属性"] = require("app.models.fight.Effect.AttrMonitorEffect"),
 	["角色立即死亡"] = require("app.models.fight.Effect.SelfKillEffect"),
+	["受伤回血"] = require("app.models.fight.Effect.HpRecoverOnHurtEffect"),
 	default = require("app.models.fight.Effect.BaseEffect")
 }
 
@@ -12,4 +13,4 @@ function EffectFactory:create(effect)
 end
 
 return EffectFactory
-00000000
+000000000

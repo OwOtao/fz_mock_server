@@ -1,11 +1,19 @@
 local ActivityTaskRewardConf = {}
 
+local ActivityCalendarUtils = require("app.models.Action.ActivityCalendarUtils")
+
+local hztcStartTime, hztcEndTime = ActivityCalendarUtils:getActivityTime(GameConst:getDefaultValue("bafangyouli_huizitiancheng"))
+
+hztcStartTime = Helper:date("%Y%m%d", hztcStartTime)
+
+hztcEndTime = Helper:date("%Y%m%d", hztcEndTime)
+
 local config = {
     {
         --@desc 活动开始时间
-        s_time = "20260420",
+        s_time = hztcStartTime,
         --@desc 活动结束时间
-        e_time = "20260427",
+        e_time = hztcEndTime,
         tasks = {
             ["task16"] = {
                 getReward = function(self, taskId,params)
@@ -61,9 +69,9 @@ local config = {
     },
     {
         --@desc 活动开始时间
-        s_time = "20250724",
+        s_time = "20260813",
         --@desc 活动结束时间
-        e_time = "20250808",
+        e_time = "20260828",
         tasks = {
             ["task16"] = {
                 getReward = function(self, taskId,params)
@@ -148,4 +156,4 @@ function ActivityTaskRewardConf:getTaskLocalReward(taskId , params )
 end
 
 return ActivityTaskRewardConf
-00000000000
+00

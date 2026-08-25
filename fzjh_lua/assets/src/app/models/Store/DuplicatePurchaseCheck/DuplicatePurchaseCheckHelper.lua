@@ -5,9 +5,9 @@ local lru = require("third.cache.lru")
 local GoodsSearchResourceClass = {}
 
 function GoodsSearchResourceClass:create(id)
-    id = tonumber(id) or error("GoodsSearchResourceClass:create() - id is nil or not number")
+    id = tonumber(id) or error("GoodsSearchResourceClass:create() - id is nil or not number， id is "..tostring(id))
     local p = setmetatable({}, {__index = GoodsSearchResourceClass})
-    p:__init(goodsSearchResource[id] or error("GoodsSearchResourceClass:create() - id is not exist in goodsSearchResource"))
+    p:__init(goodsSearchResource[id] or error("GoodsSearchResourceClass:create() - id is not exist in goodsSearchResource， id is "..tostring(id)))
     return p
 end
 
@@ -63,15 +63,32 @@ function DuplicatePurchaseCheckHelper.checkDuplicate(id, role)
     --@RefType [src.app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck#ADuplicatePurchaseCheck]
     local checkClass = require("app.models.Store.DuplicatePurchaseCheck.DuplicatePurchaseCheck" .. tostring(checkType))
 
-    local resutl, msg = checkClass:duplicateCheck(role, res)
+    local result, msg = checkClass:duplicateCheck(role, res)
 
     local searchInfo = {
-        searchType = checkType,
-        msg = msg
+        hitResults = {},
+        hitCount = 0
     }
 
-    return resutl, searchInfo
+    if result then
+        table.insert(
+            searchInfo.hitResults,
+            {
+                -- 检索条件表 id，用于追踪命中的配置来源。
+                searchId = res:getId(),
+                -- 当前命中的条件 id；基础条件与 searchId 一致，组合逻辑中用于保留子条件来源。
+                conditionId = res:getId(),
+                -- 检索类型，如 101/201/301，用于结果展示分类。
+                searchType = tostring(checkType),
+                -- 当前命中条件的 2.0 提示文本。
+                msg = msg
+            }
+        )
+        searchInfo.hitCount = 1
+    end
+
+    return result, searchInfo
 end
 
 return DuplicatePurchaseCheckHelper
-000000
+0000000

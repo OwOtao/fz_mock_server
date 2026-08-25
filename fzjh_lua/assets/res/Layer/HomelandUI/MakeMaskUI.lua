@@ -590,18 +590,19 @@ Text_name:setName("Text_name")
 Text_name:setTag(245)
 Text_name:setCascadeColorEnabled(true)
 Text_name:setCascadeOpacityEnabled(true)
-Text_name:setPosition(103.1507, 49.3810)
+Text_name:setAnchorPoint(0.0000, 0.5000)
+Text_name:setPosition(33.6507, 49.3811)
 layout = ccui.LayoutComponent:bindLayoutComponent(Text_name)
 layout:setPositionPercentYEnabled(true)
-layout:setPositionPercentX(0.1102)
+layout:setPositionPercentX(0.0360)
 layout:setPositionPercentY(0.5198)
 layout:setPercentWidth(0.1485)
 layout:setPercentHeight(0.5474)
 layout:setSize({width = 139.0000, height = 52.0000})
 layout:setLeftMargin(33.6507)
 layout:setRightMargin(763.3493)
-layout:setTopMargin(19.6190)
-layout:setBottomMargin(23.3810)
+layout:setTopMargin(19.6189)
+layout:setBottomMargin(23.3811)
 Panel_title:addChild(Text_name)
 
 --Create Image_row
@@ -1332,4 +1333,4 @@ end
 
 return Result
 
-0000000000000
+0000

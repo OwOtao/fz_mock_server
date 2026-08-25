@@ -56,7 +56,7 @@ layout = ccui.LayoutComponent:bindLayoutComponent(Image_titleBack)
 layout:setPositionPercentX(0.5000)
 layout:setPositionPercentY(1.0000)
 layout:setPercentWidth(1.0000)
-layout:setPercentHeight(0.0562)
+layout:setPercentHeight(0.0563)
 layout:setSize({width = 1080.0000, height = 108.0000})
 layout:setBottomMargin(1812.0000)
 Layer:addChild(Image_titleBack)
@@ -105,12 +105,12 @@ layout = ccui.LayoutComponent:bindLayoutComponent(Text_title)
 layout:setPositionPercentX(0.5000)
 layout:setPositionPercentY(0.4879)
 layout:setPercentWidth(0.1731)
-layout:setPercentHeight(0.6944)
-layout:setSize({width = 187.0000, height = 75.0000})
+layout:setPercentHeight(0.7037)
+layout:setSize({width = 187.0000, height = 76.0000})
 layout:setLeftMargin(446.5000)
 layout:setRightMargin(446.5000)
-layout:setTopMargin(17.8093)
-layout:setBottomMargin(15.1907)
+layout:setTopMargin(17.3093)
+layout:setBottomMargin(14.6907)
 Image_titleBack:addChild(Text_title)
 
 --Create Panel_title
@@ -377,7 +377,7 @@ Text_Custom:ignoreContentAdaptWithSize(true)
 Text_Custom:setTextAreaSize({width = 0, height = 0})
 Text_Custom:setFontName("Font/default.ttf")
 Text_Custom:setFontSize(48)
-Text_Custom:setString([[Text Label]])
+Text_Custom:setString([[]])
 Text_Custom:enableOutline({r = 0, g = 0, b = 0, a = 255}, 5)
 Text_Custom:setTouchEnabled(true);
 Text_Custom:setLayoutComponentEnabled(true)
@@ -393,13 +393,10 @@ layout = ccui.LayoutComponent:bindLayoutComponent(Text_Custom)
 layout:setPositionPercentYEnabled(true)
 layout:setPositionPercentX(0.9463)
 layout:setPositionPercentY(0.5000)
-layout:setPercentWidth(0.2222)
-layout:setPercentHeight(0.5926)
-layout:setSize({width = 240.0000, height = 64.0000})
-layout:setLeftMargin(782.0000)
+layout:setLeftMargin(1022.0000)
 layout:setRightMargin(58.0000)
-layout:setTopMargin(22.0000)
-layout:setBottomMargin(22.0000)
+layout:setTopMargin(54.0000)
+layout:setBottomMargin(54.0000)
 Image_titleBack:addChild(Text_Custom)
 
 --Create Image_left_0
@@ -741,4 +738,4 @@ end
 
 return Result
 
-0
+000

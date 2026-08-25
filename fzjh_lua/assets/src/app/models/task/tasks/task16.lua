@@ -1,6 +1,14 @@
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
+local TASK_ID = "task16"
+local feiZeiRes = LiLianTaskHelper:getTaskConfigInfo(TASK_ID)
+
+local function getTaskConfig(confVer)
+	return LiLianTaskHelper:getTaskConfigInfo(TASK_ID, confVer)
+end
+
 local task =
 {
-	id = "task16",
+	id = TASK_ID,
 
 	-- 显示
 	buttonA = "taskButton10a",
@@ -82,7 +90,6 @@ local task =
 		-- action = "kill",	--击杀
 		-- zCount = 2,	-- 完成总次数
 		-- dCount = 1, -- 当天完成次数
-		cCount = 50, -- 当天可完成次数
 		canAbandon = true,	-- 任务能否放弃（true 可以 false 不能）
 	},
 
@@ -91,21 +98,25 @@ local task =
 		{
 			type = "属性",
 			name = "exp",
-			value = function(lv, exp, fy, sklv)
-				return math.floor(Formula:getFormula("jingyan1")(exp, fy, sklv, 100,lv))
+			value = function(lv, exp, fy, sklv, confVer)
+				local taskConfig = getTaskConfig(confVer)
+				return math.floor(Formula:getFormula("jingyan1")(exp, fy, sklv, taskConfig.jobreward1,lv))
 			end
 		},
 		{
 			type = "属性",
 			name = "pot",
-			value = function(lv, exp, fy, sklv)
-				return math.floor(Formula:getFormula("qianneng1")(exp, fy, sklv, 100))
+			value = function(lv, exp, fy, sklv, confVer)
+				local taskConfig = getTaskConfig(confVer)
+				return math.floor(Formula:getFormula("qianneng1")(exp, fy, sklv, taskConfig.jobreward2))
 			end
 		},
 		{
 			type = "属性",
 			name = "yueli",
-			value = 5
+			value = function(lv, exp, fy, sklv, confVer)
+				return getTaskConfig(confVer).jobreward4
+			end
 		}
 	},
 
@@ -118,11 +129,11 @@ local task =
 			
 			_type = "yinpiao",
 
-			--@count 今日完成次数
-			value = function (self,count)
-				local base = 50
-
-				return base + count * 10
+			--@count 今日已领取次数
+			value = function (self,count,isDispatchTask,confVer)
+				--完成次数
+				local countTimes = count + 1
+				return LiLianTaskHelper:getYinPiaoCount(countTimes, getTaskConfig(confVer))
 			end,
 
 			condi = function ()
@@ -159,21 +170,21 @@ local task =
 
 }
 
-local res = require("script.others.Activetask") 
-local zhuDongList =  res["主动任务"]
-local feizeiList = zhuDongList["1"]
-task.desc = string.split(feizeiList["text"], ";")
-task.texttime =  string.split(feizeiList["texttime"], ";") 
-task.Decline =  string.split(feizeiList["Decline"], ";") 
-task.score =  string.split(feizeiList["score"], ";") 
-task.taskitem = Helper:getDef(string.split(feizeiList["taskitem"], ";"),{})  
-task.rate = string.split(feizeiList["rate"], ";") 
-function task:getSpecialReward()
+task.desc = string.split(feiZeiRes["text"], ";")
+task.texttime =  string.split(feiZeiRes["texttime"], ";") 
+
+function task:getDynamicDailyMaxCount(confVer)
+	return getTaskConfig(confVer).maxtime
+end
+
+function task:getSpecialReward(confVer)
 	local rewards = {}
 	
 	local role = User:getRole()
 	
-	local taskitem = Helper:getDef(string.split(feizeiList["taskitem"], ";"),{})
+	local taskConfig = getTaskConfig(confVer)
+	local taskitem = Helper:getDef(string.split(taskConfig["taskitem"], ";"),{})
+	local rate = string.split(taskConfig["rate"], ";")
 
 	if MapIsEmpty(taskitem) == false then
 		--@desc 记录飞贼任务奖励次数
@@ -184,7 +195,7 @@ function task:getSpecialReward()
 		else
 			local itemId = taskitem[role:getDayFlag(dayFlagName) + 1]
 	
-			local percent = self.rate[role:getDayFlag(dayFlagName) + 1]
+			local percent = rate[role:getDayFlag(dayFlagName) + 1]
 	
 			if itemId ~= nil and math.random(1, 100) <= tonumber(percent) * 100 then
 				local reward = {
@@ -201,67 +212,20 @@ function task:getSpecialReward()
 	end
 
 	return rewards
-
-	-- local rewardBuff = 1
-    
-	-- if MapIsEmpty(taskitem) == true then
-	-- else
-	-- 	local value = taskitem[role:getDayFlag("飞贼任务奖励") + 1]		-- add by XiaoZhiWei 2017/12/01 21:41:29 物品ID
-		
-	-- 	-- 飞贼任务完成奖励宝箱修改, 每天最多3次  ，第一次概率100%第二次60% 第三次30%
-	-- 	local x = math.random( 1, 100 )
-	-- 	local percent = self.rate[role:getDayFlag("飞贼任务奖励") + 1]	-- add by XiaoZhiWei 2017/12/01 21:41:34 概率
-	-- 	if value ~= nil and x <= tonumber(percent) *100 then
-	-- 		if role:checkCanBuyTwoOrMoreThings({[value] = 1}) ~= true then
-	-- 			-- PopText("背包剩余容量不足，无法获取奖励")
-	-- 			return
-	-- 		else
-	-- 		end
-	-- 		role:addItemCount(value, 1)
-	-- 		PopText("获得失窃的包裹  X 1")
-	-- 		role:setDayFlag("飞贼任务奖励", role:getDayFlag("飞贼任务奖励") + 1)
-	-- 	end
-
-	-- 	if role:getDayFlag("飞贼任务奖励") >= 3  then
-	-- 		PopText("您今日获得失窃的包裹已到上限。")
-	-- 	end
-	-- end
-	-- -- role:setFlag("飞贼任务奖励加成", 0)
-	-- return self:dealRewardMagnification(rewardBuff)
 end
--- -----------------------------------------------------------------------------------------------------------
--- -- @author GaoHanZheng
--- -- @time 2017/07/24 17:06:51
--- -- @desc 奖励倍数
--- function task:dealRewardMagnification(rewardBuff)
--- 	local roleTask = self:getRoleTask(self.id)
--- 	local count = roleTask.dCount + 1 --加上当前一次，共完成的任务次数
-
--- 	local score = string.split(feizeiList["score"], ";") 
--- 	local Decline = string.split(feizeiList["Decline"], ";") 
--- 	if MapIsEmpty(Decline) == true then
--- 		print("主动任务配置 江湖送信 reward为nil")
--- 	else
--- 		for k,v in pairs(Decline) do
--- 			if count >= tonumber(v)  then
--- 				rewardBuff = Helper:getDef( tonumber(score[k]),0)
--- 			end
--- 	   end
--- 	end  
--- 	return Helper:getRange(rewardBuff, 0)
--- end
 
 --@desc 主动任务属性奖励
-function task:getBuff()
+function task:getBuff(confVer)
 	local tasks = User:getRoleAttr("tasks")
 
 	local roleTask = tasks[self.id]
 
 	local count = roleTask.dCount + 1
 
-	local score_list = string.split(feizeiList["score"], ";")
+	local taskConfig = getTaskConfig(confVer)
+	local score_list = string.split(taskConfig["score"], ";")
 
-	local decline_list = string.split(feizeiList["Decline"], ";")
+	local decline_list = string.split(taskConfig["Decline"], ";")
 
 	local buff = 1
 	if MapIsEmpty(decline_list) == false then
@@ -341,4 +305,4 @@ end
 -- 加密版本
 task.isEncrypted = true
 return task
-0000000000000
+0000

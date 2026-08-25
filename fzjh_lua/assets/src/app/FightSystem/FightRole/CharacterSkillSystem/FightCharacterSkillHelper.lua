@@ -58,5 +58,18 @@ function FightSkillHelper:removeActiveSkillEnterBuffAdder(character)
     end
 end
 
+--@desc:
+--@author:Seven
+--@time:2026-05-19 20:31:45
+--@character: [src.app.FightSystem.FightRole.NewFightCharacter#FightCharacter]
+function FightSkillHelper:addKnowledgeFightSkillEnterBuffAdder(character)
+    for i, skillId in ipairs(FightCommons.ACCEPT_KONWLEDGE_SKILL) do
+        local skill = character:getKnowledgeSkill(skillId)
+        if skill ~= nil then
+            skill:addCarryBuffAdderToCharacter()
+        end
+    end
+end
+
 return FightSkillHelper
-000000000
+0000000

@@ -5,6 +5,8 @@
 ]]
 local BasicFightSkill = require("app.FightSystem.FightSkill.BasicFightSkill")
 
+local BasicFightKnowledgeSkill = require("app.FightSystem.FightSkill.BasicFightKnowledgeSkill")
+
 local FightSkillFactory = {}
 
 --@desc: 创建战斗技能
@@ -19,4 +21,10 @@ function FightSkillFactory.createBasicFightSkill(id,lv)
 end
 
 
-return FightSkillFactory0000000
+function FightSkillFactory.createKnowledgeFightSkill(id,lv)
+    local k_skill = BasicFightKnowledgeSkill:create(id)
+    k_skill:setLevel(lv)
+    return k_skill
+end
+
+return FightSkillFactory000000000

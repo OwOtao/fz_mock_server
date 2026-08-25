@@ -1098,7 +1098,7 @@ local function initActionList(list)
 			)
 		end,
 
-		["平遥之约"] = function(actionId, actionRule)
+		["百战砺心"] = function(actionId, actionRule)
 			PopupLayerController:showLayer(
 				"ChallengeClearTimesPresenter",
 				function(layer)
@@ -1114,6 +1114,33 @@ local function initActionList(list)
 				layer:setActionId(actionId)
 				layer:showLayer()
 				layer:initRule(actionRule)
+			end)
+		end,
+
+		["十载共此约"] = function(actionId, actionRule)
+			PopupLayerController:showLayer("LoginMultipleRewardPresenter",function(layer)
+				layer:setActionId(actionId)
+				layer:showLayer()
+				layer:initRule(actionRule)
+			end)
+		end,
+
+		["朝源七日录"] = function(actionId, actionRule)
+			PopupLayerController:showLayer(
+				"MingShiZhiYuePresenters",
+				function(layer)
+					layer:setActionId(actionId)
+					layer:showLayer()
+					layer:initRule(actionRule)
+				end
+			)
+		end,
+
+		["十载鉴藏"] = function(actionId, actionRule)
+			PopupLayerController:showLayer("DanQingGePresenter",function(layer)
+				layer:setActionId(actionId)
+				layer:initRule(actionRule)
+				layer:showLayer()
 			end)
 		end,
 	}
@@ -1233,6 +1260,9 @@ local ManageActionByName = {
 	["百战砺心"] = true,
 	["双钩校场"] = true,
 	["平遥之约"] = true,
+	["十载共此约"] = true,
+	["朝源七日录"] = true,
+	["十载鉴藏"] = true,
 }
 
 function ActionLayer:afterGetList(list,showList)
@@ -1364,4 +1394,4 @@ function ActionLayer:setActivityBtn()
 end
 
 Helper:classDefNodeGetInstance(ActionLayer)
-return ActionLayer0000000000000000
+return ActionLayer0000000

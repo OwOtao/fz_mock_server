@@ -39,6 +39,11 @@ end
 
 function DuelChallengeFightCallback:doWin(fight)
     self.__map:playerKillRole(self.__roomId, self.__defenderId)
+
+	local csjCD = self.__player:getFlag("长生诀时间")
+	if csjCD > 0 then
+		self.__player:setFlag("长生诀时间",math.max(csjCD - 10,0))
+	end
 end
 
 function DuelChallengeFightCallback:doLose(fight)
@@ -77,4 +82,4 @@ function DuelChallengeFightCallback:doRunaway(fight)
 end
 
 return newClass("DuelChallengeFightCallback", {AChallengeFinishCallback}, DuelChallengeFightCallback)
-0000000000
+00

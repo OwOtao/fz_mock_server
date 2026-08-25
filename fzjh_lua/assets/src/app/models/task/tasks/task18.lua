@@ -1,10 +1,14 @@
-local res = require("script.others.Activetask")
-local zhuDongList =  res["主动任务"]
-local feizeiList = zhuDongList["6"]
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
+local TASK_ID = "task18"
+local feizeiList = LiLianTaskHelper:getTaskConfigInfo(TASK_ID)
+
+local function getTaskConfig(confVer)
+	return LiLianTaskHelper:getTaskConfigInfo(TASK_ID, confVer)
+end
 
 local task =
 {
-	id = "task18",
+	id = TASK_ID,
 
 	-- 显示
 	buttonA = "taskButton18a",
@@ -122,7 +126,11 @@ function task:setTaskDesc()
 	-- RichPrint("main" ,"施粥长老正在浮云寺寺门处等着少侠，快快前去吧。")
 end
 
-function task:getSpecialReward()
+function task:getDynamicDailyMaxCount(confVer)
+	return getTaskConfig(confVer).maxtime
+end
+
+function task:getSpecialReward(confVer)
 	local role = User:getRole()
 	local roleTask = self:getRoleTask(self.id)
 	local familyName = role:getFamilyName() --XX门派   没有门派就江湖浪人
@@ -141,4 +149,4 @@ end
 -- 加密版本
 task.isEncrypted = true
 return task
-0000000000000000
+000000000000000

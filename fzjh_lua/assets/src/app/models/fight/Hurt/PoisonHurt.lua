@@ -11,15 +11,10 @@ function PoisonHurt:create(type,value)
 end
 
 function PoisonHurt:ctor()
-end
-
-function PoisonHurt:isActiveHurt()
-    return false
-end
-
-function PoisonHurt:isAutoHurt()
-    return true
+	self.__isAutoHurt = true
+	
+	self.__isActiveHurt = false
 end
 
 return newClass("PoisonHurt", {BaseHurt}, PoisonHurt)
-000000000000000
+0000000000

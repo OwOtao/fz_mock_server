@@ -78,6 +78,12 @@ function NewRandomGiftUI:showListView(listData)
                 itemInfo.func()
             end
         end)
+
+		itemUI:releaseFunc(function()
+            if itemInfo.itemfunc then
+                itemInfo.itemfunc()
+            end
+        end)
     end
 
     local itemNum = #self.ListView_item:getItems()
@@ -335,4 +341,4 @@ function NewRandomGiftUI:__addItemToInfoListView(itemUI)
 end
 
 return NewRandomGiftUI
-0000000000
+000000000000

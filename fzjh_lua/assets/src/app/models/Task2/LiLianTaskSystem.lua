@@ -119,7 +119,7 @@ function LiLianTaskSystem:submitLiLianTask(taskId)
                 print("是的，我提交任务")
             end
             local task = self:getLiLianTask()
-            local isSubmit = task:submitTask()
+            local isSubmit, configVersion = task:submitTask()
             if isSubmit == false then
                 return
             end
@@ -130,7 +130,7 @@ function LiLianTaskSystem:submitLiLianTask(taskId)
 
             task:getTaskReward()
 
-            task:getDayReward()
+            task:getDayReward(configVersion)
         
             task:extraFunc()
             
@@ -178,6 +178,26 @@ function LiLianTaskSystem:acceptZhuDongTask(taskId)
     )
 end
 
+function LiLianTaskSystem:showZhuDongTask(taskId)
+    RoleTaskControllor:clickZhuXianTask(
+        function()
+            if User:getRole():isInCurrState(ROLE_CURR_STATE_SHIMEN) == true then
+                PopText("请先完成师门任务")
+                return
+            end
+
+            local task = self:getZhuDongTask(taskId)
+            PopupLayerController:showLayer(
+                "TaskZhuXianLayer",
+                function(layer)
+                    layer:show(task, self)
+                end
+            )
+        end,
+        taskId
+    )
+end
+
 function LiLianTaskSystem:submitZhuDongTask(taskId)
     local dialog = DialogALayer:getInstance()
     dialog:show("是否提交任务")
@@ -194,7 +214,7 @@ function LiLianTaskSystem:submitZhuDongTask(taskId)
             print("LiLianTaskSystem:submitZhuDongTask role addr:" , role, self.__player)
             print("LiLianTaskSystem:submitZhuDongTask role tasks addr:" , role.tasks, self.__player.tasks)
             print("LiLianTaskSystem:submitZhuDongTask before:" .. roleTask.state, roleTask)
-            local isSubmit = task:submitTask()
+            local isSubmit, configVersion = task:submitTask()
             if isSubmit == false then
                 return
             end
@@ -213,7 +233,7 @@ function LiLianTaskSystem:submitZhuDongTask(taskId)
             
             task:getTaskReward()
 
-            task:getDayReward()
+            task:getDayReward(configVersion)
         
             task:extraFunc()
             

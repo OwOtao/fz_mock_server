@@ -586,7 +586,7 @@ function FightRole:init()
 
     self.__activeDamageFactorMap = {} --主动技能伤害抗性修正系数
 
-	self.__partForgetSkills = {} --部分遗忘武学
+	self.__partForgetZhaoMethod = nil --部分遗忘禁用的主动招式类型
 end
 
 -----------------------------------------------------------------------------------------------------------
@@ -4525,12 +4525,8 @@ function FightRole:isSaveDamageByHurt(hurt)
     for k, effect in pairs(self._effectMap) do
         if effect:getType() == "储伤" then
             local effectObject = effect:getEffectObject(self)
-            if effectObject:isTakeEffect() then 
-                if hurt:isActiveHurt() and effectObject:isActiveHurtSaveDamage() then
-                    return true
-                elseif hurt:isAutoHurt() and effectObject:isAutoHurtSaveDamage() then
-                    return true
-                end
+            if effectObject:isTakeEffect() and effectObject:isTrigger(hurt) then 
+				return true
             end
         end
     end
@@ -4546,14 +4542,9 @@ function FightRole:addSaveDamageValueByHurt(hurt)
     for k, effect in pairs(self._effectMap) do
         if effect:getType() == "储伤" then
             local effectObject = effect:getEffectObject(self)
-            if effectObject:isTakeEffect() then
-                if hurt:isActiveHurt() and effectObject:isActiveHurtSaveDamage() then
-                    effectObject:addActiveHurtSaveDamageValue(hurt:getValue())
-                    break
-                elseif hurt:isAutoHurt() and effectObject:isAutoHurtSaveDamage() then
-                    effectObject:addAutoHurtSaveDamageValue(hurt:getValue())
-                    break
-                end
+            if effectObject:isTakeEffect() and effectObject:isTrigger(hurt) then
+                effectObject:trigger(hurt)
+				break
             end
         end
     end
@@ -5466,33 +5457,13 @@ function FightRole:checkRoleSkillEffectTrigger(conStr, predicateSymbol)
     return checkSingleCond(conStr)
 end
 
---@desc: 添加部分遗忘武学
+--@desc: 设置部分遗忘状态禁用得主动招式类型
 --@author:LvBin
---@time:2026-04-24 16:22:33
---@skillId: 
+--@time:2026-05-27 18:27:28
+--@zhaoMethod: 
 --@return
-function FightRole:addPartForgetSkill(skillId)
-	if not skillId then
-		return
-	end
-	self.__partForgetSkills[skillId] = true
-end
-
---@desc: 清空部分遗忘武学
---@author:LvBin
---@time:2026-04-24 16:23:06
---@return
-function FightRole:cleanPartForgetSkills()
-	self.__partForgetSkills = {}
-end
-
---@desc: 判断主动招式所属武学是否被部分遗忘
---@author:LvBin
---@time:2026-04-21 17:46:44
---@skillId: 
---@return
-function FightRole:isPartForgetSkill(skillId)
-	return self.__partForgetSkills[skillId] == true
+function FightRole:setPartForgetZhaoMethod(zhaoMethod)
+	self.__partForgetZhaoMethod = zhaoMethod
 end
 
 --@desc: 部分遗忘状态下能否释放指定主动技能
@@ -5505,18 +5476,49 @@ function FightRole:isPartForgetCanUseActiveZhao(activeZhaoId)
 		return true
 	end
 
-	local skillId = Skill:getSkillIdByZhaoId(activeZhaoId)
+	local activeZhao = Skill:getActiveZhao(activeZhaoId)
 
-	if not skillId then
-		return true
-	end
-	
-	if self:isPartForget() and self:isPartForgetSkill(skillId) and not self:getRole():checkSkillIsPrepared(skillId) then
+	local zhaoMethod = activeZhao:getZhaoMethod()
+
+	local zhaoMethodCN = switch(zhaoMethod,{
+		[1] = "攻击",
+		[2] = "内功",
+		[3] = "轻功",
+		[4] = "招架",
+		[5] = "攻击",
+	})
+
+	if self.__partForgetZhaoMethod and string.find(self.__partForgetZhaoMethod,zhaoMethodCN) then
 		return false
 	end
 	
 	return true
 end
 
+--@desc: 受伤回血
+--@author:LvBin
+--@time:2026-07-13 16:45:59
+--@hurt: [src.app.models.fight.Hurt.BaseHurt#BaseHurt]
+--@return
+function FightRole:hpRecoverOnHurt(hurt)
+	local hurtValue = hurt:getValue()
+
+	if hurtValue <= 0 then
+		return
+	end
+
+	local effectMap = self:getEffectMap()
+
+	for k, effect in ipairs(effectMap) do
+		if effect:getType() == "受伤回血" then
+			local effectObject = effect:getEffectObject(self)
+
+            if effectObject:isTrigger(hurt) then
+                effectObject:trigger(hurt)
+            end
+		end
+	end
+end
+
 return FightRole
-000000000000
+0000

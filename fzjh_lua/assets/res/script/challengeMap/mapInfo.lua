@@ -1030,7 +1030,7 @@ hdroom0540,hdroom0541,hdroom0544,hdroom0515,hdroom0516,hdroom0517,hdroom0518,hdr
 hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546
 hdroom0528
-hdroom0551,hdroom0529]],notcleaningtime={}},hdfb0601={id="hdfb0601",name="平安小镇",type=2,section={601,1},gradeName="端阳轶事—壹",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成老乞丐之托"},finishId={relation="and",conditions={{type="equaltab",args={"35012",13}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"凝神丹*100","分身符*2"},awardId="24hdcelue0601",rsesources={{"ningshendan",100}},strain=0,startTime="2024053015",endTime="2024061315",roomGridId="hdroom0601",npcGridId="hdfbnpc0601",roleGridId="hdrole0601",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0551,hdroom0529]],notcleaningtime={}},hdfb0601={id="hdfb0601",name="平安小镇",type=2,section={601,1},gradeName="端阳轶事—壹",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成老乞丐之托"},finishId={relation="and",conditions={{type="equaltab",args={"35012",13}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：LZS蒲剑履NOR*1","黄金*100","分身符*10","银票*200"},awardId="26dwjqcelue01",rsesources={{"yinpiao",200}},strain=0,startTime="2026061115",endTime="2026062515",roomGridId="hdroom0601",npcGridId="hdfbnpc0601",roleGridId="hdrole0601",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1060,7 +1060,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0602={id="hdfb0602",name="平安小镇",type=2,section={601,2},gradeName="端阳轶事—贰",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35015",9}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"凝神丹*100","分身符*2"},awardId="24hdcelue0601",rsesources={{"ningshendan",100}},strain=0,startTime="2024053115",endTime="2024061315",roomGridId="hdroom0602",npcGridId="hdfbnpc0601",roleGridId="hdrole0602",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0602={id="hdfb0602",name="平安小镇",type=2,section={601,2},gradeName="端阳轶事—贰",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35015",9}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：HIC悬艾冠NOR*1","遁地符*10","天香玉露*1","如意*1"},awardId="26dwjqcelue02",rsesources={},strain=0,startTime="2026061215",endTime="2026062515",roomGridId="hdroom0602",npcGridId="hdfbnpc0601",roleGridId="hdrole0602",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1090,7 +1090,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0603={id="hdfb0603",name="平安小镇",type=2,section={601,3},gradeName="端阳轶事—叁",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35018",6}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"凝神丹*100","遁地符*2"},awardId="24hdcelue0602",rsesources={{"ningshendan",100}},strain=0,startTime="2024060115",endTime="2024061315",roomGridId="hdroom0603",npcGridId="hdfbnpc0601",roleGridId="hdrole0603",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0603={id="hdfb0603",name="平安小镇",type=2,section={601,3},gradeName="端阳轶事—叁",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35018",6}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：OGR朱砂囊NOR*1","苏合香*1","醉梦生*1","凝神丹*20"},awardId="26dwjqcelue03",rsesources={{"ningshendan",20}},strain=0,startTime="2026061315",endTime="2026062515",roomGridId="hdroom0603",npcGridId="hdfbnpc0601",roleGridId="hdrole0603",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1120,7 +1120,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0604={id="hdfb0604",name="平安小镇",type=2,section={601,4},gradeName="端阳轶事—肆",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35019",8}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"GRN菖平靴NOR","凝神丹*100"},awardId="24hdcelue0603",rsesources={{"ningshendan",100}},strain=0,startTime="2024060215",endTime="2024061315",roomGridId="hdroom0604",npcGridId="hdfbnpc0601",roleGridId="hdrole0604",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0604={id="hdfb0604",name="平安小镇",type=2,section={601,4},gradeName="端阳轶事—肆",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35019",8}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：BLU角黍衣NOR*1","行功散*2","天工石*2","凝神丹*30"},awardId="26dwjqcelue04",rsesources={{"ningshendan",30}},strain=0,startTime="2026061415",endTime="2026062515",roomGridId="hdroom0604",npcGridId="hdfbnpc0601",roleGridId="hdrole0604",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1150,7 +1150,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0605={id="hdfb0605",name="平安小镇",type=2,section={601,5},gradeName="端阳轶事—伍",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35021",13}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"GRN艾虎冠NOR","凝神丹*200","潜能丹*2"},awardId="24hdcelue0604",rsesources={{"ningshendan",200}},strain=0,startTime="2024060315",endTime="2024061315",roomGridId="hdroom0605",npcGridId="hdfbnpc0601",roleGridId="hdrole0605",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0605={id="hdfb0605",name="平安小镇",type=2,section={601,5},gradeName="端阳轶事—伍",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35021",13}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：HIW缠彩丝NOR*1","行功散*3","掘金铲*5","凝神丹*40"},awardId="26dwjqcelue05",rsesources={{"ningshendan",40}},strain=0,startTime="2026061515",endTime="2026062515",roomGridId="hdroom0605",npcGridId="hdfbnpc0601",roleGridId="hdrole0605",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1180,7 +1180,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0606={id="hdfb0606",name="平安小镇",type=2,section={601,6},gradeName="端阳轶事—陆",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35027",12}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"HIW白玉喜蛛NOR","凝神丹*200","潜能丹*2"},awardId="24hdcelue0605",rsesources={{"ningshendan",200}},strain=0,startTime="2024060415",endTime="2024061315",roomGridId="hdroom0606",npcGridId="hdfbnpc0601",roleGridId="hdrole0606",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0606={id="hdfb0606",name="平安小镇",type=2,section={601,6},gradeName="端阳轶事—陆",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35027",12}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"装备：LQS桡歌行NOR*1","行功散*3","流云甘露*4","凝神丹*50"},awardId="26dwjqcelue06",rsesources={{"ningshendan",50}},strain=0,startTime="2026061615",endTime="2026062515",roomGridId="hdroom0606",npcGridId="hdfbnpc0601",roleGridId="hdrole0606",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -1210,7 +1210,7 @@ hdroom0542,hdroom0549,hdroom0548,hdroom0523,hdroom0524,hdroom0525,hdroom0526
 hdroom0543,hdroom0527,hdroom0546,hdroom0557
 hdroom0561,hdroom0528
 hdroom0551,hdroom0529
-hdroom0558]],notcleaningtime={}},hdfb0607={id="hdfb0607",name="平安小镇",type=2,section={601,7},gradeName="端阳轶事—柒",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35028",7}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"HIG艾蒿辟疫袍NOR","凝神丹*200","洗颜水*2"},awardId="24hdcelue0606",rsesources={{"ningshendan",200}},strain=0,startTime="2024060515",endTime="2024061315",roomGridId="hdroom0607",npcGridId="hdfbnpc0601",roleGridId="hdrole0607",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
+hdroom0558]],notcleaningtime={}},hdfb0607={id="hdfb0607",name="平安小镇",type=2,section={601,7},gradeName="端阳轶事—柒",summary="鹤发垂肩尺许长，离家三十五端阳。儿童见说深惊讶，却问何方是故乡。端午的平安小镇里，又会遇到什么奇人奇事呢？",finishText={"完成柳七刀之托"},finishId={relation="and",conditions={{type="equaltab",args={"35028",7}}}},entryRoom1="hdroom0514",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"YEL称号【龙舟竞渡】NOR*1","散人顶级残页*2","奇闻札记其四*2","洗颜水*3"},awardId="26dwjqcelue07",rsesources={},strain=0,startTime="2026061715",endTime="2026062515",roomGridId="hdroom0607",npcGridId="hdfbnpc0601",roleGridId="hdrole0607",itemGridId="hditem0601",mapAppearance=[[　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　码头　　　北巷　破屋
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　▏　　　　▏
 　　　　　　木屋　　　　　　温泉　　　　　　　　　　　　　　　　北大街　　北巷口
 　　　　　　　▏　　　　　╱　　　　　　　　　　　　　　　　　　　▏　　　　▏
@@ -5485,4 +5485,204 @@ hdroom1916,hdroom1915,hdroom1917
 hdroom1912,hdroom1914,hdroom1913
 hdroom1910,hdroom1909,hdroom1911
 hdroom1908,hdroom1903
-hdroom1907,hdroom1906,hdroom1905,hdroom1904,hdroom1902,hdroom1901]],notcleaningtime={}}}}0000000000
+hdroom1907,hdroom1906,hdroom1905,hdroom1904,hdroom1902,hdroom1901]],notcleaningtime={}},hdfb2001={id="hdfb2001",name="熙熙红松",type=2,section={2001,1},gradeName="红松山庄—壹",summary="花径不曾缘客扫，蓬门今始为君开。",finishText={"完成红松山庄所遇轶事"},finishId={relation="and",conditions={{type="mapstatustagscondi",args={"310003",1,"="}}}},entryRoom1="hdroom0719",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"WAT腰坠：退隐令NOR*1","灵猴的书*1","天香玉露*2","潜能丹*5","登临武意*100","凝神丹*100"},awardId="26znqcelue01",rsesources={{"ningshendan",100},{"canyechoice2",100}},strain=0,startTime="2026071615",endTime="2026081200",roomGridId="hdroom2001",npcGridId="hdfbnpc2001",roleGridId="hdrole2001",itemGridId="hditem2001",mapAppearance=[[内屋                                草坪
+　▏                                   
+松竹院——溪涧——竹林小路——藏书阁  密室
+　　　　　　　　　　　　　╲
+　　　　　　　　　　　　　竹林小路
+　　　　　　　　　　　　　　　╲
+　　　　　　　　　　后山山顶——后山　　密室　　　　　松柏堂
+　　　　　　　　　╱　　　　　　　▏　　　▏　　　　　　▏
+　　　　　　　台地　　兰园　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　竹园——松乔院——梅园——暖阁——仓库　松柏院
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　菊园　　　梅屋　　　▏　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　▏　　　　　　▏
+　　　　　　雪松崖—雪山树林　　　　　山庄大厅————后院——小黑屋
+　　　　　　　　　　　　▏　　　　　　　　▏
+　　　　　　　　　　雪山树林—山溪边—红松庄门——山路
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　小溪——翠谷——山路——苍松崖
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　雪松林
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　雪松斜坡——大平台
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　雪地
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　谷底　　　　　　　　　　　　将军庙　　　　　　山洞　　闹市　　山巅]],mapAppearanceIndex=[[hdroom0701,hdroom0745
+hdroom0702,hdroom0703,hdroom0704,hdroom0743,hdroom0744
+hdroom0705
+hdroom0732,hdroom0706,hdroom0707,hdroom0733
+hdroom0742,hdroom0736
+hdroom0737,hdroom0708,hdroom0709,hdroom0710,hdroom0731,hdroom0711
+hdroom0738,hdroom0734
+hdroom0712,hdroom0713,hdroom0714,hdroom0715,hdroom0730
+hdroom0716,hdroom0717,hdroom0718,hdroom0719
+hdroom0720,hdroom0721,hdroom0722,hdroom0723
+hdroom0724
+hdroom0725,hdroom0726
+hdroom0727
+hdroom0729,hdroom0728,hdroom0739,hdroom0740,hdroom0741]],notcleaningtime={}},testBatttle101={id="testBatttle101",name="战斗测试副本",type=2,section={102,1},gradeName="战斗测试",finishText={"无"},finishId={relation="and",conditions={{type="equaltab",args={"10007",1}}}},entryRoom1="testroom0101",level=1,sign={},ExpendItem={},daily=99,activity=99,BGM="chengzhenyewan",finishAwardTxt={"无"},rsesources={},strain=0,startTime="2022090900",endTime="2026072823",roomGridId="testroom0101",npcGridId="testfbnpc0101",roleGridId="testrole0101",itemGridId="testitem0101",mapAppearance="房间1——房间2——房间3——房间4",mapAppearanceIndex="testroom0101,testroom0102,testroom0103,testroom0104",notcleaningtime={}},hdfb2002={id="hdfb2002",name="熙熙红松",type=2,section={2001,2},gradeName="红松山庄—贰",summary="花径不曾缘客扫，蓬门今始为君开。",finishText={"完成红松山庄所遇轶事"},finishId={relation="and",conditions={{type="mapstatustagscondi",args={"410005",1,"="}}}},entryRoom1="hdroom0719",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"WAT短刀：松糕刃NOR*1","灵猴的书*2","HIM融铁煤NOR*5","HIM无烟煤NOR*5","银票*500","凝神丹*120"},awardId="26znqcelue02",rsesources={{"ningshendan",120},{"yinpiao",500}},strain=0,startTime="2026071715",endTime="2026081200",roomGridId="hdroom2002",npcGridId="hdfbnpc2001",roleGridId="hdrole2002",itemGridId="hditem2001",mapAppearance=[[内屋                                草坪
+　▏                                   
+松竹院——溪涧——竹林小路——藏书阁  密室
+　　　　　　　　　　　　　╲
+　　　　　　　　　　　　　竹林小路
+　　　　　　　　　　　　　　　╲
+　　　　　　　　　　后山山顶——后山　　密室　　　　　松柏堂
+　　　　　　　　　╱　　　　　　　▏　　　▏　　　　　　▏
+　　　　　　　台地　　兰园　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　竹园——松乔院——梅园——暖阁——仓库　松柏院
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　菊园　　　梅屋　　　▏　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　▏　　　　　　▏
+　　　　　　雪松崖—雪山树林　　　　　山庄大厅————后院——小黑屋
+　　　　　　　　　　　　▏　　　　　　　　▏
+　　　　　　　　　　雪山树林—山溪边—红松庄门——山路
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　小溪——翠谷——山路——苍松崖
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　雪松林
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　雪松斜坡——大平台
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　雪地
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　谷底　　　　　　　　　　　　将军庙　　　　　　山洞　　闹市　　山巅]],mapAppearanceIndex=[[hdroom0701,hdroom0745
+hdroom0702,hdroom0703,hdroom0704,hdroom0743,hdroom0744
+hdroom0705
+hdroom0732,hdroom0706,hdroom0707,hdroom0733
+hdroom0742,hdroom0736
+hdroom0737,hdroom0708,hdroom0709,hdroom0710,hdroom0731,hdroom0711
+hdroom0738,hdroom0734
+hdroom0712,hdroom0713,hdroom0714,hdroom0715,hdroom0730
+hdroom0716,hdroom0717,hdroom0718,hdroom0719
+hdroom0720,hdroom0721,hdroom0722,hdroom0723
+hdroom0724
+hdroom0725,hdroom0726
+hdroom0727
+hdroom0729,hdroom0728,hdroom0739,hdroom0740,hdroom0741]],notcleaningtime={}},hdfb2003={id="hdfb2003",name="熙熙红松",type=2,section={2001,3},gradeName="红松山庄—叁",summary="花径不曾缘客扫，蓬门今始为君开。",finishText={"完成红松山庄所遇轶事"},finishId={relation="and",conditions={{type="mapstatustagscondi",args={"510005",1,"="}}}},entryRoom1="hdroom0719",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"WAT长鞭：惊弦索NOR*1","WAT下装：惊鸿裤NOR*1","HIC如意NOR*2","掘金铲*5","登临武意*200","凝神丹*120"},awardId="26znqcelue03",rsesources={{"ningshendan",120},{"canyechoice2",200}},strain=0,startTime="2026071815",endTime="2026081200",roomGridId="hdroom2003",npcGridId="hdfbnpc2001",roleGridId="hdrole2003",itemGridId="hditem2001",mapAppearance=[[内屋                                草坪
+　▏                                   
+松竹院——溪涧——竹林小路——藏书阁  密室
+　　　　　　　　　　　　　╲
+　　　　　　　　　　　　　竹林小路　　　　　　　　　　　　　　　　　　　　　百木原——百木园——天枢殿
+　　　　　　　　　　　　　　　╲　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　后山山顶——后山　　密室　　　　　松柏堂　　　　　　　　迎客亭
+　　　　　　　　　╱　　　　　　　▏　　　▏　　　　　　▏　　　　　　　　　　▏
+　　　　　　　台地　　兰园　　　　▏　　　▏　　　　　　▏　　　　　　　　四雅清风
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏　　　　　　　　　　▏
+　　　　　　　竹园——松乔院——梅园——暖阁——仓库　松柏院　　　　　　　　大天井
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏　　　　　　　　　　▏
+　　　　　　　　　　　菊园　　　梅屋　　　▏　　　　　　▏　　　　　　　　梅庄大门
+　　　　　　　　　　　　　　　　　　　　　▏　　　　　　▏　　　　　　　　　　▏
+　　　　　　雪松崖—雪山树林　　　　　山庄大厅————后院——小黑屋      孤山石阶 
+　　　　　　　　　　　　▏　　　　　　　　▏
+　　　　　　　　　　雪山树林—山溪边—红松庄门——山路
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　小溪——翠谷——山路——苍松崖
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　雪松林
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　雪松斜坡——大平台
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　雪地
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　谷底　　　　　　　　　　　　将军庙　　　　　　山洞　　闹市　　山巅]],mapAppearanceIndex=[[hdroom0701,hdroom0745
+hdroom0702,hdroom0703,hdroom0704,hdroom0743,hdroom0744
+hdroom0705,hdroom0752,hdroom0753,hdroom0754
+hdroom0732,hdroom0706,hdroom0707,hdroom0733,hdroom0751
+hdroom0742,hdroom0736,hdroom0750
+hdroom0737,hdroom0708,hdroom0709,hdroom0710,hdroom0731,hdroom0711,hdroom0749
+hdroom0738,hdroom0734,hdroom0748
+hdroom0712,hdroom0713,hdroom0714,hdroom0715,hdroom0730,hdroom0747
+hdroom0716,hdroom0717,hdroom0718,hdroom0719
+hdroom0720,hdroom0721,hdroom0722,hdroom0723
+hdroom0724
+hdroom0725,hdroom0726
+hdroom0727
+hdroom0729,hdroom0728,hdroom0739,hdroom0740,hdroom0741]],notcleaningtime={}},hdfb2004={id="hdfb2004",name="熙熙红松",type=2,section={2001,4},gradeName="红松山庄—肆",summary="花径不曾缘客扫，蓬门今始为君开。",finishText={"完成红松山庄所遇轶事"},finishId={relation="and",conditions={{type="mapstatustagscondi",args={"520008",1,"="}}}},entryRoom1="hdroom0719",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"WAT戒指：四柳戒NOR*1","WAT鞋子：三尺靴NOR*1","HIR散人顶级残页NOR*3","洗颜水*5","登临武意*500","凝神丹*150"},awardId="26znqcelue04",rsesources={{"ningshendan",150},{"canyechoice2",500}},strain=0,startTime="2026071915",endTime="2026081200",roomGridId="hdroom2004",npcGridId="hdfbnpc2001",roleGridId="hdrole2004",itemGridId="hditem2001",mapAppearance=[[内屋                                草坪
+　▏                                   
+松竹院——溪涧——竹林小路——藏书阁  密室
+　　　　　　　　　　　　　╲
+　　　　　　　　　　　　　竹林小路
+　　　　　　　　　　　　　　　╲
+　　　　　　　　　　后山山顶——后山　　密室　　　　　松柏堂
+　　　　　　　　　╱　　　　　　　▏　　　▏　　　　　　▏
+　　　　　　　台地　　兰园　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　竹园——松乔院——梅园——暖阁——仓库　松柏院
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　菊园　　　梅屋　　　▏　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　▏　　　　　　▏
+　　　　　　雪松崖—雪山树林　　　　　山庄大厅————后院——小黑屋
+　　　　　　　　　　　　▏　　　　　　　　▏
+　　　　　　　　　　雪山树林—山溪边—红松庄门——山路
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　小溪——翠谷——山路——苍松崖
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　雪松林
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　雪松斜坡——大平台
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　雪地
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　谷底　　　　　　　　　　　　将军庙　　　　　　山洞　　闹市　　山巅]],mapAppearanceIndex=[[hdroom0701,hdroom0745
+hdroom0702,hdroom0703,hdroom0704,hdroom0743,hdroom0744
+hdroom0705
+hdroom0732,hdroom0706,hdroom0707,hdroom0733
+hdroom0742,hdroom0736
+hdroom0737,hdroom0708,hdroom0709,hdroom0710,hdroom0731,hdroom0711
+hdroom0738,hdroom0734
+hdroom0712,hdroom0713,hdroom0714,hdroom0715,hdroom0730
+hdroom0716,hdroom0717,hdroom0718,hdroom0719
+hdroom0720,hdroom0721,hdroom0722,hdroom0723
+hdroom0724
+hdroom0725,hdroom0726
+hdroom0727
+hdroom0729,hdroom0728,hdroom0739,hdroom0740,hdroom0741]],notcleaningtime={}},hdfb2005={id="hdfb2005",name="熙熙红松",type=2,section={2001,5},gradeName="红松山庄—伍",summary="花径不曾缘客扫，蓬门今始为君开。",finishText={"完成红松山庄所遇轶事"},finishId={relation="and",conditions={{type="mapstatustagscondi",args={"410004",1,"="}}}},entryRoom1="hdroom0719",level=1,sign={},ExpendItem={},daily=1,activity=1,BGM="chengzhenyewan",finishAwardTxt={"WAT上装：易容袍NOR*1","QIZ称号：行者无疆NOR*1","HIR散人顶级残页NOR*3","兵器武学秘籍*3","轻内武学秘籍*3","拳脚武学秘籍*3"},awardId="26znqcelue05",rsesources={},strain=0,startTime="2026072015",endTime="2026081200",roomGridId="hdroom2005",npcGridId="hdfbnpc2001",roleGridId="hdrole2005",itemGridId="hditem2001",mapAppearance=[[内屋                                草坪
+　▏                                   
+松竹院——溪涧——竹林小路——藏书阁  密室
+　　　　　　　　　　　　　╲
+　　　　　　　　　　　　　竹林小路
+　　　　　　　　　　　　　　　╲
+　　　　　　　　　　后山山顶——后山　　密室　　　　　松柏堂
+　　　　　　　　　╱　　　　　　　▏　　　▏　　　　　　▏
+　　　　　　　台地　　兰园　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　竹园——松乔院——梅园——暖阁——仓库　松柏院
+　　　　　　　　　　　　▏　　　　▏　　　▏　　　　　　▏
+　　　　　　　　　　　菊园　　　梅屋　　　▏　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　▏　　　　　　▏
+　　　　　　雪松崖—雪山树林　　　　　山庄大厅————后院——小黑屋
+　　　　　　　　　　　　▏　　　　　　　　▏
+　　　　　　　　　　雪山树林—山溪边—红松庄门——山路
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　小溪——翠谷——山路——苍松崖
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　　　　　　雪松林
+　　　　　　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　雪松斜坡——大平台
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　　　　　　　　　　　　　　　雪地
+　　　　　　　　　　　　　　　　　　　　　▏
+　　　　　　谷底　　　　　　　　　　　　将军庙　　　　　　山洞　　闹市　　山巅——登高阁]],mapAppearanceIndex=[[hdroom0701,hdroom0745
+hdroom0702,hdroom0703,hdroom0704,hdroom0743,hdroom0744
+hdroom0705
+hdroom0732,hdroom0706,hdroom0707,hdroom0733
+hdroom0742,hdroom0736
+hdroom0737,hdroom0708,hdroom0709,hdroom0710,hdroom0731,hdroom0711
+hdroom0738,hdroom0734
+hdroom0712,hdroom0713,hdroom0714,hdroom0715,hdroom0730
+hdroom0716,hdroom0717,hdroom0718,hdroom0719
+hdroom0720,hdroom0721,hdroom0722,hdroom0723
+hdroom0724
+hdroom0725,hdroom0726
+hdroom0727
+hdroom0729,hdroom0728,hdroom0739,hdroom0740,hdroom0741,hdroom0746]],notcleaningtime={}}}}000000000000000

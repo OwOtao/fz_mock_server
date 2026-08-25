@@ -18,6 +18,20 @@ local newClass = require("third.class.NewClass")
 --@SuperType [src.app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck#ADuplicatePurchaseCheck]
 local DuplicatePurchaseCheck701 = {}
 
+local function getServerResourceName(serverResourceId)
+    local item = Item:getOneItemByKey(serverResourceId)
+    if item and item.name then
+        return item.name
+    end
+
+    local chAttrName = Role:getCHAttrName(serverResourceId)
+    if chAttrName ~= "" then
+        return chAttrName
+    end
+
+    return tostring(serverResourceId)
+end
+
 --[[
     @desc: 
     author:tanqinjian
@@ -65,9 +79,7 @@ function DuplicatePurchaseCheck701:checkDuplicatePurchase(role)
 
             if self:_compareValue(count) then
                 result = true
-                if msg == nil then
-                    msg = "已达到商品可持有数量的限制，不可购买！"
-                end
+                msg = string.format("已拥有【%s】数量%s%s", getServerResourceName(serverResourceId), self:_getCompareSymbolText(), tostring(self:_getJudgingValue()))
             end
         else
             PopText(errmsg)
@@ -78,4 +90,4 @@ function DuplicatePurchaseCheck701:checkDuplicatePurchase(role)
 end
 
 return newClass("DuplicatePurchaseCheck701", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck701)
-00000000000
+00000000

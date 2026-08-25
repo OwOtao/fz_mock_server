@@ -130,7 +130,10 @@ local layers = {
     TeacherFeatClassPresenter = "app.presenters.TeacherBuild.TeacherFeatClassPresenter",
     TeacherGuidancePresenter = "app.presenters.TeacherBuild.TeacherGuidancePresenter",
     MeridianImprintingPresenter = "app.presenters.Meridian.MeridianImprintingPresenter",
-    HiddenMeridianMenuPresenter = "app.presenters.Meridian.HiddenMeridian.HiddenMeridianMenuPresenter"
+    HiddenMeridianMenuPresenter = "app.presenters.Meridian.HiddenMeridian.HiddenMeridianMenuPresenter",
+
+    ActiveZhaoMeditateMenuPresenter = "app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoMeditateMenuPresenter"
+	
 }
 
 local switchs = {
@@ -572,12 +575,10 @@ local switchs = {
         animPreFunc = function(self)
             local layer = self:getLayer("TitleLayer")
             layer:setLocalZOrder(10)
-            layer:setButton_setup()
-            layer:setSetUpButtonName("设置")
         end,
         animAftFunc = function(self)
             local layer = self:getLayer("TitleLayer")
-            layer:setTextTitle("我的技能")
+            -- layer:setTextTitle("我的技能")
         end
     },
     MapLayerBiWuMainLayer = {
@@ -2291,7 +2292,10 @@ local switchs = {
             Audio:stopMusic()
         end
     },
-    MapLayerActionLayer = "隐藏标题和输出栏"
+    MapLayerActionLayer = "隐藏标题和输出栏",
+
+	SkillInfoLayerActiveZhaoMeditateMenuPresenter = "隐藏标题和输出栏",
+    ActiveZhaoMeditateMenuPresenterSkillInfoLayer = {"显示标题和输出栏", "反向动画"},
 }
 
 function ControllLayer:create()
@@ -2748,18 +2752,26 @@ function ControllLayer:startGame()
                     DataBase:setDataByString("MapPvp", MapPvp)
                 end
 
-                -- add by XiaoZhiWei 2018/06/02 12:12:20 离线模式检查一下是否有邮箱 (只检查一次)
-                if MapPvp ~= "OFFLINE" and User:getRole():getFlag("邮箱检查") == 0 then
-                    Account:getEmail(
-                        function(eventName, errmsg, email, isBind, isLogout)
-                            if eventName == "有邮箱" and isBind == true then
-                            else
-                                DataBase:setDataByString("MapPvp", "OFFLINE")
-                                User:getRole():setFlag("PVP战斗状态", "离线模式")
-                            end
-                            User:getRole():setFlag("邮箱检查", 1)
-                        end
-                    )
+                
+                if MapPvp ~= "OFFLINE" then
+					-- add by XiaoZhiWei 2018/06/02 12:12:20 离线模式检查一下是否有邮箱 (只检查一次)
+					if User:getRole():getFlag("邮箱检查") == 0 then
+						Account:getEmail(
+							function(eventName, errmsg, email, isBind, isLogout)
+								if eventName == "有邮箱" and isBind == true then
+								else
+									DataBase:setDataByString("MapPvp", "OFFLINE")
+									User:getRole():setFlag("PVP战斗状态", "离线模式")
+								end
+								User:getRole():setFlag("邮箱检查", 1)
+							end
+						)
+					end
+
+					if User:getRole():canOpenMapEncounter() ~= true then
+						DataBase:setDataByString("MapPvp", "OFFLINE")
+						User:getRole():setFlag("PVP战斗状态", "离线模式")
+					end
                 else
                     if MapPvp == "ONLINE" then
                         User:getRole():setFlag("PVP战斗状态", "战斗结束")
@@ -3042,4 +3054,4 @@ Helper:classDefNodeGetInstance(ControllLayer)
 -- 加密标记
 ControllLayer.isEncrypted = true
 return ControllLayer
-0000000000
+00000

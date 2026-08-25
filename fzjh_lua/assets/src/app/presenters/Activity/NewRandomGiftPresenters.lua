@@ -162,8 +162,17 @@ function NewRandomGiftPresenters:__showListView()
                 end
             end
         end
+		v.itemfunc = function()
+			self:__showGoodsInfoUI({{id = v.gid}})
+		end
     end
     self._actionUI:showListView(rewardList)
+end
+
+function NewRandomGiftPresenters:__showGoodsInfoUI(showList)
+    PopupLayerController:showLayer("GoodsInfoMainPresenter",function(layer)
+        layer:showLayer(showList)
+    end)
 end
 
 function NewRandomGiftPresenters:hideLayer()
@@ -201,4 +210,4 @@ end
 Helper:classDefNodeGetInstance(NewRandomGiftPresenters)
 
 return NewRandomGiftPresenters
-0
+00000

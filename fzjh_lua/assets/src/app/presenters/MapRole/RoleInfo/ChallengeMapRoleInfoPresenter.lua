@@ -40,6 +40,10 @@ function ChallengeMapRoleInfoPresenter:showPresenter()
                 self:__refreshLiaoShangUI()
                 
                 self:__refreshDaZuoUI()
+
+				self:__refreshCsjUI()
+
+				self:__refreshCsjHuiFu(elapsed)
             
                 do  --刷新常态buff
                     local ChallengeMapSystem = require("app.models.ChallengeMap.ChallengeMapSystem")
@@ -97,6 +101,7 @@ function ChallengeMapRoleInfoPresenter:__showRoleInfoPanel()
     self:__setDaZuo()
     self:__setHuiFu()
     self:__setLiaoShang()
+	self:__setButtonCsj()
 end
 
 function ChallengeMapRoleInfoPresenter:__setRoleName()
@@ -200,6 +205,47 @@ function ChallengeMapRoleInfoPresenter:__setDaZuo()
     self.__output:setButtonVisible(3,true)
 end
 
+function ChallengeMapRoleInfoPresenter:__setButtonCsj()
+	self.__output:setButtonName(5,"长生诀")
+
+    self.__output:setButtonTouchEnable(5,true)
+
+	local csjLv = self.__role:getSkillLv("changshengjueyin") > 0 and self.__role:getSkillLv("changshengjueyin") or self.__role:getSkillLv("changshengjueyang")
+
+    self.__output:setButtonVisible(5,csjLv >= 600)
+
+	self.__output:setButtonFunc(5,function()
+        Audio:playEffect("xiaoAnNiu")
+
+        if self.__role:getFlag("长生诀时间") > 0  then
+            return
+        end
+
+        local canUseCsj,msg = self.__input:checkCanUseCsj()
+
+        if canUseCsj then
+            self.__input:useCsj()
+
+            self.__csjHuiFuIng = true
+
+            PopupLayerController:showLayer("GlobalShadeLayer",function (layer)
+				layer:setPopText("你正在运功，请稍后片刻")
+				layer:showLayer()
+			end)
+
+            self.__role:setFlag("长生诀时间",GetTime())
+
+            if self.__role:getSkill("changshengjueyin") then
+				RichPrint("main","HIW你运起长生诀阴之内功，顿时灵台一片清明，内力缓慢流动，自行运转周天，待你回过神来，身上伤势已是荡然无存，内力也充溢无比，全无异样。")
+			elseif self.__role:getSkill("changshengjueyang") then
+				RichPrint("main","HIW你运起长生诀阳之内功，顿时丹田处生出一股热流，流遍奇经八脉，待你回过神来，身上伤势已是荡然无存，内力也充溢无比，全无异样。")
+			end
+        else
+            self:__popText(Helper:getDef(msg,""))
+        end
+    end)
+end
+
 function ChallengeMapRoleInfoPresenter:__initRoleButtons()
     local buttons = {
         {posX = 50,posY = 58},
@@ -257,9 +303,62 @@ function ChallengeMapRoleInfoPresenter:__refreshDaZuoUI()
     end
 end
 
+function ChallengeMapRoleInfoPresenter:__refreshCsjUI()
+	if self.__role:getFlag("长生诀时间") > 0 then
+		local currTime = GetTime()
+        
+		local needTime = currTime - self.__role:getFlag("长生诀时间")
+		
+        local percent = math.min(Helper:mathFloor(needTime / 300 * 100), 100)
+
+		self.__output:setButtonPercent(5, percent)
+
+		if percent == 100 then
+			self.__role:setFlag("长生诀时间",0)
+		end
+	else
+        self.__output:setButtonPercent(5, 100)
+	end
+end
+
+function ChallengeMapRoleInfoPresenter:__refreshCsjHuiFu(elapsed)
+    if self.__csjHuiFuIng ~= true then
+        return
+    end
+
+    local speed = 0.01
+
+	local qiPercentHuifuSpeed = speed
+
+    local qiHuifuSpeed = self.__role:getFinalAttr("qiMax") * speed
+
+    local neiliHuifuSpeed = self.__role:getFinalAttr("neiliMax") * 2 * speed
+
+    self.__diffTime = Helper:getDef(self.__diffTime,0)  + elapsed
+
+    if self.__diffTime >= 0.01 then
+        self.__role:setAttr("qi", math.min(self.__role:getAttr("qi") + qiHuifuSpeed, self.__role:getFinalAttr("qiMax")))
+
+        self.__role:setAttr("neili", math.min(self.__role:getAttr("neili") + neiliHuifuSpeed, self.__role:getFinalAttr("neiliMax")*2))
+
+        self.__role:setAttr("qiPercent", math.min(self.__role:getAttr("qiPercent") + qiPercentHuifuSpeed, 1))
+        
+        self.__diffTime = nil
+
+        if  self.__role:getAttr("qi") >= self.__role:getFinalAttr("qiMax") and 
+            self.__role:getAttr("neili") >= self.__role:getFinalAttr("neiliMax")*2 and 
+            self.__role:getAttr("qiPercent") >= 1 then
+                PopupLayerController:hideLayer("GlobalShadeLayer",function (layer)
+                    layer:hideLayer()
+                end)
+                self.__csjHuiFuIng = nil
+        end
+    end
+end
+
 function ChallengeMapRoleInfoPresenter:__popText(text)
     PopText(text)
 end
 
 return class("ChallengeMapRoleInfoPresenter", {}, ChallengeMapRoleInfoPresenter)
-00000000000000
+0000

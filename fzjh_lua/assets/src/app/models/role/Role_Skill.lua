@@ -1101,4 +1101,13 @@ function Role_Skill:startSkillAdvance(skillAdvance)
 	self:addItemCount(skillAdvance:getItemId(),-skillAdvance:getItemNum())
 end
 
-return Role_Skill000000000000000
+function Role_Skill:getActiveZhaoMeditateSystem()
+	if self.__ActiveZhaoMeditateSystem == nil then
+		local ActiveZhaoMeditateSystem = require("app.models.skill.ActiveZhaoMeditate.ActiveZhaoMeditateSystem")
+		self.__ActiveZhaoMeditateSystem = ActiveZhaoMeditateSystem:create(self)
+	end
+	
+	return self.__ActiveZhaoMeditateSystem
+end
+
+return Role_Skill00000000000

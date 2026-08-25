@@ -442,7 +442,7 @@ function User:createSaveRoleCoroutine()
                     coroutine.yield()
                     self._role.saveDataTime = GetTime()
                     coroutine.yield()
-                    local roleData = self._role:trimRoleData()
+                    local roleData = createSafeTable("__SAVE_TRIM_DATA__",self._role:trimRoleData())
                     coroutine.yield()
                     roleData = clone(roleData)
                     coroutine.yield()
@@ -553,4 +553,4 @@ function User:setNaturalAttr(name , value)
 end
 
 return User
-0000000000
+0000

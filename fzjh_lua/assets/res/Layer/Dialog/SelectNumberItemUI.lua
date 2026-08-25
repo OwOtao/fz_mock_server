@@ -211,18 +211,17 @@ Text_desc_4:setTag(23)
 Text_desc_4:setCascadeColorEnabled(true)
 Text_desc_4:setCascadeOpacityEnabled(true)
 Text_desc_4:setVisible(false)
-Text_desc_4:setAnchorPoint(0.4451, 0.5731)
-Text_desc_4:setPosition(540.0000, 1010.0000)
+Text_desc_4:setPosition(540.0000, 1005.3220)
 Text_desc_4:setTextColor({r = 255, g = 0, b = 0})
 layout = ccui.LayoutComponent:bindLayoutComponent(Text_desc_4)
 layout:setPositionPercentX(0.5000)
-layout:setPositionPercentY(0.5260)
+layout:setPositionPercentY(0.5236)
 layout:setPercentWidth(0.4343)
 layout:setPercentHeight(0.0333)
 layout:setSize({width = 469.0000, height = 64.0000})
-layout:setLeftMargin(331.2481)
-layout:setRightMargin(279.7519)
-layout:setTopMargin(882.6783)
+layout:setLeftMargin(305.5000)
+layout:setRightMargin(305.5000)
+layout:setTopMargin(882.6785)
 layout:setBottomMargin(973.3216)
 Layer:addChild(Text_desc_4)
 
@@ -727,4 +726,4 @@ end
 
 return Result
 
-000000000
+00000

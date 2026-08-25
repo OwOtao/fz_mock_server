@@ -275,7 +275,7 @@ function StartGameLayer:checkLogin()
 				self:checkTime()
 				return
 			elseif responseData.errcode == 551 then -- invalid uuid
-				PopText("您的uuid为空, 请检查您的设备, 官方客服: 800184002")
+				PopText("您的uuid为空, 请检查您的设备, 官方客服: " .. Game:getKFQQ())
 				return
 			elseif responseData.errcode == 552 then -- userid not exists
 				-- User:resetRole()
@@ -425,4 +425,4 @@ end
 -- 加密标记
 StartGameLayer.isEncrypted = true
 return StartGameLayer
-0
+00000000

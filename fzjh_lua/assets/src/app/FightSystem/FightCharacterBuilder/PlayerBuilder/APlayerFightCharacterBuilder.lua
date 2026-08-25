@@ -35,6 +35,8 @@ local ShenBingRes = require("app.models.ShenBing.ShenBingRes")
 
 local EquipmentFactory = require("app.FightSystem.Factory.EquipmentFactory.EquipmentFactory")
 
+local FightSkillFactory = require("app.FightSystem.FightSkill.Factory.FightSkillFactory")
+
 --@SuperType [src.app.FightSystem.FightCharacterBuilder.PlayerBuilder.APlayerFightCharacterBuilder#IConfigGetter]
 local APlayerFightCharacterBuilder = {}
 
@@ -166,7 +168,6 @@ end
 --@time:2023-02-21 10:34:43
 --@character: [src.app.FightSystem.FightRole.NewFightCharacter#FightCharacter]
 function APlayerFightCharacterBuilder:__initPrepSkillAndActiveSkill(character)
-    local FightSkillFactory = require("app.FightSystem.FightSkill.Factory.FightSkillFactory")
 
     local FightActiveSkillFactory = require("app.FightSystem.FightSkill.Factory.FightActiveSkillFactory")
 
@@ -202,6 +203,25 @@ function APlayerFightCharacterBuilder:__initPrepSkillAndActiveSkill(character)
                         character:addActiveSkill(activeSkill)
                     end
                 end
+            end
+        end
+    end
+end
+
+-- 知识类武学的功能需要逐步接入，不能一次性添加所有
+local __konwledgeSkillIdList = FightCommons.ACCEPT_KONWLEDGE_SKILL
+function APlayerFightCharacterBuilder:__initKonwledgeSkill(character)
+    for _, skillId in ipairs(__konwledgeSkillIdList) do
+        local role_skill = self.__role:getSkill(skillId)
+        if role_skill ~= nil then
+            local skill_exp = role_skill.exp or 0
+            local skill = Skill:getSkill(skillId)
+            if skill ~= nil then
+                local lv = skill:getLv(skill_exp)
+                local konwledgeFightSkill = FightSkillFactory.createKnowledgeFightSkill(skillId, lv)
+                character:addKnowledgeSkill(skillId, konwledgeFightSkill)
+            else
+                error("unkonw Skill Id : " .. tostring(skillId))
             end
         end
     end
@@ -427,6 +447,7 @@ function APlayerFightCharacterBuilder:buildCharacter()
     self:__initAttr(character)
     self:__initBasicSkill(character)
     self:__initPrepSkillAndActiveSkill(character)
+    self:__initKonwledgeSkill(character)
     self:__initRawSkills(character)
     self:__initEquipment(character)
     self:__initFistFoot(character)
@@ -439,4 +460,4 @@ function APlayerFightCharacterBuilder:buildCharacter()
 end
 
 return abstract("APlayerFightCharacterBuilder", {IConfigGetter, IFightCharacterBuilder}, APlayerFightCharacterBuilder)
-0000000000000
+000000000

@@ -1,4 +1,5 @@
 local class = require("third.class.NewClass")
+local GoodsHelper = require("app.models.Store.GoodsHelper")
 local DrinkMorePresenters = {}
 
 function DrinkMorePresenters:create(iNianBeastView,iNianBeastModel)
@@ -237,22 +238,40 @@ function DrinkMorePresenters:doDrink()
 end
 
 function DrinkMorePresenters:__getReward(rid, giftId, rewards, func)
-    if self.__input:checkCanGetReward(rewards) then
-        self.__input:doReward(rid, giftId, function()
-            self.__input:getActionInfo(function()
-                self.__output:setText1Str("剩余佳酿："..tostring(self.__input:getDrinkNum()))
-                if self.__showType == 1 then
-                    self:showPersonalRewardList()
-                elseif self.__showType == 2 then
-                    self:showGroupRewardList()
-                end
+    local isTrue, searchInfo = self.__input:checkCanGetReward(rewards)
 
-                if func then
-                    func()
-                end
-            end)
-        end)
+    if isTrue == false then
+        GoodsHelper:handleDuplicatePurchaseSearchInfo(
+            searchInfo,
+            {
+                flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+            }
+        )
+
+        return
     end
+
+    local isBagEnough, msg = self.__input:checkBagCanGetReward(rewards)
+
+    if isBagEnough == false then
+        PopText(msg)
+        return
+    end
+
+    self.__input:doReward(rid, giftId, function()
+        self.__input:getActionInfo(function()
+            self.__output:setText1Str("剩余佳酿："..tostring(self.__input:getDrinkNum()))
+            if self.__showType == 1 then
+                self:showPersonalRewardList()
+            elseif self.__showType == 2 then
+                self:showGroupRewardList()
+            end
+
+            if func then
+                func()
+            end
+        end)
+    end)
 end
 
 function DrinkMorePresenters:__showSelectUI(rid, giftIdList, state)
@@ -338,4 +357,4 @@ end
 
 return class("DrinkMorePresenters", {}, DrinkMorePresenters)
 
-0000000000
+00000000

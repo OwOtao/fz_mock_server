@@ -43,7 +43,7 @@ function ZhuDongTaskBtnPresenter:updateUI()
         self.__ui:setInnerBtnName("进行中")
         self.__ui:setInnerBtnClickFunc(
             function()
-                self.__mainTaskPresenter:acceptZhuDongTask(self:getId())
+                self.__mainTaskPresenter:showZhuDongTask(self:getId())
             end
         )
     elseif style == "待提交" then
@@ -79,4 +79,4 @@ function ZhuDongTaskBtnPresenter:updateUI()
 end
 
 return newClass("ZhuDongTaskBtnPresenter", {}, ZhuDongTaskBtnPresenter)
-000000000000000
+0

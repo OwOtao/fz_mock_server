@@ -19,6 +19,9 @@ function GoodsPresenterFactory:createGoodsPrensenter(goods)
                 [VIEWTYPE.BOX] = function()
                     return require("app.presenters.GoodsInfo.BoxGoodsInfoPresenter"):create(goods)
                 end,
+				[VIEWTYPE.EQUIP] = function()
+                    return require("app.presenters.GoodsInfo.EquipGoodsInfoPresenter"):create(goods)
+                end,
                 default = function()
                     return require("app.presenters.GoodsInfo.NormalGoodsInfoPresenter"):create(goods)
                 end,
@@ -29,4 +32,4 @@ function GoodsPresenterFactory:createGoodsPrensenter(goods)
 end
 
 return GoodsPresenterFactory
-00000000
+000000000

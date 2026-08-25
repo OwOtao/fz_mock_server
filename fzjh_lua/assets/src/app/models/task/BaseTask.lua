@@ -1,8 +1,17 @@
 -- local User = require("app.models.user.User")
 
 local OfflineProfit = require("app.models.OfflineProfit.OfflineProfit")
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
 
 local sklv = 140
+local activeConfigTaskIds = {
+	task16 = true,
+	task17 = true,
+	task18 = true,
+	task19 = true,
+	task20 = true,
+	task21 = true
+}
 
 local BaseTask =
 {
@@ -149,6 +158,34 @@ end
 
 function BaseTask:setRoleCurrTaskId(id)
 	return User:setRoleAttr("currTaskId", id)
+end
+
+function BaseTask:isActiveConfigTask()
+	return activeConfigTaskIds[self.id] == true
+end
+
+function BaseTask:isActiveConfigState(state)
+	return state == TASK_STATE_ACCEPT or state == TASK_STATE_TO_SUBMIT or state == TASK_STATE_DISPATCH
+end
+
+function BaseTask:getActiveConfigVersion(confVer)
+	if confVer ~= nil then
+		return confVer
+	end
+
+	return LiLianTaskHelper:getRoleTaskConfigVersion(self:getRoleTask(self.id))
+end
+
+function BaseTask:makeActiveConfigVersionByNow()
+	return LiLianTaskHelper:getConfigVersionByTime(GetTime())
+end
+
+function BaseTask:setActiveConfigVersion(confVer)
+	local roleTask = self:getRoleTask(self.id)
+	if confVer == nil then
+		confVer = self:makeActiveConfigVersionByNow()
+	end
+	roleTask.aConfVer = confVer
 end
 
 --初始化用户任务数据（主线任务备用）
@@ -783,11 +820,25 @@ function BaseTask:isCreateChapmanByAction(currTime, startTime, endTime)
 end
 
 --@desc 获取任务奖励中属性的buff
-function BaseTask:getBuff()
+function BaseTask:getBuff(confVer)
 	return 1
 end
 
-function BaseTask:getSpecialReward()
+function BaseTask:getTaskDailyMaxCount(confVer)
+	if self.getDynamicDailyMaxCount then
+		return self:getDynamicDailyMaxCount(confVer)
+	end
+
+	if self.cCount then
+		return self.cCount
+	end
+
+	if self.zhuXianCondition then
+		return self.zhuXianCondition.cCount
+	end
+end
+
+function BaseTask:getSpecialReward(confVer)
 	return 1
 end
 
@@ -811,6 +862,9 @@ end
 --接受任务
 function BaseTask:acceptTask()
 	local roleTask = self:getRoleTask(self.id)
+	local oldState = roleTask.state
+	local isNewActiveTask = self:isActiveConfigTask() and not self:isActiveConfigState(oldState)
+	local shouldKeepActiveStartTime = self:isActiveConfigTask() and self:isActiveConfigState(oldState)
 	roleTask.state = TASK_STATE_ACCEPT
 
 	roleTask.startTime = Helper:getDef(roleTask.startTime,0)
@@ -833,15 +887,21 @@ function BaseTask:acceptTask()
 	elseif  self.id == "task18" then
 		User:getRole():setInheritFlag("腊八施粥",1)
 		RichPrint("main" ,"施粥长老正在浮云寺寺门处等着少侠，快快前去吧。")
-		if self:getRoleCurrTaskId() ~= self.id then
+		if (self:getRoleCurrTaskId() ~= self.id and shouldKeepActiveStartTime == false) or isNewActiveTask then
 			roleTask.startTime = GetTime()
+		end
+		if isNewActiveTask then
+			self:setActiveConfigVersion()
 		end
 		self:getRole():setRoleCurrState(ROLE_CURR_STATE_ZHUDONG)
 		self:setRoleCurrTaskId(self.id)
-	
+
 	else
-		if self:getRoleCurrTaskId() ~= self.id then
+		if (self:getRoleCurrTaskId() ~= self.id and shouldKeepActiveStartTime == false) or isNewActiveTask then
 			roleTask.startTime = GetTime()
+		end
+		if isNewActiveTask then
+			self:setActiveConfigVersion()
 		end
 		self:getRole():setRoleCurrState(ROLE_CURR_STATE_ZHUDONG)
 		self:setRoleCurrTaskId(self.id)
@@ -871,6 +931,8 @@ end
 function BaseTask:submitTask()
 	local role = User:getRole()
 	local roleTask = self:getRoleTask(self.id)
+	local configVersion = self:getActiveConfigVersion()
+	local taskCCount = self:getTaskDailyMaxCount(configVersion)
 	local exp = role:getAttr("exp")
 	local fy = role:getFinalAttr("luck")
 	local sklv = role:getKongfu()
@@ -879,17 +941,17 @@ function BaseTask:submitTask()
 	-- 检查默认值
 	roleTask.dCount = Helper:getDef(roleTask.dCount, 0)
 	roleTask.zCount = Helper:getDef(roleTask.zCount, 0)
-	roleTask.cCount = Helper:getDef(roleTask.cCount, self.zhuXianCondition.cCount)
-	if roleTask.cCount < self.zhuXianCondition.cCount then
-		roleTask.cCount = self.zhuXianCondition.cCount
+	roleTask.cCount = Helper:getDef(roleTask.cCount, taskCCount)
+	if roleTask.cCount < taskCCount then
+		roleTask.cCount = taskCCount
 	end
 
 	-- 任务的特殊处理
-	local rewardBuff = self:getBuff()
+	local rewardBuff = self:getBuff(configVersion)
 
 	-- 奖励无法领取的情况为nil
 	if rewardBuff == nil then
-		return false
+		return false, configVersion
 	end
 
 	-- 传承加成
@@ -917,7 +979,7 @@ function BaseTask:submitTask()
 				local meridianBuffValue = Meridian:getMeridianBuffValue("jiemieyin")
 				meridianBuffValue = string.split(meridianBuffValue,";")
 				local otherValue = tonumber(meridianBuffValue[1])
-				local nvValue = tonumber(meridianBuffValue[2]) 
+				local nvValue = tonumber(meridianBuffValue[2])
 				if role:getAttr("sex") == "女" then
 					rewardBuff = rewardBuff + nvValue
 				else
@@ -964,7 +1026,7 @@ function BaseTask:submitTask()
 				role:setDayFlag("飞贼人数",4) 
 			end
 			roleTask.dCount = 0
-			roleTask.cCount = self.zhuXianCondition.cCount
+			roleTask.cCount = self:getTaskDailyMaxCount(configVersion)
 		end
 		
 		local items  = User:getRole():getItemsWithItemId(User:getRole():getFlag("主动任务物品"))
@@ -973,7 +1035,6 @@ function BaseTask:submitTask()
 			User:getRole():addItemCount(User:getRole():getFlag("主动任务物品"), -1)
 			User:getRole():setFlag("主动任务物品","nil")
 		end
-	   
 	end
 	if roleTask.startTime and Helper:diffWithDate(GetTime(), roleTask.startTime) >= 1 then
 		if self.id == "task15" then
@@ -989,20 +1050,20 @@ function BaseTask:submitTask()
 			-- if currtime - startTime >= 3600*24*7 then
 			if Helper:diffWithDate(currtime, startTime) >= 7 then
 				roleTask.dCount = 0
-				roleTask.cCount = self.zhuXianCondition.cCount
+				roleTask.cCount = self:getTaskDailyMaxCount(configVersion)
 				if roleTask.state == TASK_STATE_COMPLETE then
 					roleTask.state = TASK_STATE_IDLE
 				end
 			--间隔小于7天，并且startWeekdy不为周末
 			elseif currWeekdy ~= 0 and startWeekdy > currWeekdy then
 				roleTask.dCount = 0
-				roleTask.cCount = self.zhuXianCondition.cCount
+				roleTask.cCount = self:getTaskDailyMaxCount(configVersion)
 				if roleTask.state == TASK_STATE_COMPLETE then
 					roleTask.state = TASK_STATE_IDLE
 				end
 			elseif startWeekdy == 0 and currWeekdy > 0 then
 				roleTask.dCount = 0
-				roleTask.cCount = self.zhuXianCondition.cCount
+				roleTask.cCount = self:getTaskDailyMaxCount(configVersion)
 				if roleTask.state == TASK_STATE_COMPLETE then
 					roleTask.state = TASK_STATE_IDLE
 				end
@@ -1012,7 +1073,7 @@ function BaseTask:submitTask()
 
 	-- 有物品奖励时，检测背包是否有剩余空间获取奖励物品
 	local rewardItemCount = 0
-	local rewards = self:getRewardsList()
+	local rewards = self:getRewardsList(configVersion)
 	for k, v in pairs(rewards) do
 		if v.type == "物品" then
 			rewardItemCount = rewardItemCount + 1
@@ -1022,7 +1083,7 @@ function BaseTask:submitTask()
 	local items = User:getRoleAttr("items")
 	if User:getRoleAttr("weight") - #items < rewardItemCount then
 		PopText("背包剩余容量不足" .. rewardItemCount .. "，无法获取奖励")
-		return false
+		return false, configVersion
 	end
 
 
@@ -1053,12 +1114,6 @@ function BaseTask:submitTask()
 		end
 	end
 	
-	-- self:getTaskReward()
-
-	-- self:getDayReward()
-
-	-- self:extraFunc()
-	
 	-- 计算并获取主线任务奖励
 	for k, v in pairs(rewards) do
 		if v.type == "属性" then
@@ -1067,7 +1122,7 @@ function BaseTask:submitTask()
 				value = v.value
 			elseif type(v.value) == "function" then
 				local lv = Helper:getDef(roleTask.roleLv,Lv)
-				value = v.value(lv, exp, fy, sklv)
+				value = v.value(lv, exp, fy, sklv, configVersion)
 			end
 			if v.name =="yueli"then
 				role:addAttr(v.name, value)
@@ -1144,7 +1199,7 @@ function BaseTask:submitTask()
 
 	self:updateCount()
 
-	return true
+	return true, configVersion
 end
 
 function BaseTask:recordActiveCount()
@@ -1214,7 +1269,7 @@ function BaseTask:changeTaskNPC()
 	local roleTask
 	-- role:setRoleCurrState(ROLE_CURR_STATE_IDLE)
 	role:setFlag("更换人物刷新CD"..self.id,GetTime())
-	roleTask = self:getRoleTask(self:getRoleCurrTaskId())
+	roleTask = self:getRoleTask(self.id)
 	-- end
 	
 	--删除任务道具物品
@@ -1229,7 +1284,8 @@ function BaseTask:changeTaskNPC()
 		cCount = roleTask.cCount,
 		zCount = roleTask.zCount,
 		endTime = GetTime(),
-		startTime = GetTime()--roleTask.startTime
+		startTime = GetTime(),--roleTask.startTime
+		aConfVer = self:isActiveConfigTask() and self:makeActiveConfigVersionByNow() or nil
 	}
 	role:setTask(self.id, roleTask)
 
@@ -1254,7 +1310,7 @@ function BaseTask:cancelTask()
 		User:getRole():setFlag( User:getRole():getFlag("历练"),0)
 		return true
 	else
-		roleTask = self:getRoleTask(self:getRoleCurrTaskId())
+		roleTask = self:getRoleTask(self.id)
 	end
 	
 	local role_money = role:getAttr("money")
@@ -1309,16 +1365,15 @@ end
 function BaseTask:updateCount(flag)
 	local role = User:getRole()
 	local roleTask = self:getRoleTask(self.id)
+	local taskCCount = self:getTaskDailyMaxCount(self:getActiveConfigVersion())
 	if roleTask.dCount == nil then
 		roleTask.dCount = 0
 	end
 
-	print("baseTask updateCount",self.id,self.cCount,self.zhuXianCondition.cCount,roleTask.cCount)
+	print("baseTask updateCount",self.id,self.cCount,taskCCount,roleTask.cCount)
 
-	if self.cCount and roleTask.cCount ~= self.cCount then
-		roleTask.cCount = self.cCount
-	elseif self.zhuXianCondition.cCount and roleTask.cCount ~= self.zhuXianCondition.cCount then
-		roleTask.cCount = self.zhuXianCondition.cCount
+	if taskCCount and roleTask.cCount ~= taskCCount then
+		roleTask.cCount = taskCCount
 	end
 
 	if not roleTask.state then
@@ -1393,11 +1448,8 @@ function BaseTask:updateCount(flag)
 	end
 
 	-- 今日完成次数达上限
-	if self.zhuXianCondition ~= nil and roleTask.dCount >= self.zhuXianCondition.cCount and roleTask.state ~= TASK_STATE_DISPATCH then
+	if self.zhuXianCondition ~= nil and taskCCount and roleTask.dCount >= taskCCount and roleTask.state ~= TASK_STATE_DISPATCH then
 		roleTask.state = TASK_STATE_COMPLETE
-		-- if role:isInCurrState(ROLE_CURR_STATE_ZHUDONG) == true then -- add by XiaoZhiWei 2017/07/28 20:07:40 只有在主动技能接取的时候才需要去除
-		-- 	role:removeRoleCurrState(ROLE_CURR_STATE_ZHUDONG) -- add by XiaoZhiWei 2017/07/28 18:11:42 达到限制,去除主动状态
-		-- end
 	end
 end
 ---------------------------------------------------------------------------
@@ -1579,7 +1631,7 @@ function BaseTask:getCurrTaskMoney(roleTask)
 end
 
 
-function BaseTask:getDayReward()
+function BaseTask:getDayReward(confVer)
 	if MapIsEmpty(self.dayReward) then
 		return
 	end
@@ -1601,7 +1653,7 @@ function BaseTask:getDayReward()
 					if bool then
 						local value = 0
 						if type(day_reward.value) == "function" then
-							value = day_reward:value(today_count)
+							value = day_reward:value(today_count, nil, confVer)
 						elseif type(day_reward.value) == "number" then
 							value = day_reward.value
 						else
@@ -1636,7 +1688,7 @@ function BaseTask:getDayReward()
 					if bool then
 						local value = 0
 						if type(day_reward.value) == "function" then
-							value = day_reward:value(today_count)
+							value = day_reward:value(today_count, nil, confVer)
 						elseif type(day_reward.value) == "number" then
 							value = day_reward.value
 						else
@@ -1656,7 +1708,7 @@ end
 --@desc: 获取主动任务奖励，增加活动类本地奖励配置。
 --@author:Liang SongQiang
 --@time:2019-01-17 10:57:30
-function BaseTask:getRewardsList()
+function BaseTask:getRewardsList(confVer)
 	local rewards = {}
 	
 	local tasks = User:getRoleAttr("tasks")
@@ -1668,7 +1720,7 @@ function BaseTask:getRewardsList()
         end
     end
 
-    local lilian_rewards = self:getSpecialReward()
+    local lilian_rewards = self:getSpecialReward(confVer)
 
     if MapIsEmpty(lilian_rewards) == false then
         for _, reward in ipairs(lilian_rewards) do
@@ -1756,4 +1808,4 @@ end
 -- 加密版本
 BaseTask.isEncrypted = true
 return BaseTask
-0000000000
+000000000

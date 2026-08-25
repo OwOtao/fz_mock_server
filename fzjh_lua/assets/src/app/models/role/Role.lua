@@ -1882,6 +1882,12 @@ function Role:getCHAttrName(attr)
 		return CurrencyUtil:getCurrencyName(attr)
 	end
 
+	local SelfCreatedSkillManager = require("app.models.SelfCreatedSkillSystem.SelfCreatedSkillManager.SelfCreatedSkillManager")
+	local prop = SelfCreatedSkillManager:getPropMap(attr)
+	if prop and prop.name then
+		return prop.name
+	end
+
 	local tabs =
 	{
 		age = "年龄",
@@ -5530,7 +5536,14 @@ function Role:isShowViewingHallHongDian()
 	end
 end
 
+--@desc: 角色是否能开副本偶遇状态(1.版本开关 2.通关15章 3.创号时间大于72小时)
+--@author:LvBin
+--@time:2026-07-13 18:11:41
+--@return
+function Role:canOpenMapEncounter()
+	return Game:isOpenEncounter() == true and Map:getMapState("fb15") == MAP_STATE.COMPLETE and GetTime() - Helper:getDef(self:getAttr("createTime"), GetTime()) > 3600 * 72
+end
 
 Role.isEncrypted = true
 return NewClass("Role", {IRoleInput}, Role, true)
-0000
+000000000000

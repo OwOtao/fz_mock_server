@@ -20,6 +20,8 @@ local ABuffEffect = require("app.FightSystem.FightRole.CharacterBuff.Effects.ABu
 --@RefType [src.app.FightSystem.FightRole.CharacterBuff.Buffs.BuffDamageCalculator.BuffEffectDamagCalculatorFactory#BuffEffectDamageCalculatorFactory]
 local BuffEffectDamageCalculatorFactory = require("app.FightSystem.FightRole.CharacterBuff.Buffs.BuffDamageCalculator.BuffEffectDamagCalculatorFactory")
 
+local ActiveSkillCdUpdateViewEvent = require("app.FightSystem.Veiws.ViewEvents.Events.ActiveSkillCdUpdateViewEvent")
+
 --@SuperType [src.app.FightSystem.FightRole.CharacterBuff.Effects.ABuffEffect#ABuffEffect]
 local BuffEffect12 = {}
 
@@ -99,9 +101,16 @@ function BuffEffect12:makeEffectOnAdd()
 
         local nowCD = activeSkill:getCD()
 
-        local newCD = nowCD + self.__value
+        local newCD = Helper:getRange(nowCD + self.__value, 0, cdLimit)
 
-        activeSkill:setCD(Helper:getRange(newCD, 0, cdLimit))
+        if newCD ~= nowCD then
+            activeSkill:setCD(newCD)
+
+            local owner = self.__buff:getBuffOwner()
+            local updateViewEvent = ActiveSkillCdUpdateViewEvent:create(owner:getId(), activeSkill:getId(), nowCD, newCD)
+
+            owner:getFight():notifyVeiwEvent(updateViewEvent)
+        end
     end
 end
 
@@ -181,4 +190,4 @@ function BuffEffect12:__walkPrepActiveSkills(func)
 end
 
 return newClass("BuffEffect12", {ABuffEffect}, BuffEffect12)
-000000
+000000000

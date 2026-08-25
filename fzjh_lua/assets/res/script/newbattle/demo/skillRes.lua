@@ -424,7 +424,11 @@ return {["武学"]={["AcalanathaRule"]={["autoZhaoAtkDamageClass"]=0,["battleBac
  
 可准备为:轻功
  
-需心法【养蛇术】等级70级]],["familyId"]=[[baituoshan]],["id"]=[[chanchubufa]],["name"]=[[三蟾步玉门]],["nameColor"]=[[HIG]],["parryClass"]=0,["skillType"]=[[30010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["chanhunsuo"]={["activeZhaos"]=[[duohunshi#suohunshi]],["autoZhaoAtkDamageClass"]=5,["battleBackAnim"]=21003,["battleIdleAnim"]=21001,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq500600000808000]],["battleRunAnim"]=21002,["dodgeClass"]=0,["dsc"]=[[HIW天狼教独有的一门鞭法,威力惊人。NOR
+需心法【养蛇术】等级70级]],["familyId"]=[[baituoshan]],["id"]=[[chanchubufa]],["name"]=[[三蟾步玉门]],["nameColor"]=[[HIG]],["parryClass"]=0,["skillType"]=[[30010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["changshengjueyang"]={["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=0,["battleIdleAnim"]=0,["battleJoinAnim"]=0,["battleRunAnim"]=0,["dodgeClass"]=0,["dsc"]=[[HIW长生诀(阳)乃是道家宝典长生诀的分支，习此功者战斗使用恢复有机会恢复更多气血、练功和打坐效率更高。NOR
+ 
+]],["id"]=[[changshengjueyang]],["name"]=[[长生诀(阳)]],["nameColor"]=[[HIW]],["parryClass"]=0,["type"]=5,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["changshengjueyin"]={["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=0,["battleIdleAnim"]=0,["battleJoinAnim"]=0,["battleRunAnim"]=0,["dodgeClass"]=0,["dsc"]=[[HIW长生诀(阴)乃是道家宝典长生诀的分支，习此功者战斗使用恢复有机会恢复更多气血、战斗中伤害提高、回复精力更快。NOR
+ 
+]],["enteredLauncherAdd"]=[[LaunEnter_changshengjueyin]],["id"]=[[changshengjueyin]],["name"]=[[长生诀(阴)]],["nameColor"]=[[HIW]],["parryClass"]=0,["type"]=5,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["chanhunsuo"]={["activeZhaos"]=[[duohunshi#suohunshi]],["autoZhaoAtkDamageClass"]=5,["battleBackAnim"]=21003,["battleIdleAnim"]=21001,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq500600000808000]],["battleRunAnim"]=21002,["dodgeClass"]=0,["dsc"]=[[HIW天狼教独有的一门鞭法,威力惊人。NOR
  
 可准备为:鞭法、招架
 需要装备:长鞭、软鞭、九节鞭、杆子鞭、链枷
@@ -1189,7 +1193,9 @@ return {["武学"]={["AcalanathaRule"]={["autoZhaoAtkDamageClass"]=0,["battleBac
 需心法【生财之道】等级1级]],["familyId"]=[[jinqianbang]],["id"]=[[pocaishou]],["name"]=[[破财手]],["nameColor"]=[[HIY]],["parryClass"]=1,["skillType"]=[[10030#50010]],["type"]=2,["weaponTypes"]=10101,["zhaoJiaDefDamageClass"]=1,["zhaoJiaDefDamageParam"]=0.15},["pomopimajianfa"]={["autoZhaoAtkDamageClass"]=9,["battleBackAnim"]=21003,["battleIdleAnim"]=21001,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq500500000707000]],["battleRunAnim"]=21002,["dodgeClass"]=0,["dsc"]=[[HIW这是一位痴迷作画的江湖前辈从字墨中悟出的武学，其剑法招式繁多，让人目不暇接。NOR
  
 可准备为:剑法、招架
-需要装备:长剑、短剑、软剑、重剑、刺剑]],["id"]=[[pomopimajianfa]],["name"]=[[墨云拖雨剑]],["nameColor"]=[[HIC]],["parryClass"]=2,["skillType"]=[[20010#50010]],["type"]=2,["weaponTypes"]=[[20201#20202#20203#20204#20205]],["zhaoJiaDefDamageClass"]=9,["zhaoJiaDefDamageParam"]=0.2},["poyunshou"]={["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=11003,["battleIdleAnim"]=5011045,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq1]],["battleRunAnim"]=11002,["dodgeClass"]=0,["dsc"]=[[新战斗未实装，武学信息异常]],["id"]=[[poyunshou]],["name"]=[[破云手]],["nameColor"]=[[NZS]],["parryClass"]=1,["skillType"]=[[10010#50010]],["type"]=2,["zhaoJiaDefDamageClass"]=9,["zhaoJiaDefDamageParam"]=0.15},["puduzhang"]={["activeZhaos"]=[[pudutianxia]],["autoZhaoAtkDamageClass"]=3,["battleBackAnim"]=23003,["battleIdleAnim"]=5023000,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq300600000808000]],["battleRunAnim"]=23002,["dodgeClass"]=0,["dsc"]=[[HIW这是少林七十二绝技之一的普渡杖。NOR
+需要装备:长剑、短剑、软剑、重剑、刺剑]],["id"]=[[pomopimajianfa]],["name"]=[[墨云拖雨剑]],["nameColor"]=[[HIC]],["parryClass"]=2,["skillType"]=[[20010#50010]],["type"]=2,["weaponTypes"]=[[20201#20202#20203#20204#20205]],["zhaoJiaDefDamageClass"]=9,["zhaoJiaDefDamageParam"]=0.2},["poyunshou"]={["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=11003,["battleIdleAnim"]=5011045,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq1]],["battleRunAnim"]=11002,["dodgeClass"]=0,["dsc"]=[[新战斗未实装，武学信息异常]],["id"]=[[poyunshou]],["name"]=[[破云手]],["nameColor"]=[[NZS]],["parryClass"]=1,["skillType"]=[[10010#50010]],["type"]=2,["zhaoJiaDefDamageClass"]=9,["zhaoJiaDefDamageParam"]=0.15},["primBindAsceDrag"]={["activeZhaos"]=[[dragVeinRunsDeep#bloodSoakCang]],["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=0,["battleIdleAnim"]=0,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq208]],["battleRunAnim"]=0,["dodgeClass"]=0,["dsc"]=[[HIW此决乃无名道人所创，观天象以应人身，融周天星辰轨迹入内息，以经脉为锁、穴位为缚，驯服原本狂暴躁戾之龙气。修习者内劲雄浑刚猛，然需时刻与体内龙气相抗，稍有不慎便反噬己身。原典早已残佚，只余零散心法隐没江湖。NOR
+ 
+可准备为:内功]],["id"]=[[primBindAsceDrag]],["name"]=[[太初缚龙诀]],["nameColor"]=[[HIY]],["parryClass"]=0,["skillType"]=[[40010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["puduzhang"]={["activeZhaos"]=[[pudutianxia]],["autoZhaoAtkDamageClass"]=3,["battleBackAnim"]=23003,["battleIdleAnim"]=5023000,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq300600000808000]],["battleRunAnim"]=23002,["dodgeClass"]=0,["dsc"]=[[HIW这是少林七十二绝技之一的普渡杖。NOR
  
 可准备为:棍法、招架
 需要装备:长棍、长枪、三节棍、狼牙棒、战戟
@@ -1512,7 +1518,9 @@ return {["武学"]={["AcalanathaRule"]={["autoZhaoAtkDamageClass"]=0,["battleBac
 可准备为:双持、招架
 需要装备:对剑、双钩
  
-需心法【驯蜂心术】等级1级]],["familyId"]=[[gumu]],["id"]=[[suxinjianfa]],["name"]=[[玉心清虚剑]],["nameColor"]=[[HIC]],["parryClass"]=2,["skillType"]=[[20060#50010]],["type"]=2,["weaponTypes"]=[[20502#20503]],["zhaoJiaDefDamageClass"]=7,["zhaoJiaDefDamageParam"]=0.2},["taijijian"]={["activeZhaos"]=[[sanhuantaoyue#mianzijue]],["autoZhaoAtkDamageClass"]=7,["battleBackAnim"]=21003,["battleIdleAnim"]=33012010,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq502100000909000]],["battleRunAnim"]=21002,["dodgeClass"]=0,["dsc"]=[[HIW武当派绝学，攻守兼备，出招时行云流水一气呵成,灵活柔韧。防守时剑气绵绵不断，令人无机可乘。NOR
+需心法【驯蜂心术】等级1级]],["familyId"]=[[gumu]],["id"]=[[suxinjianfa]],["name"]=[[玉心清虚剑]],["nameColor"]=[[HIC]],["parryClass"]=2,["skillType"]=[[20060#50010]],["type"]=2,["weaponTypes"]=[[20502#20503]],["zhaoJiaDefDamageClass"]=7,["zhaoJiaDefDamageParam"]=0.2},["swalVanish"]={["activeZhaos"]=[[swalTailGrazStream#swalGlyphRetur]],["autoZhaoAtkDamageClass"]=0,["battleBackAnim"]=0,["battleIdleAnim"]=0,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq8090000000]],["battleRunAnim"]=0,["dodgeClass"]=1,["dsc"]=[[HIW昔有武痴见飞燕掠水，悟得此步。取轻掠之势藏割裂之锋，敌身未觉已中招，己躯却因极速反震，衫襟尽赤，如同自刃。NOR
+ 
+可准备为:轻功]],["id"]=[[swalVanish]],["name"]=[[燕不留痕]],["nameColor"]=[[HIG]],["parryClass"]=0,["skillType"]=[[30010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0},["taijijian"]={["activeZhaos"]=[[sanhuantaoyue#mianzijue]],["autoZhaoAtkDamageClass"]=7,["battleBackAnim"]=21003,["battleIdleAnim"]=33012010,["battleJoinAnim"]=90000001,["battleQuality"]=[[bq502100000909000]],["battleRunAnim"]=21002,["dodgeClass"]=0,["dsc"]=[[HIW武当派绝学，攻守兼备，出招时行云流水一气呵成,灵活柔韧。防守时剑气绵绵不断，令人无机可乘。NOR
  
 可准备为:剑法、招架
 需要装备:长剑、短剑、软剑、刺剑
@@ -2066,4 +2074,4 @@ NOR
  
 可准备为:轻功
  
-需心法【落月庄规】等级70级]],["familyId"]=[[luoyue]],["id"]=[[zuixianwangyuebu]],["name"]=[[醉仙望月步]],["nameColor"]=[[HIG]],["parryClass"]=0,["skillType"]=[[30010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0}}}0000000000000000
+需心法【落月庄规】等级70级]],["familyId"]=[[luoyue]],["id"]=[[zuixianwangyuebu]],["name"]=[[醉仙望月步]],["nameColor"]=[[HIG]],["parryClass"]=0,["skillType"]=[[30010]],["type"]=2,["zhaoJiaDefDamageClass"]=0,["zhaoJiaDefDamageParam"]=0}}}000

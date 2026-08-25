@@ -11,15 +11,10 @@ function AutoZhaoAddEffectHurt:create(type,value)
 end
 
 function AutoZhaoAddEffectHurt:ctor()
-end
-
-function AutoZhaoAddEffectHurt:isActiveHurt()
-    return false
-end
-
-function AutoZhaoAddEffectHurt:isAutoHurt()
-    return true
+	self.__isAutoHurt = true
+	
+	self.__isActiveHurt = false
 end
 
 return newClass("AutoZhaoAddEffectHurt", {BaseHurt}, AutoZhaoAddEffectHurt)
-0000000
+00000000

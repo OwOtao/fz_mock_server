@@ -87,7 +87,7 @@ function ZhuXianUI:setTask(task)
 	local condition = task.zhuXianCondition
 	local role = User:getRole()
 
-	local taskres = require("script.others.Experiencetask")
+	local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
 
 	-- 设置当前主线任务地图标签
 
@@ -128,91 +128,101 @@ function ZhuXianUI:setTask(task)
 	--江湖历练任务 单独处理
 	if task.id == "task15" then
 		--历练中dCount完成次数作为任务等级，最高为5
-		local tasklevel = Helper:getRange(dCount, 1, 5)
+		local taskIndex = Helper:getRange(dCount, 1, 5)
 
 
 		-- if dCount > 5 then
 		-- 	dCount = 5
-		-- 	tasklevel = dCount
+		-- 	taskIndex = dCount
 		-- elseif dCount < 1 then
-		-- 	tasklevel =1
+		-- 	taskIndex =1
 		-- else
-		-- 	tasklevel = dCount
+		-- 	taskIndex = dCount
 		-- end
-		local num = math.random(1,4) 
+		local taskTypeCount = 4
 		if Map:getMapState("fb25") == MAP_STATE.COMPLETE then
-			num = math.random(1,5) 
-			tasklevel = tasklevel + 5
+			taskTypeCount = 5
+			taskIndex = taskIndex + 5
 		end
 
-		
+		local taskIdByType =
+		{
+			["江湖送信"] = "task19",
+			["缉拿恶徒"] = "task20",
+			["南阳匪乱"] = "task17",
+			["飞贼横行"] = "task16",
+			["古寺失窃"] = "task21"
+		}
 
-		local liLianTask = taskres["历练任务"]
-		local taksTypeListString = liLianTask[""..tasklevel].tasktype 
-		local taksTypeList = string.split(taksTypeListString, ";")
-		local taskType = taksTypeList[num]
-			
-		local needTimeListString = liLianTask[""..tasklevel].needtime 
-		local needTimeList = string.split(needTimeListString, ";")
-		local needTimelist = string.split(needTimeList[num], ",")
-		local needTime =  math.random(tonumber(needTimelist[1]),tonumber(needTimelist[2])) 
+		local taskIndexById =
+		{
+			task19 = 1,
+			task20 = 2,
+			task17 = 3,
+			task16 = 4,
+			task21 = 5
+		}
 
-
-
-		local isTask = User:getRole():getFlag("历练")
-		if isTask == "nil" or isTask == 0 then
-			self.taskType = taskType
-			self.needTime = needTime
-			self.num = num
-			isTask = "nil"
-		end
-		self.taskType = Helper:getDef(self.taskType, taskType)
-		self.needTime = Helper:getDef(self.needTime, needTime)
-		self.num = Helper:getDef(self.num, num)
-		
-
-		--获取随机任务的完成次数
 		local mytaskid
-		if self.taskType =="飞贼横行" then
-			mytaskid ="task16"
-		elseif self.taskType =="南阳匪乱" then
-			mytaskid ="task17"
-		elseif self.taskType =="江湖送信" then
-			mytaskid ="task19"
-		elseif self.taskType =="缉拿恶徒" then
-			mytaskid ="task20"
-		elseif self.taskType =="古寺失窃" then
-			mytaskid ="task21"
-		end
-		
-		self.last_dCount = User:getRole():getFlag("历练随机任务已完成次数")	
-		if User:getRole():getFlag(isTask ) ~= 0 and isTask ~= "nil" then
-			mytaskid = isTask
-			
-			self.needTime  = User:getRole():getFlag(isTask )  
-			local randTask = Helper:getDef(role:getTask(mytaskid),{}) 
-			self.taskType =  User:getRole():getFlag("历练随机任务名")
-			if mytaskid =="task16" then
-				self.num = 4
-			elseif mytaskid =="task17" then
-				self.num = 3
-			elseif mytaskid =="task19" then
-				self.num = 1
-			elseif mytaskid =="task20" then
-				self.num = 2
-			elseif mytaskid =="task21" then
-				self.num = 5
+		local isTask = role:getFlag("历练")
+		local hasTask = false
+
+		if isTask ~= nil and isTask ~= "nil" and isTask ~= 0 then
+			local savedNeedTime = role:getFlag(isTask)
+			local savedTaskIndex = taskIndexById[isTask]
+
+			if savedNeedTime ~= nil and savedNeedTime ~= "nil" and savedNeedTime ~= 0 and savedTaskIndex ~= nil then
+				hasTask = true
+				mytaskid = isTask
+				self.needTime = savedNeedTime
+				self.num = savedTaskIndex
+				self.taskType = role:getFlag("历练随机任务名")
 			end
 		end
 
-		local descListString = liLianTask[""..tasklevel].jobtext 
+		local configVersion
+		if hasTask then
+			configVersion = LiLianTaskHelper:getRoleTaskConfigVersion(roleTask)
+		else
+			local isActiveRoundState = roleTask.state == TASK_STATE_ACCEPT or roleTask.state == TASK_STATE_TO_SUBMIT or roleTask.state == TASK_STATE_DISPATCH
+			if roleTask.aConfVer == nil and isActiveRoundState then
+				roleTask.aConfVer = LiLianTaskHelper:getRoleTaskConfigVersion(roleTask)
+			elseif roleTask.aConfVer == nil or isActiveRoundState == false then
+				roleTask.aConfVer = LiLianTaskHelper:getConfigVersionByTime(GetTime())
+			end
+			configVersion = roleTask.aConfVer
+		end
+
+		local liLianTask = LiLianTaskHelper:getExperienceTaskConfigInfo(taskIndex, configVersion)
+		local taskTypeList = string.split(liLianTask.tasktype, ";")
+		local needTimeList = string.split(liLianTask.needtime, ";")
+
+		if hasTask and (self.taskType == nil or self.taskType == "nil" or self.taskType == 0) then
+			self.taskType = taskTypeList[self.num]
+		end
+
+		if hasTask == false then
+			local num = math.random(1, taskTypeCount)
+			local taskType = taskTypeList[num]
+			local needTimeRange = string.split(needTimeList[num], ",")
+			local needTime = math.random(tonumber(needTimeRange[1]), tonumber(needTimeRange[2]))
+
+			self.taskType = taskType
+			self.needTime = needTime
+			self.num = num
+			mytaskid = taskIdByType[taskType]
+		end
+
+		self.last_dCount = role:getFlag("历练随机任务已完成次数")
+
+		local descListString = liLianTask.jobtext 
 		local descList = string.split(descListString, ";")
 		local desc = descList[self.num]
 		self:print(desc)
         
-		User:getRole():setFlag("历练随机任务名",self.taskType)
-        User:getRole():setFlag("历练",mytaskid)
-		User:getRole():setFlag( mytaskid ,self.needTime)
+		role:setFlag("历练随机任务名",self.taskType)
+        role:setFlag("历练",mytaskid)
+		role:setFlag( mytaskid ,self.needTime)
 		self.Text_dayCount:setString("完成"..self.taskType.."任务："..(self.last_dCount).."/"..self.needTime)
 		
 		self.Button_start:setVisible(false)
@@ -434,60 +444,17 @@ function ZhuXianUI:setButtonGO(id)
 				end)
 			
 		else
-			local item = Item:getOneItemByKey("dundifu")
-			if not item then
-				return
-			end
 			local map = Map:getMapById(self._currTask.mapId)
-
-			local roomId = self._roomId
-
-			local role = User:getRole()
-			local item_count = role:getItemCount("dundifu")
-			local skill = role:getSkill("wuxingdunfa")
-
-			-- if item_count >= 1 and MapIsEmpty(skill) == false then
-				local dialog = DialogALayer:getInstance()
-				local showStr="HIY"..map.name..self.goRoomName.."NOR"
-				local dialog = DialogALayer:getInstance()
-				dialog:show("选择前往"..showStr.."的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）")
-				dialog:setWeChatVisible(false)
-				dialog:setButton1("自行前往", function()
-					MainControllLayer:pushLayer("SelectMapLayer")
-					local selectMapLayer = MainControllLayer:getLayer("SelectMapLayer")
-					selectMapLayer:setMap(map.id)
+			local text = "选择前往HIY"..map.name..self.goRoomName.."NOR的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）"
+			local backClick = true
+			local callfunc = function(result, failureState)
+				if result == true then
 					self:setVisible(false)
-				end)
-				dialog:setButton2("用遁地符", function()
-					item:useDunDiFu(role,map.id, roomId,function ()
-						self:setVisible(false)
-					end,SKILL_ITEM_DUNDIFU_TYPE)
-				end)
-				if MapIsEmpty(skill) == false then
-					dialog:setButton3("五行遁法", function()
-						item:useDunDiFu(role,map.id, roomId, function(useResult)
-							if useResult == false then 
-								dialog:setVisible(true)
-							else
-								self:setVisible(false)
-							end
-						end,SKILL_ITEM_TYPE)
-					end)
 				end
-			-- elseif MapIsEmpty(skill) == false then
-			-- 	--@desc 直接使用五行遁法
-			-- 	item:useDunDiFu(role, map.id, roomId, function (useResult)
-			-- 		if useResult == false then 
-			-- 		else
-			-- 			self:setVisible(false)
-			-- 		end
-			-- 	end,SKILL_ITEM_TYPE)
-			-- else
-			-- 	--@desc 直接使用遁地符
-			-- 	item:useDunDiFu(role, map.id, roomId,function ()
-			-- 		self:setVisible(false)
-			-- 	end,SKILL_ITEM_DUNDIFU_TYPE,true)
-			-- end
+			end
+			
+			local JumpMapStylePrensenter = require("app.presenters.JumpMapStyle.JumpMapStylePrensenter"):create()
+            JumpMapStylePrensenter:showLayer(User:getRole(), self._currTask.mapId, self._roomId, text, backClick, callfunc)
 		end
 	end)
 end
@@ -524,4 +491,5 @@ function ZhuXianUI:setBack()
 	end)
 end
 
-return ZhuXianUI0000000000000000
+return ZhuXianUI
+000

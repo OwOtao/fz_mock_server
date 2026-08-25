@@ -25,11 +25,11 @@ function DuplicatePurchaseCheck101:checkDuplicatePurchase(role)
 
     if self:_compareValue(lv) then
         result = true
-        msg = "商品对应的武学，您已练习至超出此商品的可购买范围！"
+        msg = string.format("已学习【%s】且%s%s级", skill:getNoColorName(), self:_getCompareSymbolText(), tostring(self:_getJudgingValue()))
     end
 
     return result, msg
 end
 
 return newClass("DuplicatePurchaseCheck101", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck101)
-0000000000000000
+00000000

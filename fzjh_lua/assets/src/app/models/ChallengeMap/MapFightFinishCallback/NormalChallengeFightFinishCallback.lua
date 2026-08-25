@@ -10,6 +10,10 @@ function NormalChallengeFightFinishCallback:create()
 end
 
 function NormalChallengeFightFinishCallback:doWin(fight)
+	local csjCD = self.__player:getFlag("长生诀时间")
+	if csjCD > 0 then
+		self.__player:setFlag("长生诀时间",math.max(csjCD - 10,0))
+	end
 end
 
 function NormalChallengeFightFinishCallback:doLose(fight)
@@ -51,4 +55,4 @@ function NormalChallengeFightFinishCallback:doRunaway(fight)
 end
 
 return newClass("NormalChallengeFightFinishCallback", {AChallengeFinishCallback}, NormalChallengeFightFinishCallback)
-0000000000000
+0000000

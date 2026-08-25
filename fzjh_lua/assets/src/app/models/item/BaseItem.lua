@@ -1289,7 +1289,7 @@ function BaseItem:useDunDiFu(role, mapId, roomId, func,useType,isShow)
 					MainControllLayer:pushLayer("MapLayer")
 					MessageCenter:notify("EnterMap",{map=map})
 					if func then
-						func()
+						func(true)
 					end
 				end)
 
@@ -1327,7 +1327,7 @@ function BaseItem:useDunDiFu(role, mapId, roomId, func,useType,isShow)
 			Audio:stopMusic()
 
 			if func then
-				func()
+				func(true)
 			end
 		end)
 	end
@@ -1782,4 +1782,4 @@ end
 -- 加密标记
 BaseItem.isEncrypted = true
 return BaseItem
-000
+00000000000

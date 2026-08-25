@@ -8,6 +8,16 @@ local newClass = require("third.class.NewClass")
 --@SuperType [src.app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck#ADuplicatePurchaseCheck]
 local DuplicatePurchaseCheck401 = {}
 
+local function getOwnStateText(value)
+    if value == 1 then
+        return "已拥有"
+    elseif value == 0 then
+        return "未拥有"
+    end
+
+    error("DuplicatePurchaseCheck401:getOwnStateText 只支持 1 或 0，当前值：" .. tostring(value))
+end
+
 --@author:Seven
 --@time:2025-09-18 14:42:32
 --@role: [src.app.models.role.Role#Role]
@@ -39,11 +49,11 @@ function DuplicatePurchaseCheck401:checkDuplicatePurchase(role)
 
     if self:_compareValue(currentValue) then
         result = true
-        msg = "已达到商品可持有数量的限制，无法购买"
+        msg = string.format("%s【%s】", getOwnStateText(currentValue), item.name)
     end
 
     return result, msg
 end
 
 return newClass("DuplicatePurchaseCheck401", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck401)
-0
+000

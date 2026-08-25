@@ -21,6 +21,10 @@ function TeacherLayer:init()
 	-- Helper:print_lua_table(family:getNpcList())
 	self:setBottomEventList()
 
+	self.Text_gongxian:setString("")
+
+	self.Text_prestige:setString("")
+
 	self:schedule(
     	function(ft)
     		if not self._time then
@@ -543,4 +547,4 @@ function TeacherLayer:getfamilyInfo()
 	return desc
 end
 return TeacherLayer
-00000000
+00000000000000

@@ -32,6 +32,12 @@ function TeacherSkillInfoPresenter:__init(mainPresenter,viewModel)
 	self.__role = viewModel:getRole()
 end
 
+function TeacherSkillInfoPresenter:onEnable()
+	self:setTitleName()
+	
+	self:setButtonSkillBreak()
+end
+
 function TeacherSkillInfoPresenter:showPresenter()
 	self:setCurrTabIndex(1)
 
@@ -48,6 +54,8 @@ function TeacherSkillInfoPresenter:showPresenter()
 	self:setButtonSkillBreak()
 
 	self:setButtonPrepare()
+	
+	self:setButtonActiveZhaoMeditate()
 end
 
 function TeacherSkillInfoPresenter:update()
@@ -208,20 +216,25 @@ function TeacherSkillInfoPresenter:setButtonTab()
         self.__mainPresenter:showMySelfSkillInfoPresenter()
 	end
 
-	self.__ui:setButtonTab(isVisible,buttonName,callback)
-end
-
-function TeacherSkillInfoPresenter:setButtonLianGong()
-	self.__ui:setButtonLianGong(false)
-end
-
-function TeacherSkillInfoPresenter:setButtonSkillBreak()
-	self.__ui:setButtonSkillBreak(false)
+	self.__ui:setButton1(isVisible,buttonName,callback)
 end
 
 function TeacherSkillInfoPresenter:setButtonPrepare()
-	self.__ui:setButtonPrepare(false)
+	self.__ui:setButton2(false)
+end
+
+function TeacherSkillInfoPresenter:setButtonActiveZhaoMeditate()
+	self.__ui:setButton3(false)
+end
+
+function TeacherSkillInfoPresenter:setButtonLianGong()
+	self.__ui:setButton4(false)
+end
+
+function TeacherSkillInfoPresenter:setButtonSkillBreak()
+	local titleLayer = MainControllLayer:getLayer("TitleLayer")
+    titleLayer:setCustomButton("",EMPTY_FUNC)
 end
 
 return class("TeacherSkillInfoPresenter", {BaseSkillInfoPresenter}, TeacherSkillInfoPresenter)
-0000000000000000
+00000000000000

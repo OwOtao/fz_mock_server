@@ -17,15 +17,16 @@ function SelfCreatedSkillAffixCountCondition:check()
 
     local books = sys:getBooks()
 
-    local zhaoCount = 0
-
     local secondType = tonumber(self:getAttrId())
 
     local affixCount = tonumber(self:getParam()[1])
 
+    local maxZhaoCount = 0
+
     for i,v in ipairs(books) do
         local skill = SelfCreatedSkill:create(v)
         if secondType == 0 or skill:getSecondType() == secondType then
+            local zhaoCount = 0
             local zhaos = skill:getZhaos()
             if not MapIsEmpty(zhaos) then
                 for i, zhao in ipairs(zhaos) do
@@ -34,12 +35,16 @@ function SelfCreatedSkillAffixCountCondition:check()
                         zhaoCount = zhaoCount + 1
                     end
                 end
+
+                if zhaoCount > maxZhaoCount then
+                    maxZhaoCount = zhaoCount
+                end
             end
         end
     end
 
-    return self:compare(zhaoCount)
+    return self:compare(maxZhaoCount)
 end
 
 return newClass("SelfCreatedSkillAffixCountCondition", {BaseCondition}, SelfCreatedSkillAffixCountCondition)
-000000
+00000000

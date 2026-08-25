@@ -3141,6 +3141,8 @@ function Fight:roleAttack(role, target, zhao)
 				else
 					self:doDamageReturnEffect(role,target,targetQiAtk)
 
+					target:hpRecoverOnHurt(HurtFactory:create(0,targetQiAtk))
+
 					if role:canDie() then
 						self:roleKill(target, role)
 					end
@@ -3373,6 +3375,8 @@ function Fight:roleAttack(role, target, zhao)
                     self:roleKill(role, target)
 				else
 					self:doDamageReturnEffect(role,target,targetQiAtk)
+
+					target:hpRecoverOnHurt(HurtFactory:create(0,targetQiAtk))
 
                 	if role:canDie() then
                     	self:roleKill(target, role)
@@ -4499,8 +4503,10 @@ function Fight:roleDoEffect(role, effect)
                     if role:canDie() then
                         self:roleKill(targetRole, role)
                     else
-						if arg2 < 0 and effect:getFinalDuration() == 0 then
+						if arg2 < 0 and effect:getTarget() == "目标" and effect:getFinalDuration() == 0 then
 							self:doDamageReturnEffect(targetRole,role,math.abs(arg2))
+
+							role:hpRecoverOnHurt(HurtFactory:create(effect:getArg3(),math.abs(arg2)))
 						end
 
 						if targetRole:canDie() then
@@ -5086,7 +5092,9 @@ function Fight:roleAddEffect(attacker, target, effect)
 
 						local forgetType = effect:getArg2()
 						local btnType = 2
-						if forgetType then
+						if forgetType then	
+							target:setPartForgetZhaoMethod(forgetType)
+
 							btnType = 3
 							
 							local methods = string.split(forgetType,"#")
@@ -5097,24 +5105,23 @@ function Fight:roleAddEffect(attacker, target, effect)
 									for __,prepareIndex in ipairs(attackSkillPrepares) do
 										local prepareSkillId = target._role.skillPrepare[prepareIndex]
 										if prepareSkillId then
-											target:addPartForgetSkill(prepareSkillId)
 											target._role.skillPrepare[prepareIndex] = nil
-											local skillZhaoList = Skill:getSkillZhaoList(prepareSkillId)
-											for i, zhao in ipairs(skillZhaoList) do
-												self:deleteRoleActiveZhao(targetId, zhao:getId())
-											end
 										end
 									end
 								else
 									local skillType = SkillConst:getSkillTypeByName(method)
 									local prepareSkillId = target._role.skillPrepare[skillType]
 									if prepareSkillId then
-										target:addPartForgetSkill(prepareSkillId)
 										target._role.skillPrepare[skillType] = nil
-										local skillZhaoList = Skill:getSkillZhaoList(prepareSkillId)
-										for i, zhao in ipairs(skillZhaoList) do
-											self:deleteRoleActiveZhao(targetId, zhao:getId())
-										end
+									end
+								end
+							end
+
+							local activeZhaos = self:getRoleActiveZhaos(targetId)
+							if not MapIsEmpty(activeZhaos) then
+								for i,v in ipairs(activeZhaos) do
+									if not target:isPartForgetCanUseActiveZhao(v.zid) then
+										table.remove(activeZhaos,i)
 									end
 								end
 							end
@@ -6137,6 +6144,10 @@ function Fight:roleAddEffect(attacker, target, effect)
                     target:addEffect(effect)
                 end
             end,
+			["受伤回血"] = function()
+                LogSystem:log("旧版战斗：受伤回血  arg1:", effect:getFinalArg1())
+                target:addEffect(effect)
+            end,
         })
     
     -- 刷新角色buff
@@ -6350,7 +6361,7 @@ function Fight:roleRemoveEffect(role, effectId)
                 
                 role._role.skillPrepare = role._prePrepareSkills 
                 role._prePrepareSkills = nil
-				role:cleanPartForgetSkills()
+				role:setPartForgetZhaoMethod(nil)
 
                 if role:isPlayer() then
                     if role._role.isMenKe then
@@ -6860,4 +6871,4 @@ Decorator:after(Fight,"roleDoEffect",
     end)
 
 return Fight
-0000
+0000000000000

@@ -722,6 +722,30 @@ function ServerActionSystem:getTalentPageInfo(codeVersion, callback)
     )
 end
 
+--@desc: Get actual talent page count.
+function ServerActionSystem:getTalentPageCount(codeVersion, callback, isRetry)
+    local retryType = isRetry == true and HTTP_MANAGER_RETRY_TYPE_RETRY or HTTP_MANAGER_RETRY_TYPE_OK
+
+    HttpManagerEx:getTalentPageCount(
+        self:getDataVersion(),
+        codeVersion,
+        function(status, errcode, errmsg, data)
+            if status == 200 and errcode == 0 then
+                callback(true, "", data)
+                return true
+            end
+
+            if isRetry == true then
+                return false
+            end
+
+            callback(false, errmsg)
+            return true
+        end,
+        IS_SHOW_WAITING,
+        retryType
+    )
+end
 --[[
     @desc: 获取特性池详情
     author:{author}
@@ -826,4 +850,4 @@ function ServerActionSystem:changeTelentPage(pageNum, codeVersion, callback)
 end
 
 return class("ServerActionSystem", {}, ServerActionSystem)
-00000000000
+000

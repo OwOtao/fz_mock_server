@@ -1176,6 +1176,8 @@ function Fight:roleAttack(role, target, zhao)
                     self:roleKill(role, target)
 				else
 					self:doDamageReturnEffect(role,target,targetQiAtk)
+
+					target:hpRecoverOnHurt(HurtFactory:create(0,targetQiAtk))
                 end
 
                 if role:canDie() then
@@ -1391,6 +1393,8 @@ function Fight:roleAttack(role, target, zhao)
                     targetIsAlive = false
 				else
 					self:doDamageReturnEffect(role,target,targetQiAtk)
+
+					target:hpRecoverOnHurt(HurtFactory:create(0,targetQiAtk))
                 end
 
                 -- 攻击的时候刷新效果
@@ -2497,8 +2501,10 @@ function Fight:roleDoEffect(role, effect)
                     if role:canDie() then
                         self:roleKill(targetRole, role)
                     else
-						if arg2 < 0 and effect:getFinalDuration() == 0 then
+						if arg2 < 0 and effect:getTarget() == "目标" and effect:getFinalDuration() == 0 then
 							self:doDamageReturnEffect(targetRole,role,math.abs(arg2))
+
+							role:hpRecoverOnHurt(HurtFactory:create(effect:getArg3(),math.abs(arg2)))
 						end
 
 						if targetRole:canDie() then
@@ -3069,7 +3075,6 @@ function Fight:roleAddEffect(attacker, target, effect)
 									for __,prepareIndex in ipairs(attackSkillPrepares) do
 										local prepareSkillId = target._role.skillPrepare[prepareIndex]
 										if prepareSkillId then
-											target:addPartForgetSkill(prepareSkillId)
 											target._role.skillPrepare[prepareIndex] = nil
 										end
 									end
@@ -3077,7 +3082,6 @@ function Fight:roleAddEffect(attacker, target, effect)
 									local skillType = SkillConst:getSkillTypeByName(method)
 									local prepareSkillId = target._role.skillPrepare[skillType]
 									if prepareSkillId then
-										target:addPartForgetSkill(prepareSkillId)
 										target._role.skillPrepare[skillType] = nil
 									end
 								end
@@ -4104,6 +4108,10 @@ function Fight:roleAddEffect(attacker, target, effect)
                     target:addEffect(effect)
                 end
             end,
+			["受伤回血"] = function()
+                LogSystem:log("旧版战斗：受伤回血  arg1:", effect:getFinalArg1())
+                target:addEffect(effect)
+            end,
         })
     
     -- 刷新角色buff
@@ -4315,7 +4323,6 @@ function Fight:roleRemoveEffect(role, effectId)
                     role._role:updateActiveZhaoStatus()
 
                     role._prePrepareSkills = nil
-					role:cleanPartForgetSkills()
 
                     
                     self:callEventListener("Forget",role,3)
@@ -5721,4 +5728,4 @@ function Fight:RandomByWeight(list, weightName, returnName)
 end
 
 return Fight
-0000000
+0000000000000000

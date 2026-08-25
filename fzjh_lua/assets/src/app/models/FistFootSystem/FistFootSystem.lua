@@ -606,18 +606,18 @@ function FistFootSystem:isCompleteGuaJi()
 end
 
 function FistFootSystem:refreshGamingTime()
-	if not self:isGuaJi() then
-		return
-	end
-	
-	if self:isCompleteGuaJi() then
-		local endTime = self.__guajiInfo.startTime + self:getTask(self.__guajiInfo.taskId).time * 3600 - self.__guajiInfo.speedUpTime
-		if endTime > self.__player:getFlag("游戏时间") then
-			self.__player:setGamingTime(endTime)
-		end
-	else
-		self.__player:setGamingTime()
-	end
+    if not self:isGuaJi() then
+        return
+    end
+
+    if self:isCompleteGuaJi() then
+        local endTime = self.__guajiInfo.startTime + self:getTask(self.__guajiInfo.taskId).time * 3600 - self.__guajiInfo.speedUpTime
+        if endTime > self.__player:getFlag("游戏时间") then
+            self.__player:setGamingTime(endTime)
+        end
+    else
+        self.__player:setGamingTime()
+    end
 end
 
 --@desc: 开始修行
@@ -923,6 +923,19 @@ function FistFootSystem:getTalentPageInfo(callback)
     )
 end
 
+function FistFootSystem:getTalentPageCount(callback, isRetry)
+    self.__player:getServerActionSystem():getTalentPageCount(
+        self.__codeVersion,
+        function(ok, errmsg, data)
+            if ok then
+                callback(true, "", data)
+            else
+                callback(false, errmsg)
+            end
+        end,
+        isRetry
+    )
+end
 --[[
     @desc: 获取特性池详情
     author:{author}
@@ -1332,4 +1345,4 @@ function FistFootSystem:initFromPVPData(data)
 end
 
 return newClass("FistFootSystem", {}, FistFootSystem)
-00000000
+00000000000

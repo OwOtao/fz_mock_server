@@ -567,6 +567,10 @@ function MainTaskPresenter:acceptZhuDongTask(taskId)
     self.__liLianInterator:acceptZhuDongTask(taskId)
 end
 
+function MainTaskPresenter:showZhuDongTask(taskId)
+    self.__liLianInterator:showZhuDongTask(taskId)
+end
+
 function MainTaskPresenter:submitZhuDongTask(taskId)
     self.__liLianInterator:submitZhuDongTask(taskId)
 end
@@ -595,4 +599,4 @@ end
 
 Helper:classDefNodeGetInstance(MainTaskPresenter)
 return MainTaskPresenter
-00000
+000000

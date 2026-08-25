@@ -250,7 +250,9 @@ function JiangHuMiBao:__doReward(rewardId,callback)
 end
 
 function JiangHuMiBao:__checkCanBuy(rewards)
-    return ActionRewardsHelper:checkRewardsCanBuy(rewards, self._role)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self._role, rewards)
+
+    return not isDuplicate, searchInfo
 end
 
 function JiangHuMiBao:__checkCanGetReward(rewards)
@@ -324,20 +326,12 @@ function JiangHuMiBao:__dealWithRewardInfo(rewardInfo)
                                 end
                             end
                         else
-                            local msg = ""
-                            
-                            if searchInfo.searchType == "101" then
-                                msg = "已学习对应武学，无需再次购买！"
-                            elseif searchInfo.searchType == "301" then
-                                msg = "您该主动技能即将/已经达到熟练度上限，无需购买！"
-                            elseif searchInfo.searchType == "201" or searchInfo.searchType == "401" or searchInfo.searchType == "501" or searchInfo.searchType == "701" then
-                                msg = "已达到商品可持有数量的限制，不可购买！"
-                            elseif searchInfo.searchType == "1001" or searchInfo.searchType == "1002" then
-                                msg = "不满足购买条件，无法购买!"
-                            elseif searchInfo.searchType == "601" then
-                                msg = "您的等级不符合该礼包道具的最低使用要求，目前不能购买！"
-                            end
-                            PopText(msg)
+                            GoodsHelper:handleDuplicatePurchaseSearchInfo(
+                                searchInfo,
+                                {
+                                    flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+                                }
+                            )
                         end
                     elseif v.state == rewardState.NOT_REWARD then
                         local isTrue, msg = self:__checkCanGetReward(v.reward)
@@ -365,4 +359,4 @@ function JiangHuMiBao:__dealWithRewardInfo(rewardInfo)
 end
 
 return class("JiangHuMiBao", {}, JiangHuMiBao)
-00000000
+000000000000000

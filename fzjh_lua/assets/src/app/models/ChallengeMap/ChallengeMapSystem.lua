@@ -109,6 +109,9 @@ function ChallengeMapSystem:createPlayer()
     --@desc 初始化主动技能释放次数
     role:setAttr("activeReleaseTimesMap", {})
 
+	--重置长生诀cd
+    role:setFlag("长生诀时间", 0)
+
     role.isChallengeRole = true
 
     local skillPrepare = role:getSkillPrepare()

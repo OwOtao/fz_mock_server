@@ -1,11 +1,5 @@
 local MingShiZhiYuePresenters = class("MingShiZhiYuePresenters", cc.Layer)
 
-local RewardType = {
-        Free = 1, --免费解锁
-        RMB = 2,  --人民币解锁
-        YueKa = 3   --月卡解锁
-    }
-
 function MingShiZhiYuePresenters:create()
     local p = MingShiZhiYuePresenters:new()
     p:init()
@@ -34,10 +28,8 @@ function MingShiZhiYuePresenters:showLayer()
     self._role = User:getRole()
 
     self._interactor:setRole(self._role)
-
-    self._showType = RewardType.Free
     
-    self:__initData() 
+    self:__initData()
 end
 
 function MingShiZhiYuePresenters:setActionId(actionId)
@@ -47,6 +39,10 @@ end
 function MingShiZhiYuePresenters:__initData()
     self._interactor:init(
         function()
+            self._showTypeList = self._interactor:getShowTypeList()
+
+            self._showType = self._showTypeList[1]
+
             self._actionUI:setTextTitle(self._interactor:getActionName())
 
             self._actionUI:setDesc(self._interactor:getActionDesc())
@@ -71,22 +67,22 @@ function MingShiZhiYuePresenters:__initData()
 end
 
 function MingShiZhiYuePresenters:initHongDian()
-    if self._showType == RewardType.Free then
-        local isTrue = self._interactor:getRewardState(RewardType.YueKa)
+    if self._showType == self._showTypeList[1] then
+        local isTrue = self._interactor:getRewardState(self._showTypeList[2])
         self._actionUI:setHongDianVisible(isTrue)
         self._actionUI:setHongDianPosition(cc.p(865, 1518))
-    elseif self._showType == RewardType.YueKa then
-        local isTrue = self._interactor:getRewardState(RewardType.Free)
+    elseif self._showType == self._showTypeList[2] then
+        local isTrue = self._interactor:getRewardState(self._showTypeList[1])
         self._actionUI:setHongDianVisible(isTrue)
         self._actionUI:setHongDianPosition(cc.p(508, 1518))
     end
 end
 
 function MingShiZhiYuePresenters:initTitleText()
-    local text = self._interactor:getRewardTitle(RewardType.Free)
+    local text = self._interactor:getRewardTitle(self._showTypeList[1])
     self._actionUI:setTextStr(1, text)
 
-    local text = self._interactor:getRewardTitle(RewardType.YueKa)
+    local text = self._interactor:getRewardTitle(self._showTypeList[2])
     self._actionUI:setTextStr(2, text)
 end
 
@@ -96,8 +92,8 @@ function MingShiZhiYuePresenters:initConditionText()
 end
 
 function MingShiZhiYuePresenters:initTextColor()
-    if self._showType == RewardType.Free then
-        local isTrue = self._interactor:getRewardUnlockState(RewardType.Free)
+    if self._showType == self._showTypeList[1] then
+        local isTrue = self._interactor:getRewardUnlockState(self._showTypeList[1])
         if isTrue then
             self._actionUI:setTextColor(1, cc.c3b(207,196,57))
         else
@@ -105,8 +101,8 @@ function MingShiZhiYuePresenters:initTextColor()
         end
         
         self._actionUI:setTextColor(2, cc.c3b(255,255,255))
-    elseif self._showType == RewardType.YueKa then
-        local isTrue = self._interactor:getRewardUnlockState(RewardType.YueKa)
+    elseif self._showType == self._showTypeList[2] then
+        local isTrue = self._interactor:getRewardUnlockState(self._showTypeList[2])
         if isTrue then
             self._actionUI:setTextColor(2, cc.c3b(207,196,57))
         else
@@ -119,55 +115,68 @@ end
 
 function MingShiZhiYuePresenters:initTextFunc()
     self._actionUI:setTextFunc(1, function()
-        if self._showType == RewardType.Free then
+        if self._showType == self._showTypeList[1] then
             return
         end
 
-        local isTrue = self._interactor:getRewardUnlockState(RewardType.Free)
+        local isTrue = self._interactor:getRewardUnlockState(self._showTypeList[1])
         if isTrue == false then
-            local msg = self._interactor:getRewardConditionText(RewardType.Free)
+            local msg = self._interactor:getRewardConditionText(self._showTypeList[1])
             if msg then
                 PopText(msg)
             end
         end
 
-        self._showType = RewardType.Free
+        self._showType = self._showTypeList[1]
 
         self:initConditionText()
         self:initTextColor()
         self:initHongDian()
         self:initListView()
+        self:initButtonFunc()
     end)
 
     self._actionUI:setTextFunc(2, function()
-        if self._showType == RewardType.YueKa then
+        if self._showType == self._showTypeList[2] then
             return
         end
 
-        local isTrue = self._interactor:getRewardUnlockState(RewardType.YueKa)
+        local isTrue = self._interactor:getRewardUnlockState(self._showTypeList[2])
         if isTrue == false then
-            local msg = self._interactor:getRewardConditionText(RewardType.YueKa)
+            local msg = self._interactor:getRewardConditionText(self._showTypeList[2])
             if msg then
                 PopText(msg)
             end
         end
 
-        self._showType = RewardType.YueKa
+        self._showType = self._showTypeList[2]
 
         self:initConditionText()
         self:initTextColor()
         self:initHongDian()
         self:initListView()
+        self:initButtonFunc()
     end)
 end
 
 function MingShiZhiYuePresenters:initButtonFunc()
     local productKey = self._interactor:getRewardProductKey(self._showType)
     if productKey then
-        self._actionUI:setButtonVisible(true)
+        local isTrue = self._interactor:getRewardUnlockState(self._showType) 
+        if isTrue then
+            self._actionUI:setButtonVisible(false)
+        else
+            self._actionUI:setButtonVisible(true)
+        end
         
         self._actionUI:setButtonFunc(function()
-            
+            self._interactor:toPay(productKey, function()
+                self._interactor:init(function()
+                    self:initHongDian()
+                    self:initListView()
+                    self:initButtonFunc()
+                end)
+            end)
         end)
     else
         self._actionUI:setButtonVisible(false)
@@ -261,4 +270,4 @@ end
 Helper:classDefNodeGetInstance(MingShiZhiYuePresenters)
 
 return MingShiZhiYuePresenters
-0000000
+00000000000000

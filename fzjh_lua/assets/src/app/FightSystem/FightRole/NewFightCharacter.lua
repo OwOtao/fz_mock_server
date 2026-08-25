@@ -859,6 +859,10 @@ function FightCharacter:getSkillRawData(skill_id)
     return self:getFuncSystem(SYSTEM_NAME.SKILL_SYSTEM):getSkillFormRawData(skill_id)
 end
 
+function FightCharacter:getSkillLevel(skillId)
+    return self:getFuncSystem(SYSTEM_NAME.SKILL_SYSTEM):getSkillLevel(skillId)
+end
+
 --@desc: 当前使用的攻击武学类型
 --@author:Seven
 --@time:2021-05-28 11:20:49
@@ -908,6 +912,24 @@ end
 
 function FightCharacter:getPrepSkills()
     return self:getFuncSystem(SYSTEM_NAME.SKILL_SYSTEM):getPrepSkillMap()
+end
+
+--@desc: 添加知识类武学
+--@author:Seven
+--@time:2026-05-19 20:16:19
+--@skillId: 技能id
+--@knowledgeSkill:[src.app.FightSystem.FightSkill.BasicFightKnowledgeSkill#BasicFightKnowledgeSkill]
+function FightCharacter:addKnowledgeSkill(skillId, knowledgeSkill)
+    return self:getFuncSystem(SYSTEM_NAME.SKILL_SYSTEM):addKnowledgeSkill(skillId, knowledgeSkill)
+end
+
+--@desc: 获取知识武学 , 可为空
+--@author:Seven
+--@time:2026-05-19 00:00:00
+--@skillId: 武学ID
+--@return [src.app.FightSystem.FightSkill.BasicFightKnowledgeSkill#BasicFightKnowledgeSkill]
+function FightCharacter:getKnowledgeSkill(skillId)
+    return self:getFuncSystem(SYSTEM_NAME.SKILL_SYSTEM):getKnowledgeSkill(skillId)
 end
 
 --@desc: 获取准备技能
@@ -1881,7 +1903,7 @@ end
 
 --@region 自身携带buff
 
---@desc: 
+--@desc:
 --@author:Seven
 --@time:2026-01-07 17:49:11
 --@initCarryBuffClass: [src.app.FightSystem.FightRole.CharacterBuff.CharacterCarryBuffWhenInit#CharacterCarryBuffWhenInit]
@@ -1898,4 +1920,4 @@ end
 --@endregion
 
 return class("FightCharacter", {}, FightCharacter)
-0
+00000000

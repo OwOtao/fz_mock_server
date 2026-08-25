@@ -1,6 +1,7 @@
 --@desc 2019-01-12 14:45:52 原重光兑换界面
 
 local ChongGuangDuiHuanLayer = class("ChongGuangDuiHuanLayer", LayerEx)
+local ActivityCalendarUtils = require("app.models.Action.ActivityCalendarUtils")
 
 local config = {
     -- --[[
@@ -537,14 +538,29 @@ end
 function ChongGuangDuiHuanLayer:clearExChangeTimes()
     local list_data = Helper:getDef(config.exchangeItems, {})
     local role = User:getRole()
-    local activity_times = role:getInheritFlag("hztc_activity_times")
-    local currTimes = 33
+    local lastActivityTime = role:getInheritFlag("last_hztc_activity_time")
+    local hztcStartTime, hztcEndTime = ActivityCalendarUtils:getActivityTime(GameConst:getDefaultValue("bafangyouli_huizitiancheng"))
 
-    if activity_times < currTimes then
+    if lastActivityTime ~= 0 then
+        if lastActivityTime ~= hztcStartTime then
+            role:setInheritFlag("last_hztc_activity_time", hztcStartTime)
+
+            for index, item_data in pairs(list_data) do
+                role:setInheritFlag(item_data.flag, 0)
+            end
+        end
+
+    else
+        role:setInheritFlag("last_hztc_activity_time", hztcStartTime)
+
         for index, item_data in pairs(list_data) do
             role:setInheritFlag(item_data.flag, 0)
         end
-        role:setInheritFlag("hztc_activity_times",currTimes)
+
+        local activity_times = role:getInheritFlag("hztc_activity_times")
+        if activity_times ~= 0 then
+            role:setInheritFlag("hztc_activity_times", 0)
+        end
     end
 end
 

@@ -25,6 +25,25 @@ local GoodsType = {
     BagType = 4 --玩家当前背包商品
 }
 
+local CHECK_CAN_BUY_FAIL_TYPE = {
+    POP_TEXT = "popText",
+    DUPLICATE_PURCHASE = "duplicatePurchase"
+}
+
+local createCheckCanBuyPopTextFailInfo = function(msg)
+    return {
+        failType = CHECK_CAN_BUY_FAIL_TYPE.POP_TEXT,
+        msg = msg
+    }
+end
+
+local createCheckCanBuyDuplicatePurchaseFailInfo = function(searchInfo)
+    return {
+        failType = CHECK_CAN_BUY_FAIL_TYPE.DUPLICATE_PURCHASE,
+        searchInfo = searchInfo
+    }
+end
+
 local isSettlement = false --是否结算成功
 
 function Store:create()
@@ -483,9 +502,19 @@ function Store:buyGoods(goods, func)
 
     local buyCount = goods.count
 
-    local isCanBuy, msg = self:__checkCanBuyGoods({index = goods.index, type = goods.type, count = buyCount})
+    local isCanBuy, failInfo = self:__checkCanBuyGoods({index = goods.index, type = goods.type, count = buyCount})
     if isCanBuy == false then
-        PopText(msg)
+        if failInfo ~= nil and failInfo.failType == CHECK_CAN_BUY_FAIL_TYPE.DUPLICATE_PURCHASE then
+            GoodsHelper:handleDuplicatePurchaseSearchInfo(
+                failInfo.searchInfo,
+                {
+                    flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+                }
+            )
+        else
+            PopText(failInfo and failInfo.msg)
+        end
+
         return
     end
 
@@ -924,7 +953,7 @@ end
 
 function Store:__checkCanBuyGoods(goods)
     if MapIsEmpty(goods) then
-        return false
+        return false, createCheckCanBuyPopTextFailInfo()
     end
 
     local itemClass = self:getItem(goods.type, goods.index)
@@ -933,7 +962,7 @@ function Store:__checkCanBuyGoods(goods)
 
     if currencyNum < itemClass:getPrice() * goods.count then
         local currencyName = self:getCurrencyName(itemClass:getPriceUnit())
-        return false, currencyName .. "不足"
+        return false, createCheckCanBuyPopTextFailInfo(currencyName .. "不足")
     end
 
     if goods.type == GoodsType.BuyType then
@@ -941,13 +970,13 @@ function Store:__checkCanBuyGoods(goods)
             if goods.count + itemClass:getLimitBoughtCount() > itemClass:getLimitCount() then
                 local text = "此商品已达到限购条件，%s内无法再次购买"
                 text = string.format(text, self:getLimitTypeText(itemClass:getLimitType()))
-                return false, text
+                return false, createCheckCanBuyPopTextFailInfo(text)
             end
         end
 
         local result, searchInfo = GoodsHelper:checkDuplicatePurchase(self._role, itemClass:getId())
         if result == true then
-            return false, searchInfo.msg
+            return false, createCheckCanBuyDuplicatePurchaseFailInfo(searchInfo)
         end
 
         local goodsClass = GoodsHelper:getGoodsResClass(itemClass:getId())
@@ -966,13 +995,13 @@ function Store:__checkCanBuyGoods(goods)
             if MapIsEmpty(currencyInfo) == false then
                 if currencyInfo.cycleNum and currencyInfo.cycleLimit then
                     if currencyInfo.cycleNum + finalCount > currencyInfo.cycleLimit then
-                        return false, string.format("%s已超出%s可获取的上限，无法购买", goodsClass:getName(), CurrencyUtil:getLimitTypeText(goodsClass:getItemId()))
+                        return false, createCheckCanBuyPopTextFailInfo(string.format("%s已超出%s可获取的上限，无法购买", goodsClass:getName(), CurrencyUtil:getLimitTypeText(goodsClass:getItemId())))
                     end
                 end
 
                 if currencyInfo.num and currencyInfo.limit then
                     if currencyInfo.num + finalCount > currencyInfo.limit then
-                        return false, string.format("%s已超出上限，无法购买", goodsClass:getName())
+                        return false, createCheckCanBuyPopTextFailInfo(string.format("%s已超出上限，无法购买", goodsClass:getName()))
                     end
                 end
             end
@@ -993,7 +1022,7 @@ function Store:__checkCanBuyGoods(goods)
         end
     end
 
-    return false, "背包容量已达上限，无法购买。"
+    return false, createCheckCanBuyPopTextFailInfo("背包容量已达上限，无法购买。")
 end
 
 function Store:__initCurrencyList(list)
@@ -1133,4 +1162,4 @@ function Store:getRefreshStateText()
 end
 
 return class("Store", {}, Store)
-000000000000
+00000000000

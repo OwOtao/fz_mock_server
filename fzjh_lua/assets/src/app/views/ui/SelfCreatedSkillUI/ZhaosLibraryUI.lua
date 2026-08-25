@@ -190,6 +190,18 @@ function ZhaosLibraryUI:richPrint(text)
     RichPrint("main",text)
 end
 
+function ZhaosLibraryUI:setButtonRuleVisible(isVisible)
+    self.Image_rule:setVisible(isVisible)
+end	
+
+function ZhaosLibraryUI:setButtonRuleFunc(func)
+    self.Image_rule:releaseFunc(function()
+        if func then
+            func()
+        end
+    end)
+end
+
 isImplement(ZhaosLibraryUI,IZhaosLibraryPresenterOutput)
 Helper:classDefNodeGetInstance(ZhaosLibraryUI)
-return ZhaosLibraryUI0000000000000
+return ZhaosLibraryUI000000000000

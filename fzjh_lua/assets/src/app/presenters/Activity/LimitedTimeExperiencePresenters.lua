@@ -1,4 +1,5 @@
 local class = require("third.class.NewClass")
+local GoodsHelper = require("app.models.Store.GoodsHelper")
 local LimitedTimeExperiencePresenters = {}
 
 function LimitedTimeExperiencePresenters:create(iNianBeastView,iNianBeastModel)
@@ -126,6 +127,11 @@ function LimitedTimeExperiencePresenters:__showRewardList()
         end
 
         info.func = function()
+            if v.state == 2 then
+                PopText("此奖励已领取")
+                return
+            end
+
             if isShowSelectReward == false then
                 self:__doReward(v.rid, rewardIds[1], function()
                     self.__input:getActionInfo(function()
@@ -229,10 +235,16 @@ function LimitedTimeExperiencePresenters:__showSelectUI(rid, giftIdList, state)
 end
 
 function LimitedTimeExperiencePresenters:__doReward(rid, giftId, func)
-    local isTrue, msg = self.__input:checkCanGetReward(self.__input:getReward(giftId))
+    local isTrue, searchInfo = self.__input:checkCanGetReward(self.__input:getReward(giftId))
 
     if isTrue == false then
-        PopText("不满足领取条件，领取失败")
+        GoodsHelper:handleDuplicatePurchaseSearchInfo(
+            searchInfo,
+            {
+                flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+            }
+        )
+
         return
     end
 
@@ -308,4 +320,4 @@ end
 
 return class("LimitedTimeExperiencePresenters", {}, LimitedTimeExperiencePresenters)
 
-0000000000
+000000000000

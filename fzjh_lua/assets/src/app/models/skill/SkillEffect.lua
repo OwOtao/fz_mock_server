@@ -256,6 +256,8 @@ function SkillEffect:initWithData(data)
             end,
 			["必中"] = function()
             end,
+			["受伤回血"] = function()
+            end,
             default = function()
                 error(self:getId() .. ": 没有定义效果类型 type = " .. self:getType())
             end
@@ -1176,4 +1178,4 @@ function SkillEffect:getAbsorbDamage()
 end
 
 return SkillEffect
-00
+00000000000000

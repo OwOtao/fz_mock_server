@@ -63,6 +63,7 @@ function FightEnterState:onEnterState()
             local character = character
 
             FightSkillHelper:addActiveSkillEnterBuffAdder(character)
+            FightSkillHelper:addKnowledgeFightSkillEnterBuffAdder(character)
 
             local joinAnimResId = character:getJoinAnimId()
 
@@ -232,4 +233,4 @@ function FightEnterState:__addWeaponCarryBuff()
 end
 
 return newClass("FightEnterState", {AFightState}, FightEnterState)
-00000000000000
+0000000000000000

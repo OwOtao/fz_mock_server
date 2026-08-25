@@ -27,6 +27,36 @@ local BUFF_ADDER_TRIGGER_TYPE = BUFF_CONSTANT.ADDER_TRIGGER_TYPE
 local ADD_BUFF_NODE_TYEP = BUFF_CONSTANT.ADD_BUFF_NODE_TYEP
 local BUFF_EFFECT_ON_TYPE = BUFF_CONSTANT.BUFF_MAKE_EFFECT_ON_NODE_TYPE
 
+local CHANG_SHENG_JUE_SKILL_IDS = {
+    "changshengjueyang",  -- 阳优先
+    "changshengjueyin"
+}
+
+local function getChangShengJueSkillLevelAndType(character)
+    for _, skillId in ipairs(CHANG_SHENG_JUE_SKILL_IDS) do
+        local skill = character:getKnowledgeSkill(skillId)
+        if skill then
+            return skill:getLevel(), skillId
+        end
+    end
+    return 0, nil
+end
+
+local function getChangShengJueFactor(skillLevel)
+    if skillLevel <= 0 then
+        return 1, false
+    end
+    local triggerRate = math.max((skillLevel * 3 - 1400) / 16, 25)
+    local randomValue = FightUtil:random(1, 100)
+    local triggered = randomValue <= triggerRate
+    FightUtil:printLog(string.format("长生诀触发概率 - 等级:%s 触发率:%s%% 随机值:%s 结果:%s",
+        skillLevel, triggerRate, randomValue, triggered and "成功" or "失败"))
+    if not triggered then
+        return 1, false
+    end
+    return 1 + skillLevel / 2500, true
+end
+
 --@SuperType [src.app.FightSystem.BattleActions.ABaseBattleAction#ABaseBattleAction]
 local RecoverQiAction = {}
 
@@ -44,6 +74,7 @@ function RecoverQiAction:onInit()
 
     --@RefType [src.app.FightSystem.FightRole.NewFightCharacter#FightCharacter]
     self.__character = self.__fight:getCharacter(self.__characterId)
+    self.__changShengJueSkillLv, self.__changShengJueSkillType = getChangShengJueSkillLevelAndType(self.__character)
 end
 
 function RecoverQiAction:onStart()
@@ -76,9 +107,19 @@ function RecoverQiAction:onStart()
 
     local healReduceqiSXBH = self.__character:getAttr("healReduceqiSXBH")
 
-    local value = FightFormula:calReocverQiValue(neiliMax, healthyQi, healReduceqi, healReduceqiSXBH)
+    local changShengJueFactor, changShengJueTriggered = getChangShengJueFactor(self.__changShengJueSkillLv)
+
+    local value = FightFormula:calReocverQiValue(neiliMax, healthyQi, healReduceqi, healReduceqiSXBH, changShengJueFactor)
 
     self.__character:addAttr("qi", value)
+
+    if changShengJueTriggered then
+        local textId = self.__changShengJueSkillType == "changshengjueyang" and "1110" or "1111"
+        local printText = FightDesc:create()
+        printText:setText(TextResManager:getText(textId))
+        printText:setAttacker(self.__character)
+        self.__fight:showPrintText(printText:getString())
+    end
 
     FightUtil:printLog(string.format("角色(%s)释放【恢复】：%s", self.__character:getAttr("name"), value))
 
@@ -125,4 +166,4 @@ function RecoverQiAction:getNextBattleAction()
 end
 
 return newClass("RecoverQiAction", {ABaseBattleAction}, RecoverQiAction)
-0
+00

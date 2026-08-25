@@ -5,6 +5,8 @@ local dispatchTasks = requireWithEncrypt("script.others.familylist")["派遣表"
 --@RefType [src.app.models.HomelandModel.HomelandRoleUtil#HomelandRoleUtil]
 local HomelandRoleUtil = require("app.models.HomelandModel.HomelandRoleUtil")
 
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
+
 local dispatchTasklist = {}
 
 local activityTaskRelations = {}
@@ -48,28 +50,32 @@ function DispatchTaskUtils:init()
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
                 _flag = "飞贼任务奖励",
-                _taskItems = Task:getTask("task16").taskitem
+                _taskId = "task16"
             },
             dayReward = Task:getTask("task16").dayReward,
             reward = {
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, 100,lv))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task16Config = LiLianTaskHelper:getTaskConfigInfo("task16", confVer)
+                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task16Config.jobreward1,lv))
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, 100))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task16Config = LiLianTaskHelper:getTaskConfigInfo("task16", confVer)
+                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task16Config.jobreward2))
                     end
                 },
                 {
                     type = "属性",
                     name = "yueli",
-                    value = 5
+                    value = function(lv, exp, fy, sklv, confVer)
+                        return LiLianTaskHelper:getTaskConfigInfo("task16", confVer).jobreward4
+                    end
                 }
             }
         },
@@ -79,28 +85,32 @@ function DispatchTaskUtils:init()
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
                 _flag = "南阳匪贼任务奖励",
-                _taskItems = Task:getTask("task17").taskitem
+                _taskId = "task17"
             },
             dayReward = Task:getTask("task17").dayReward,
             reward = {
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, 5760,lv))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task17Config = LiLianTaskHelper:getTaskConfigInfo("task17", confVer)
+                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task17Config.jobreward1,lv))
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, 5760))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task17Config = LiLianTaskHelper:getTaskConfigInfo("task17", confVer)
+                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task17Config.jobreward2))
                     end
                 },
                 {
                     type = "属性",
                     name = "yueli",
-                    value = 5
+                    value = function(lv, exp, fy, sklv, confVer)
+                        return LiLianTaskHelper:getTaskConfigInfo("task17", confVer).jobreward4
+                    end
                 }
             }
         },
@@ -110,22 +120,24 @@ function DispatchTaskUtils:init()
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
                 _flag = "信使任务奖励",
-                _taskItems = Task:getTask("task19").taskitem
+                _taskId = "task19"
             },
             dayReward = Task:getTask("task19").dayReward,
             reward = {
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, 200))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task19Config = LiLianTaskHelper:getTaskConfigInfo("task19", confVer)
+                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task19Config.jobreward2))
                     end
                 },
                 {
                     type = "属性",
                     name = "money",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, 750))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task19Config = LiLianTaskHelper:getTaskConfigInfo("task19", confVer)
+                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, task19Config.jobreward3))
                     end
                 }
             }
@@ -136,22 +148,24 @@ function DispatchTaskUtils:init()
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
                 _flag = "缉拿任务奖励",
-                _taskItems = Task:getTask("task20").taskitem
+                _taskId = "task20"
             },
             dayReward = Task:getTask("task20").dayReward,
             reward = {
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, 750))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task20Config = LiLianTaskHelper:getTaskConfigInfo("task20", confVer)
+                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task20Config.jobreward2))
                     end
                 },
                 {
                     type = "属性",
                     name = "money",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, 200))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task20Config = LiLianTaskHelper:getTaskConfigInfo("task20", confVer)
+                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, task20Config.jobreward3))
                     end
                 }
             }
@@ -167,15 +181,17 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, 3450,lv))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task21Config = LiLianTaskHelper:getTaskConfigInfo("task21", confVer)
+                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task21Config.jobreward1,lv))
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, 3450))
+                    value = function(lv, exp, fy, sklv, confVer)
+                        local task21Config = LiLianTaskHelper:getTaskConfigInfo("task21", confVer)
+                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task21Config.jobreward2))
                     end
                 }
             }
@@ -243,18 +259,38 @@ function DispatchTaskUtils:changePlayerTaskState(taskId)
     end
 
     roleTask.state = TASK_STATE_DISPATCH
+    if activityTaskRelations[taskId] then
+        roleTask.aConfVer = LiLianTaskHelper:getConfigVersionByTime(GetTime())
+    end
+end
+
+function DispatchTaskUtils:getTaskTime(taskId, confVer)
+    local d_task = self:getTaskById(taskId)
+    assert(d_task, "DispatchTaskUtils:getTaskTime 派遣任务不存在，taskId:" .. tostring(taskId))
+
+    local taskTime = d_task.tasktime
+    if taskTime == "activemaxtime" then
+        taskTime = LiLianTaskHelper:getTaskConfigInfo(taskId, confVer).maxtime
+    end
+
+    taskTime = tonumber(taskTime)
+    assert(taskTime, "DispatchTaskUtils:getTaskTime 派遣任务次数配置错误，taskId:" .. tostring(taskId) .. ", tasktime:" .. tostring(d_task.tasktime))
+
+    return taskTime
 end
 
 --@desc: 获取派遣任务关联的任务
 --@author:Liang SongQiang
 --@time:2018-05-03 11:13:01
 --@taskId: 派遣任务ID
-function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
+function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId, confVer)
     local roleTaskId
 
     if activityTaskRelations[taskId] then
         roleTaskId = activityTaskRelations[taskId].relationId
     end
+
+    local taskTime = self:getTaskTime(taskId, confVer)
 
     --@RefType [src.app.models.role.Role#Role]
     local role = User:getRole()
@@ -269,7 +305,7 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
                 startTime = 0,
                 endTime = nil,
                 dCount = 0,
-                cCount = self:getTaskById(taskId).tasktime,
+                cCount = taskTime,
                 zCount = 0
             }
             role:setTask(taskId, tempTask)
@@ -287,7 +323,7 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
                 startTime = 0,
                 endTime = nil,
                 dCount = 0,
-                cCount = self:getTaskById(taskId).tasktime,
+                cCount = taskTime,
                 zCount = 0
             }
             role:setTask(taskId, tempTask)
@@ -295,9 +331,6 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
             roleTask = role:getTask(taskId)
         end
         
-        if roleTask.cCount ~= self:getTaskById(taskId).tasktime then
-            roleTask.cCount = self:getTaskById(taskId).tasktime
-        end
     end
 
     if not roleTask then
@@ -305,7 +338,20 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
         return nil
     end
 
+    if roleTask.cCount ~= taskTime then
+        roleTask.cCount = taskTime
+    end
+
     return roleTask
+end
+
+function DispatchTaskUtils:getActivityTaskSpecialItems(taskId, specialReward, confVer)
+    if specialReward._taskItems then
+        return specialReward._taskItems
+    end
+
+    local taskConfig = LiLianTaskHelper:getTaskConfigInfo(Helper:getDef(specialReward._taskId, taskId), confVer)
+    return Helper:getDef(string.split(taskConfig.taskitem, ";"), {})
 end
 
 --@desc:获得主动任务奖励
@@ -315,11 +361,13 @@ end
 --@taskId:任务ID
 --@taskCount: 今天还能完成的次数
 --@estTime: 预计完成时间
-function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTime)
+function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTime, confVer)
     local player = User:getRole()
 
     local taskRelation = activityTaskRelations[taskId]
-
+    if confVer == nil then
+        confVer = LiLianTaskHelper:getConfigVersionByTime(GetTime())
+    end
 
     -- 预计收益=历练任务剩余次数收益*math.min（任务过期时间/预计完成时间,1）
     -- 任务过期时间=24点---当前时间
@@ -346,7 +394,7 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 local exp = player:getAttr("exp")
                 local sklv = player:getKongfu()
                 local fy = player:getFinalAttr("luck")
-                estRewardList["属性"][reward.name] = reward.value(lv, exp, fy, sklv) * taskCount
+                estRewardList["属性"][reward.name] = reward.value(lv, exp, fy, sklv, confVer) * taskCount
             elseif type(reward.value) == "number" then
                 estRewardList["属性"][reward.name] = tonumber(reward.value) * taskCount
             else
@@ -364,15 +412,14 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
     --@desc 特殊奖励
     --@desc 特殊物品数量
     if taskRelation.specialReward then
-        local task_res = self:getTaskById(taskId)
-
-        local factor = taskCount / task_res.tasktime
+        local factor = taskCount / self:getTaskTime(taskId, confVer)
 
         if factor >= 0.5 then
             local specialCount = 0
+            local taskItems = self:getActivityTaskSpecialItems(taskId, taskRelation.specialReward, confVer)
             if taskRelation.specialReward._flag then
                 local tempCount = 0
-                for k, v in pairs(taskRelation.specialReward._taskItems) do
+                for k, v in pairs(taskItems) do
                     tempCount = tempCount + 1
                 end
     
@@ -387,7 +434,7 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 if taskRelation.specialReward._flag then
                     tempIndex = player:getDayFlag(taskRelation.specialReward._flag) + i
                 end
-                estRewardList["物品"][taskRelation.specialReward._taskItems[tempIndex]] = 1
+                estRewardList["物品"][taskItems[tempIndex]] = 1
             end
             
             --@desc 判断是否有特殊奖励
@@ -426,7 +473,7 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
 
                     local t_count = today_count
                     for i=1,r_count do
-                        local a_value = day_reward:value(t_count,true)
+                        local a_value = day_reward:value(t_count,true,confVer)
                         total_value = total_value + a_value
                         t_count = t_count + 1
                     end
@@ -975,7 +1022,8 @@ function DispatchTaskUtils:updateActivityTaskRewardsCount(taskId, roleTask)
     local taskRelation = activityTaskRelations[taskId]
     if taskRelation.specialReward and taskRelation.specialReward._flag and roleTask.reward.isSp == 1 then
         local tempCount = 0
-        for k, v in pairs(taskRelation.specialReward._taskItems) do
+        local taskItems = self:getActivityTaskSpecialItems(taskId, taskRelation.specialReward, LiLianTaskHelper:getRoleTaskConfigVersion(roleTask))
+        for k, v in pairs(taskItems) do
             tempCount = tempCount + 1
         end
         role:setDayFlag(taskRelation.specialReward._flag, tempCount)
@@ -1021,4 +1069,4 @@ function DispatchTaskUtils:clearNpcDispatchTaskList(npcId)
 end
 
 return DispatchTaskUtils
-000
+000000000000000

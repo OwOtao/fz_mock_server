@@ -27,17 +27,20 @@ function BasicSkill:__init(res)
     self.__res = res
     assert(self.__res.name, "武学 id : " .. self.__res.name .. "武学名字未填")
     assert(self.__res.type, "武学 id : " .. self.__res.id .. "武学类型未填")
-    assert(self.__res.battleQuality, "武学 id : " .. self.__res.id .. "武学战斗属性品质未填")
     assert(self.__res.dsc, "武学 id : " .. self.__res.id .. "武学描述未填")
     assert(self.__res.nameColor, "武学 id : " .. self.__res.id .. "武学颜色未填")
-
+    
     assert(tonumber(self.__res.battleJoinAnim), "武学 id : " .. self.__res.id .. "入场动画填写错误")
     assert(tonumber(self.__res.battleIdleAnim), "武学 id : " .. self.__res.id .. "待机（站立）动画填写错误")
     assert(tonumber(self.__res.battleRunAnim), "武学 id : " .. self.__res.id .. "跳跃（攻击准备）动画填写错误")
     assert(tonumber(self.__res.battleBackAnim), "武学 id : " .. self.__res.id .. "跳回（返回）动画填写错误")
-
-    if BasicSkill.IsFirstTypeSkill(self:getId(), self:getSkillType(), SKILL_FIRST_TYPE.BING_QI) and BasicSkill.IsFirstTypeSkill(self:getId(), self:getSkillType(), SKILL_FIRST_TYPE.QUAN_JIAO) then
-        assert(false, "武学技能 id : " .. self.__res.id .. "武学类型不可有兵器与拳脚共存")
+    
+    -- 没填武学类型的，默认不走武学相关判断
+    if self.__res.skillType ~= nil  then
+        assert(self.__res.battleQuality, "武学 id : " .. self.__res.id .. "武学战斗属性品质未填")
+        if BasicSkill.IsFirstTypeSkill(self:getId(), self:getSkillType(), SKILL_FIRST_TYPE.BING_QI) and BasicSkill.IsFirstTypeSkill(self:getId(), self:getSkillType(), SKILL_FIRST_TYPE.QUAN_JIAO) then
+            assert(false, "武学技能 id : " .. self.__res.id .. "武学类型不可有兵器与拳脚共存")
+        end
     end
 end
 
@@ -248,5 +251,17 @@ function BasicSkill:getZhaoJiaDefDamageParam()
     return self.__res.zhaoJiaDefDamageParam
 end
 
+function BasicSkill:getEnteredLauncherAdd()
+    if self.__enteredLauncherAdd == nil then
+        if self.__res.enteredLauncherAdd ~= nil then
+            self.__enteredLauncherAdd = string.split(self.__res.enteredLauncherAdd, "#")
+        else
+            self.__enteredLauncherAdd = {}
+        end
+    end
+
+    return self.__enteredLauncherAdd
+end
+
 return newClass("BasicSkill", {}, BasicSkill)
-0000000000000
+000000000

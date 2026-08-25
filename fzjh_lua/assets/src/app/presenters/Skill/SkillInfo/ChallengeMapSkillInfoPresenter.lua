@@ -11,7 +11,7 @@ function ChallengeMapSkillInfoPresenter:create(mainPresenter,viewModel)
 end
 
 function ChallengeMapSkillInfoPresenter:__initUI()
-    self.__ui:setTitleTabListViewItemsMargin(30)
+    self.__ui:setTitleTabListViewItemsMargin(0)
 
     self.__ui:setTitleTabListViewScrollBarEnabled(false)
 end
@@ -39,4 +39,4 @@ function ChallengeMapSkillInfoPresenter:setButtonPrepareSkill()
 end
 
 return NewClass("ChallengeMapSkillInfoPresenter", {MapSkillInfoPresenter}, ChallengeMapSkillInfoPresenter)
-000000000
+0000000000

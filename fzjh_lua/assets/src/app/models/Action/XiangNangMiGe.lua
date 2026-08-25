@@ -1,7 +1,6 @@
 local class = require("third.class.NewClass")
 
 local GoodsHelper = require("app.models.Store.GoodsHelper")
-local ActionRewardsHelper = require("app.models.Action.ActionRewardsHelper")
 
 local XiangNangMiGe = {}
 
@@ -173,7 +172,9 @@ function XiangNangMiGe:checkBagIsEnough(rewards)
 end
 
 function XiangNangMiGe:checkCanBuy(rewards)
-    return ActionRewardsHelper:checkRewardsCanBuy(rewards, self._role)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self._role, rewards)
+
+    return not isDuplicate, searchInfo
 end
 
 function XiangNangMiGe:__dealWithRewardLevelInfo(rewardInfo)
@@ -235,4 +236,4 @@ function XiangNangMiGe:__dealWithRewardInfo(rewardInfo)
 end
 
 return class("XiangNangMiGe", {}, XiangNangMiGe)
-00
+0000000000000

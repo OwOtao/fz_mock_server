@@ -969,171 +969,6 @@ function SkillXiuLianLayer:getEventFunc(roleSkill,name,skillState)
 				end
 			end)
 		end
-
-		-- local xiuLianBtnFunc = function(selectTime)
-		-- 	if selectTime == 0 then 
-		-- 		return
-		-- 	end
-		-- 	--需更新当前耐久度
-		-- 	self:refreshItemRoleInfo()
-		-- 	self.currSelectTime = selectTime
-		-- 	skillLv = Skill:getLv(roleSkill.exp)
-		-- 	local cLv = role:getSkillLv("changshengjueyang")
-		-- 	if cLv >= 600 then
-		-- 		role:setFlag("练功长生诀等级",cLv)
-		-- 	end
-		-- 	--NEEDTODO 解析技能列表，找到当前的所有技能，然后获取技能等级
-		-- 	--   对应技能等级和基础等级，技能等级不能超过基础等级+1
-
-		-- 	local jbLv,skillType = self:getjibenLvAndPrepareType(skill)
-		-- 	role:setFlag("武功修炼类型", skillType)
-		-- 	local afterLv,needTime,actualNeedJing,actualNeedDurable,limitType = SkillXiuLianUtil:getXiuLianActualSkillInfo(roleSkill.id,self.itemRole,selectTime)
-
-		-- 	if afterLv == nil or needTime == nil or needTime <=0 then
-		-- 		return
-		-- 	end
-		-- 	-- 秒
-		-- 	local time, hour, min, sec
-		-- 	local showTime = needTime
-		-- 	--对不足一秒的显示为一秒
-		-- 	if showTime>0 and showTime<1 then 
-		-- 		showTime = 1
-		-- 	end
-		-- 	hour = math.floor(showTime/3600)
-		-- 	min = math.floor(math.mod(showTime/60, 60))
-		-- 	sec = math.floor(math.mod(showTime, 60))
-		-- 	time = hour.."小时"..min.."分钟"..sec.."秒"
-
-		-- 	local currDurable,afterDurable = self.itemRole.durable,math.max(self.itemRole.durable-SkillXiuLianUtil:getXiuLianNeedDurable(needTime),0)
-		-- 	local title, list, butn1, func1, butn2, func2,butn3,func3
-		-- 	--self.afterDurable = afterDurable
-		-- 	-- 最高等级不能超过基础内功等级
-		-- 	if PRINT_MODE == 1 then 
-		-- 		print("---------------role:getAttr:",role:getAttr("jing"),"actualNeedJing:",actualNeedJing)
-		-- 	end
-			
-		-- 	if role:isInCurrState(ROLE_CURR_STATE_XIULIAN) then
-		-- 		if self._skillToLv then 
-		-- 			afterLv = self._skillToLv --直接使用记录时间 防止因为出现计算误差显示不一致
-		-- 		end
-		-- 		title = "修炼中"
-		-- 		list =
-		-- 		{
-		-- 			{title = "精力：", num = tostring(math.floor(role:getAttr("jing"))).."→"..tostring(math.floor(math.max(role:getAttr("jing")-actualNeedJing,0)))},
-		-- 			{title = "假人耐久：", num = math.floor(currDurable).."→"..math.floor(afterDurable)},
-		-- 			{title = "修炼时间：", num = time},
-		-- 			{title = "武功：", num = skill.name},
-		-- 			{title = "等级：", num = skillLv.."→"..afterLv},
-		-- 		}
-		-- 		butn1 = "结束修炼"
-		-- 		func1 = function()
-		-- 			role:stopXiuLian()
-		-- 			self._stata = nil
-		-- 			self._skillToLv = nil
-		-- 			self:hideSkillInfo()
-		-- 			self:setSkillList(role)
-		-- 		end
-		-- 		butn2 = "关闭"
-		-- 		func2=function()
-		-- 			self:setSkillList(role)
-		-- 		end
-		-- 	else
-		-- 		title = "你要开始修炼"..skill.name.."吗？"				-- 标题
-		-- 		list = 												-- 内容列表
-		-- 		{
-		-- 			{title = "精力：", num = tostring(math.floor(role:getAttr("jing"))).."→"..tostring(math.floor(math.max(role:getAttr("jing")-actualNeedJing,0)))},
-		-- 			{title = "假人耐久：", num =  math.floor(currDurable).."→"..math.floor(afterDurable)},
-		-- 			{title = "修炼时间：", num = time},
-		-- 			{title = "武功：", num = skill.name},
-		-- 			{title = "等级：", num = skillLv.."→"..afterLv},
-		-- 		}
-		-- 		--使用分身符后，显示信息，并直接进入练功阶段
-
-		-- 		butn1 = "开始"
-		-- 		func1 = function()
-		-- 			RoleTaskControllor:clickXiuLianLayer(skill.id, 
-		-- 				function()
-		-- 					SkillXiuLianUtil:startXiuLian(roleSkill.id,self.itemRole,needTime)
-		-- 					roleSkill.startTime = GetTime()
-		-- 					roleSkill.toLv = afterLv
-		-- 					self._skillToLv = afterLv
-		-- 					roleSkill.state = ROLE_CURR_STATE_XIULIAN
-		-- 					self:xiuLian(roleSkill)
-		-- 					self:showSkillInfo(role:getSkill(roleSkill.id))
-		-- 				end,
-		-- 				function()
-		-- 					self:getEventFunc(roleSkill, "修炼","timeSelected")
-		-- 				end,
-		-- 				function()
-		-- 					self:hideSkillInfo()
-		-- 					self:setSkillList(User:getRole())
-		-- 				end,
-		-- 				function()
-		-- 					self:hideSkillInfo()
-		-- 					self:setSkillList(User:getRole())
-		-- 				end
-		-- 			)
-		-- 		end
-		-- 		butn2 = "取消"
-		-- 	end
-
-		-- 	if limitType == 1 then 
-		-- 		list[1].num = "RED"..list[1].num
-		-- 	elseif limitType ==2 then 
-		-- 		list[2].num = "RED"..list[2].num
-		-- 	elseif limitType ==3 then
-		-- 		list[5].num = "RED"..list[5].num
-		-- 	end
-
-		-- 	if SkillXiuLianUtil:checkIsSpecailItem(self.itemRole.jjId) then 
-		-- 		list[2].num = "不损耗耐久"
-		-- 	end
-			
-		-- 	local params =
-		-- 	{
-		-- 		title = title,
-		-- 		list = list,
-		-- 		butn1 = butn1,
-		-- 		func1 = func1,
-		-- 		butn2 = butn2,
-		-- 		butn3 = butn3,
-		-- 		func2 = func2,
-		-- 		func3 = func3,
-		-- 		descTextVisible = false
-		-- 	}
-
-		-- 	setDialogC(params)
-		-- end
-		-- local btnList = {
-		-- 	{name = "一小时",index = 3600.0},
-		-- 	{name = "五小时",index = 18000.0},
-		-- 	{name = "十小时",index = 36000.0},
-		-- 	{name = "取消",index = 0},
-		-- }
-		
-		-- if role:isInCurrState(ROLE_CURR_STATE_XIULIAN) then 
-		-- 	local xiuLianData = role:getAttr("xiuLianData")
-		-- 	if MapIsEmpty(xiuLianData) ==false then 
-		-- 		local needTime  = xiuLianData.endTime - GetTime()
-		-- 		xiuLianBtnFunc(needTime)
-		-- 	else
-		-- 		print("------------出错了")
-		-- 	end
-		-- elseif skillState == "timeSelected" and self.currSelectTime then 
-		-- 	xiuLianBtnFunc(self.currSelectTime)
-		-- else
-		-- 	PopupLayerController:showLayer("ItemSelectAutoFitLayer",function ( layer )
-		-- 		layer:setBtnClickFunc(
-		-- 			function ( index )
-		-- 				xiuLianBtnFunc(index)
-		-- 				layer:hideLayer()
-		-- 			end
-		-- 		)
-		-- 		layer:setList(btnList)
-		-- 		layer:setTitle("请选择修炼时长")
-		-- 		layer:showLayer()
-		-- 	end)
-		-- end
 	end
 end
 
@@ -1162,6 +997,8 @@ function SkillXiuLianLayer:popSpecialInfo(params)
 	self.skillInfoPopSpecialUI:setTextDesc1(params.costDesc1)
 	self.skillInfoPopSpecialUI:setButton2(params.butn2, params.func2)
 	self.skillInfoPopSpecialUI:setTextDesc2(params.costDesc2)
+	self.skillInfoPopSpecialUI:setThirdTypeVisible(true)
+    self.skillInfoPopSpecialUI:setSkillThirdTypes(params.desc3)
 	self.skillInfoPopSpecialUI:setActiveZhaoList(params.zhaoList)
 	self.skillInfoPopSpecialUI.Image_infoArea:releaseFunc(
 	function()
@@ -1201,6 +1038,8 @@ function SkillXiuLianLayer:popNormalInfo(params)
 	self.skillInfoPopNormalUI:setTextDesc1(params.costDesc1)
 	self.skillInfoPopNormalUI:setButton2(params.butn2, params.func2)
 	self.skillInfoPopNormalUI:setTextDesc2(params.costDesc2)
+	self.skillInfoPopNormalUI:setThirdTypeVisible(true)
+    self.skillInfoPopNormalUI:setSkillThirdTypes(params.desc3)
 	self.skillInfoPopNormalUI.Image_infoArea:releaseFunc(
 	function()
 		-- Audio:playEffect("daAnNiu")
@@ -1307,6 +1146,11 @@ function SkillXiuLianLayer:showRoleSkillInfo(role, roleSkill, expDsc)
 	desc = skill:getStageDsc(role)
 	dsc = skill.dsc
 
+	local skillThridTypesText = ""
+	if self._currSkillList and self._currSkillList.name ~= "知识" then
+		skillThridTypesText = skill:getTextSkillThridTypes()
+	end
+
 	-- expDsc = math.floor(skillExp).."/"..skillLv.."级"
 	-- 基本类型 只有研究功能  研究不能超过等级上限
 	if skill.type == SKILL_TYPE_BASE and skill.id ~= "jibenneigong" then
@@ -1364,6 +1208,7 @@ function SkillXiuLianLayer:showRoleSkillInfo(role, roleSkill, expDsc)
 		name = name,
 		desc = desc,
 		dsc = dsc,
+		desc3 = skillThridTypesText,
 		expDsc = expDsc,
 		butn1 = butn1,
 		func1 = func1,
@@ -1438,4 +1283,4 @@ Helper:classDefNodeGetInstance(SkillXiuLianLayer)
 -- 加密标记
 SkillXiuLianLayer.isEncrypted = true
 return SkillXiuLianLayer
-0000000000
+00000000000000

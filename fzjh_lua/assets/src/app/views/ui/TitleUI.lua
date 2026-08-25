@@ -137,6 +137,8 @@ function TitleUI:init()
 
                             self.Button_setup:setVisible(false)
 
+							self.Text_Custom:setVisible(true)
+
                             self.Text_title:setTextColor({r = 208, g = 208, b = 208})
 
                             self.Text_title:setFontName("Font/HYCFS.ttf")
@@ -257,8 +259,9 @@ function TitleUI:init()
                                     self.Button_action:setVisible(false)
                                 end,
                                 SkillBreakThroughPresent = function()
+									self.Text_Custom:setVisible(true)
                                     self.Button_back:setVisible(true)
-                                    self.Button_setup:setVisible(true)
+                                    self.Button_setup:setVisible(false)
                                     self.Button_action:setVisible(false)
                                 end,
 								SkillPrepareLayer = function()
@@ -913,4 +916,4 @@ function TitleUI:setCustomButton(name,func)
 	end)
 end
 
-return TitleUI0000000000
+return TitleUI0

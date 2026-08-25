@@ -8,5 +8,11 @@ end
 function Ihurt:getValue()
 end
 
+function Ihurt:isAutoHurt()
+end
+
+function Ihurt:isActiveHurt()
+end
+
 return interface("Ihurt", Ihurt)
-0
+0000000

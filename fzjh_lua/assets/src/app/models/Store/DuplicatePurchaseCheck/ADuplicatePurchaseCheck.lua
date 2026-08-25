@@ -14,6 +14,14 @@ local ADuplicatePurchaseCheck = {
     _res = nil
 }
 
+local COMPARE_SYMBOL_TEXT = {
+    [">"] = "大于",
+    [">="] = "大于等于",
+    ["="] = "等于",
+    ["<"] = "小于",
+    ["<="] = "小于等于"
+}
+
 function ADuplicatePurchaseCheck:_compareValue(currentValue)
     local judgingCondition = self._res:getJudgingcondition()
     local judgingValue = self._res:getJudgingvalue()
@@ -31,6 +39,21 @@ function ADuplicatePurchaseCheck:_compareValue(currentValue)
     else
         error("ADuplicatePurchaseCheck:_compareValue() - not support judgingCondition : " .. tostring(judgingCondition))
     end
+end
+
+function ADuplicatePurchaseCheck:_getCompareSymbolText()
+    local judgingCondition = self._res:getJudgingcondition()
+    local text = COMPARE_SYMBOL_TEXT[judgingCondition]
+
+    if text == nil then
+        error("ADuplicatePurchaseCheck:_getCompareSymbolText() - not support judgingCondition : " .. tostring(judgingCondition))
+    end
+
+    return text
+end
+
+function ADuplicatePurchaseCheck:_getJudgingValue()
+    return self._res:getJudgingvalue()
 end
 
 --@desc:检测是否重复购买
@@ -51,4 +74,4 @@ function ADuplicatePurchaseCheck:duplicateCheck(role, res)
 end
 
 return abstract("ADuplicatePurchaseCheck", {IDuplicatePurchaseCheck}, ADuplicatePurchaseCheck)
-00
+0000000000

@@ -11,15 +11,10 @@ function FistFootHurt:create(type,value)
 end
 
 function FistFootHurt:ctor()
-end
-
-function FistFootHurt:isActiveHurt()
-    return false
-end
-
-function FistFootHurt:isAutoHurt()
-    return true
+	self.__isAutoHurt = true
+	
+	self.__isActiveHurt = false
 end
 
 return newClass("FistFootHurt", {BaseHurt}, FistFootHurt)
-000000000000000
+00000000000000

@@ -97,7 +97,7 @@ local function initWxclassify(skill)
         return
     end
     local wxclassify = {}
-    if skill.wxclassify then
+    if skill.wxclassify and skill.wxclassify ~= 0 then
         local array = string.split(skill.wxclassify,",")
         for i,v in ipairs(array) do
             table.insert(wxclassify, v)
@@ -1766,4 +1766,4 @@ end
 -- 加密标志
 Skill.isEncrypted = true
 return Skill
-00000000000000
+0000

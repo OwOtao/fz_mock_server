@@ -7,6 +7,7 @@ local hurtCreateSwitch = {
 	["3"] = require("app.models.fight.Hurt.FistFootHurt"),
     ["4"] = require("app.models.fight.Hurt.PoisonHurt"),
 	["5"] = require("app.models.fight.Hurt.AutoZhaoAddEffectHurt"),
+	["6"] = require("app.models.fight.Hurt.SelfHurt"),
 	default = require("app.models.fight.Hurt.BaseHurt"),
 }
 
@@ -15,4 +16,4 @@ function HurtFactory:create(type,value)
 end
 
 return HurtFactory
-00000
+0000000000000000

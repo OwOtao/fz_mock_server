@@ -2,6 +2,7 @@ local DispatchTaskManager = {}
 
 --@RefType [src.app.models.HomelandModel.DispatchTaskModel.DispatchTaskUtils#DispatchTaskUtils]
 local DispatchTaskUtils = require("app.models.HomelandModel.DispatchTaskModel.DispatchTaskUtils")
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
 
 --@RefType [src.app.models.HomelandModel.HomelandRoleUtil#HomelandRoleUtil]
 local HomelandRoleUtil = require("app.models.HomelandModel.HomelandRoleUtil")
@@ -172,19 +173,20 @@ end
 --@time:2018-05-03 09:51:37
 --@role:[src.app.models.role.Role#Role]
 --@taskId: 任务ID
-function DispatchTaskManager:getEstFinishCount(role, taskId)
+function DispatchTaskManager:getEstFinishCount(role, taskId, confVer)
     local dispatchTask = DispatchTaskUtils:getTaskById(taskId)
-    local dayCount = self:getDayFinishTaskCountById(taskId)
+    local taskTime = DispatchTaskUtils:getTaskTime(taskId, confVer)
+    local dayCount = self:getDayFinishTaskCountById(taskId, confVer)
     print(role:getKongfu(),dispatchTask.gongfu)
 
     local lv = HomelandRoleUtil:getFidelityLv(role:getAttr("defaultZhongCheng"))
 
     local factor = (2*role:getKongfu()-dispatchTask.gongfu+800)/(dispatchTask.gongfu+200)*(lv+1)/8
 
-    local estCount = math.floor(dispatchTask.tasktime * factor)
+    local estCount = math.floor(taskTime * factor)
 
-    if dispatchTask.tasktime - dayCount < estCount then
-        estCount = dispatchTask.tasktime - dayCount
+    if taskTime - dayCount < estCount then
+        estCount = taskTime - dayCount
     end
 
     return math.max(estCount, 1)
@@ -259,12 +261,12 @@ end
 --@time:2018-05-03 11:45:28
 --@role:[src.app.models.role.Role#Role]
 --@taskId: 派遣任务ID
-function DispatchTaskManager:getEstReward(role, taskId, estCount, estTime)
+function DispatchTaskManager:getEstReward(role, taskId, estCount, estTime, confVer)
     local dispatchTask = DispatchTaskUtils:getTaskById(taskId)
 
     local rewardList = {}
     if dispatchTask.tasktype == "主动任务" then
-        rewardList = DispatchTaskUtils:getActivityTaskReward(role, taskId, estCount, estTime)
+        rewardList = DispatchTaskUtils:getActivityTaskReward(role, taskId, estCount, estTime, confVer)
     elseif dispatchTask.tasktype == "其他任务" then
         rewardList = DispatchTaskUtils:getNormalTaskReward(role, taskId)
     end
@@ -279,18 +281,23 @@ end
 --@taskId: 任务ID
 function DispatchTaskManager:initTaskData(role, taskId)
     local structure = {}
+    local dispatchTask = DispatchTaskUtils:getTaskById(taskId)
 
     structure.npcId = role.id
 
     structure.taskId = taskId
 
-    structure.count = self:getEstFinishCount(role, taskId)
+    if dispatchTask.tasktype == "主动任务" then
+        structure.aConfVer = LiLianTaskHelper:getConfigVersionByTime(GetTime())
+    end
+
+    structure.count = self:getEstFinishCount(role, taskId, structure.aConfVer)
 
     structure.estFinishTime = self:getEstTime(role, taskId, structure.count)
 
-    structure.reward = self:getEstReward(role, taskId, structure.count, structure.estFinishTime)
+    structure.reward = self:getEstReward(role, taskId, structure.count, structure.estFinishTime, structure.aConfVer)
 
-    structure.tasktype = DispatchTaskUtils:getTaskById(taskId).tasktype
+    structure.tasktype = dispatchTask.tasktype
 
     structure.successRate = DispatchTaskUtils:getSuccessRate(role, taskId)
 
@@ -348,7 +355,7 @@ function DispatchTaskManager:dispatchTask(data, map)
 
                     roleTask.state = TASK_STATE_DISPATCH
                 
-                    local todayCount = self:getDayFinishTaskCountById(data.taskId)
+                    local todayCount = self:getDayFinishTaskCountById(data.taskId, data.aConfVer)
 
                     local npc = map:getRole(data.npcId)
                     local roomId = npc.fjId
@@ -362,6 +369,7 @@ function DispatchTaskManager:dispatchTask(data, map)
                     roleTask.reward = data.reward
                     roleTask.npcId = data.npcId
                     roleTask.speedState = data.speedState
+                    roleTask.aConfVer = data.aConfVer
                     --@desc 派遣时所在的房间
                     roleTask.roomId = roomId
                 
@@ -454,10 +462,10 @@ end
 --@time:2018-05-02 21:03:09
 --@taskId:派遣任务ID
 --@return 此任务今天已完成的次数
-function DispatchTaskManager:getDayFinishTaskCountById(taskId)
+function DispatchTaskManager:getDayFinishTaskCountById(taskId, confVer)
     local dispatchTask = DispatchTaskUtils:getTaskById(taskId)
 
-    local roleTask = DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId)
+    local roleTask = DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId, confVer)
 
     roleTask.startTime = Helper:getDef(roleTask.startTime, 0)
 
@@ -677,6 +685,7 @@ function DispatchTaskManager:resetTask(task)
     task.speedState = nil
     task.isSuccess = nil
     task.estFinishTime = nil
+    task.aConfVer = nil
 end
 
 --@desc: 修复回档造成服务器数据不同步的情况
@@ -777,4 +786,4 @@ function DispatchTaskManager:getReward(map, npcId)
 end
 
 return DispatchTaskManager
-000
+0000000000

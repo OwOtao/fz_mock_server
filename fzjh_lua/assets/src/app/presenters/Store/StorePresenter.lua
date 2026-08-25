@@ -2,6 +2,7 @@ local StorePresenter = class("StorePresenter", cc.Layer)
 local GoodsHelper = require("app.models.Store.GoodsHelper")
 local StoreHelper = require("app.models.Store.StoreHelper")
 local Store = require("app.models.Store.Store")
+local GoodsPresenterFactory = require("app.presenters.GoodsInfo.GoodsPresenterFactory")
 
 function StorePresenter:create()
     local p = StorePresenter:new()
@@ -293,6 +294,9 @@ function StorePresenter:__initLeftList()
 
             info.dsc = "    " .. itemClass:getDsc()
             info.name = itemClass:getName()
+			info.goodsTipText = ""
+			info.goodsTipIsVisible = false
+			info.goodsClickFunc = EMPTY_FUNC
 
             info.func = function(buyNumber)
                 local goods = {count = buyNumber, type = item.type, index = item.index}
@@ -338,6 +342,21 @@ function StorePresenter:__initRightList()
             info.maxCount = item.count
             info.dsc = "    " .. itemClass:getDsc()
             info.name = itemClass:getName()
+			local goodsResClass = GoodsHelper:getGoodsResClass(itemClass:getId())
+			
+			if goodsResClass:getViewType() ~= 0 then
+				info.goodsTipText = "点击可查看道具详情"
+				info.goodsTipIsVisible = true
+				info.goodsClickFunc = function()
+					PopupLayerController:showLayer("GoodsInfoMainPresenter",function(layer)
+						layer:showLayer({{id = itemClass:getId()}})
+					end)
+				end
+			else
+				info.goodsTipText = ""
+				info.goodsTipIsVisible = false
+				info.goodsClickFunc = EMPTY_FUNC
+			end
 
             if self._interactor:checkGoodsTypeIsBuyType(item.type) == false then
                 info.text1 = "将获得："
@@ -380,6 +399,7 @@ function StorePresenter:__showSelectLayer(selectInfo)
             layer:setTextDesc_1(selectInfo.dsc)
             layer:setTextDesc_2("")
             layer:setTextDesc_3(selectInfo.name, selectInfo.unitCount)
+			layer:setTextDesc_4(selectInfo.goodsTipText,selectInfo.goodsTipIsVisible,selectInfo.goodsClickFunc)
             layer:setText_1Str(selectInfo.text1)
             layer:setItemName(selectInfo.name)
             layer:setUnitPrice(selectInfo.price)
@@ -415,4 +435,4 @@ end
 
 Helper:classDefNodeGetInstance(StorePresenter)
 return StorePresenter
-0000000
+00000000000

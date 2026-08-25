@@ -339,12 +339,18 @@ function ActiveZhao:create(data)
     return p
 end
 
+--@desc: 初始化主动招式类型（本次修改内容：只初始化第一个数据,目前没有多类型的需求）
+--@author:LvBin
+--@time:2026-05-25 16:23:16
+--@zhao: 
+--@return
 local function initMethods(zhao)
     if zhao.methods ~= nil and string.len(zhao.methods) > 0 then
         local method = string.split(zhao.methods, ";")
         zhao.methods = {}
         for i, v in ipairs(method) do
             table.insert(zhao.methods, tonumber(v))
+			break
         end
     end
 end
@@ -1297,5 +1303,13 @@ function ActiveZhao:refreshCD()
     self:setCDLeft(cdLeft)
 end
 
+--@desc: 获取主动招式类型（目前只配置了一个,默认取第一个）
+--@author:LvBin
+--@time:2026-05-25 16:40:45
+--@return
+function ActiveZhao:getZhaoMethod()
+    return self.methods[1]
+end
+
 return ActiveZhao
-00000000
+0000000000

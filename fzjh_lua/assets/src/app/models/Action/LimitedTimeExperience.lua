@@ -196,14 +196,6 @@ function LimitedTimeExperience:__initRewardInfo(list)
                 self.__rewardState = true
             end
 
-            if v.state == 2 then
-                rewardInfo.loadTexture = "Image/UI/TaskUI/anniuhui.png"
-                rewardInfo.btnName = "已领取"
-            else
-                rewardInfo.loadTexture = "Image/UI/TaskUI/anniu.png"
-                rewardInfo.btnName = "领取"
-            end
-
             table.insert(self.__rewardList,rewardInfo)
         end
 
@@ -230,9 +222,9 @@ function LimitedTimeExperience:getReward(rewardId)
 end
 
 function LimitedTimeExperience:checkCanGetReward(rewards)
-    local isTrue, searchInfo = ActionRewardsHelper:checkRewardsCanBuy(rewards, self.__role)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self.__role, rewards)
 
-    return isTrue, searchInfo.msg
+    return not isDuplicate, searchInfo
 end
 
 function LimitedTimeExperience:checkBagCanGetReward(rewards)
@@ -432,4 +424,4 @@ function LimitedTimeExperience:__checkTaskIsClosedByCondition(conditionType)
 end
 
 return class("LimitedTimeExperience", {}, LimitedTimeExperience)
-000000
+000

@@ -1,4 +1,8 @@
 local class = require("third.class.NewClass")
+local GoodsHelper = require("app.models.Store.GoodsHelper")
+local ActionRewardsHelper = require("app.models.Action.ActionRewardsHelper")
+local GrantGoodRequest = require("app.models.Store.GrantGoodRequest")
+local CurrencyUtil = require("app.models.Currency.CurrencyUtil")
 
 local DanQingGe = {}
 
@@ -27,6 +31,8 @@ function DanQingGe:ctor()
     self._desc = ""
 
     self._rewardList = {}
+
+    self._currencyList = {}
 end
 
 function DanQingGe:setRole(role)
@@ -38,7 +44,8 @@ function DanQingGe:setActionId(actionId)
 end
 
 function DanQingGe:init(callback)
-    HttpManagerEx:getDanQingPavilionInfo(self._actionId, function(status, errcode, errmsg, data)
+    local currencyVersion = self._role:getCurrencyVersion()
+    HttpManagerEx:getDanQingPavilionInfo(self._actionId, currencyVersion, function(status, errcode, errmsg, data)
         if status == 200 and errcode == 0 then
             self._name = data.act_name
 
@@ -52,9 +59,7 @@ function DanQingGe:init(callback)
 
             self._desc = desc
 
-            self._currencyName = data.currency_name
-
-            self._currencyNum = data.currency_number
+            self._currencyList = data.currencyList
 
             self:__dealWithList(data.list)
 
@@ -75,12 +80,16 @@ function DanQingGe:getActionDesc()
     return self._desc
 end
 
-function DanQingGe:getCurrencyName()
-    return self._currencyName
+function DanQingGe:getCurrencyNameByCurrencyId(currencyId)
+    return CurrencyUtil:getCurrencyName(currencyId)
 end
 
-function DanQingGe:getCurrencyNum()
-    return self._currencyNum
+function DanQingGe:getCurrencyNumByCurrencyId(currencyId)
+    for k, v in ipairs(self._currencyList) do
+        if v.id == currencyId then
+            return v.num
+        end
+    end
 end
 
 function DanQingGe:getList()
@@ -89,10 +98,15 @@ end
 
 function DanQingGe:exchangeReward(id, rewardId, callback)
     local dataVer = self._role:getServerActionSystem():getDataVersion()
-    HttpManagerEx:exchangeDanQingPavilionItem(self._actionId, id, rewardId, dataVer, function(status, errcode, errmsg, data)
+    local currencyVersion = self._role:getCurrencyVersion()
+    HttpManagerEx:exchangeDanQingPavilionItem(self._actionId, id, rewardId, dataVer, currencyVersion, function(status, errcode, errmsg, data)
         if status == 200 and errcode == 0 then
             if data.msg then
                 PopText(data.msg)
+            end
+
+            if data.currencyVersion then
+                self._role:setCurrencyVersion(data.currencyVersion)
             end
 
             if callback then
@@ -106,28 +120,12 @@ end
 
 function DanQingGe:doReward(rewardId, callback)
     local dataVer = self._role:getServerActionSystem():getDataVersion()
-    HttpManagerEx:getDanQingPavilionReward(self._actionId, rewardId, dataVer, function(status, errcode, errmsg, data)
+    local currencyVersion = self._role:getCurrencyVersion()
+    HttpManagerEx:getDanQingPavilionReward(self._actionId, rewardId, dataVer, currencyVersion, function(status, errcode, errmsg, data)
         if status == 200 and errcode == 0 then
-            local rewardList = data.rewards
-            if MapIsEmpty(rewardList) == false then
-                for k,v in pairs(rewardList) do
-                    if v.type == 1 or v.type == 2 then --物品
-                        self._role:addItemCount(v.id,v.number)
-                    elseif v.type == 3 then --属性
-                        self._role:addAttr(v.id,v.number)
-                    end
+            GoodsHelper:fromNetworkGrantGoods(self._role,GrantGoodRequest:create({goodsList = data.rewards, dataVersion = data.dataVer, currencyVersion = data.currencyVersion, yashiExpiredTime = data.yashi_expired_time}))
 
-                    PopText("获得"..v.name.."X"..tostring(v.number))
-                end
-            end
-
-            if data and data.yashi_expired_time then  --江湖雅士体验卡额外处理
-                self._role:updateYaShiStatus(data.yashi_expired_time)
-            end
-
-            if data.dataVer then
-                self._role:getServerActionSystem():setDataVersion(data.dataVer)
-            end
+            ActionRewardsHelper:printGetRewardsText(data.rewards)
 
             if data.msg then
                 PopText(data.msg)
@@ -152,6 +150,14 @@ function DanQingGe:checkRewardIsSelect(type)
     return type == 2
 end
 
+function DanQingGe:checkRewardIsRandom(type)
+    return type == 3
+end
+
+function DanQingGe:checkIsDiscount(discount)
+    return discount < 1
+end
+
 function DanQingGe:checkStateIsReward(state)
     return state == RewardState.Reward
 end
@@ -164,29 +170,15 @@ function DanQingGe:checkStateIsRewarded(state)
     return state == RewardState.AfterReward
 end
 
-function DanQingGe:checkCurrencyIsEnough(price)
-    return self._currencyNum >= price
+function DanQingGe:checkCanGetReward(rewards)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self._role, rewards)
+
+    return not isDuplicate, searchInfo
 end
 
--- true 代表背包满
-function DanQingGe:checkBagIsEnough(rewards)
-    local items = {}
-
-    for k,v in pairs(rewards) do
-        if v.type == 1 or v.type == 2 then
-            if items[v.id] then
-                items[v.id] = tonumber(v.number) + items[v.id]
-            else
-                items[v.id] = tonumber(v.number)
-            end
-        end
-    end
-
-    if self._role:checkCanBuyTwoOrMoreThings(items, false) == true then
-        return false
-    else
-        return true
-    end
+function DanQingGe:checkBagCanGetReward(rewards)
+    local isTrue, msg = ActionRewardsHelper:checkBagCanGetRewards(rewards, self._role)
+    return isTrue, msg
 end
 
 function DanQingGe:__dealWithList(rewardInfo)
@@ -201,10 +193,14 @@ function DanQingGe:__dealWithList(rewardInfo)
                 _info.type = v.rewardType
                 _info.id = v.id
                 _info.price = v.price
+                _info.currencyId = v.currencyId
+                _info.discount = v.discount
                 _info.buyTimes = v.buyTimes
                 _info.totalTimes = v.totalTimes
                 _info.reward = v.reward
-                _info.rewardIdList = {}
+                _info.rewardNumber = v.rewardNumber
+                _info.reduplicate = v.reduplicate
+                _info.rewardIdPoolList = {}
                 
                 for rewardId, rewards in pairs(v.showList) do
                     local showList = {}
@@ -213,8 +209,8 @@ function DanQingGe:__dealWithList(rewardInfo)
                         table.insert(showList, __v)
                     end
 
-                    table.insert(_info.rewardIdList, rewardId)
-                    self._rewardList[rewardId] = showList
+                    table.insert(_info.rewardIdPoolList, rewardId)
+                    self._rewardList[tostring(rewardId)] = showList
                 end
 
                 table.insert(info,_info)
@@ -236,4 +232,4 @@ function DanQingGe:__dealWithList(rewardInfo)
 end
 
 return class("DanQingGe", {}, DanQingGe)
-0000
+000000000

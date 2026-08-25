@@ -35,6 +35,12 @@ function MySelfSkillInfoPresenter:__init(mainPresenter, viewModel)
     self.__role = viewModel:getRole()
 end
 
+function MySelfSkillInfoPresenter:onEnable()
+	self:setTitleName()
+	
+	self:setButtonSkillBreak()
+end
+
 function MySelfSkillInfoPresenter:showPresenter()
     self:setCurrTabIndex(1)
 
@@ -48,9 +54,11 @@ function MySelfSkillInfoPresenter:showPresenter()
 
     self:setButtonLianGong()
 
-    self:setButtonSkillBreak()
-
+	self:setButtonSkillBreak()
+	
     self:setButtonPrepare()
+	
+    self:setButtonActiveZhaoMeditate()
 end
 
 function MySelfSkillInfoPresenter:update()
@@ -304,7 +312,7 @@ function MySelfSkillInfoPresenter:setButtonTab()
         end
     end
 
-    self.__ui:setButtonTab(isVisible, buttonName, callback)
+    self.__ui:setButton1(isVisible, buttonName, callback)
 end
 
 function MySelfSkillInfoPresenter:setButtonLianGong()
@@ -355,29 +363,51 @@ function MySelfSkillInfoPresenter:setButtonLianGong()
     else
     end
 
-    self.__ui:setButtonLianGong(isVisible, buttonName, callback)
+    self.__ui:setButton4(isVisible, buttonName, callback)
 end
 
-function MySelfSkillInfoPresenter:setButtonSkillBreak()
-    local isVisible = self.__role:getLv() >= 1000 and true or false
+function MySelfSkillInfoPresenter:setButtonActiveZhaoMeditate()
+    local isVisible = self.__role:getLv() >= 600 and true or false
 
-    local buttonName = "突\n破"
+    local buttonName = "领\n悟"
 
     local callback = function()
         Audio:playEffect("daAnNiu")
 
         self:hideSkillInfoPopUI()
 
-        if self.__role:getSkillBreakThroughSystem():isBreakThrough() then
-            self:showSkillBreakLayer()
-        else
-            PopText("所需基本武学都达到1000级才能武学突破")
-        end
+        self.__role:getActiveZhaoMeditateSystem():pullSysData(
+			function(isOk,msg)
+				if isOk then
+					Audio:playEffect("daAnNiu")
+					MainControllLayer:pushLayer("ActiveZhaoMeditateMenuPresenter")
+				else
+					PopText(msg)
+				end
+			end
+		) 
     end
 
-    self.__ui:setButtonSkillBreak(isVisible, buttonName, callback)
+    self.__ui:setButton3(isVisible, buttonName, callback)
+end
 
-    self.__ui:setButtonSkillBreakTexture("Image/UI/TeacherUI/lotus_shape_button.png")
+function MySelfSkillInfoPresenter:setButtonSkillBreak()
+	local titleLayer = MainControllLayer:getLayer("TitleLayer")
+
+	if self.__role:getLv() < 1000 then
+		titleLayer:setCustomButton("",EMPTY_FUNC)
+	else
+		titleLayer:setCustomButton("突破",function()
+			self:hideSkillInfoPopUI()
+	
+			if self.__role:getSkillBreakThroughSystem():isBreakThrough() then
+				self:showSkillBreakLayer()
+			else
+				PopText("所需基本武学都达到1000级才能武学突破")
+			end
+		end)
+	end
+
 end
 
 function MySelfSkillInfoPresenter:setButtonPrepare()
@@ -409,7 +439,7 @@ function MySelfSkillInfoPresenter:setButtonPrepare()
         self:showSkillPrepareLayer()
     end
 
-    self.__ui:setButtonPrepare(isVisible, buttonName, callback)
+    self.__ui:setButton2(isVisible, buttonName, callback)
 end
 
 function MySelfSkillInfoPresenter:showBiGuanLayer(skillId)
@@ -539,4 +569,4 @@ function MySelfSkillInfoPresenter:showSkillPrepareLayer()
 end
 
 return class("MySelfSkillInfoPresenter", {BaseSkillInfoPresenter}, MySelfSkillInfoPresenter)
-00000
+0000000000

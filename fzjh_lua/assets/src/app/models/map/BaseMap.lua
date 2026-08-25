@@ -1094,7 +1094,7 @@ function BaseMap:setCallBackAndConnect(func)
 	end
 	if DEBUG_MODE == 1 then
 		self:__connectWeb()
-	elseif (User:getRole():getFlag("PVP战斗状态") ~= "离线模式" and Game:isOpenEncounter() == true and Map:getMapState("fb15") == MAP_STATE.COMPLETE and GetTime() - Helper:getDef(User:getRoleAttr("createTime"), GetTime()) > 3600 * 24) then
+	elseif User:getRole():getFlag("PVP战斗状态") ~= "离线模式" and User:getRole():canOpenMapEncounter() then
 		-- add by XiaoZhiWei 2017/09/25 17:13:54 
 		--[[
 				是否通关开启偶遇;ouyuopen
@@ -4499,4 +4499,4 @@ end
 -- 加密标记
 BaseMap.isEncrypted = true
 return BaseMap
-0000000000000000
+000

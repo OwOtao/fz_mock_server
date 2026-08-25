@@ -16,6 +16,8 @@ local PAGE_NAME_INDEX = {
     [2] = "护元经脉"
 }
 
+BasicMeridianImprintingPage.PAGE_NAME_INDEX = PAGE_NAME_INDEX
+
 function BasicMeridianImprintingPage:create(...)
     local p = BasicMeridianImprintingPage.new()
     return p:__init(...)
@@ -127,4 +129,4 @@ function BasicMeridianImprintingPage:clearImprintings()
 end
 
 return newClass("BasicMeridianImprintingPage", {}, BasicMeridianImprintingPage)
-00000
+0000

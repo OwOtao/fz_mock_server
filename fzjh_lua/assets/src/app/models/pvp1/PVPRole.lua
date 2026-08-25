@@ -598,8 +598,6 @@ function FightRole:init()
     self._isPlayWinAnim = false --是否播放过胜利动画
 
     self.__activeDamageFactorMap = {} --主动技能伤害抗性修正系数
-
-	self.__partForgetSkills = {} --部分遗忘武学
 end
 
 -----------------------------------------------------------------------------------------------------------
@@ -4432,12 +4430,8 @@ function FightRole:isSaveDamageByHurt(hurt)
     for k, effect in pairs(self._effectMap) do
         if effect:getType() == "储伤" then
             local effectObject = effect:getEffectObject(self)
-            if effectObject:isTakeEffect() then 
-                if hurt:isActiveHurt() and effectObject:isActiveHurtSaveDamage() then
-                    return true
-                elseif hurt:isAutoHurt() and effectObject:isAutoHurtSaveDamage() then
-                    return true
-                end
+            if effectObject:isTakeEffect() and effectObject:isTrigger(hurt) then 
+				return true
             end
         end
     end
@@ -4453,14 +4447,9 @@ function FightRole:addSaveDamageValueByHurt(hurt)
     for k, effect in pairs(self._effectMap) do
         if effect:getType() == "储伤" then
             local effectObject = effect:getEffectObject(self)
-            if effectObject:isTakeEffect() then
-                if hurt:isActiveHurt() and effectObject:isActiveHurtSaveDamage() then
-                    effectObject:addActiveHurtSaveDamageValue(hurt:getValue())
-                    break
-                elseif hurt:isAutoHurt() and effectObject:isAutoHurtSaveDamage() then
-                    effectObject:addAutoHurtSaveDamageValue(hurt:getValue())
-                    break
-                end
+            if effectObject:isTakeEffect() and effectObject:isTrigger(hurt) then
+                effectObject:trigger(hurt)
+				break
             end
         end
     end
@@ -5436,36 +5425,6 @@ function FightRole:checkRoleSkillEffectTrigger(conStr, predicateSymbol)
     return checkSingleCond(conStr)
 end
 
---@desc: 添加部分遗忘武学
---@author:LvBin
---@time:2026-04-24 16:22:33
---@skillId: 
---@return
-function FightRole:addPartForgetSkill(skillId)
-	if not skillId then
-		return
-	end
-	self.__partForgetSkills[skillId] = true
-end
-
---@desc: 清空部分遗忘武学
---@author:LvBin
---@time:2026-04-24 16:23:06
---@return
-function FightRole:cleanPartForgetSkills()
-	self.__partForgetSkills = {}
-end
-
-
---@desc: 判断主动招式所属武学是否被部分遗忘
---@author:LvBin
---@time:2026-04-21 17:46:44
---@skillId: 
---@return
-function FightRole:isPartForgetSkill(skillId)
-	return self.__partForgetSkills[skillId] == true
-end
-
 --@desc: 部分遗忘状态下能否释放指定主动技能
 --@author:LvBin
 --@time:2026-04-21 19:22:24
@@ -5476,17 +5435,51 @@ function FightRole:isPartForgetCanUseActiveZhao(activeZhaoId)
 		return true
 	end
 
-	local skillId = Skill:getSkillIdByZhaoId(activeZhaoId)
+	local activeZhao = Skill:getActiveZhao(activeZhaoId)
 
-	if not skillId then
-		return true
-	end
-	
-	if self:isPartForget() and self:isPartForgetSkill(skillId) and not self:getRole():checkSkillIsPrepared(skillId) then
-		return false
-	end
+	local zhaoMethod = activeZhao:getZhaoMethod()
+
+	local zhaoMethodCN = switch(zhaoMethod,{
+		[1] = "攻击",
+		[2] = "内功",
+		[3] = "轻功",
+		[4] = "招架",
+		[5] = "攻击",
+	})
+
+	for k, effect in pairs(self._effectMap) do
+        if effect:getType() == "遗忘" and effect:getArg2() and effect:getArg2() == zhaoMethodCN then         
+            return false
+        end
+    end
+
 	
 	return true
 end
 
-return FightRole000000000000000
+--@desc: 受伤回血
+--@author:LvBin
+--@time:2026-07-13 16:45:59
+--@hurt: [src.app.models.fight.Hurt.BaseHurt#BaseHurt]
+--@return
+function FightRole:hpRecoverOnHurt(hurt)
+	local hurtValue = hurt:getValue()
+
+	if hurtValue <= 0 then
+		return
+	end
+
+	local effectMap = self:getEffectMap()
+
+	for k, effect in ipairs(effectMap) do
+		if effect:getType() == "受伤回血" then
+			local effectObject = effect:getEffectObject(self)
+
+            if effectObject:isTrigger(hurt) then
+                effectObject:trigger(hurt)
+            end
+		end
+	end
+end
+
+return FightRole0

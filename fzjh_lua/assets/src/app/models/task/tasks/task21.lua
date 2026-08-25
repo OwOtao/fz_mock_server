@@ -1,12 +1,15 @@
 
+local LiLianTaskHelper = require("app.models.task.LiLianTaskHelper")
+local TASK_ID = "task21"
+local guSiRes = LiLianTaskHelper:getTaskConfigInfo(TASK_ID)
 
-local res = require("script.others.Activetask")
-local zhuDongList =  res["主动任务"]
-local gusiList = zhuDongList["5"]
+local function getTaskConfig(confVer)
+	return LiLianTaskHelper:getTaskConfigInfo(TASK_ID, confVer)
+end
 
 local task =
 {
-	id = "task21",
+	id = TASK_ID,
 
 	-- 显示
 	buttonA = "taskButton21a",
@@ -51,7 +54,6 @@ local task =
 		-- action = "talk",	--交谈
 		-- zCount = 2,	-- 完成总次数
 		-- dCount = 1, -- 当天完成次数
-		cCount = 1, -- 当天可完成次数
 		canAbandon = true,	-- 任务能否放弃（true 可以 false 不能）
 	},
 
@@ -60,15 +62,17 @@ local task =
 		{
 			type = "属性",
 			name = "exp",
-			value = function(lv, exp, fy, sklv)
-				return math.floor(Formula:getFormula("jingyan1")(exp, fy, sklv, gusiList["jobreward1"],lv))
+			value = function(lv, exp, fy, sklv, confVer)
+				local taskConfig = getTaskConfig(confVer)
+				return math.floor(Formula:getFormula("jingyan1")(exp, fy, sklv, taskConfig["jobreward1"],lv))
 			end
 		},
 		{
 			type = "属性",
 			name = "pot",
-			value = function(lv, exp, fy, sklv)
-				return math.floor(Formula:getFormula("qianneng1")(exp, fy, sklv, gusiList["jobreward2"]))
+			value = function(lv, exp, fy, sklv, confVer)
+				local taskConfig = getTaskConfig(confVer)
+				return math.floor(Formula:getFormula("qianneng1")(exp, fy, sklv, taskConfig["jobreward2"]))
 			end
 		},
 	},
@@ -81,11 +85,11 @@ local task =
 			
 			_type = "yinpiao",
 
-			value = function (self,count)
-				local role = User:getRole()
-				local luck = role:getFinalAttr("luck")
-
-				return math.floor(math.min(luck*1.5+40,200))
+			--@count 今日已领取次数
+			value = function (self,count,isDispatchTask,confVer)
+				--完成次数
+				local countTimes = count + 1 
+				return LiLianTaskHelper:getYinPiaoCount(countTimes, getTaskConfig(confVer))
 			end,
 
 			condi = function (self)
@@ -120,11 +124,12 @@ local task =
 	}
 
 }
---缉拿任务 根据江湖进度 从xuan1 ~ xuanXXX 中获取物品
 
-task.desc = string.split(gusiList["text"], ";")
-task.Decline =  string.split(gusiList["Decline"], ";") 
-task.score =  string.split(gusiList["score"], ";") 
+task.desc = string.split(guSiRes["text"], ";")
+
+function task:getDynamicDailyMaxCount(confVer)
+	return getTaskConfig(confVer).maxtime
+end
 
 function task:getTaskReward()
 	if GetTime() > Helper:getTimeStampWithStringDate("20210211", 0)  and GetTime() < Helper:getTimeStampWithStringDate("20210226", 0) then
@@ -176,4 +181,4 @@ end
 -- 加密版本
 task.isEncrypted = true
 return task
-000
+0000

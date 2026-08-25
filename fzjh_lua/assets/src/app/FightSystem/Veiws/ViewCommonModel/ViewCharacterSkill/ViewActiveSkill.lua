@@ -105,6 +105,12 @@ end
 function ViewActiveSkill:updateViewCd(mainView, oldCd, newCd, ft)
     self:killUpdateCDTween()
 
+    if ft == nil or ft <= 0 then
+        self:setViewActiveCD(newCd)
+        mainView:getPlayerButtonViewUI(self.__posIndex):setBtnProgressValue(self:getViewActiveCooldownTime() - newCd, self:getViewActiveCooldownTime())
+        return
+    end
+
     self:setViewActiveCD(oldCd)
 
     self.__updateCDTween =
@@ -199,4 +205,4 @@ function ViewActiveSkill:destory()
     self:killUpdateCDTween()
 end
 return newClass("ViewActiveSkill", {}, ViewActiveSkill)
-0000
+000000000

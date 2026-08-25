@@ -1177,6 +1177,24 @@ function BaseSkill:getSkillThridTypes()
     return BasicSkillManager:getBasicSkill(self.id):getClassifyThirdTypes()
 end
 
+function BaseSkill:getTextSkillThridTypes()
+    local thirdTypes = self:getSkillThridTypes()
+
+    local thirdTypeText = ""
+
+    for i,thirdType in ipairs(thirdTypes) do
+        local name = SkillClassifyManager:getThirdTypeName(thirdType)
+        
+        if i < table.getn(thirdTypes) then
+            name = name .. "、"
+        end
+
+        thirdTypeText = thirdTypeText .. name
+    end
+
+    return thirdTypeText
+end
+
 function BaseSkill:getMcmrestrict()
     local skillId = nil
 
@@ -1351,4 +1369,4 @@ end
 
 BaseSkill.isEncrypted = true
 return BaseSkill
-0000000
+000000000000000

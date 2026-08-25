@@ -62,7 +62,7 @@ function SkillInfoUI:setPanelDi(callback)
     )
 end
 
-function SkillInfoUI:setButtonPrepare(isVisible, buttonName, callback)
+function SkillInfoUI:setButton2(isVisible, buttonName, callback)
     self.Button_prepare:setVisible(isVisible)
     if isVisible then
         self.Button_prepare.Text_buttonName:setString(buttonName)
@@ -74,7 +74,7 @@ function SkillInfoUI:setButtonPrepare(isVisible, buttonName, callback)
     end
 end
 
-function SkillInfoUI:setButtonTab(isVisible, buttonName, callback)
+function SkillInfoUI:setButton1(isVisible, buttonName, callback)
     self.Button_tab:setVisible(isVisible)
     if isVisible then
         self.Button_tab.Text_buttonName:setString(buttonName)
@@ -86,7 +86,7 @@ function SkillInfoUI:setButtonTab(isVisible, buttonName, callback)
     end
 end
 
-function SkillInfoUI:setButtonSkillBreak(isVisible, buttonName, callback)
+function SkillInfoUI:setButton3(isVisible, buttonName, callback)
     self.Button_skillBreak:setVisible(isVisible)
     if isVisible then
         self.Button_skillBreak.Text_buttonName:setString(buttonName)
@@ -102,7 +102,7 @@ function SkillInfoUI:setButtonSkillBreakTexture(imgPath)
     self.Button_skillBreak:loadTextureNormal(imgPath, 0)
 end
 
-function SkillInfoUI:setButtonLianGong(isVisible, buttonName, callback)
+function SkillInfoUI:setButton4(isVisible, buttonName, callback)
     self.Button_lianGong:setVisible(isVisible)
     if isVisible then
         self.Button_lianGong.Text_buttonName:setString(buttonName)
@@ -142,4 +142,4 @@ function SkillInfoUI:removeSkillListViewAllItems()
 end
 
 return SkillInfoUI
-00000000000000
+000000

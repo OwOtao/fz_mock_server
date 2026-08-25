@@ -208,6 +208,10 @@ local conditions = {
             hadGetTitle["纵横天下"] = true
         end
 
+        if role:hasBasicTitle("40052") then
+            hadGetTitle["行者无疆"] = true
+        end
+
         return function(chengHaoStr)
             return hadGetTitle[chengHaoStr]
         end
@@ -573,6 +577,21 @@ local achievementList = {
         condition = {
             id = "chenghao",
             arg1 = "纵横天下"
+        },
+        reward = {
+            netAttr = {
+                ["meiyu"] = 300
+            }
+        }
+    },
+    {
+        name = "行者无疆",
+        tiaojian = "拥有称号【行者无疆】",
+        rewardDesc = "江湖美誉*300",
+        flagSuffix = 46,
+        condition = {
+            id = "chenghao",
+            arg1 = "行者无疆"
         },
         reward = {
             netAttr = {
@@ -1182,4 +1201,4 @@ end
 
 Helper:classDefNodeGetInstance(DaXiaChenZhangZhiLuLayer)
 return DaXiaChenZhangZhiLuLayer
-000000000
+00000000

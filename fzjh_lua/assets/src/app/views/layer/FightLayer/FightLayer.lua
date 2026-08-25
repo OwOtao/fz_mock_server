@@ -4426,6 +4426,10 @@ function FightLayer:roleBeginEffect(role, effect, immediateEffectUIInfo)
 			["必中"] = function()
                 self:printFightStatus(effect:getBeginDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,{})
             end,
+
+			["受伤回血"] = function()
+                self:printFightStatus(effect:getBeginDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,{})
+            end,
         })
     self:updateRoleBuff()
 end
@@ -4862,6 +4866,10 @@ function FightLayer:roleEndEffect(role, effect)
             end,
 
 			["必中"] = function()
+                self:printFightStatus(effect:getEndDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,{})
+            end,
+
+			["受伤回血"] = function()
                 self:printFightStatus(effect:getEndDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,{})
             end,
         })
@@ -5335,6 +5343,25 @@ function FightLayer:roleDoEffect(role, effect, immediateEffectUIInfo)
 			["加权随机触发"] = function()
                 self:printFightStatus(effect:getDoDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,{})
             end,
+
+			["受伤回血"] = function()
+				if MapIsEmpty(immediateEffectUIInfo) == false then
+                    local objectInfo = immediateEffectUIInfo:getEffectObjectUIInfo()[1]
+
+                    if MapIsEmpty(objectInfo) == false then
+						local value = objectInfo:getValue()
+
+						self:rolePopNumber(role, "+"..objectInfo:getPopValue(), objectInfo:getPopTextColor())
+
+						self:printFightStatus(effect:getDoDesc(), effect:getOwner():getName(), role:getName(), nil, nil, nil,
+							{
+								["$arg1"] = effect:getArg1(),
+								["$arg2"] = abs(value),
+							}
+						)
+					end
+				end
+            end,
         })
 
     self:updateRoleBuff()
@@ -5728,4 +5755,4 @@ end
 
 Helper:classDefNodeGetInstance(FightLayer)
 return FightLayer
-0000000000000
+00

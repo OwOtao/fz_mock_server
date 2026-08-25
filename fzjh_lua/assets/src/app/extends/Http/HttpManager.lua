@@ -4880,22 +4880,22 @@ function HttpManager:getYuanbaoConsumptionReward(rid, is_email, callback, isNeed
 end
 
 --丹青阁
-function HttpManager:getDanQingPavilionInfo(activityId, callback,isNeedWait, retryType)
+function HttpManager:getDanQingPavilionInfo(activityId, currencyVersion, callback,isNeedWait, retryType)
     local callback = self:createGetResponseFunction(callback)
-    self:retryGetWithHeader(DOMAIN.."get_danqing_pavilion_info/"..activityId,nil,nil,callback,isNeedWait,retryType)
+    self:retryPostWithHeader(DOMAIN.."get_danqing_pavilion_info",{activityId = activityId, currencyVersion = currencyVersion},nil,callback,isNeedWait,retryType)
 end
 
 --兑换丹青阁奖励
-function HttpManager:exchangeDanQingPavilionItem(activityId, id, rid, dataVer, callback, isNeedWait, retryType)
+function HttpManager:exchangeDanQingPavilionItem(activityId, id, rid, dataVer, currencyVersion, callback, isNeedWait, retryType)
     local callback = self:createGetResponseFunction(callback)
-    self:retryPostWithHeader(DOMAIN .. "exchange_danqing_pavilion_item", {activityId = activityId, id = id, rid = rid, dataVer = dataVer}, nil, callback, isNeedWait, retryType)
+    self:retryPostWithHeader(DOMAIN .. "exchange_danqing_pavilion_item", {activityId = activityId, id = id, rid = rid, dataVer = dataVer, currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
 end
 
 --获取丹青阁奖励
 --id 奖励id
-function HttpManager:getDanQingPavilionReward(activityId, id, dataVer, callback, isNeedWait, retryType)
+function HttpManager:getDanQingPavilionReward(activityId, id, dataVer, currencyVersion, callback, isNeedWait, retryType)
     local callback = self:createGetResponseFunction(callback)
-    self:retryPostWithHeader(DOMAIN .. "get_danqing_pavilion_reward", {activityId = activityId, id = id, dataVer = dataVer}, nil, callback, isNeedWait, retryType)
+    self:retryPostWithHeader(DOMAIN .. "get_danqing_pavilion_reward", {activityId = activityId, id = id, dataVer = dataVer, currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
 end
 
 --获取历史存档神兵数据
@@ -4968,6 +4968,11 @@ end
 function HttpManager:getTalentPageInfo(dataVer, codeVer,callback, isNeedWait, retryType)
     local callback = self:createGetResponseFunction(callback)
     self:retryPostWithHeader(DOMAIN .. "get_talent_info", {dataVer = dataVer, codeVer = codeVer}, nil, callback, isNeedWait, retryType)
+end
+
+function HttpManager:getTalentPageCount(dataVer, codeVer, callback, isNeedWait, retryType)
+    local callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "get_talent_page_count", {dataVer = dataVer, codeVer = codeVer}, nil, callback, isNeedWait, retryType)
 end
 
 function HttpManager:getCharacterPoolInfo(poolId, dataVer, codeVer,callback, isNeedWait, retryType)
@@ -5624,9 +5629,9 @@ end
 
 
 --是否可传承
-function HttpManager:canInherit(callback, isNeedWait, retryType)
+function HttpManager:canInherit(currencyVersion, callback, isNeedWait, retryType)
     callback = self:createGetResponseFunction(callback)
-    self:retryGetWithHeader(DOMAIN .. "canInherit", "", nil, callback, isNeedWait, retryType)
+    self:retryPostWithHeader(DOMAIN .. "canInherit", {currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
 end
 
 function HttpManager:getwxtranstwxplushasGainAfter202509291500(callback, isNeedWait, retryType)
@@ -5957,5 +5962,143 @@ function HttpManager:getServerResourceCount(itemList, dataVer, currencyVersion, 
     self:retryPostWithHeader(DOMAIN .. "get_server_resource_count", {itemList = itemList, dataVer = dataVer, currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
 end
 
+--[[
+    @desc: 获取登录奖励数据
+    author:tanqinjian
+    time:2026-07-02 10:46:09
+    --@activityId:活动id
+	--@userAttr:解锁角色属性数据
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+    @return:
+]]
+function HttpManager:getNewLoginRewardInfo(activityId, userAttr, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "get_new_login_reward_Info", {activityId = activityId, userAttr = userAttr}, nil, callback, isNeedWait, retryType)
+end
+
+--[[
+    @desc: 领取当前所有奖励
+    author:tanqinjian
+    time:2026-07-02 10:46:46
+    --@activityId:活动id
+	--@type:奖励类型
+	--@isEmail:是否邮件
+	--@dataVer:
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+    @return:
+]]
+function HttpManager:claimAllNewLoginReward(activityId, type, isEmail, dataVer, currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "claim_all_new_login_reward", {activityId = activityId, type = type, isEmail = isEmail, dataVer = dataVer, currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--[[
+    @desc:领取单独奖励
+    author:tanqinjian
+    time:2026-07-02 11:01:20
+    --@activityId:活动id
+	--@poolId:奖池id
+	--@day:天数
+	--@isEmail:是否邮件
+	--@dataVer:
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+    @return:
+]]
+function HttpManager:claimSingleNewLoginReward(activityId, poolId, day, isEmail, dataVer, currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "claim_single_new_login_reward", {activityId = activityId, poolId = poolId, day = day, isEmail = isEmail, dataVer = dataVer, currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 获取领悟系统数据
+--@author:LvBin
+--@time:2026-07-22 20:17:30
+--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:getActiveZhaoMeditateInfo(currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "get_insight_data", {currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 开始领悟
+--@author:LvBin
+--@time:2026-07-22 20:38:53
+--@insightData: 领悟数据
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:startActiveZhaoMeditate(insightData,currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "start_insight", {insightData = insightData,currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 取消领悟
+--@author:LvBin
+--@time:2026-07-22 20:56:03
+--@zhaoId:
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:cancelActiveZhaoMeditate(zhaoId,currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "cancel_insight", {zhaoId = zhaoId,currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 完成领悟
+--@author:LvBin
+--@time:2026-07-22 21:01:23
+--@zhaoId:
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:completeActiveZhaoMeditate(zhaoId,currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "complete_insight", {zhaoId = zhaoId,currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 融汇主动招式残页
+--@author:LvBin
+--@time:2026-07-22 21:06:21
+--@fuseCost: 融汇列表
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:executeFuseActiveZhaoCanYe(fuseCost,currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "execute_fuse", {fuseCost = fuseCost,currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+--@desc: 提升领悟境界
+--@author:LvBin
+--@time:2026-07-22 21:07:33
+	--@currencyVersion:
+	--@callback:
+	--@isNeedWait:
+	--@retryType: 
+--@return
+function HttpManager:advanceActiveZhaoMeditateLevel(currencyVersion, callback, isNeedWait, retryType)
+    callback = self:createGetResponseFunction(callback)
+    self:retryPostWithHeader(DOMAIN .. "advance_insight_realm", {currencyVersion = currencyVersion}, nil, callback, isNeedWait, retryType)
+end
+
+
 return HttpManager
-00000
+00000000000

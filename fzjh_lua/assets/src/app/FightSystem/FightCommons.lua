@@ -290,5 +290,10 @@ FightCommons.HIDE_ACTIVE_SKILL_NAME_ANIM_STYLE = {
     FONT_YELLOW = 2
 }
 
+FightCommons.ACCEPT_KONWLEDGE_SKILL = {
+    "changshengjueyin",
+    "changshengjueyang"
+}
+
 return FightCommons
 00000000000000

@@ -365,7 +365,6 @@ function PopupLayerController:init()
 		--批量处理界面
 		BatchProcessLayer = "app.views.layer.DialogLayer.BatchProcessLayer",
 		ServantRewardLayer = "app.views.layer.HomelandLayer.ServantRewardLayer",
-		LimitDiscountLayer = "app.views.layer.ActionLayer.LimitDiscountLayer",
 		
 		--钓鱼玩法
 		FishingGameLayer = "app.views.layer.ActionLayer.FishingGameLayer.FishingGameLayer",
@@ -643,6 +642,7 @@ function PopupLayerController:init()
 		MaskRoleInfoBorderPresenter = "app.presenters.Mask.MaskRoleInfoBorderPresenter",
 		MakeMaskSecretGiftPresenter = "app.presenters.Activity.MakeMaskSecretGiftPresenter",
 		GoodsInfoMainPresenter = "app.presenters.GoodsInfo.GoodsInfoMainPresenter",
+		GoodsDuplicatePurchasePresenter = "app.presenters.GoodsInfo.GoodsDuplicatePurchasePresenter",
 		
 		FistFootShopPresenter = "app.presenters.Activity.FistFootShop.FistFootShopPresenter",
 		FistFootShopDayPaySelectPresenter = "app.presenters.Activity.FistFootShop.FistFootShopDayPaySelectPresenter",
@@ -683,7 +683,16 @@ function PopupLayerController:init()
 		BaiDuanGePresenter = "app.presenters.Activity.BaiDuanGePresenter",
 
 		ChallengeClearTimesPresenter = "app.presenters.Activity.ChallengeClearTimesPresenter",
+		LoginMultipleRewardPresenter = "app.presenters.Activity.LoginMultipleRewardPresenter",
 
+		ActiveZhaoMeditateInfoPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoMeditateInfoPresenter",
+		ActiveZhaoLevelPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoLevelPresenter",
+		ActiveZhaoMergePresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoMergePresenter",
+		ActiveZhaoInsightConfirmPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoInsightConfirmPresenter",
+		ActiveZhaoStopInsightPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoStopInsightPresenter",
+		ActiveZhaoMergeConfirmPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoMergeConfirmPresenter",
+		ActiveZhaoGuaJiPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoGuaJiPresenter",
+		ActiveZhaoMeditateConfirmPresenter ="app.presenters.Skill.ActiveZhaoMeditate.ActiveZhaoMeditateConfirmPresenter",
 	} -- add by XiaoZhiWei 2017/09/11 17:38:22 需要管理的页面列表
 	self._layerCache = {} -- add by XiaoZhiWei 2017/09/11 17:42:02 记录一些页面切换的信息,用于管理页面的创建和销毁
 end
@@ -826,4 +835,5 @@ function PopupLayerController:update()
 end
 
 Helper:classDefNodeGetInstance(PopupLayerController)
-return PopupLayerController000000
+return PopupLayerController
+0000000000000

@@ -90,6 +90,17 @@ function StoreGoodsSelectPresenter:setTextDesc_3(str1, str2)
     self._ui:setTextDescStr("Text_desc_3", str)
 end
 
+function StoreGoodsSelectPresenter:setTextDesc_4(str,isVisible,func)
+	self._ui:setTextVisible("Text_desc_4", isVisible)
+
+    self._ui:setTextDescStr("Text_desc_4", str)
+
+	self._ui:setTextFunc("Text_desc_4",function()
+        if func then
+            func()
+        end
+    end)
+end
 
 function StoreGoodsSelectPresenter:setText_1Str(str)
     self._ui:setTextStr("Text_1", str)
@@ -376,4 +387,4 @@ end
 Helper:classDefNodeGetInstance(StoreGoodsSelectPresenter)
 
 return StoreGoodsSelectPresenter
-00
+0000000000000

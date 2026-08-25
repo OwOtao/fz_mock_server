@@ -25,8 +25,15 @@ local SKILL_SECOND_TYPE = SkillConst.SkillSecondType
 --@SuperType [src.app.FightSystem.FightRole.BasicFuncSystem.ABasicCharacterFuncSystem#ABasicCharacterFuncSystem]
 local CharacterSkillSystem = {
     __attackSkillType = SKILL_SECOND_TYPE.QUAN_JIAO,
-    --@desc 存放角色所会的武学数据
+    --@desc 存放战斗中已加入的武学数据，供伤害强度 skilllv 变量读取
     __skillMap = {},
+    --[[
+        knowledgeMap结构说明：
+        {
+            [skillId] = basicSkill
+        }
+    ]]
+    __knowledgeMap = {},
     -- 基本武学
     __base_skill = {
         [tostring(SKILL_SECOND_TYPE.QUAN_JIAO)] = nil,
@@ -160,6 +167,52 @@ function CharacterSkillSystem:getSkillFormRawData(skillId)
     return nil
 end
 
+function CharacterSkillSystem:__recordFightSkill(fightSkill)
+    if fightSkill == nil then
+        return
+    end
+
+    self.__skillMap[tostring(fightSkill:getId())] = fightSkill
+end
+
+function CharacterSkillSystem:getFightSkill(skillId)
+    if skillId == nil then
+        return nil
+    end
+
+    return self.__skillMap[tostring(skillId)]
+end
+
+function CharacterSkillSystem:getSkillLevel(skillId)
+    local skill = self:getFightSkill(skillId)
+
+    if skill == nil then
+        return 0
+    end
+
+    return skill:getLevel()
+end
+
+--@desc: 添加知识武学
+--@author:Seven
+--@time:2026-05-19 00:00:00
+--@skillId: 武学ID
+--@knowledgeSkill: [src.app.FightSystem.FightSkill.BasicFightKnowledgeSkill#BasicFightKnowledgeSkill]
+function CharacterSkillSystem:addKnowledgeSkill(skillId, knowledgeSkill)
+    self.__knowledgeMap[tostring(skillId)] = isImplement(knowledgeSkill, require("app.FightSystem.FightSkill.BasicFightKnowledgeSkill"))
+    knowledgeSkill:setCharacter(self.__character)
+    self:__recordFightSkill(knowledgeSkill)
+end
+
+--@desc: 获取知识武学 , 可为空
+--@author:Seven
+--@time:2026-05-19 00:00:00
+--@skillId: 武学ID
+--@return [src.app.FightSystem.FightSkill.BasicFightKnowledgeSkill#BasicFightKnowledgeSkill]
+function CharacterSkillSystem:getKnowledgeSkill(skillId)
+    return self.__knowledgeMap[tostring(skillId)]
+end
+
 --@desc: 添加基本武学
 --@author:Seven
 --@time:2021-06-28 15:06:18
@@ -168,6 +221,7 @@ end
 function CharacterSkillSystem:addBaseSkill(skillSecType, baseSkill)
     self.__base_skill[tostring(skillSecType)] = isImplement(baseSkill, require("app.FightSystem.FightSkill.BasicFightSkill"))
     baseSkill:setCharacter(self.__character)
+    self:__recordFightSkill(baseSkill)
 end
 
 --@desc: 获取基本武学类型信息
@@ -187,6 +241,7 @@ end
 function CharacterSkillSystem:prepSkill(skillSecType, f_skill)
     f_skill:setCharacter(self.__character)
     self.__prep_skill[tostring(skillSecType)] = isImplement(f_skill, require("app.FightSystem.FightSkill.BasicFightSkill"))
+    self:__recordFightSkill(f_skill)
 end
 
 function CharacterSkillSystem:getPrepSkillMap()

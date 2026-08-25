@@ -1,5 +1,7 @@
 local class = require("third.class.NewClass")
 
+local GoodsHelper = require("app.models.Store.GoodsHelper")
+
 local NewRandomGift = {}
 
 local rewardType = {
@@ -236,6 +238,7 @@ function NewRandomGift:__dealWithRewardInfo(rewardInfo)
             
                 _info.rid = v.rid
                 _info.state = v.state
+				_info.gid = v.gid
                 
                 _info.rewards = {
                     {
@@ -247,6 +250,19 @@ function NewRandomGift:__dealWithRewardInfo(rewardInfo)
 
                 _info.func = function()
                     if v.state == 0 then
+						local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self._role, {{id = v.gid,number = v.number}})
+
+						if isDuplicate == true then
+							GoodsHelper:handleDuplicatePurchaseSearchInfo(
+								searchInfo,
+								{
+									flowType = GoodsHelper.DUPLICATE_PURCHASE_FLOW_TYPE.BLOCK
+								}
+							)
+
+							return
+						end
+
                         self:__buyGoods(v.rid,function()
                             if self._afterBuyCallback then
                                 self._afterBuyCallback()
@@ -302,4 +318,4 @@ function NewRandomGift:__dealWithRewardPoolInfo(rewardPool)
 end
 
 return class("NewRandomGift", {}, NewRandomGift)
-00000000
+000

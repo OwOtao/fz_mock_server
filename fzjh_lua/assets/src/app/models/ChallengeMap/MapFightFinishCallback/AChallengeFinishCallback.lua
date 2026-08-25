@@ -30,6 +30,8 @@ function AChallengeFinishCallback:ctor()
         function(currFight)
             print("你赢了！！！！！！！！！！")
             self.__fightFinishEventType = ChallengeMapConstant.EventType.ChallengeWin
+
+			self:doWin(currFight)
         end
     )
 
@@ -161,4 +163,4 @@ function AChallengeFinishCallback:getFightFinishEventTypt()
 end
 
 return abstract("AChallengeFinishCallback", {IChallengeFinishCallback}, AChallengeFinishCallback)
-0000000000000000
+0000

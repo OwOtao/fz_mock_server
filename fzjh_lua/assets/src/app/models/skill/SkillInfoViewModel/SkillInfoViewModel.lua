@@ -175,21 +175,7 @@ function SkillInfoViewModel:sortSkill(list,skillType)
 end
 
 function SkillInfoViewModel:getTextSkillThridTypes()
-    local thirdTypes = self:getSkill():getSkillThridTypes()
-
-    local thirdTypeText = ""
-
-    for i,thirdType in ipairs(thirdTypes) do
-        local name = SkillClassifyManager:getThirdTypeName(thirdType)
-        
-        if i < table.getn(thirdTypes) then
-            name = name .. "、"
-        end
-
-        thirdTypeText = thirdTypeText .. name
-    end
-
-    return thirdTypeText
+    return self:getSkill():getTextSkillThridTypes()
 end
 
 
@@ -402,4 +388,4 @@ function SkillInfoViewModel:__isOpenZuoYouHuBo()
     return self.__role:isHaveImprintingId("zuoyouhuboyin")
 end
 
-return class("SkillInfoViewModel", {BaseSkillInfoViewModel}, SkillInfoViewModel)000000000000
+return class("SkillInfoViewModel", {BaseSkillInfoViewModel}, SkillInfoViewModel)000000

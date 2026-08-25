@@ -23,12 +23,16 @@ function DuplicatePurchaseCheck201:checkDuplicatePurchase(role)
     local count = ItemHelper.getRoleOwnedTotalCountWithItemId(role, itemId)
 
     if self:_compareValue(count) then
+        local item = Item:getOneItemByKey(itemId)
+
+        assert(item ~= nil and item.name ~= nil, "DuplicatePurchaseCheck201:checkDuplicatePurchase 客户端道具资源没有找到，检查物品id是否正确" .. tostring(itemId))
+
         result = true
-        msg = "已达到商品可持有数量的限制，无法购买"
+        msg = string.format("已拥有【%s】且数量%s%s", item.name, self:_getCompareSymbolText(), tostring(self:_getJudgingValue()))
     end
 
     return result, msg
 end
 
 return newClass("DuplicatePurchaseCheck201", {require("app.models.Store.DuplicatePurchaseCheck.ADuplicatePurchaseCheck")}, DuplicatePurchaseCheck201)
-0
+00000000000000

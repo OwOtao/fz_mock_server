@@ -54,6 +54,9 @@ end
 function PreReviewLiLianTaskSystem:acceptZhuDongTask(taskId)
 end
 
+function PreReviewLiLianTaskSystem:showZhuDongTask(taskId)
+end
+
 function PreReviewLiLianTaskSystem:submitZhuDongTask(taskId)
 end
 
@@ -63,4 +66,4 @@ function PreReviewLiLianTaskSystem:updateAllTasks()
 end
 
 return newClass("PreReviewLiLianTaskSystem", {}, PreReviewLiLianTaskSystem)
-0000000000000000
+0000000000000

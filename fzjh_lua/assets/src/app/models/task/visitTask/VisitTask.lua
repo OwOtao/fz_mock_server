@@ -1,7 +1,6 @@
 
 local Item = require("app.models.item.Item")
 local visitTaskInfo = assert(require("script.others.bfrw"))
-local DialogALayer = require("app.views.layer.DialogLayer.DialogALayer")
 local visitTaskContent = visitTaskInfo["拜访任务"]
 
 local visitTaskNpc = visitTaskInfo["npc生成表"]
@@ -486,62 +485,19 @@ function VisitTask:ok(type,task,npcName)
                 end
 
                 local roomId = roomList[math.random(1, #roomList)]
-
-                local item_count = role:getItemCount("dundifu")
-                local skill = role:getSkill("wuxingdunfa")
-
-                -- if item_count >= 1 and MapIsEmpty(skill) == false then
-                    local dialog = DialogALayer:getInstance()
-                    local showStr="HIY"..map.name..room.name.."NOR"
-                    local dialog = DialogALayer:getInstance()
-                    dialog:show("选择前往"..showStr.."的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）")
-                    dialog:setBack(false)
-                    dialog:setWeChatVisible(false)
-                    dialog:setButton1("自行前往", function()
-                        if MainControllLayer:getCurrLayer()=="MapLayer" then 
-                            MainControllLayer:getLayer("MapLayer"):quit()
+                local mapId = destinationLocal[1]
+                local text = "选择前往HIY"..map.name..room.name.."NOR的方式。\n（选择遁地方式前往，会偶然出现意想不到的结果，请谨慎使用。）"
+                local backClick = false
+                local callfunc = function(result, failureState)
+                    if result == true then
+                        if task.destinationText then 
+                            RichPrint("main", task.destinationText)
                         end
-                        MainControllLayer:pushLayer("SelectMapLayer")
-                        local selectMapLayer = MainControllLayer:getLayer("SelectMapLayer")
-                        selectMapLayer:setMap(destinationLocal[1])
-                    end)
-                    dialog:setButton2("用遁地符", function()
-                        item:useDunDiFu(role,map.id, roomId,function ()
-                            if task.destinationText then 
-                                RichPrint("main", task.destinationText)
-                            end
-                        end,SKILL_ITEM_DUNDIFU_TYPE)
-                    end)
-                    if MapIsEmpty(skill) == false then
-                        dialog:setButton3("五行遁法", function()
-                            item:useDunDiFu(role,map.id, roomId, function(useResult)
-                                if useResult == false then 
-                                    dialog:setVisible(true)
-                                else
-                                    if task.destinationText then 
-                                        RichPrint("main", task.destinationText)
-                                    end
-                                end
-                            end,SKILL_ITEM_TYPE)
-                        end)
                     end
-                -- elseif MapIsEmpty(skill) == false then
-                --     --@desc 直接使用五行遁法
-                --     item:useDunDiFu(role, map.id, roomId, function(useResult)
-                --         if useResult == false then 
-                --         else
-                --             if task.destinationText then 
-                --                 RichPrint("main", task.destinationText)
-                --             end
-                --         end
-                --     end,SKILL_ITEM_TYPE)
-                -- else
-                --     item:useDunDiFu(role, map.id, roomId,function ()
-                --         if task.destinationText then 
-                --             RichPrint("main", task.destinationText)
-                --         end
-                --     end,SKILL_ITEM_DUNDIFU_TYPE)
-                -- end
+                end
+
+                local JumpMapStylePrensenter = require("app.presenters.JumpMapStyle.JumpMapStylePrensenter"):create()
+                JumpMapStylePrensenter:showLayer(role, mapId, roomId, text, backClick, callfunc)
             end
         elseif task.operation == 3 then
             role:setTimeLimitFlag(task.flag,3,900)
@@ -900,4 +856,4 @@ function VisitTask:removeVisitNPC(isRefresh)    --是否刷新
    	end
 end
 
-return VisitTask0
+return VisitTask00000

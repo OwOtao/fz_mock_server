@@ -15,17 +15,16 @@ function DuplicatePurchaseCheck1002:checkDuplicatePurchase(role)
     local searchValue = self._res:getSearchvalue()
 
     if searchValue == "minditemfull" then
+        local isAllActivated = role:getHiddenMeridianSystem():isHiddenMeridianChartMaxLv() and role:getHiddenMeridianSystem():acupointAllActivate()
         local value = 0
 
-        if role:getHiddenMeridianSystem():isHiddenMeridianChartMaxLv() and role:getHiddenMeridianSystem():acupointAllActivate() then
+        if isAllActivated then
             value = 1
         end
 
         if self:_compareValue(value) then
             result = true
-            if msg == nil then
-                msg = "不满足购买条件，无法购买!"
-            end
+            msg = (isAllActivated and "已点亮" or "未点亮") .. "隐脉系统全部窍关"
         end
     end
     

@@ -19,6 +19,7 @@ function ChallengeMapSkillInfoViewModel:__initSkillListTab(qjList, bqList, qgLis
         {name = "轻功",skillType ="qinggong",list = qgList},
         {name = "内功",skillType ="neigong",list = ngList},
         {name = "招架",skillType ="zhaojia",list = zjList},
+		{name = "知识",skillType ="zhishi",list = zsList}
     }
 end
 
@@ -39,4 +40,4 @@ function ChallengeMapSkillInfoViewModel:getSkills()
     return retSkills
 end
 
-return class("ChallengeMapSkillInfoViewModel", {SkillInfoViewModel}, ChallengeMapSkillInfoViewModel)0000
+return class("ChallengeMapSkillInfoViewModel", {SkillInfoViewModel}, ChallengeMapSkillInfoViewModel)0000000000000

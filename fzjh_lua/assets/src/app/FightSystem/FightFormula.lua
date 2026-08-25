@@ -482,18 +482,20 @@ local cache_battleAction_healthy_healReduceqiMin = nil
 --@desc: 恢复当前气血
 --@author:Seven
 --@time:2026-03-09 11:04:31
-function FightFormula:calReocverQiValue(neiliMax, healthyQi, healReduceqi, healReduceqiSXBH)
-    --  = ((20+neiliMax/50)*1.5*角色气血恢复力+50) * max(1-角色气血恢复抗性qi-角色气血恢复抗性SXBH, 战斗气血恢复下限)
+function FightFormula:calReocverQiValue(neiliMax, healthyQi, healReduceqi, healReduceqiSXBH , changShengJueFactor)
+    --  = ((20+neiliMax/50)*1.5*角色气血恢复力+50) * max(1-角色气血恢复抗性qi-角色气血恢复抗性SXBH, 战斗气血恢复下限) * 长生诀影响系数
     if cache_battleAction_healthy_healReduceqiMin == nil then
         cache_battleAction_healthy_healReduceqiMin = BattleConstConf:get("battleAction_healthy_healReduceqiMin")
     end
-    local value = ((20 + neiliMax / 50) * 1.5 * healthyQi + 50) * math.max(1 - healReduceqi - healReduceqiSXBH, cache_battleAction_healthy_healReduceqiMin)
+
+    local value = ((20 + neiliMax / 50) * 1.5 * healthyQi + 50) * math.max(1 - healReduceqi - healReduceqiSXBH, cache_battleAction_healthy_healReduceqiMin) * changShengJueFactor
     FightUtil:printLog("恢复气血值：")
     FightUtil:printLog("│├ parmas 内力最大值 ：", neiliMax)
     FightUtil:printLog("│├ parmas 角色气血恢复力 ：", healthyQi)
     FightUtil:printLog("│├ parmas 角色气血恢复抗性qi ：", healReduceqi)
     FightUtil:printLog("│├ parmas 角色气血恢复抗性SXBH ：", healReduceqiSXBH)
     FightUtil:printLog("│├ parmas 战斗气血恢复下限 ：", cache_battleAction_healthy_healReduceqiMin)
+    FightUtil:printLog("│├ parmas 长生诀影响系数：", changShengJueFactor)
     FightUtil:printLog("└─ value 气血值 ：", value)
     return value
 end
@@ -1481,4 +1483,4 @@ end
 --@endregion
 
 return FightFormula
-000000000
+000000000000

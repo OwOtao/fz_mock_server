@@ -920,19 +920,7 @@ end
 -- @time 2017/06/30 14:11:26
 -- @desc 获取 官方客服号码
 function Game:getKFQQ()
-    local retVal = "800184002"
-    -- if CURR_DEVICE_CHANNEL == "4399" or CURR_DEVICE_CHANNEL == "dangle" then
-    --     retVal = "800184002"
-    -- elseif CURR_DEVICE_CHANNEL == "taptap" or CURR_DEVICE_CHANNEL == "yyh" then
-    --     retVal = "800184002"
-    -- elseif CURR_DEVICE_CHANNEL == "ios" then
-    --     retVal = "800184002"
-    -- else
-    --     if device.platform == "windows" then
-    --         retVal = "800184002"
-    --     end
-    -- end
-    return retVal
+    return "800041109"
 end
 
 -- 应华为渠道要求,删除官方客服相关信息
@@ -1185,4 +1173,4 @@ function Game:MonitorScreenTime(time)
 end
 
 return Game
-0000
+0000000

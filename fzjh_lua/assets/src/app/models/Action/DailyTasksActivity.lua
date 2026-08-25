@@ -137,12 +137,6 @@ function DailyTasksActivity:getReward(rewardId)
     end
 end
 
-function DailyTasksActivity:checkCanGetReward(rewards)
-    local isTrue, searchInfo = ActionRewardsHelper:checkRewardsCanBuy(rewards, self.__role)
-
-    return isTrue, searchInfo.msg
-end
-
 function DailyTasksActivity:checkBagCanGetReward(rewards)
     local isTrue, msg = ActionRewardsHelper:checkBagCanGetRewards(rewards, self.__role)
     return isTrue, msg
@@ -190,4 +184,4 @@ function DailyTasksActivity:addDailyTaskPoint(taskType)
 end
 
 return class("DailyTasksActivity", {}, DailyTasksActivity)
-00000000000
+000000000000

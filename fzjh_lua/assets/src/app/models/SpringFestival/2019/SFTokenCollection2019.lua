@@ -4,6 +4,13 @@
     --@desc 活动结束时间
     e_time = "20200202",
 ]]
+local ActivityCalendarUtils = require("app.models.Action.ActivityCalendarUtils")
+
+local hztcStartTime, hztcEndTime = ActivityCalendarUtils:getActivityTime(GameConst:getDefaultValue("bafangyouli_huizitiancheng"))
+
+hztcStartTime = Helper:date("%Y%m%d", hztcStartTime)
+
+hztcEndTime = Helper:date("%Y%m%d", hztcEndTime)
 
 local SFTokenCollection2019 = {
     configs = {
@@ -21,8 +28,8 @@ local SFTokenCollection2019 = {
                     }
                 }
             ]]
-            startTime = "20260420",
-            endTime = "20260427",
+            startTime = hztcStartTime,
+            endTime = hztcEndTime,
             --@desc 兑换消耗物品的Flag
             exChangeItemFlag = {
                 ["2020weekhztc1"] = "weekhztcjz1",
@@ -406,4 +413,4 @@ function SFTokenCollection2019:addToken(itemId, count)
 end
 
 return SFTokenCollection2019
-000000000
+00

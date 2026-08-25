@@ -92,17 +92,23 @@ function DanQingGeUI:__initItem(itemUI, itemInfo)
             itemInfo.func1()
         end
     end)
-    
+
     itemUI.Text_2:setString(itemInfo.text2)
-    itemUI.Button_1:loadTextureNormal(itemInfo.loadTexture)
+    itemUI.Text_3:setString(itemInfo.text3)
+    itemUI.Text_3:setVisible(itemInfo.visible2)
+    itemUI.Text_4:setVisible(itemInfo.visible1)
+    itemUI.Button_1:loadTextureNormal(itemInfo.texture1)
     itemUI.Button_1:setTouchEnabled(itemInfo.enable)
-    
     itemUI.Button_1.Text_buttonName:setString(itemInfo.btnName)
     itemUI.Button_1:releaseFunc(function()
         if itemInfo.func2 then
             itemInfo.func2()
         end
     end)
+
+    itemUI.Image_1:setVisible(itemInfo.visible2)
+    itemUI.Image_1:loadTexture(itemInfo.texture2)
+    itemUI.Image_line:setVisible(itemInfo.visible2)
 end
 
 function DanQingGeUI:__addItemToListView(itemUI)
@@ -110,4 +116,4 @@ function DanQingGeUI:__addItemToListView(itemUI)
 end
 
 return DanQingGeUI
-00000000000000
+0000000000000000

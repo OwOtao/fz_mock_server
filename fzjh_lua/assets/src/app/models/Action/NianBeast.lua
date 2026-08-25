@@ -128,9 +128,9 @@ function NianBeast:getDriveAwayInfo()
 end
 
 function NianBeast:checkCanGetReward(rewards)
-    local isTrue, searchInfo = ActionRewardsHelper:checkRewardsCanBuy(rewards, self.__role)
+    local isDuplicate, searchInfo = GoodsHelper:checkDuplicatePurchaseList(self.__role, rewards)
 
-    return isTrue, searchInfo.msg
+    return not isDuplicate, searchInfo
 end
 
 function NianBeast:checkBagCanGetReward(rewards)
@@ -242,4 +242,4 @@ function NianBeast:__initDriveAwayInfo(list)
 end
 
 return class("NianBeast", {}, NianBeast)
-00000000000000
+0000

@@ -11,15 +11,10 @@ function ActiveHurt:create(type,value)
 end
 
 function ActiveHurt:ctor()
-end
-
-function ActiveHurt:isActiveHurt()
-    return true
-end
-
-function ActiveHurt:isAutoHurt()
-    return false
+	self.__isAutoHurt = false
+	
+	self.__isActiveHurt = true
 end
 
 return newClass("ActiveHurt", {BaseHurt}, ActiveHurt)
-000000000000000
+0000000000

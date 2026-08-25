@@ -54,7 +54,7 @@ function HiddenMeridianMenuPresenter:showPresenter()
 end
 
 function HiddenMeridianMenuPresenter:onDisable()
-    self:unschedule("updataSchedule")
+    self:unscheduleWithTag("updataSchedule")
 
     self.__ui:hideUI()
 end
@@ -558,7 +558,7 @@ function HiddenMeridianMenuPresenter:__updataBreakThroughUI(ft)
 
         self.__ui:setBreakthroughButton2(false)
 
-        self:unschedule("updataSchedule")
+        self:unscheduleWithTag("updataSchedule")
     else
         self.__ui:setTextBreakthroughTitle("破境中")
 
@@ -659,7 +659,7 @@ function HiddenMeridianMenuPresenter:__updataAcupointActivateUI(ft)
 
         self.__ui:setBreakthroughButton2(false)
 
-        self:unschedule("updataSchedule")
+        self:unscheduleWithTag("updataSchedule")
     else
         self.__ui:setTextBreakthroughTitle("冲脉中")
 
@@ -732,4 +732,4 @@ function HiddenMeridianMenuPresenter:__updataAcupointActivateUI(ft)
 end
 
 Helper:classDefNodeGetInstance(HiddenMeridianMenuPresenter)
-return HiddenMeridianMenuPresenter000
+return HiddenMeridianMenuPresenter00000000000000
