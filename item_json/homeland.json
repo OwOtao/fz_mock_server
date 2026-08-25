@@ -1,0 +1,4540 @@
+{
+  "2020zqjj01": {
+    "buyPrice": 100,
+    "dsc": "长约三尺，宽约一尺半的书案，案子两端微微翘起，整案呈月牙形状。",
+    "id": "2020zqjj01",
+    "itemCanSale": 1,
+    "name": "赏月案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "2020zqjj02": {
+    "buyPrice": 100,
+    "dsc": "高一尺的小方凳，上下均有凳面，四条凳腿略微弯曲，整个凳子呈现出球形，宛若一盏圆月。",
+    "id": "2020zqjj02",
+    "itemCanSale": 1,
+    "name": "飞月凳",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "2020zqjj03": {
+    "buyPrice": 100,
+    "dsc": "这是一个落地柜，选用上等降香木制成，柜门绘秋菊四朵，上浮明月一盏。",
+    "id": "2020zqjj03",
+    "itemCanSale": 1,
+    "name": "仲秋柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "2020zqjj04": {
+    "buyPrice": 100,
+    "dsc": "画中明月当空，一高士临流而坐，沉吟幽思，一童侍立旁边。画法高妙，意境高远。",
+    "id": "2020zqjj04",
+    "itemCanSale": 1,
+    "name": "月色秋声图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "2020zqjj05": {
+    "buyPrice": 100,
+    "dsc": "以白橡木制成的镜台，通体雪白，表面光滑。上有圆框，内嵌一面铜镜，镜面平整，光可鉴人。",
+    "id": "2020zqjj05",
+    "itemCanSale": 1,
+    "name": "霜月镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "2024znqhome01": {
+    "buyPrice": 100,
+    "dsc": "高逾七尺，巍峨挺拔，柜门之上以天工妙笔刻出山川云雾、日月星辰、花鸟走兽、鱼跃蝶舞，可谓是天地齐聚，然柜中收揽万书，自古及今，更是包罗万象。",
+    "id": "2024znqhome01",
+    "itemCanSale": 1,
+    "name": "LQS万象书柜NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "件"
+  },
+  "2024znqhome02": {
+    "buyPrice": 100,
+    "dsc": "案台由整块青石雕琢而成，平滑若一汪止水，案侧两脚由白檀制成，雕水波样，真好似流水徐行。",
+    "id": "2024znqhome02",
+    "itemCanSale": 1,
+    "name": "LQS止水案NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "件"
+  },
+  "2024znqhome03": {
+    "buyPrice": 100,
+    "dsc": "此画以繁花为景，狸奴机警可爱，蹲于花丛中，倾身卷尾，神情专明，直视舞蝶，势将扑之。此画尽展野趣，观者似能感猫之跃跃，蝶之翩翩，恍如身在其间。",
+    "id": "2024znqhome03",
+    "itemCanSale": 1,
+    "name": "LQS花下猫窥蝶NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "2024znqhome04": {
+    "buyPrice": 100,
+    "dsc": "整体由白釉制成，纯白无瑕，莹润如玉，鹿眼钳有墨晶，耀如夜中星。仙鹿若自九天之外而来，正蹑云过人间。",
+    "id": "2024znqhome04",
+    "itemCanSale": 1,
+    "name": "LQS白釉游仙鹿NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "尊"
+  },
+  "20bafangju1": {
+    "buyPrice": 100,
+    "dsc": "以翡翠雕刻而成的骏马像，骏马两蹄扬起，仰天长嘶，其身上每一处肌肉无不活灵活现，栩栩如生。",
+    "id": "20bafangju1",
+    "itemCanSale": 1,
+    "name": "翡翠骏马",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20bafangju2": {
+    "buyPrice": 100,
+    "dsc": "一幅描绘了潮水升起时海滩景象的图画。图中大海潮水汹涌，波浪滔天，绘者用笔之高妙，给人以身临其境之感。",
+    "id": "20bafangju2",
+    "itemCanSale": 1,
+    "name": "观海图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "20bafangju3": {
+    "buyPrice": 100,
+    "dsc": "将枯萎的巨木对半劈开后，用数根木桩支撑制成长桌，桌面打磨平整后刷上一层薄漆，木纹清晰可见，充满了森林的气息。",
+    "id": "20bafangju3",
+    "itemCanSale": 1,
+    "name": "枯木逢春桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20bafangju4": {
+    "buyPrice": 100,
+    "dsc": "将数根木头钉成框架后，再用晒干的玉米叶手工编织而成，坚韧而富有弹性，每年玉米丰收之后，当地的家中总会多几个类似的家具。",
+    "id": "20bafangju4",
+    "itemCanSale": 1,
+    "name": "苞米叶躺椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20bafangju5": {
+    "buyPrice": 100,
+    "dsc": "四个一组的挂屏，以橡木为框，中间嵌入陶瓷图画，记载着春天耕地畜肥，夏天播种浇水，秋天收获打谷，冬天编织剥果的辛勤农活。",
+    "id": "20bafangju5",
+    "itemCanSale": 1,
+    "name": "四季挂屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20bafangju6": {
+    "buyPrice": 100,
+    "dsc": "一个黑色花岗岩制成的石磨，分为上下两扇，下扇用若干石砖架起，上扇有一磨眼供粮食下漏用，两扇磨之间有安有铁轴防止掉落。",
+    "id": "20bafangju6",
+    "itemCanSale": 1,
+    "name": "花岗石磨",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20cyjiaju01": {
+    "buyPrice": 100,
+    "dsc": "由上等桃木制成的长桌，用明火煅烧却不会点燃，放在屋内自有暗香袭来，被很多大宗祠在重阳节用来摆台祭祖。",
+    "id": "20cyjiaju01",
+    "itemCanSale": 1,
+    "name": "桃木台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20cyjiaju02": {
+    "buyPrice": 100,
+    "dsc": "轻便的棉布坐垫，上面染有菊花、茱萸等花朵图案，寓意长寿。登高时，人们会带上登高垫，以便累了可以坐下歇息。",
+    "id": "20cyjiaju02",
+    "itemCanSale": 1,
+    "name": "登高垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20cyjiaju03": {
+    "buyPrice": 100,
+    "dsc": "菊花图绘粉、黄、白、紫四色折枝菊花。用笔工整，设色秀雅，画面清隽娟丽。尤其白菊直接以绢为底，铅白勾画，显得晶莹剔透，别有神韵。",
+    "id": "20cyjiaju03",
+    "itemCanSale": 1,
+    "name": "菊花图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "20cyjiaju04": {
+    "buyPrice": 100,
+    "dsc": "重阳糕，因在重阳节食用而得名，亦称“花糕”。花糕蒸出时，人们喜欢保存在枣木制成的方柜中，故称“花糕柜”。",
+    "id": "20cyjiaju04",
+    "itemCanSale": 1,
+    "name": "花糕柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20cyjiaju05": {
+    "buyPrice": 100,
+    "dsc": "以金玉制成，屏风上草书的潇洒淋漓，篆籀的拙朴婉转，金石的斑驳参入画中，而金菊自然豪放，生机酣畅。刻有“秋菊粲然白，入门无点尘。”的题词。",
+    "id": "20cyjiaju05",
+    "itemCanSale": 1,
+    "name": "金玉秋菊屏风",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20czjiaju01": {
+    "buyPrice": 100,
+    "dsc": "高约一尺的唐代仕女像。仕女身穿红色绸衣，体态丰腴，右手轻贴唇边，嘴角含笑，眉目动人。",
+    "id": "20czjiaju01",
+    "itemCanSale": 1,
+    "name": "仕女含笑像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20czjiaju02": {
+    "buyPrice": 100,
+    "dsc": "用于炼丹的丹炉。此炉的独特之处在于通过机括控制风道进风量，从而控制炉内火焰大小，以达到掌握丹药炼制火候的目的。",
+    "id": "20czjiaju02",
+    "itemCanSale": 1,
+    "name": "清风炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dxcjjiaju01": {
+    "buyPrice": 100,
+    "dsc": "一件用翡翠雕成的白菜，翠白相间，栩栩如生。翡翠中的黄色瑕疵亦被雕成了一只蝗虫。",
+    "id": "20dxcjjiaju01",
+    "itemCanSale": 1,
+    "name": "翡翠白菜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dxcjjiaju02": {
+    "buyPrice": 100,
+    "dsc": "一只青花瓷笔筒，上绘竹林七贤抚琴图，人物生动，活灵活现。",
+    "id": "20dxcjjiaju02",
+    "itemCanSale": 1,
+    "name": "七贤笔筒",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dxcjjiaju03": {
+    "buyPrice": 100,
+    "dsc": "以黄花梨木制成的小椅子，花纹漂亮，包浆精巧，自然散发着降香。",
+    "id": "20dxcjjiaju03",
+    "itemCanSale": 1,
+    "name": "黄花梨木椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dxcjjiaju04": {
+    "buyPrice": 100,
+    "dsc": "以泼墨手法绘成的骏马奔腾图，黑色线条之中点缀几抹红色，使得骏马更添神采。",
+    "id": "20dxcjjiaju04",
+    "itemCanSale": 1,
+    "name": "神骏图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "20dxcjjiaju05": {
+    "buyPrice": 100,
+    "dsc": "以铁力木制成的木床，上覆白色轻纱，轻纱浮动之时若月光洒落，极具情调。",
+    "id": "20dxcjjiaju05",
+    "itemCanSale": 1,
+    "name": "月纱床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "张"
+  },
+  "20dyjiaju01": {
+    "buyPrice": 100,
+    "dsc": "上刻了一张姜太公钓鱼图小床桌。旁有文字：愿者上钩，一览宏图。造此桌之人心有抱负，未得施展，于是桌上刻字，以解愁苦。",
+    "id": "20dyjiaju01",
+    "itemCanSale": 1,
+    "name": "愿者上钩桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dzcdjiaju1": {
+    "buyPrice": 100,
+    "dsc": "色泽青翠欲滴的瓷碗，碗口沿为八瓣葵花式，碗身浮雕栩栩如生的青龙，碗中盛水时，瓷碗内壁会浮现白云游动之景，仿若青龙正在云中遨游，当真奇特。",
+    "id": "20dzcdjiaju1",
+    "itemCanSale": 1,
+    "name": "青龙葵口碗",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dzlqjiaju1": {
+    "buyPrice": 100,
+    "dsc": "一张两尺见方的棕色小桌，桌子下有一火盆，放入木炭即可于冬日取暖。",
+    "id": "20dzlqjiaju1",
+    "itemCanSale": 1,
+    "name": "赏雪暖桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dzlqjiaju2": {
+    "buyPrice": 100,
+    "dsc": "一面纸屏风，共分三扇，上绘雪落青山图一副，画者笔力雄劲，观看此图如若亲临落雪的青山之中，寒冷与静谧之感铺面而来。",
+    "id": "20dzlqjiaju2",
+    "itemCanSale": 1,
+    "name": "冬雪青山屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dzlqjiaju3": {
+    "buyPrice": 100,
+    "dsc": "一尊做工上乘的老虎像，老虎雪白皮毛中掺杂灰色条纹，血口大张向前飞扑。捏像者技艺高超，将白虎之威尽数展现了出来。",
+    "id": "20dzlqjiaju3",
+    "itemCanSale": 1,
+    "name": "白虎像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20dzlqjiaju4": {
+    "buyPrice": 100,
+    "dsc": "一幅踏雪寻梅图，图中一文士身穿貂袍，手执书卷漫步于茫茫白雪之中，远处一枝寒梅盛开，暗香漂浮。",
+    "id": "20dzlqjiaju4",
+    "itemCanSale": 1,
+    "name": "踏雪寻梅图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20hyjiaju1": {
+    "buyPrice": 100,
+    "dsc": "以紫黑檀木为框，白绸上精绣孟姜女千里送寒衣的传说，因绣技高超，使其哀怨悲凉的氛围达到极致，见者无不心生伤感。",
+    "id": "20hyjiaju1",
+    "itemCanSale": 1,
+    "name": "素绸落地屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20hyjiaju2": {
+    "buyPrice": 100,
+    "dsc": "楠木所制的书案，两端安装外卷翘头，腿足上方设断牙，各浮雕一个自腿部横生的梅花枝，图案简朴灵动。",
+    "id": "20hyjiaju2",
+    "itemCanSale": 1,
+    "name": "傲梅翘头案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20hyjiaju3": {
+    "buyPrice": 100,
+    "dsc": "通体青花为饰，颈部倒垂蕉叶纹，腹部通景绘雪晴郊外图，画中场景正应“青烟日落更黄昏，路火千堆处处痕”的描述。",
+    "id": "20hyjiaju3",
+    "itemCanSale": 1,
+    "name": "雪晴长筒瓶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20hyjiaju4": {
+    "buyPrice": 100,
+    "dsc": "此椅与“傲梅翘头案”出自同源，背靠板镶雪梅团纹，座盘下左右两侧牙条透雕，整体造型圆婉优美，体态丰满劲健，韵味十足。",
+    "id": "20hyjiaju4",
+    "itemCanSale": 1,
+    "name": "雪梅大圈椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20ldjiaju01": {
+    "buyPrice": 100,
+    "dsc": "上等翡翠雕成的青牛，仅有拳头大小。牛上有一童子，按孔吹笛。童子纤瘦脱尘，按在笛上的手指都瞧得分明。",
+    "id": "20ldjiaju01",
+    "itemCanSale": 1,
+    "name": "青牛童子像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20ldjiaju02": {
+    "buyPrice": 100,
+    "dsc": "“春种一粒粟，秋收万颗子。”图中一老农在烈日下锄草养田，汗流浃背。笔触灵动，意境高深。",
+    "id": "20ldjiaju02",
+    "itemCanSale": 1,
+    "name": "悯农夏耕图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20ldjiaju03": {
+    "buyPrice": 100,
+    "dsc": "“采菊东篱下，悠然见南山。”此贴录有陶渊明《饮酒》一首，用字为欧体正楷，方圆兼施，笔力凝重。",
+    "id": "20ldjiaju03",
+    "itemCanSale": 1,
+    "name": "南山恭耕帖",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20ldjiaju04": {
+    "buyPrice": 100,
+    "dsc": "特制的小柜子，上有小孔，底部有夹层，暗藏风道，取窖藏冰块放入，可将寒气送入柜中，用于存放食物。",
+    "id": "20ldjiaju04",
+    "itemCanSale": 1,
+    "name": "东风清凉柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20ldjiaju05": {
+    "buyPrice": 100,
+    "dsc": "一张楠木卧榻，其中金风细雨图样却是苏州一等工匠耗时一年雕刻所成。此雕刻若是错了一笔，便要整件废弃，从头雕刻，所以极为珍贵。",
+    "id": "20ldjiaju05",
+    "itemCanSale": 1,
+    "name": "金风细雨榻",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20qxjiaju01": {
+    "buyPrice": 100,
+    "dsc": "图中描绘了七夕牛郎织女鹊桥相会的场景，牛郎与织女双手相执，眼含热泪，相视而笑。二者神态惟妙惟肖，足见画者功力。",
+    "id": "20qxjiaju01",
+    "itemCanSale": 1,
+    "name": "鹊桥相会图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "20qxjiaju02": {
+    "buyPrice": 100,
+    "dsc": "一面小巧铜镜，镜子外镶木框，下有小柄。镜背绘制了一副女子穿针图。",
+    "id": "20qxjiaju02",
+    "itemCanSale": 1,
+    "name": "乞巧镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20qxjiaju03": {
+    "buyPrice": 100,
+    "dsc": "一个小木柜，白色为底，上涂七色彩漆，宛若七彩祥云。织女曾织造天上云彩，引此典故，此柜遂名织云柜。",
+    "id": "20qxjiaju03",
+    "itemCanSale": 1,
+    "name": "织云柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20qxjiaju04": {
+    "buyPrice": 100,
+    "dsc": "以柳木制成的书案，上涂青色亮漆，据称是张生曾用过的书案。",
+    "id": "20qxjiaju04",
+    "itemCanSale": 1,
+    "name": "西厢案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20qxjiaju05": {
+    "buyPrice": 100,
+    "dsc": "以上等沉香木制成的长榻，榻两侧分别绘制了青、粉两只蝴蝶，取自梁山伯与祝英台之典故，寓意有情人终成眷属。",
+    "id": "20qxjiaju05",
+    "itemCanSale": 1,
+    "name": "蝶舞榻",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "张"
+  },
+  "20s11jiaju1": {
+    "buyPrice": 100,
+    "dsc": "台座上立着六片雕花屏风，线条卷曲有度，潇洒飘逸。两侧矮屏各有一个彩凤浮雕，镂中有实，庄重华贵。",
+    "id": "20s11jiaju1",
+    "itemCanSale": 1,
+    "name": "金彩漆梳妆镜台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20s11jiaju2": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木制成的八仙桌，上面刻有数种花卉雕纹，百花齐放，栩栩如生。",
+    "id": "20s11jiaju2",
+    "itemCanSale": 1,
+    "name": "花开富贵八仙桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20s11jiaju3": {
+    "buyPrice": 100,
+    "dsc": "这方玉砚似重而轻，质刚而柔，摩之寂寂无纤响，按之如小儿肌肤，温软嫩而不滑。似浑然天成，可谓无价之宝。",
+    "id": "20s11jiaju3",
+    "itemCanSale": 1,
+    "name": "赤玉砚",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20s11jiaju4": {
+    "buyPrice": 100,
+    "dsc": "轿椅腿足很短，宽阔大气，椅面上有一幅财神撒元宝的画像。富贵人家出行之时，常见前后各一人肩扛台杠，主人可端坐其上。",
+    "id": "20s11jiaju4",
+    "itemCanSale": 1,
+    "name": "财神轿椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20shengongz01": {
+    "buyPrice": 100,
+    "dsc": "以云南千年古树之木制成的书案，天然散发一种幽香，嗅入心肺，可使人心静神宁，灵感迸发。",
+    "id": "20shengongz01",
+    "itemCanSale": 0,
+    "name": "启思凝神案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20shengongz02": {
+    "buyPrice": 100,
+    "dsc": "以红木制成，高五尺，分六格。木纹清晰，有若晴空云朵。架子两侧刻有无数简笔小人，舞枪弄棒、挥剑耍刀、打拳踢腿各式姿态均有描绘。",
+    "id": "20shengongz02",
+    "itemCanSale": 1,
+    "name": "书架",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20vote3jiaju1": {
+    "buyPrice": 100,
+    "dsc": "砚通体由冷玉制成，色蓝白，整体呈雪莲花状。砚面光滑，砚堂开阔，深凹月形池。雕工圆润，一眼望去，让人心无杂念，灵台清明。",
+    "id": "20vote3jiaju1",
+    "itemCanSale": 1,
+    "name": "雪莲砚",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20vote3jiaju2": {
+    "buyPrice": 100,
+    "dsc": "图上绘有一年轻公子，蓝袍黑履，头戴冠帽，左手持剑直指苍天，右臂出掌覆于一块岩石之上。人物肖像神异非常，尽显豪气。",
+    "id": "20vote3jiaju2",
+    "itemCanSale": 1,
+    "name": "铁掌执剑图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju1": {
+    "buyPrice": 100,
+    "dsc": "此图右下临水沙滩上绘乌龟一只，大龟口中吐出一股云气，化为祥云，左边有一老者捋须观日，气魄非凡。衬景是广阔的水面和沙丘，使画面平添了神秘感。",
+    "id": "20xyjiaju1",
+    "itemCanSale": 1,
+    "name": "水官神龟图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju2": {
+    "buyPrice": 100,
+    "dsc": "屏风框架由紫檀木搭建，屏框上下雕刻夔龙纹。屏心中央画有猪、豹、兔、羊等形象，底部两侧凸出两个昂起的鹰首。万兽祈福，寓意：万寿无疆。",
+    "id": "20xyjiaju2",
+    "itemCanSale": 1,
+    "name": "万兽祈福屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju3": {
+    "buyPrice": 100,
+    "dsc": "水月观音为三十三观音之一。该像头戴花蔓冠，双手于两侧垂肩而过，胸前饰缨络，下摆覆座垂于足上，神态安详宁静，犹如正观赏水中月影一般。",
+    "id": "20xyjiaju3",
+    "itemCanSale": 1,
+    "name": "水月观音铜像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju4": {
+    "buyPrice": 100,
+    "dsc": "一方大理石方桌，重有数百斤。方桌四周如刀斧胡乱劈刻，但桌面光洁如镜，平滑如脂。是朝中官员祭祀时，誊写祭稿的祭文台。",
+    "id": "20xyjiaju4",
+    "itemCanSale": 1,
+    "name": "祭文台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju5": {
+    "buyPrice": 100,
+    "dsc": "一个方形瓷瓶，通体青花装饰。瓷瓶胎体洁白坚硬，青花色泽明净艳丽，浓淡有致，层次分明。瓶身上描绘一幅山水道士图，笔法细腻灵动。",
+    "id": "20xyjiaju5",
+    "itemCanSale": 1,
+    "name": "山水道士瓶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20xyjiaju6": {
+    "buyPrice": 100,
+    "dsc": "扶手椅以黄花梨木制成，通体光素无雕饰。椅的靠背向后弯曲，扶手下凹，四条椅腿直下，看似做工简单，却极具匠心，在简朴的造型下彰显大气。",
+    "id": "20xyjiaju6",
+    "itemCanSale": 1,
+    "name": "祭官扶手椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20zqjiaju01": {
+    "buyPrice": 100,
+    "dsc": "以白橡木制成的床榻，床体洁白如玉，光滑无比。上设轻纱垂帘，下铺绣了明月秋霜图的床褥。",
+    "id": "20zqjiaju01",
+    "itemCanSale": 1,
+    "name": "秋霜映月榻",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "张"
+  },
+  "20zqjiaju02": {
+    "buyPrice": 100,
+    "dsc": "上绘海升明月图的坐垫，图中明月当空，碧海生光，意境极佳，坐垫内棉花厚实，柔软易用。",
+    "id": "20zqjiaju02",
+    "itemCanSale": 1,
+    "name": "海升明月垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20zqjiaju03": {
+    "buyPrice": 100,
+    "dsc": "高一尺，宽一尺的小丹炉，两侧通风口为圆月形状，风道极佳，下设鼓风口，炼丹时踩动机板，可鼓风进炉，使炉火更为旺盛。",
+    "id": "20zqjiaju03",
+    "itemCanSale": 1,
+    "name": "明月乘风炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20zyjiaju01": {
+    "buyPrice": 100,
+    "dsc": "这是一个青铜铸造的蜡台，外观上是一个青面獠牙的小鬼，手中提着一个灯笼，点亮灯火后火光印在小鬼脸上，面目十分狰狞。",
+    "id": "20zyjiaju01",
+    "itemCanSale": 1,
+    "name": "鬼点灯",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "20zyjiaju02": {
+    "buyPrice": 100,
+    "dsc": "一张长两丈的紫檀木供桌，桌面擦的漆黑锃亮，桌上置有香炉、蜡竿以及供品，桌下放置香皂、毛巾与水盆，以招孤魂野鬼前来享祭。",
+    "id": "20zyjiaju02",
+    "itemCanSale": 1,
+    "name": "奉魂",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21xccdjiaju1": {
+    "buyPrice": 100,
+    "dsc": "此联结字秀逸，笔力精到，多用颤笔飞白。每字之末笔，聚力飘飞，健拔峭劲，奇姿宕逸，得汉碑隶体之神韵。",
+    "id": "21xccdjiaju1",
+    "itemCanSale": 1,
+    "name": "RED寿岁隶书七言联NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "21xhlqjiaju1": {
+    "buyPrice": 100,
+    "dsc": "一只三尺高的瓷瓶，上绘霜雪青竹图一幅，此瓷瓶最适用于养竹，养花草便有些大材小用了。",
+    "id": "21xhlqjiaju1",
+    "itemCanSale": 1,
+    "name": "翠竹瓶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21xhlqjiaju2": {
+    "buyPrice": 100,
+    "dsc": "一块经过松木熏烤过的石砚，未研墨时，自然散发一种松木的清香。",
+    "id": "21xhlqjiaju2",
+    "itemCanSale": 1,
+    "name": "青松砚",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21xhlqjiaju3": {
+    "buyPrice": 100,
+    "dsc": "一个沉香木的长椅，上覆一层老虎皮毛。虎皮极为柔软，保暖奇佳，端坐其上极为舒适。",
+    "id": "21xhlqjiaju3",
+    "itemCanSale": 1,
+    "name": "虎皮大椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21xhlqjiaju4": {
+    "buyPrice": 100,
+    "dsc": "画中一树雪白梅花在乌巷内盛放，凌寒而立，花香动人。几名文士身穿貂裘坐在一旁，赏梅饮酒，颇有闲情。",
+    "id": "21xhlqjiaju4",
+    "itemCanSale": 1,
+    "name": "乌巷冬梅图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21yxyjiaju1": {
+    "buyPrice": 100,
+    "dsc": "四足外翘圆角凳，牙条上镶嵌玛瑙为饰，两侧挡板镂雕凤凰浴火图，整张凳子所用黑木来历非凡，散发的香味极为特殊，有凝神护心之效。",
+    "id": "21yxyjiaju1",
+    "itemCanSale": 1,
+    "name": "香牵圆角凳",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21zhounianqing01": {
+    "buyPrice": 100,
+    "dsc": "此鼎是为鎏金三足鼎，鼎形体圆有双附耳。鼎身饰龙纹二周，双附耳为龙形作腾跃状，似要腾空而起一般。",
+    "id": "21zhounianqing01",
+    "itemCanSale": 1,
+    "name": "鎏金跃龙鼎",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "件"
+  },
+  "21zhounianqing02": {
+    "buyPrice": 100,
+    "dsc": "此镜台是由整块碧石雕刻而成，台座刻成梧桐枝状，一面圆月般的玉镜架于其上，镜边有一只飞凤正欲展翅翱翔。",
+    "id": "21zhounianqing02",
+    "itemCanSale": 1,
+    "name": "碧石飞凤镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21zhounianqing03": {
+    "buyPrice": 100,
+    "dsc": "这是一尊白釉达摩像，瓷像温润柔滑，似凝脂美玉，达摩身披袈裟双手拱于胸前，赤足站于海涛上，双目凝视着远方，神色安然从容。",
+    "id": "21zhounianqing03",
+    "itemCanSale": 1,
+    "name": "达摩像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21zhounianqing04": {
+    "buyPrice": 100,
+    "dsc": "这幅画描绘的是清明时节汴京的繁华热闹景象，内容丰富生动，尽显汴京的生活面貌，而画面设色淡雅，长而不冗，繁而不乱，严密紧凑，如一气呵成。",
+    "id": "21zhounianqing04",
+    "itemCanSale": 1,
+    "name": "清明上河图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "21zhounianqing05": {
+    "buyPrice": 100,
+    "dsc": "这是用亚麻布制成的蒲团，中间绣有一朵宽瓣莲花纹，内里装满了清心凝神的香料，让人宛如置于荷间。",
+    "id": "21zhounianqing05",
+    "itemCanSale": 1,
+    "name": "莲香荷绽垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "21zyjjiaju01": {
+    "buyPrice": 100,
+    "dsc": "一幅鬼气森森的画像。画中一位披头散发，满嘴烂牙的老妪站在桥上，桥下流淌着汩汩黑水，让人瘆得发慌。",
+    "id": "21zyjjiaju01",
+    "itemCanSale": 1,
+    "name": "RED孟婆像NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "21zyjjiaju02": {
+    "buyPrice": 100,
+    "dsc": "这幅画的内容真叫人一言难尽......把它挂在房间里，真的不会倒霉运吗？",
+    "id": "21zyjjiaju02",
+    "itemCanSale": 1,
+    "name": "RED腐鬼噬恶图NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "21zyjjiaju03": {
+    "buyPrice": 100,
+    "dsc": "一尊赤铜铸成的方鼎。铜鼎口部饰有一双拖尾卧虎，虎口大张，尖牙毕露。鼎身通体刻有饕餮纹，观之只觉煞气扑面，邪性逼人。",
+    "id": "21zyjjiaju03",
+    "itemCanSale": 1,
+    "name": "RED封灵鼎NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "尊"
+  },
+  "21zyjjiaju04": {
+    "buyPrice": 100,
+    "dsc": "一座妖异诡谲的鼎炉。鼎炉不知曾经炼制过什么，散出阵阵恶臭。若非极凶极恶之人，可能还不够胆使用它。",
+    "id": "21zyjjiaju04",
+    "itemCanSale": 1,
+    "name": "RED炼尸炉NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "座"
+  },
+  "22anniversaryjj01": {
+    "buyPrice": 100,
+    "dsc": "桌长三尺，宽三尺。由尚佳紫檀木所造，通体紫红，表面光泽饱满，桌面雕刻有八仙过海图，四周浮雕刻有群龙追珠纹样，寓有飞升仙境，苍龙相伴之意。",
+    "id": "22anniversaryjj01",
+    "itemCanSale": 1,
+    "name": "HIM紫檀八仙桌NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "22anniversaryjj02": {
+    "buyPrice": 100,
+    "dsc": "太师椅通体朱红，扶手下镂空金雕浮云环月纹样，背倚处雕刻百鸟图，中部镶有圆形水墨山水画，似有仙鸟归境之美。",
+    "id": "22anniversaryjj02",
+    "itemCanSale": 1,
+    "name": "RED朱漆雕金椅NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "22anniversaryjj03": {
+    "buyPrice": 100,
+    "dsc": "屏风以松木为框，涂以黑漆，正中镶嵌着由一整块墨松石雕刻而成的奇山之景。远观峰峦层叠，行云片片，流水潺潺。近看草树萋萋，林鸟群噪，好不怡然。",
+    "id": "22anniversaryjj03",
+    "itemCanSale": 1,
+    "name": "BLU墨松石素屏NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "22anniversaryjj04": {
+    "buyPrice": 100,
+    "dsc": "此为法郎三足鼎，三足铸为鹤立之态，以鹤身托起鼎身，鼎身主以群青珐琅绘制仙鹤归天图，鹤形绘制精妙绝伦，栩栩如生，双耳是以纯金铸刻而成的祥云纹样灵动飘逸。",
+    "id": "22anniversaryjj04",
+    "itemCanSale": 1,
+    "name": "HIB群青珐琅鼎NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "件"
+  },
+  "22zyfestivaljj01": {
+    "buyPrice": 100,
+    "dsc": "这是一个用上好白梨木精雕而成的镜台，镜框雕有数十朵开放各异的梅花相互纠缠，将中心的镜面环绕其中，大有与月争辉之美。",
+    "id": "22zyfestivaljj01",
+    "itemCanSale": 1,
+    "name": "YEL暗香绕月NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "23znqjiaju01": {
+    "buyPrice": 100,
+    "dsc": "这是紫檀木制成的书案，桌面嵌有一整块云石，云石上有天生天化的石纹绘制成一幅墨山水，因云石面上白润好似云雾，所以整块云石犹如一幅雾中观山画。",
+    "id": "23znqjiaju01",
+    "itemCanSale": 1,
+    "name": "HIW雾里观山案NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "23znqjiaju02": {
+    "buyPrice": 100,
+    "dsc": "这是一尊鎏金财宝天王像，双盘莲花座上，财宝天王身披金甲，左手持吐宝鼠，右手持宝幢，以天狮为骑，威风凛凛。",
+    "id": "23znqjiaju02",
+    "itemCanSale": 1,
+    "name": "HIY财宝天王像NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "尊"
+  },
+  "23znqjiaju03": {
+    "buyPrice": 100,
+    "dsc": "这是用乌木制成的屏风，边框刻着万寿藤纹样，中间的平面镶嵌着用珠贝雕刻而成的莲花，在光照下莹莹生辉。",
+    "id": "23znqjiaju03",
+    "itemCanSale": 1,
+    "name": "HIW露水菡萏屏NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "23znqjiaju04": {
+    "buyPrice": 100,
+    "dsc": "描绘了关公生擒庞德之事。画中关公长须美髯，身穿铠甲，斜披绿袍，气宇轩昂，周仓手持青龙偃月刀侍立一旁，而庞德蓬头散发被缚于柱，怒目切齿，不甘之情跃然纸上。",
+    "id": "23znqjiaju04",
+    "itemCanSale": 1,
+    "name": "HIM关公擒将图NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "25dwhome01": {
+    "buyPrice": 100,
+    "dsc": "据传是唐代韩干的真迹，画上白马鬃毛飞扬，虽被系在柱子之上，也昂首嘶鸣，奋蹄欲跃。",
+    "id": "25dwhome01",
+    "itemCanSale": 1,
+    "name": "HIW照夜白图NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "25dwhome02": {
+    "buyPrice": 100,
+    "dsc": "这是一个素白瓷瓶，莹润如玉，通体无纹。一支三茎野菖蒲斜插在瓶中，剑叶青碧带露，生机盎然。",
+    "id": "25dwhome02",
+    "itemCanSale": 1,
+    "name": "HIG菖蒲瓶NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25dwhome03": {
+    "buyPrice": 100,
+    "dsc": "此桌乃湘妃竹接榫所制，通体不施一钉一胶，浑若天成。其色如初春雨后新篁，青中隐黛，清雅可观。",
+    "id": "25dwhome03",
+    "itemCanSale": 1,
+    "name": "HIG青筠案NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "张"
+  },
+  "25dwhome04": {
+    "buyPrice": 100,
+    "dsc": "此药橱高约六尺，分九屉十八格，以柏木所制，外涂朱漆，柜门浮雕艾草缠枝纹，一开柜门则有艾香氤氲。",
+    "id": "25dwhome04",
+    "itemCanSale": 1,
+    "name": "HIG灸草柜NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25dwhome05": {
+    "buyPrice": 100,
+    "dsc": "此像取整块和田玉雕琢而成，玉质莹润含翠，透光可见水波絮纹，宛如长江激流凝于石中。匠人因材施艺，以青白处作浪，墨晕处为舟，数舟似在波澜间争渡。",
+    "id": "25dwhome05",
+    "itemCanSale": 1,
+    "name": "CYN百舸竞渡像NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25qxhome01": {
+    "buyPrice": 100,
+    "dsc": "一枚由上好的青玉雕琢而成的竹子，竹上刻有娟秀的小字“青竹沁沁，心心相印”。",
+    "id": "25qxhome01",
+    "itemCanSale": 1,
+    "name": "玉青竹",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25qxhome02": {
+    "buyPrice": 100,
+    "dsc": "铜灯一盏，灯芯若花蕊一般，点灯亮起，火光透过灯罩，如一只蝴蝶飞于花上，寓以：两情长久，春光永存。",
+    "id": "25qxhome02",
+    "itemCanSale": 1,
+    "name": "蝶恋花",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25qxhome03": {
+    "buyPrice": 100,
+    "dsc": "由一整块玉石雕琢而成的两只比翼鸟，两只鸟双宿双飞，依偎在一起。雕像整体透亮润雅，雕工细致，一根根羽毛和身上的纹理都清晰可见。",
+    "id": "25qxhome03",
+    "itemCanSale": 1,
+    "name": "比翼双飞像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "尊"
+  },
+  "25qxhome04": {
+    "buyPrice": 100,
+    "dsc": "这是一面单扇的板屏，由金丝楠木为框，绸缎上绣着牛郎织女隔鹊桥相望，高超的绣技让画面惟妙惟肖，将重逢的喜悦和爱意互相交织到屏风之中。",
+    "id": "25qxhome04",
+    "itemCanSale": 1,
+    "name": "终相会",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25qxhome05": {
+    "buyPrice": 100,
+    "dsc": "此桌以紫檀木为基，通体暗红如绛霞初凝，表面面浮雕比目双鱼逐浪纹，两侧立柱雕作连理枝形，左刻“青丝”，右刻“白首”。",
+    "id": "25qxhome05",
+    "itemCanSale": 1,
+    "name": "长相守",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25qxhome06": {
+    "buyPrice": 100,
+    "dsc": "此镜台取昆仑白玉为基，莹白如新雪初积。镜缘镂雕寒梅缠枝纹，花枝间藏七枚银铃，暗合“七世姻缘”之说。台面一面蟠龙铜镜，镜钮铸成双鹤交颈状，栩栩如生。",
+    "id": "25qxhome06",
+    "itemCanSale": 1,
+    "name": "共白头",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25znqhome01": {
+    "buyPrice": 100,
+    "dsc": "玉雕通体玄青，温润凝光，是你循天然玉脉，尽思极心雕琢而成。玉上青龙夭矫，鳞爪分明，腾云而起，意气昂扬，直贯霄汉，恍若有风雷隐现其中。",
+    "id": "25znqhome01",
+    "itemCanSale": 1,
+    "name": "LIME青龙乘云NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25znqhome02": {
+    "buyPrice": 100,
+    "dsc": "此玉雕通体玄青，龙形腾跃，云气翻涌。然细看之下，龙睛处玉质微浊，神光稍敛，龙鳞边缘隐现石筋，势降一分，虽形神犹存八九，却终是功亏一篑。",
+    "id": "25znqhome02",
+    "itemCanSale": 1,
+    "name": "ALSS青龙玉雕NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "25znqhome03": {
+    "buyPrice": 100,
+    "dsc": "此乃一水车模型，尽用榫卯齿轮的奇巧，引水流于暗槽中，循环不息，声若檐下细雨，幽谷清泉。置于案头，见水流不息，反生空寂，闻清音不绝，却觉万籁归宁。",
+    "id": "25znqhome03",
+    "itemCanSale": 1,
+    "name": "LSB万籁静NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26bdghome01": {
+    "buyPrice": 100,
+    "dsc": "蚊帐。钩织细腻，影影绰绰。内藏熏香，可避蚊虫、远暑气，人入账中无叮咬之扰，好梦自长。",
+    "id": "26bdghome01",
+    "itemCanSale": 1,
+    "name": "青纱蚊帱",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "顶"
+  },
+  "26bdghome02": {
+    "buyPrice": 100,
+    "dsc": "老樟木为胎，包浆沉润，通体鎏金缠枝云纹，形制沉敛。内贮百年樟脑与芸香，驱虫防霉，熏衣净室，亦有辟邪之意，为一方镇宅雅物。",
+    "id": "26bdghome02",
+    "itemCanSale": 1,
+    "name": "鎏金芸香樟脑盒",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjfbjiaju01": {
+    "buyPrice": 100,
+    "dsc": "以陈年毛竹剖篾编织而成，盘面圆润，篾纹细密。盘心可置花生、桂圆、红枣等新春果物，竹香清浅，质朴中透着乡村人家的新年气息。",
+    "id": "26cjfbjiaju01",
+    "itemCanSale": 1,
+    "name": "竹编岁盘",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjfbjiaju02": {
+    "buyPrice": 100,
+    "dsc": "此柜高逾五尺，分六屉十二格，以老榆木打造，外涂金漆。柜门浮雕锦鲤穿莲图，鱼身灵动，莲叶田田，拉开抽屉则有檀香淡淡溢出，纳福藏珍皆宜。",
+    "id": "26cjfbjiaju02",
+    "itemCanSale": 1,
+    "name": "吉庆有余柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjfbjiaju03": {
+    "buyPrice": 100,
+    "dsc": "此为三足铜炉，炉身鎏金，铸刻麒麟献瑞纹样，瑞兽昂首扬蹄，神态威猛灵动。炉腹中空，燃香时青烟自兽口袅袅而出，氤氲满室。",
+    "id": "26cjfbjiaju03",
+    "itemCanSale": 1,
+    "name": "鎏金瑞兽炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "座"
+  },
+  "26cjfbjiaju04": {
+    "buyPrice": 100,
+    "dsc": "素笺之上，一只金翅大鹏展翅翱翔于云海之间，下方群山连绵，旭日东升。笔墨雄浑大气，侧题 “新岁启鸿途，鹏程万里遥”，含新春吉兆，又藏江湖侠士的凌云之志。",
+    "id": "26cjfbjiaju04",
+    "itemCanSale": 1,
+    "name": "鹏程万里图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "26cjfbjiaju05": {
+    "buyPrice": 100,
+    "dsc": "此屏以和田玉为骨，赤金为饰，屏面分四扇，分别雕 “岁稔年丰”“侠路安澜”“百福骈臻”“万象升平” 四景。玉质莹润通透，金纹流光溢彩，寓意着新年江湖安泰。",
+    "id": "26cjfbjiaju05",
+    "itemCanSale": 1,
+    "name": "万象升平金玉屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjhdjiaju01": {
+    "buyPrice": 100,
+    "dsc": "这是一尊由紫砂陶塑而成的罗汉像，它袒胸露腹，手持水磨禅杖，盘膝而坐，神态威严。杖身刻满梵文经咒，罗汉双目微睁，似千钧之力蕴于体内，镇宅护院，气势不凡。",
+    "id": "26cjhdjiaju01",
+    "itemCanSale": 1,
+    "name": "ZHS撼山罗汉像NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "尊"
+  },
+  "26cjhdjiaju02": {
+    "buyPrice": 100,
+    "dsc": "架身以玄铁混檀木锻造，沉稳厚重，横梁铸盘龙绕柱之形，龙鳞清晰可辨。专为搁置长棍、长枪而制，架角坠铜铃，棍杖入架则铃音轻响，尽显武人豪迈。",
+    "id": "26cjhdjiaju02",
+    "itemCanSale": 1,
+    "name": "ZHS盘龙镇岳架NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjhdjiaju03": {
+    "buyPrice": 100,
+    "dsc": "匣身以阴沉木打造，通体黝黑如墨，仅以细银丝嵌出暗纹锁扣。内分十层暗格，每层皆有磁吸机关，专储百般小巧暗器，开合无声，匣盖微启则寒光隐隐，精巧凌厉。",
+    "id": "26cjhdjiaju03",
+    "itemCanSale": 1,
+    "name": "XNS千机隐锋匣NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "26cjhdjiaju04": {
+    "buyPrice": 100,
+    "dsc": "铜铸寒梅枝桠，枝头绽三朵鎏金梅花，花瓣间斜衔三枚薄刃飞刀，刀身隐于花瓣阴影之中。微风拂过，刀身轻颤，寒光一闪而逝，尽显江湖客的藏锋之道。",
+    "id": "26cjhdjiaju04",
+    "itemCanSale": 1,
+    "name": "XNS寒芒衔梅NOR",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bagwooden001": {
+    "id": "bagwooden001",
+    "name": "背包木人",
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi001": {
+    "buyPrice": 10,
+    "dsc": "一把铸造精良的青铜剑。",
+    "id": "bingqi001",
+    "name": "青铜剑",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi002": {
+    "buyPrice": 10,
+    "dsc": "一把精铁打造而成的大刀。",
+    "id": "bingqi002",
+    "name": "铁刀",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi003": {
+    "buyPrice": 10,
+    "dsc": "一根打磨得光滑的木棍。",
+    "id": "bingqi003",
+    "name": "木棍",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi004": {
+    "buyPrice": 10,
+    "dsc": "一把造型奇特的三尖枪。",
+    "id": "bingqi004",
+    "name": "三尖枪",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi005": {
+    "buyPrice": 10,
+    "dsc": "一根带着倒刺的软鞭。",
+    "id": "bingqi005",
+    "name": "软鞭",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi006": {
+    "buyPrice": 10,
+    "dsc": "几枚球形的铁弹子。",
+    "id": "bingqi006",
+    "name": "铁弹子",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi007": {
+    "buyPrice": 100,
+    "dsc": "据说是三国时孙权所珍藏的六把名剑之一。",
+    "id": "bingqi007",
+    "name": "紫电剑",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi008": {
+    "buyPrice": 100,
+    "dsc": "汉末名将张飞初拜为新亭侯时，命铁匠取炼赤珠山铁，打造成一刀，随身佩带。",
+    "id": "bingqi008",
+    "name": "新亭侯",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi009": {
+    "buyPrice": 100,
+    "dsc": "战国末年赵国徐夫人的名刃，形若新月，寒气四射。后燕国皇室花重金购买，交由宫廷匠师反复淬炼之后，终于成为一把见血封喉的毒刀。",
+    "id": "bingqi009",
+    "name": "寒月",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi010": {
+    "buyPrice": 100,
+    "dsc": "古代名厨庖丁所用菜刀，是用最普通的铁刃和最常见的木柄制成，然而由于庖丁技术高超，即便用之解牛也是“游刃有余”，所以经久不坏，数十年不磨依然刃口如新。",
+    "id": "bingqi010",
+    "name": "庖丁菜刀",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi011": {
+    "buyPrice": 100,
+    "dsc": "东汉末年名将关羽所用战刀，重八十二斤，又名冷艳锯，身经百战，所向披靡。",
+    "id": "bingqi011",
+    "name": "青龙偃月",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "bingqi012": {
+    "buyPrice": 100,
+    "dsc": "相传为众神采首山之铜为黄帝所铸，后传与夏禹。剑身一面刻日月星辰，一面刻山川草木。剑柄一面书农耕畜养之术，一面书四海一统之策。",
+    "id": "bingqi012",
+    "name": "轩辕剑",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "caan001": {
+    "id": "caan001",
+    "name": "茶案",
+    "type": "家具",
+    "unit": "个"
+  },
+  "cangku001": {
+    "dsc": "这是一个巨大的箱子。",
+    "id": "cangku001",
+    "name": "储物箱",
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju01": {
+    "buyPrice": 100,
+    "dsc": "凳面呈曲线的小板凳，随取随用，十分方便。此凳因有曲线凳面，端坐其上十分舒适，久坐不累，是临时休憩的不二之选。",
+    "id": "cfjiaju01",
+    "itemCanSale": 1,
+    "name": "踏青凳",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju02": {
+    "buyPrice": 100,
+    "dsc": "以上等花梨木制成的圆桌，上覆红漆，边角雕了红杏数朵。取“一只红杏出墙来”之意，寓意春光美好。",
+    "id": "cfjiaju02",
+    "itemCanSale": 1,
+    "name": "红杏桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju03": {
+    "buyPrice": 100,
+    "dsc": "黑漆木的茶几，通体纯黑，四角各雕琢了一只飞燕。春日归来，燕戏窗外。雕刻师以精细手法在桌上刻出飞燕，纤毫毕现，极尽巧思。",
+    "id": "cfjiaju03",
+    "itemCanSale": 1,
+    "name": "春归茶几",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju04": {
+    "buyPrice": 100,
+    "dsc": "左右雕刻着莺飞纹饰的镜台，正中镶着一块椭圆形的铜镜。取“草长莺飞二月天”之意。",
+    "id": "cfjiaju04",
+    "itemCanSale": 1,
+    "name": "莺飞镜台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju05": {
+    "buyPrice": 100,
+    "dsc": "纹饰华丽的卧榻，两侧护栏为镂空雕刻。春日无限好，最美莫过于把酒望春，尽兴而归，卧榻而眠。",
+    "id": "cfjiaju05",
+    "itemCanSale": 1,
+    "name": "醉春榻",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "cfjiaju06": {
+    "buyPrice": 100,
+    "dsc": "江南工匠所制的靠椅，刻柳叶数枚，取“绝胜烟柳满皇都”之意。",
+    "id": "cfjiaju06",
+    "itemCanSale": 1,
+    "name": "烟柳椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang001": {
+    "buyPrice": 10,
+    "dsc": "说是床，其实就是一个木板搭建在凳子上。",
+    "id": "chuang001",
+    "name": "木板床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang002": {
+    "buyPrice": 10,
+    "dsc": "一张普普通通的架子床。",
+    "id": "chuang002",
+    "name": "架子床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang003": {
+    "buyPrice": 10,
+    "dsc": "以绳索固定起来的吊床，柔软舒适。",
+    "id": "chuang003",
+    "name": "吊床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang004": {
+    "buyPrice": 10,
+    "dsc": "坚硬冰冷的铁床。寻常人根本没法在上面睡觉。",
+    "id": "chuang004",
+    "name": "铁床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang005": {
+    "buyPrice": 10,
+    "dsc": "一个干燥稻草堆起来的草垛。虽然能睡觉，但并不怎么舒服。",
+    "id": "chuang005",
+    "name": "草垛",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang006": {
+    "buyPrice": 10,
+    "dsc": "一张雕着花纹的木床。",
+    "id": "chuang006",
+    "name": "雕花床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang007": {
+    "buyPrice": 100,
+    "dsc": "这床虽然构造简单，但雕刻工艺集齐考究，下有三弯腿内翻云纹足，上有挂檐镶绦环板，镂雕“双龙戏珠”和“双凤朝阳”，十分精美。",
+    "id": "chuang007",
+    "name": "六柱架子床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang008": {
+    "buyPrice": 100,
+    "dsc": "这床是罗汉床的制式，围子用紫檀木小料以攒接法拼成“曲尺”图案。",
+    "id": "chuang008",
+    "name": "三屏罗汉床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang009": {
+    "buyPrice": 100,
+    "dsc": "此床是江南地区常见的宁式床， 床门以绳纹缠绕，饰以雕花，一般以柏木为柱，花梨木嵌牛骨为板饰。",
+    "id": "chuang009",
+    "name": "万字绳纹床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang010": {
+    "buyPrice": 100,
+    "dsc": "以绳纹缠绕卷曲的装饰作为床脸，有寓意子孙后代连绵不断，一脉永存的含义。 一般是由三块整板雕刻而成。",
+    "id": "chuang010",
+    "name": "如意绳纹床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang011": {
+    "buyPrice": 100,
+    "dsc": "全名为三道檐金漆丹凤朝阳床。床门上有避邪的乾坤镜，两边雕丹凤，上有床匾，三道飞檐滴水，色彩浓重华丽。",
+    "id": "chuang011",
+    "name": "丹凤朝阳床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang012": {
+    "buyPrice": 100,
+    "dsc": "床上雕花以《 诗经》的诗文立意，鹤为阳鸟，在中国文化中是长寿与升仙的祥鸟。 所以雕刻在床门上，显得既儒雅又有仙风道骨之气。",
+    "id": "chuang012",
+    "name": "鹤鸣九皋床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的云纹床。床是架子床结构，外栏雕云纹，设有丝帐，看起来朦朦胧胧，如云雾仙境。",
+    "id": "chuang013",
+    "name": "紫檀云纹床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "chuang014": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木所制成的八宝床。床外支架略带曲线，床沿雕以镂空梅花作为装饰。",
+    "id": "chuang014",
+    "name": "黄梨八宝床",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "desk001": {
+    "id": "desk001",
+    "name": "四海八极桌",
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang001": {
+    "buyPrice": 10,
+    "dsc": "一个木头雕刻而成的飞鸟装饰。",
+    "id": "diaoxiang001",
+    "name": "木雕鸟",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang002": {
+    "buyPrice": 10,
+    "dsc": "木头雕刻的雄鸡，昂首挺胸做打鸣状。",
+    "id": "diaoxiang002",
+    "name": "木雕鸡",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang003": {
+    "buyPrice": 10,
+    "dsc": "木头雕刻的骏马，如真马一般大小。",
+    "id": "diaoxiang003",
+    "name": "木雕马",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang004": {
+    "buyPrice": 10,
+    "dsc": "木头雕刻而成的牛雕像。",
+    "id": "diaoxiang004",
+    "name": "木雕牛",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang005": {
+    "buyPrice": 10,
+    "dsc": "一个木头雕刻的兵士雕像，他手持宝剑，十分威风。",
+    "id": "diaoxiang005",
+    "name": "木雕武士像",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang006": {
+    "buyPrice": 10,
+    "dsc": "木雕的白虎，外表被漆成了白色。",
+    "id": "diaoxiang006",
+    "name": "木雕虎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang007": {
+    "buyPrice": 100,
+    "dsc": "大理石雕刻而成的张真人像，一身鹤袍，玉带高冠，面目祥和。",
+    "id": "diaoxiang007",
+    "name": "石雕真人像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang008": {
+    "buyPrice": 100,
+    "dsc": "石雕观音坐莲像，神像之上贴上了金箔。整体雕刻圆润细腻，面部栩栩如生。",
+    "id": "diaoxiang008",
+    "name": "观音坐莲像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang009": {
+    "buyPrice": 100,
+    "dsc": "玉石雕刻而成的狻猊像。其像昂首阔步，鬃毛猎猎而动，煞是威风。",
+    "id": "diaoxiang009",
+    "name": "石雕狻猊像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang010": {
+    "buyPrice": 100,
+    "dsc": "石头雕刻的穷奇像。穷奇为上古凶兽，人视之为不详，很少有人将它作为护院的雕像摆放。",
+    "id": "diaoxiang010",
+    "name": "石雕穷奇像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang011": {
+    "buyPrice": 100,
+    "dsc": "煤精石雕刻而成的貔貅像。煤精石又称墨玉，其玉如墨染，雕成貔貅之后油润亮泽，貔貅又主趋吉避凶，因而这尊雕像十分贵重。",
+    "id": "diaoxiang011",
+    "name": "煤精貔貅像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "diaoxiang012": {
+    "buyPrice": 100,
+    "dsc": "上好的羊脂玉雕刻而成的白泽像。白泽为传说中上古神兽，通世间言语，能逢凶化吉，驱鬼辟邪。",
+    "id": "diaoxiang012",
+    "name": "羊脂白泽像",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "door001": {
+    "id": "door001",
+    "name": "门",
+    "type": "家具",
+    "unit": "个"
+  },
+  "drxianglu01": {
+    "buyPrice": 100,
+    "dsc": "以精铁铸成的小香炉，上有小盖，镂有四孔。\n可燃香：艾香、苏合香、沉香",
+    "id": "drxianglu01",
+    "itemCanSale": 0,
+    "name": "暮铁炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "drxianglu02": {
+    "buyPrice": 100,
+    "dsc": "以稀有紫铜打造的熏香炉，炉上刻有仙鹤花纹。\n可燃香：艾香、苏合香、沉香\n功用：增加初始香、艾香、苏合香、沉香10%入梦概率",
+    "id": "drxianglu02",
+    "itemCanSale": 1,
+    "name": "紫铜炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "drxianglu03": {
+    "buyPrice": 100,
+    "dsc": "以纯银制成的熏香炉，炉面光滑，白若霜雪。\n可燃香：艾香、苏合香、沉香\n功用：增加初始香、艾香、苏合香、沉香20%入梦概率",
+    "id": "drxianglu03",
+    "itemCanSale": 1,
+    "name": "银月炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "drxianglu04": {
+    "buyPrice": 100,
+    "dsc": "纯金制成的熏香炉，正面刻朱雀神兽。\n可燃香：艾香、苏合香、沉香\n功用：增加初始香、艾香、苏合香、沉香25%入梦概率",
+    "id": "drxianglu04",
+    "itemCanSale": 1,
+    "name": "金炽炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs1": {
+    "buyPrice": 100,
+    "dsc": "以精细机括制成的匣子，开启之后，轻拧旋钮，可自动奏出一段美妙乐曲。",
+    "id": "duanwubs1",
+    "itemCanSale": 1,
+    "name": "灵音宝匣",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs2": {
+    "buyPrice": 100,
+    "dsc": "以上等白玉刻成的大印，上刻“九天扶兮”四个大字。印下方稍有杂质，是为白璧微瑕。",
+    "id": "duanwubs2",
+    "itemCanSale": 1,
+    "name": "东皇印",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs3": {
+    "buyPrice": 100,
+    "dsc": "以杨木制成的小矮桌，上覆青漆。制漆之时，掺入了艾草汁液，因此桌子散发着一股淡淡的艾草味。",
+    "id": "duanwubs3",
+    "itemCanSale": 1,
+    "name": "青艾桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs4": {
+    "buyPrice": 100,
+    "dsc": "以楠木精细制成的衣柜，柜面上以彩漆绘成了一幅仲夏夜雨图。绘工极为精细，非一等画师不能为之。",
+    "id": "duanwubs4",
+    "itemCanSale": 1,
+    "name": "仲夏柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs5": {
+    "buyPrice": 100,
+    "dsc": "以七种部件拼成的椅子，每个部件都对应苍龙七宿之一，各部件上都刻有对应星宿的名称。",
+    "id": "duanwubs5",
+    "itemCanSale": 1,
+    "name": "七宿椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanwubs6": {
+    "buyPrice": 100,
+    "dsc": "据称是一炼丹术士特制的丹炉，以牢固而著称。这炼丹术士曾在炼丹之时被炸断一条腿，遂铸此炉，以求炼丹无虞。",
+    "id": "duanwubs6",
+    "itemCanSale": 1,
+    "name": "真阳炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "duanzaolu001": {
+    "id": "duanzaolu001",
+    "name": "锻造炉",
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju001": {
+    "buyPrice": 10,
+    "dsc": "一把乌木打制的太师椅，靠背和坐垫披挂着一整张虎皮，任何人坐上去，都有几分不怒自威的意思。",
+    "id": "dyjiaju001",
+    "itemCanSale": 1,
+    "name": "虎皮太师椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju002": {
+    "buyPrice": 10,
+    "dsc": "这是妙笔客晚年画技大成时的作品，泼墨的技巧已臻化境，细看之下，似乎还融入了一套剑法的剑意。",
+    "id": "dyjiaju002",
+    "itemCanSale": 1,
+    "name": "猛虎下山图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju003": {
+    "buyPrice": 10,
+    "dsc": "这是一尊花岗岩雕像，雕刻着一头吊睛白额猛虎，栩栩如生，用作镇宅显然是个不错的选择。",
+    "id": "dyjiaju003",
+    "itemCanSale": 1,
+    "name": "吊睛白额虎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "座"
+  },
+  "dyjiaju004": {
+    "buyPrice": 10,
+    "dsc": "一个精美绝伦的紫砂壶，选用上等原料所制，胎壁厚实，胎质纯而细腻，壶身的金鱼和海草浮雕刀工精湛，显然是出自大师之手。",
+    "id": "dyjiaju004",
+    "itemCanSale": 1,
+    "name": "鱼纹紫砂壶",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju005": {
+    "buyPrice": 10,
+    "dsc": "既是可用于称量金银、贵重药品香料的精密衡器，也是可用于赏玩的工艺品，通体由一块象牙制成，殊为难得。",
+    "id": "dyjiaju005",
+    "itemCanSale": 1,
+    "name": "象牙称",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju006": {
+    "buyPrice": 10,
+    "dsc": "采用雕瓷工艺，通体施银色釉，光洁似银器，外壁鎏银，瓷胎厚重，是上佳的赏玩摆件。",
+    "id": "dyjiaju006",
+    "itemCanSale": 1,
+    "name": "聚宝盆",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju007": {
+    "buyPrice": 10,
+    "dsc": "由红铜所铸，整个炉身刻着魏紫姚黄牡丹花，可谓典雅华贵，艳压群芳。",
+    "id": "dyjiaju007",
+    "itemCanSale": 1,
+    "name": "牡丹三足炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju008": {
+    "buyPrice": 10,
+    "dsc": "此是一张沉香木制作的书案，厚重、古朴，在桌面的一角刻着两句诗：“沉舟侧畔千帆过，病树前头万木春。”",
+    "id": "dyjiaju008",
+    "itemCanSale": 1,
+    "name": "沉香案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "件"
+  },
+  "dyjiaju009": {
+    "buyPrice": 10,
+    "dsc": "这是一个软硬适中、制作精良的蒲团。佛有三身，即法身，报身，应化身。",
+    "id": "dyjiaju009",
+    "itemCanSale": 1,
+    "name": "三身垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju010": {
+    "buyPrice": 10,
+    "dsc": "这是曾巩的书法作品。书法结字修长，笔画清劲，寥寥百字，道尽心中的沉郁孤愤，是难得的传世之作。",
+    "id": "dyjiaju010",
+    "itemCanSale": 1,
+    "name": "局事帖",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju011": {
+    "buyPrice": 10,
+    "dsc": "这是重光商会从西洋购置回的椅子，其形制有些像中土的矮几或软榻，颇有异域风情。",
+    "id": "dyjiaju011",
+    "itemCanSale": 1,
+    "name": "西洋沙发",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju012": {
+    "buyPrice": 10,
+    "dsc": "托名唐太宗时的戒奢屏，实际是后人的仿作，但制作精良，还原度极高，用料考究，仍称得上屏风中的上品。",
+    "id": "dyjiaju012",
+    "itemCanSale": 1,
+    "name": "戒奢屏",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "件"
+  },
+  "dyjiaju013": {
+    "buyPrice": 10,
+    "dsc": "这是一个巨大的青铜鼎，足有三尺高，制造于春秋早期，是大开门的老物件，有着很高的收藏价值。",
+    "id": "dyjiaju013",
+    "itemCanSale": 1,
+    "name": "青铜三足鼎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "件"
+  },
+  "dyjiaju014": {
+    "buyPrice": 10,
+    "dsc": "这是一个由整块青玉制成的四方瓶，色泽温润，细腻苍翠，器型庄重，是汉代玉器中的精品。",
+    "id": "dyjiaju014",
+    "itemCanSale": 1,
+    "name": "碧玉四方瓶",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju015": {
+    "buyPrice": 10,
+    "dsc": "这是一尊九天玄女雕像，雕工有北魏遗风，似乎还采用了一些西洋技法，造型立体生动，栩栩如生。",
+    "id": "dyjiaju015",
+    "itemCanSale": 1,
+    "name": "九天玄女像",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju016": {
+    "buyPrice": 10,
+    "dsc": "这是一个红木柜子，柜子的造型颇受西洋之风的影响，柜子两侧各画着一只貔貅吞金的画像。",
+    "id": "dyjiaju016",
+    "itemCanSale": 1,
+    "name": "貔貅吞金柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju017": {
+    "buyPrice": 10,
+    "dsc": "画圣吴道子的真迹极少现世，这一幅钟馗画像画工出色，神韵天成，方家都确信是真迹而非后人仿作的赝品。",
+    "id": "dyjiaju017",
+    "itemCanSale": 1,
+    "name": "十指钟馗图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju018": {
+    "buyPrice": 10,
+    "dsc": "李公麟名作。李公麟的白描技法独步天下，犹如群龙之首。",
+    "id": "dyjiaju018",
+    "itemCanSale": 1,
+    "name": "维摩居士像",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju019": {
+    "buyPrice": 10,
+    "dsc": "这是一个琉璃镜台，琉璃镜似乎采用了西洋技艺，人在镜中，清晰透亮，纤毫毕现，非一般铜镜可比。",
+    "id": "dyjiaju019",
+    "itemCanSale": 1,
+    "name": "西洋镜台",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju020": {
+    "buyPrice": 10,
+    "dsc": "重光商会在波斯采购订制的地毯，并根据中原人的习惯进行了一些改良。",
+    "id": "dyjiaju020",
+    "itemCanSale": 1,
+    "name": "波斯地毯",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "条"
+  },
+  "dyjiaju021": {
+    "buyPrice": 10,
+    "dsc": "这是一张由红木制成的拔步床，体型巨大，前有碧纱厨及踏步，四面围栏镂空雕刻着大幅海棠花，装饰繁复，一看就造价不菲。",
+    "id": "dyjiaju021",
+    "itemCanSale": 1,
+    "name": "海棠春睡床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "张"
+  },
+  "dyjiaju022": {
+    "buyPrice": 10,
+    "dsc": "这是一尊食铁兽类雕像，并用了熟石灰和黑炭配上特制的油墨进行了染色，看起来黑白分明、憨态可掬，十分喜感。",
+    "id": "dyjiaju022",
+    "itemCanSale": 1,
+    "name": "食铁兽像",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju023": {
+    "buyPrice": 10,
+    "dsc": "这是一个熔炼炉，不知由何种材质制成，炉壁上刻着双鹤和八卦的纹饰，精美异常，绝非凡品。",
+    "id": "dyjiaju023",
+    "itemCanSale": 1,
+    "name": "双鹤八卦炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju024": {
+    "buyPrice": 10,
+    "dsc": "这是王蒙的名作，这幅画描绘了晋代道士葛洪携家移居罗浮山修道的情景。",
+    "id": "dyjiaju024",
+    "itemCanSale": 1,
+    "name": "稚川移居图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju025": {
+    "buyPrice": 10,
+    "dsc": "这是一张黄杨木书案，上面刻着曹刘二人青梅煮酒的图像，刀工极为精湛，将曹操睥睨天下、刘备如履薄冰的神态表现得十分到位。",
+    "id": "dyjiaju025",
+    "itemCanSale": 1,
+    "name": "青梅煮酒案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "张"
+  },
+  "dyjiaju026": {
+    "buyPrice": 10,
+    "dsc": "这是一幅兰花工笔画，似乎出自女子之手，画中的兰花迎风傲立，栩栩如生。",
+    "id": "dyjiaju026",
+    "itemCanSale": 1,
+    "name": "空谷幽兰图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju027": {
+    "buyPrice": 10,
+    "dsc": "这是一个江湖高级锦缎制成的蒲团，上面用金线绣着一副山水画，画上一副田园阡陌、宫装丽人赏花的景象，十分精美。",
+    "id": "dyjiaju027",
+    "itemCanSale": 1,
+    "name": "陌上花开垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju028": {
+    "buyPrice": 10,
+    "dsc": "这是一个由黄花梨木制成的笔筒，用料考究，且出自名家之手，十分具有收藏价值。",
+    "id": "dyjiaju028",
+    "itemCanSale": 1,
+    "name": "黄花梨笔筒",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju029": {
+    "buyPrice": 10,
+    "dsc": "这是少林禅院特制的一种蒲团，由江南上好织料制成，并加入了一些产自天竺的香料，专供寺院的高僧，后被认为过于奢靡而禁止了。",
+    "id": "dyjiaju029",
+    "itemCanSale": 1,
+    "name": "禅院蒲团",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju030": {
+    "buyPrice": 10,
+    "dsc": "这是一个木鱼，由椿木制成，敲之则发出清脆悦耳的声音。",
+    "id": "dyjiaju030",
+    "itemCanSale": 1,
+    "name": "木鱼",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju031": {
+    "buyPrice": 10,
+    "dsc": "YEL虽然很多人声称这是天狼教的至宝，但仍有很多人表示怀疑它只是个仿制品。抛开争议不谈，它仍是一个绝佳的炼药炉。NOR",
+    "id": "dyjiaju031",
+    "itemCanSale": 1,
+    "name": "神木王鼎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju032": {
+    "buyPrice": 10,
+    "dsc": "这是著名画师、有小画圣之称的画圣后人吴惊风壮年时所作的一幅人像，画中人数足有三十六之多，每一个都栩栩如生、神气活现。",
+    "id": "dyjiaju032",
+    "itemCanSale": 1,
+    "name": "异人图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju033": {
+    "buyPrice": 10,
+    "dsc": "这是一个巨大的浮雕，材质是花岗岩，整个作品雕刻着鬼谷子坐着虎豹所拉的大车、出山营救徒弟孙膑的故事。",
+    "id": "dyjiaju033",
+    "itemCanSale": 1,
+    "name": "鬼谷子下山像",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju034": {
+    "buyPrice": 10,
+    "dsc": "这是一方砚台，由产自贺兰山麓的石料制成，雕刻着云纹、苍松、白鹤的图案，十分雅致。",
+    "id": "dyjiaju034",
+    "itemCanSale": 1,
+    "name": "松鹤砚",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju035": {
+    "buyPrice": 10,
+    "dsc": "这是熔炼炉，炉壁上刻着两个童子在菩提树下跪拜佛祖的图案，当火生起时，菩提树的树冠还会因为高温而发出一层金光，十分精巧",
+    "id": "dyjiaju035",
+    "itemCanSale": 1,
+    "name": "童子拜佛炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju036": {
+    "buyPrice": 10,
+    "dsc": "重光商会从海外佛国重金采购而得的蒲团，做工精良，用料考究，是万里无一的精品。",
+    "id": "dyjiaju036",
+    "itemCanSale": 1,
+    "name": "伽蓝垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju037": {
+    "buyPrice": 10,
+    "dsc": "这是焦尾琴，但八成是个赝品，不过考据和用料十分到位，还原度高得几可乱真、非琴道大家无法甄别。",
+    "id": "dyjiaju037",
+    "itemCanSale": 1,
+    "name": "焦尾琴",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "张"
+  },
+  "dyjiaju038": {
+    "buyPrice": 10,
+    "dsc": "这是一种兽面镇墓兽，从一座战国时期的楚国墓葬里出土的。镇墓兽原本是一种冥器，通常以成对的形式出现。",
+    "id": "dyjiaju038",
+    "itemCanSale": 1,
+    "name": "镇墓兽",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju039": {
+    "buyPrice": 10,
+    "dsc": "一尊执剑侍卫石俑，石俑面部虽有些磨损，但五官依稀可辨。据说此物有近千年历史，乃前朝盗墓行家从前朝大官墓寝耳室取出。",
+    "id": "dyjiaju039",
+    "itemCanSale": 1,
+    "name": "执剑侍卫俑",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju040": {
+    "buyPrice": 10,
+    "dsc": "一面金丝螺钿镜，镜面光滑如水，漆背螺钿乃为“琴翁话酒”之图，且这月白色的螺钿自不同角度泛出七彩，精美非常，故在寻常人家难得一见。",
+    "id": "dyjiaju040",
+    "itemCanSale": 1,
+    "name": "金丝螺钿镜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju041": {
+    "buyPrice": 10,
+    "dsc": "一件磁刻鸳鸯鼎，鼎身雕刻鸳鸯，通体小巧，便是双手捧着把玩也可。",
+    "id": "dyjiaju041",
+    "itemCanSale": 1,
+    "name": "磁刻鸳鸯鼎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "件"
+  },
+  "dyjiaju042": {
+    "buyPrice": 10,
+    "dsc": "一扇紫檀鹦鹉鎏金立屏，紫檀本就难得，且用这鎏金工艺将《戏鹦图》浮于其表就更是少见。只见立屏上的两只鹦鹉若争相互戏，似朝你飞腾而来。",
+    "id": "dyjiaju042",
+    "itemCanSale": 1,
+    "name": "紫檀鎏金立屏",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "件"
+  },
+  "dyjiaju043": {
+    "buyPrice": 10,
+    "dsc": "一把海青石琴桌，边缘雕刻螺旋边纹，两侧则以梅兰竹菊入画。桌上一角有三足香炉的凹痕，听闻前人好琴，日日于桌前抚弄焚香，时间一长便有了此痕。",
+    "id": "dyjiaju043",
+    "itemCanSale": 1,
+    "name": "海青石琴桌",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju044": {
+    "buyPrice": 10,
+    "dsc": "一把梨木雕花刺绣椅，看起来倒也寻常，只是这椅背上的绣布半嵌其中，一般除却收藏，极少有人将其摆出，因这刺绣难以清洗，若稍有污渍便为可惜。",
+    "id": "dyjiaju044",
+    "itemCanSale": 1,
+    "name": "雕花刺绣椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju045": {
+    "buyPrice": 10,
+    "dsc": "一幅海天落照图，图中群山青翠，云海缥缈，只道是：山绕青云不知山，云嵌青山未有云。让人恨不得走入这画中一览美景。",
+    "id": "dyjiaju045",
+    "itemCanSale": 1,
+    "name": "海天落照图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju046": {
+    "buyPrice": 10,
+    "dsc": "一幅江帆楼阁图，整幅画色泽由暗到明，由淡而浓。且楼阁掩于山木之中，大有琵琶半遮面之感，实乃佳品。",
+    "id": "dyjiaju046",
+    "itemCanSale": 1,
+    "name": "江帆楼阁图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "dyjiaju047": {
+    "buyPrice": 10,
+    "dsc": "这是一张云屏青擂案，案身两侧由连贯的长木支撑，并雕制成屏，中间镂空圆洞中嵌有皮鼓，上绘青云绕山之景，若不小心碰触皮鼓周围，鼓声奏响，恰如战场擂鼓声声。",
+    "id": "dyjiaju047",
+    "itemCanSale": 1,
+    "name": "云屏青擂案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju048": {
+    "buyPrice": 10,
+    "dsc": "柜身以鸡翅木而造，顶板则嵌岩石石屏，石屏红白相间，看上去既像云间晚霞，日暮将沉，又像是美人衣袖，拂扫长空。",
+    "id": "dyjiaju048",
+    "itemCanSale": 1,
+    "name": "红袖掩霞柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "dyjiaju049": {
+    "buyPrice": 10,
+    "dsc": "这是一张雕有暗八仙的螺钿檀木床，床脚四周各有长杆作架，四角横木相连。且横木并无雕饰，只以翠青玉石穿链，长短不一的悬挂在上，若掀起床中帐帘，珠链碰撞，声音清脆，若八仙奏乐。",
+    "id": "dyjiaju049",
+    "itemCanSale": 1,
+    "name": "八宝螺钿床",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "张"
+  },
+  "dyjiaju050": {
+    "buyPrice": 10,
+    "dsc": "传闻此炉乃著名方士陶弘景之物。炉身分两层，每层各铸有四条样貌不一的巨龙，其龙首托珠，最上层四珠相连，上托宝塔，塔上又有巨大明珠，明珠上一龙盘桓。每当丹药出炉，便云雾环绕，亮如启明。",
+    "id": "dyjiaju050",
+    "itemCanSale": 1,
+    "name": "九珠启明炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi001": {
+    "buyPrice": 10,
+    "dsc": "一个木制的柜子。",
+    "id": "guizi001",
+    "name": "木柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi002": {
+    "buyPrice": 10,
+    "dsc": "整个由铁浇筑而成的柜子，十分沉重。",
+    "id": "guizi002",
+    "name": "铁柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi003": {
+    "buyPrice": 10,
+    "dsc": "表面包着铜皮的木柜。",
+    "id": "guizi003",
+    "name": "包铜柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi004": {
+    "buyPrice": 10,
+    "dsc": "一个用来放宝物的多宝格，上面放着几个花瓶。",
+    "id": "guizi004",
+    "name": "多宝格",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi005": {
+    "buyPrice": 10,
+    "dsc": "一个对开门的小柜子。",
+    "id": "guizi005",
+    "name": "小柜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi006": {
+    "buyPrice": 10,
+    "dsc": "一个半人高的书架，上面放着各式各样的书籍。",
+    "id": "guizi006",
+    "name": "书架",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi007": {
+    "buyPrice": 100,
+    "dsc": "这架格隔板三层，均以横、竖短材攒成“品”字形围栏，其上安双套环。",
+    "id": "guizi007",
+    "name": "品字栏架格",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi008": {
+    "buyPrice": 100,
+    "dsc": "该多宝格木胎髹漆，上半部敞格以黑漆打底，作描金山水景物装饰，遍布纵横板面，在平面之中营造深远意境。",
+    "id": "guizi008",
+    "name": "描金多宝格",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi009": {
+    "buyPrice": 100,
+    "dsc": "这柜子木表呈现黝泽莹润的质感和光泽，柜门及膛板分别作“苍龙教子”和“二龙戏珠”。",
+    "id": "guizi009",
+    "name": "云龙方角柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi010": {
+    "buyPrice": 100,
+    "dsc": "这柜子门无闩杆，开合时柜门相互挤兑，配铜镶足套，錾花鎏金，更显精致华丽。",
+    "id": "guizi010",
+    "name": "鎏金小柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi011": {
+    "buyPrice": 100,
+    "dsc": "这柜子上有柜帽，下有底座，竹节形边框纵横交错，暗八仙、龙凤、花卉、走兽、鸟鱼等等遍布其间。",
+    "id": "guizi011",
+    "name": "竹节雕鸟柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi012": {
+    "buyPrice": 100,
+    "dsc": "这架格制为上下两个部分，可以分离。主体结构采用“圆包圆”的形式，造型整饬，方中有圆，圆中有方。",
+    "id": "guizi012",
+    "name": "杉木直棂架",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的云纹柜。柜为方角柜样式，木表呈现黝泽莹润的质感和光泽，其上雕刻着云纹。",
+    "id": "guizi013",
+    "name": "紫檀云纹柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "guizi014": {
+    "buyPrice": 100,
+    "dsc": "黄梨木所制成的小方角柜。其门上有门，上下连体，上为梅树，下为落梅。",
+    "id": "guizi014",
+    "name": "黄梨八宝柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren001": {
+    "att": 120,
+    "buyPrice": 100,
+    "deposit": 0,
+    "dsc": "这是一个用风干草团制成的稻草假人，看起来不是很耐用，不过如果作为练武的对象，可能会对武学的领悟有所益处。",
+    "id": "jiaren001",
+    "itemCanSale": 0,
+    "name": "干草人偶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren002": {
+    "att": 600,
+    "buyPrice": 100,
+    "deposit": 0,
+    "dsc": "这是一个用圆木拼接而成的假人，构造奇特，一拳过去，纹风不动，若是在此潜心修炼，想必能使武学造诣大有长进。",
+    "id": "jiaren002",
+    "itemCanSale": 0,
+    "name": "木质人偶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren003": {
+    "att": 1200,
+    "buyPrice": 100,
+    "deposit": 0,
+    "dsc": "这是一个用青铜材质做成的假人，看起来十分坚固，表面刻有对称花纹，是上好的手艺。若以此为练武对象，想必会更容易集中精神。",
+    "id": "jiaren003",
+    "itemCanSale": 0,
+    "name": "青铜假人",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren004": {
+    "att": 2400,
+    "buyPrice": 100,
+    "deposit": 0,
+    "dsc": "据说此物是少林寺十八铜人侍僧所用之物，看起来坚不可摧，厚重无比，相传与其对练武学，突破精进速度不可同日而语！",
+    "id": "jiaren004",
+    "itemCanSale": 0,
+    "name": "十八铜人",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren005": {
+    "att": 9999,
+    "buyPrice": 100,
+    "deposit": 0,
+    "dsc": "传闻此物乃天工巧匠鲁班所传至宝，形态栩栩如生，全身各处布有精密机关，构造巧妙。年代久远，却不见丝毫锈迹和腐坏！",
+    "id": "jiaren005",
+    "itemCanSale": 0,
+    "name": "鲁班奇偶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jiaren999": {
+    "att": 0,
+    "buyPrice": 10,
+    "deposit": 0,
+    "dsc": "一个因刻苦修炼而损坏了的假人，已经毫无用处了。",
+    "id": "jiaren999",
+    "itemCanSale": 1,
+    "name": "损坏的假人",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jing001": {
+    "id": "jing001",
+    "name": "玉露井",
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai001": {
+    "buyPrice": 10,
+    "dsc": "一个实木制作的梳妆台。",
+    "id": "jingtai001",
+    "name": "梳妆台",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai002": {
+    "buyPrice": 10,
+    "dsc": "一个寻常的镜台。",
+    "id": "jingtai002",
+    "name": "镜台",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai003": {
+    "buyPrice": 10,
+    "dsc": "一面铜镜，镜子后面有木制的支架支撑。",
+    "id": "jingtai003",
+    "name": "铜镜",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai004": {
+    "buyPrice": 10,
+    "dsc": "一个巨大的落地式镜台。",
+    "id": "jingtai004",
+    "name": "落地镜台",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai005": {
+    "buyPrice": 10,
+    "dsc": "一个木匣，匣子打开上面镶嵌着镜子。",
+    "id": "jingtai005",
+    "name": "镜匣",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai006": {
+    "buyPrice": 10,
+    "dsc": "一个一人高的镜架。",
+    "id": "jingtai006",
+    "name": "镜架",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai007": {
+    "buyPrice": 100,
+    "dsc": "未经雕琢的镜台。虽看似平凡，但由于制作的木材是极为珍贵的鸡翅木，因而备受欢迎。",
+    "id": "jingtai007",
+    "name": "鸡翅木镜台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai008": {
+    "buyPrice": 100,
+    "dsc": "硬木所制成的梳妆台，宝座式镜台，搭脑圆雕龙头，屏心嵌装透雕麒麟送子纹绦环板。",
+    "id": "jingtai008",
+    "name": "硬木梳妆台",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai009": {
+    "buyPrice": 100,
+    "dsc": "单扇镂空的镜台。镜台之后镂空雕刻着如意的纹路。",
+    "id": "jingtai009",
+    "name": "如意单面镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai010": {
+    "buyPrice": 100,
+    "dsc": "全名为镂雕凤穿牡丹纹镜台。镜台上镂雕凤凰，下镂雕牡丹，上下相映成趣。",
+    "id": "jingtai010",
+    "name": "凤穿牡丹镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai011": {
+    "buyPrice": 100,
+    "dsc": "带有镜台的官皮箱镜，配以浮雕花卉，木质紧密细腻。",
+    "id": "jingtai011",
+    "name": "板雕花卉镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai012": {
+    "buyPrice": 100,
+    "dsc": "五扇屏风样式的镜台。屏风上镂空雕刻着百鸟图案，繁而不乱，镜台之下设五格抽屉，可放一些小物件。",
+    "id": "jingtai012",
+    "name": "鸟纹五屏镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的云纹镜台。正中镶嵌着铜镜，镜子两旁伸展向上雕刻着云纹。",
+    "id": "jingtai013",
+    "name": "紫檀云纹镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jingtai014": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木所做成的八宝镜台。镜台制作成曲线状，上窄下宽，其上雕刻有梅花图案。",
+    "id": "jingtai014",
+    "name": "黄梨八宝镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "jtai001": {
+    "dsc": "测试专用",
+    "id": "jtai001",
+    "name": "晶台",
+    "type": "家具",
+    "unit": "个"
+  },
+  "lvfei001": {
+    "buyPrice": 1,
+    "dsc": "这是一份绿肥，可以用于种植作物、改善土壤。",
+    "id": "lvfei001",
+    "name": "GRN绿肥NOR",
+    "salePrice": 1,
+    "type": "其他",
+    "unit": "份"
+  },
+  "mapwooden001": {
+    "id": "mapwooden001",
+    "name": "副本木人",
+    "type": "家具",
+    "unit": "个"
+  },
+  "ncjiaju001": {
+    "buyPrice": 10,
+    "dsc": "螺钿紫檀琵琶，是世间难得的五弦琵琶，存世唯一，据闻有不少琴技大师曾四下搜寻此琴，皆无果。",
+    "id": "ncjiaju001",
+    "itemCanSale": 1,
+    "name": "螺钿紫檀琵琶",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ncjiaju002": {
+    "buyPrice": 10,
+    "dsc": "一座玉石屏风，上面以各色玉石雕刻数百株牡丹，诗云：云想衣裳花想容。",
+    "id": "ncjiaju002",
+    "itemCanSale": 1,
+    "name": "花想容",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng001": {
+    "buyPrice": 10,
+    "dsc": "木头中间雕花的屏风。",
+    "id": "pingfeng001",
+    "name": "木雕屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng002": {
+    "buyPrice": 10,
+    "dsc": "竹子扎在一起做成的屏风。看起来倒像个栅栏。",
+    "id": "pingfeng002",
+    "name": "竹制屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng003": {
+    "buyPrice": 10,
+    "dsc": "石头雕刻而成的屏风，沉重无比。",
+    "id": "pingfeng003",
+    "name": "石制屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng004": {
+    "buyPrice": 10,
+    "dsc": "藤条编成的屏风。",
+    "id": "pingfeng004",
+    "name": "藤条屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng005": {
+    "buyPrice": 10,
+    "dsc": "一个四扇屏，上面画着些许人物山水。",
+    "id": "pingfeng005",
+    "name": "画扇屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng006": {
+    "buyPrice": 10,
+    "dsc": "绸缎为扇面制成的屏风。",
+    "id": "pingfeng006",
+    "name": "绸制屏风",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng007": {
+    "buyPrice": 10,
+    "dsc": "三屏风的样式，素束腰鼓腿彭牙，回纹内翻马蹄足，下置托泥。浮雕“五蝠捧寿”，云纹缭绕。",
+    "id": "pingfeng007",
+    "name": "云蝠纹屏",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng008": {
+    "buyPrice": 100,
+    "dsc": "这屏风以一片大荷叶为底纹，自上而下浮雕云、龙、宝珠和图案化的“寿”字。",
+    "id": "pingfeng008",
+    "name": "莲叶龙纹屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng009": {
+    "buyPrice": 100,
+    "dsc": "这屏风屏身五扇，高度由中间向左右递减。每扇又分四段进行装饰。上下两段为高浮雕张牙舞爪的升龙。",
+    "id": "pingfeng009",
+    "name": "云龙嵌玉屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng010": {
+    "buyPrice": 100,
+    "dsc": "这屏风屏。屏心为云石板，装透雕卷草纹海棠式开光的绦环板，雕花适度，文气而不张扬。",
+    "id": "pingfeng010",
+    "name": "白石云屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng011": {
+    "buyPrice": 100,
+    "dsc": "全称为红木金漆嵌象牙屏风。三屏风围子，有束腰三弯腿结构。贴金嵌象牙成石榴、寿桃、佛手之形。",
+    "id": "pingfeng011",
+    "name": "金漆嵌牙屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng012": {
+    "buyPrice": 100,
+    "dsc": "全称为红木框雕漆地嵌玉石围屏。屏心剔红作锦地纹，再巧用白玉、青玉、碧玉、水晶、玛瑙等各色玉石，镶嵌出“仙童祝寿”的画面来。",
+    "id": "pingfeng012",
+    "name": "红木雕漆屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的六扇屏。因屏风有六面而命名。屏风之上画着山水图，边角雕云纹为饰。",
+    "id": "pingfeng013",
+    "name": "紫檀六扇屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "pingfeng014": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木所制成的四扇屏。因扇面为四扇而命之。扇面呈2曲型，其上绘着落梅图。",
+    "id": "pingfeng014",
+    "name": "黄梨四扇屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan001": {
+    "buyPrice": 10,
+    "dsc": "一个稻草编制的蒲团。",
+    "id": "putuan001",
+    "name": "草垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan002": {
+    "buyPrice": 10,
+    "dsc": "一个树木砍下来的树墩，上面铺放着布。",
+    "id": "putuan002",
+    "name": "树墩",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan003": {
+    "buyPrice": 10,
+    "dsc": "粗布制成的蒲团。",
+    "id": "putuan003",
+    "name": "布垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan004": {
+    "buyPrice": 10,
+    "dsc": "粗布制成的蒲团。",
+    "id": "putuan004",
+    "name": "布团",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan005": {
+    "buyPrice": 10,
+    "dsc": "一个兽皮缝纫而成的蒲团。",
+    "id": "putuan005",
+    "name": "皮垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan006": {
+    "buyPrice": 10,
+    "dsc": "棉花填充而成的蒲团。",
+    "id": "putuan006",
+    "name": "棉垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan007": {
+    "buyPrice": 10,
+    "dsc": "寺院之内常见的蒲团。内里包有清心的草药。",
+    "id": "putuan007",
+    "name": "禅修垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan008": {
+    "buyPrice": 10,
+    "dsc": "一个金黄色的布团，含有清心的药草香味。",
+    "id": "putuan008",
+    "name": "清心垫",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan009": {
+    "buyPrice": 100,
+    "dsc": "一个青色的蒲团，包裹蒲团的布匹由草药浆洗浸染，有一股淡淡的药香。",
+    "id": "putuan009",
+    "name": "筑元垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan010": {
+    "buyPrice": 100,
+    "dsc": "一个江南暗金锦制成的蒲团。十分珍贵。",
+    "id": "putuan010",
+    "name": "归元垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan011": {
+    "buyPrice": 100,
+    "dsc": "按照罗汉座下蒲团制成。蒲团边缘印花为金边梵文，看起来庄严肃穆。",
+    "id": "putuan011",
+    "name": "金纹罗汉垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "putuan012": {
+    "buyPrice": 100,
+    "dsc": "道观之中长剑的蒲团。蒲团为青色，边缘印花为月圆月缺的变化，十分有趣。",
+    "id": "putuan012",
+    "name": "碧月三清垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qiangbi001": {
+    "dsc": "测试专用",
+    "id": "qiangbi001",
+    "name": "墙壁",
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju01": {
+    "buyPrice": 100,
+    "dsc": "高五尺的立柜，柜门之上雕刻着数朵海棠。此柜木材经过香料泡制，每次开柜都可闻到浓郁花香。",
+    "id": "qmjiaju01",
+    "itemCanSale": 1,
+    "name": "藏春柜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju02": {
+    "buyPrice": 100,
+    "dsc": "典雅的柳木桌，并无太多装饰，简约大气。刨工精致，虽无装饰，但却可从各处细节上看到工匠之用心。",
+    "id": "qmjiaju02",
+    "itemCanSale": 1,
+    "name": "寒食桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju03": {
+    "buyPrice": 100,
+    "dsc": "高三尺的屏风，底座为黄色柚木，屏风面则是一副水墨观雨图。此图以墨笔作画，并无其他颜色，仅以一只毛笔便展出一种烟雨朦胧之感。",
+    "id": "qmjiaju03",
+    "itemCanSale": 1,
+    "name": "细雨屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju04": {
+    "buyPrice": 100,
+    "dsc": "以稀有墨绿色木料制成的书案，光线越强，越加翠绿。木材经过精心覆漆，给人一种晶莹剔透之感，伸手抚摸亦有一种玉石的温润感。",
+    "id": "qmjiaju04",
+    "itemCanSale": 1,
+    "name": "青玉案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju05": {
+    "buyPrice": 100,
+    "dsc": "以精铜制成的硕大熔炼炉，上有祥云纹饰，另有仙鹤两只挟云而上，雕刻精致，栩栩如生。此炉风道亦精心设计，可使炉火长燃不熄。",
+    "id": "qmjiaju05",
+    "itemCanSale": 1,
+    "name": "凌霄炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "qmjiaju06": {
+    "buyPrice": 100,
+    "dsc": "此画用色精巧，画中地藏菩萨双手合十端坐谛听之上，谛听则双目紧闭，似在聆听周围的声音。",
+    "id": "qmjiaju06",
+    "itemCanSale": 1,
+    "name": "地藏谛听图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu001": {
+    "buyPrice": 10,
+    "dsc": "一个陈旧的熔炼炉。",
+    "id": "ronglianlu001",
+    "name": "熔炼炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu002": {
+    "buyPrice": 10,
+    "dsc": "石头打造的熔炼炉，虽然精致，但并不能长时间承受高温。",
+    "id": "ronglianlu002",
+    "name": "石炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu003": {
+    "buyPrice": 10,
+    "dsc": "青铜制成的熔炼炉。",
+    "id": "ronglianlu003",
+    "name": "铜鼎",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu004": {
+    "buyPrice": 10,
+    "dsc": "玄铁锻造的熔炼炉。",
+    "id": "ronglianlu004",
+    "name": "玄铁炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu005": {
+    "buyPrice": 10,
+    "dsc": "赤金打造的熔炼炉。",
+    "id": "ronglianlu005",
+    "name": "赤金炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu006": {
+    "buyPrice": 10,
+    "dsc": "铜制的熔炼炉，表面被漆成了金色。",
+    "id": "ronglianlu006",
+    "name": "金刚炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu007": {
+    "buyPrice": 100,
+    "dsc": "纯金打造的熔炼炉。龙凤各自盘踞左右，盘绕而上，龙凤连接着凤翔和注水处，龙嘴喷水，凤嘴吐风。",
+    "id": "ronglianlu007",
+    "name": "龙凤金炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu008": {
+    "buyPrice": 100,
+    "dsc": "表面雕刻满蝉翼纹路的熔炼炉。雕工精致细腻。",
+    "id": "ronglianlu008",
+    "name": "蝉翼雕炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu009": {
+    "buyPrice": 100,
+    "dsc": "表面被漆成朱红色的熔炼炉。漆色经过特殊处理，平时为暗红色，加温时候便会越发的红。",
+    "id": "ronglianlu009",
+    "name": "丹心炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu010": {
+    "buyPrice": 100,
+    "dsc": "表面雕刻着云纹以及百花生长纹路的熔炼炉。",
+    "id": "ronglianlu010",
+    "name": "云纹百花炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu011": {
+    "buyPrice": 100,
+    "dsc": "碧绿晶石整个雕琢而成的熔炼炉。炉子透亮，可以看到锻材的加温情况。",
+    "id": "ronglianlu011",
+    "name": "碧云精晶炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ronglianlu012": {
+    "buyPrice": 100,
+    "dsc": "产自深海的海源木所制成的熔炼炉。由于海源木性质极阴，无法点燃，又导热良好，所制成的熔炼炉都是个中极品。",
+    "id": "ronglianlu012",
+    "name": "海源双兽炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shihe001": {
+    "dsc": "测试专用",
+    "id": "shihe001",
+    "name": "食盒",
+    "type": "消耗品",
+    "unit": "个"
+  },
+  "shipingxiang001": {
+    "id": "shipingxiang001",
+    "name": "饰品箱",
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan001": {
+    "buyPrice": 10,
+    "dsc": "一个普普通通的书案。",
+    "id": "shuan001",
+    "name": "书案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan002": {
+    "buyPrice": 10,
+    "dsc": "一个桌面宽阔的平头案。",
+    "id": "shuan002",
+    "name": "平头案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan003": {
+    "buyPrice": 10,
+    "dsc": "一个中间平整，两头翘起的翘头案。",
+    "id": "shuan003",
+    "name": "翘头案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan004": {
+    "buyPrice": 10,
+    "dsc": "一个长条状书案。",
+    "id": "shuan004",
+    "name": "长书案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan005": {
+    "buyPrice": 10,
+    "dsc": "一个身子细长的书案。",
+    "id": "shuan005",
+    "name": "条案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan006": {
+    "buyPrice": 10,
+    "dsc": "一个腿脚雕花的书案。",
+    "id": "shuan006",
+    "name": "雕花案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan007": {
+    "buyPrice": 100,
+    "dsc": "这书案桌面攒框装板，束腰打洼，雕连珠纹垂牙子，方腿直足内翻马蹄。雕饰上繁下简，相映成趣，造型稳重大方。",
+    "id": "shuan007",
+    "name": "如意案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan008": {
+    "buyPrice": 100,
+    "dsc": "此书案以黄杨木制作而成，束腰，镂空，抛牙板，四条四方马蹄腿，边线起凸棱。用黄杨木镂雕拐子龙纹为枨。",
+    "id": "shuan008",
+    "name": "黄杨木书案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan009": {
+    "buyPrice": 100,
+    "dsc": "这书案面打槽装板，方正规矩，边与四腿相连自然向下弯曲内卷呈书卷状，牙板镂雕成卷草纹。腿间装挡板，镂雕卷草纹及缠枝花卉纹，内翻足。",
+    "id": "shuan009",
+    "name": "榉木镶红案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan010": {
+    "buyPrice": 100,
+    "dsc": "该书桌面攒框瘿木，凹凸不平，显示了历史的沧桑感，边沿混面，束腰，罗锅枨上置矮老，瓜棱腿。",
+    "id": "shuan010",
+    "name": "瓜棱腿书案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan011": {
+    "buyPrice": 100,
+    "dsc": "这书案方形台面，四方腿，腰部镂空开长方形开光，枨透雕简易夔龙纹。",
+    "id": "shuan011",
+    "name": "紫衫霸王案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan012": {
+    "buyPrice": 100,
+    "dsc": "这张书案腿间上部条环板雕桃形纹饰，下部挡板浮雕双凤含珠，足下承托泥。其造型紧凑而不拘谨，简洁疏朗，刀法细腻，包浆厚实。",
+    "id": "shuan012",
+    "name": "卷云翘头案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木制成的书案，包浆润泽。长条形台面，四方回纹腿，腿间亚字形开光，四边饰镂空牙板，内容为龙奉寿桃。",
+    "id": "shuan013",
+    "name": "紫檀云纹案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shuan014": {
+    "buyPrice": 100,
+    "dsc": "这是黄花梨木制成的书案，案面攒框镶独板，板材硕大，纹理秀美。牙头及牙板上皆以浮雕拐子龙为饰，牙板中部雕饰龙托宝鼎，寓意“问鼎天下”。",
+    "id": "shuan014",
+    "name": "黄梨八宝案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "shugui001": {
+    "dsc": "测试专用",
+    "id": "shugui001",
+    "name": "书柜",
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss03jj1": {
+    "buyPrice": 10,
+    "dsc": "张宁生前夜游寒山寺所作绘卷，如今已成张家流传下来的最后一幅字画。画上孤月当空，江上灯火若隐若现，一派萧瑟景象。",
+    "id": "ss03jj1",
+    "itemCanSale": 1,
+    "name": "月落乌啼",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "ss05jj1": {
+    "buyPrice": 10,
+    "dsc": "用整张虎皮制成的挂饰，虎皮毛色鲜亮，花纹分明，看起来十分威风。",
+    "id": "ss05jj1",
+    "itemCanSale": 1,
+    "name": "虎皮挂饰",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "ss07jj1": {
+    "buyPrice": 10,
+    "dsc": "妾发初覆额，折花门前剧。郎骑竹马来，绕床弄青梅。",
+    "id": "ss07jj1",
+    "itemCanSale": 1,
+    "name": "竹马",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss10jj1": {
+    "buyPrice": 10,
+    "dsc": "碧色的晶莹玉石制成的毛笔，色泽盈润，虽可作为寻常毛笔使用，但大多用于观赏。",
+    "id": "ss10jj1",
+    "itemCanSale": 1,
+    "name": "碧晶笔",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss12jj1": {
+    "buyPrice": 10,
+    "dsc": "绣女所绣的龙凤图，龙凤姿态灵动，造型精美。由于是一针一线刺绣，较作画更为难得。",
+    "id": "ss12jj1",
+    "itemCanSale": 1,
+    "name": "龙凤图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "ss15jj1": {
+    "buyPrice": 10,
+    "dsc": "黄寿山石雕刻的托塔罗汉。罗汉色如粟黄，凝脂如玉，温润见古，质地纯正。",
+    "id": "ss15jj1",
+    "itemCanSale": 1,
+    "name": "寿山石雕罗汉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss20jj1": {
+    "buyPrice": 10,
+    "dsc": "玉晶石雕刻而成的水仙花。花瓣叶脉晶莹剔透，似乎风吹可折。",
+    "id": "ss20jj1",
+    "itemCanSale": 1,
+    "name": "玉晶水仙",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss21jj1": {
+    "buyPrice": 10,
+    "dsc": "松鹤楼厨艺大赛的魁首奖励。此碗为圆唇敞口，斜腹微弧，浅圈足，胎质细腻致密，造型优美精致。",
+    "id": "ss21jj1",
+    "itemCanSale": 1,
+    "name": "定窑瓷碗",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss23jj1": {
+    "buyPrice": 10,
+    "dsc": "大理石雕刻而成的虎雕像。雕刻手艺十分独特，以大理石的天然纹路作为虎纹，看起来浑然天成。",
+    "id": "ss23jj1",
+    "itemCanSale": 1,
+    "name": "云石虎雕",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss24jj1": {
+    "buyPrice": 10,
+    "dsc": "用十分柔韧的草编制而成的凳子。虽然是草编制，但穿插结构十分巧妙，可承百斤而不倒。",
+    "id": "ss24jj1",
+    "itemCanSale": 1,
+    "name": "草编凳",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss30jj1": {
+    "buyPrice": 10,
+    "dsc": "这是一枚前朝的铜钱，上面有些绿色的锈迹，不过尚且保存完好。",
+    "id": "ss30jj1",
+    "itemCanSale": 1,
+    "name": "古铜钱",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss32jj1": {
+    "buyPrice": 10,
+    "dsc": "梨花木雕刻的桃子摆件。能把桃雕刻得如此惟妙惟肖，可见其主人有多爱吃。",
+    "id": "ss32jj1",
+    "itemCanSale": 1,
+    "name": "木桃",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss34jj1": {
+    "buyPrice": 10,
+    "dsc": "夜明珠的仿制品，由鱼眼石制成。虽然并没有夜明珠般价值连城，但也能在夜晚发出盈润的淡淡光芒，亦是十分珍贵。",
+    "id": "ss34jj1",
+    "itemCanSale": 1,
+    "name": "明珠",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss35jj1": {
+    "buyPrice": 10,
+    "dsc": "一幅描绘早春时节的山水图。虽然笔锋略显稚嫩，但看得出是用心之作。",
+    "id": "ss35jj1",
+    "itemCanSale": 1,
+    "name": "早春图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "ss36jj1": {
+    "buyPrice": 10,
+    "dsc": "由白玉制成的玉兔。玉质细腻，双耳尖长，身躯卷曲，造型小巧精致。",
+    "id": "ss36jj1",
+    "itemCanSale": 1,
+    "name": "卷体玉兽",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss38jj1": {
+    "buyPrice": 10,
+    "dsc": "墨玉制成的酒葫芦。虽然墨玉价格不高，但这葫芦雕刻精细，纹路浑然天成。",
+    "id": "ss38jj1",
+    "itemCanSale": 1,
+    "name": "墨玉葫芦",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss38jj2": {
+    "buyPrice": 10,
+    "dsc": "用来装酒的葫芦。由于长期浸在酒里，葫芦已经十分光滑。",
+    "id": "ss38jj2",
+    "itemCanSale": 1,
+    "name": "酒葫芦",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss39jj1": {
+    "buyPrice": 10,
+    "dsc": "褐色砂陶制成的陶环。由于独特的环形形状十分难制成，因此比较罕见。",
+    "id": "ss39jj1",
+    "itemCanSale": 1,
+    "name": "陶环",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss40jj1": {
+    "buyPrice": 10,
+    "dsc": "这砚砚首有牧童驯牛塑像，砚面乌黑发亮，似乎还残留着墨香。",
+    "id": "ss40jj1",
+    "itemCanSale": 1,
+    "name": "牧牛澄泥砚",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss41jj1": {
+    "buyPrice": 10,
+    "dsc": "桐木制成的胡琴，表面有天然的木质纹路。胡琴是从极北之地带回，颇为珍贵。",
+    "id": "ss41jj1",
+    "itemCanSale": 1,
+    "name": "桐木胡琴",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "ss45jj1": {
+    "buyPrice": 10,
+    "dsc": "样式是铜钱串起来做成的剑，唯一不同的是，这把剑是由纯金打造，贵重无比。",
+    "id": "ss45jj1",
+    "itemCanSale": 1,
+    "name": "铜钱剑",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "tianchan001": {
+    "buyPrice": 150,
+    "dsc": "这是一颗萝卜，刚从地里拔出来，可以拿去卖钱。",
+    "id": "tianchan001",
+    "name": "萝卜",
+    "salePrice": 150,
+    "type": "其他",
+    "unit": "颗"
+  },
+  "tianchan002": {
+    "buyPrice": 150,
+    "dsc": "这是一颗青菜，十分水灵，可以拿去卖钱。",
+    "id": "tianchan002",
+    "name": "青菜",
+    "salePrice": 150,
+    "type": "其他",
+    "unit": "颗"
+  },
+  "tianchan003": {
+    "buyPrice": 300,
+    "dsc": "这是一个土豆，刚从土里刨出来，可以拿去卖钱。",
+    "id": "tianchan003",
+    "name": "土豆",
+    "salePrice": 300,
+    "type": "其他",
+    "unit": "个"
+  },
+  "tingyuan001": {
+    "id": "tingyuan001",
+    "name": "湖心亭",
+    "type": "家具",
+    "unit": "个"
+  },
+  "tudi01": {
+    "id": "tudi01",
+    "name": "土地",
+    "type": "家具",
+    "unit": "个"
+  },
+  "wooden001": {
+    "id": "wooden001",
+    "name": "永久木人",
+    "type": "家具",
+    "unit": "个"
+  },
+  "xcjiaju001": {
+    "buyPrice": 100,
+    "dsc": "一个红色锦缎坐垫。内里则是上等棉絮，垫子面则是杭州第一女红用了七天绣成的一条锦鲤。绣工精湛，锦鲤栩栩如生，寓意年年有余。",
+    "id": "xcjiaju001",
+    "itemCanSale": 1,
+    "name": "红苑锦鲤垫",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "xcjiaju002": {
+    "buyPrice": 100,
+    "dsc": "以精铜制成的麒麟，精致小巧，一只手掌便可轻松托起。雕刻细致入微，麒麟眼睛处，却是镶了两块碧玉，晶莹剔透，更添神采。",
+    "id": "xcjiaju002",
+    "itemCanSale": 1,
+    "name": "碧禧麒麟",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "xianglu001": {
+    "dsc": "测试专用",
+    "id": "xianglu001",
+    "name": "香炉",
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu001": {
+    "buyPrice": 10,
+    "dsc": "一个普普通通的炼药炉。",
+    "id": "yaolu001",
+    "name": "炼丹炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu002": {
+    "buyPrice": 10,
+    "dsc": "一个铁制的炼药炉，十分沉重。",
+    "id": "yaolu002",
+    "name": "铁炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu003": {
+    "buyPrice": 10,
+    "dsc": "一个黄铜打造的炼药炉。炉脚微微泛着绿泽。",
+    "id": "yaolu003",
+    "name": "铜炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu004": {
+    "buyPrice": 10,
+    "dsc": "一个由精钢浇灌而成的炼药炉。",
+    "id": "yaolu004",
+    "name": "精钢炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu005": {
+    "buyPrice": 10,
+    "dsc": "一个银制的精致小炼药炉。",
+    "id": "yaolu005",
+    "name": "银炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu006": {
+    "buyPrice": 10,
+    "dsc": "一个铜制鎏金的炼药炉。烛火照映之下熠熠生光。",
+    "id": "yaolu006",
+    "name": "鎏金炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu007": {
+    "buyPrice": 10,
+    "dsc": "月长石打造的炼药炉。边缘淡蓝，正中散发着盈盈月光。",
+    "id": "yaolu007",
+    "name": "月长炉",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu008": {
+    "buyPrice": 100,
+    "dsc": "铸造成莲花形状的炼药炉。炉脚为莲叶，炉顶为莲花，脉络雕刻清晰，层层绽放而开。",
+    "id": "yaolu008",
+    "name": "莲花炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu009": {
+    "buyPrice": 100,
+    "dsc": "整块黑曜石雕刻而成的炼药炉。由于这种大小的黑曜石已经是世间罕见，再加之雕工精细，造型奇特，成为极为贵重的珍品。",
+    "id": "yaolu009",
+    "name": "黑曜炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu010": {
+    "buyPrice": 100,
+    "dsc": "玉石雕琢而成的炼药炉。炉身为透雕，花纹在炉火升起之时便会透光显现。",
+    "id": "yaolu010",
+    "name": "透花雕玉炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu011": {
+    "buyPrice": 100,
+    "dsc": "纯金打造的炼药炉。炉顶浇筑金蟾，金蟾大张其口仰头向天，口中含玉一枚，有财源广进之意。",
+    "id": "yaolu011",
+    "name": "望日金蟾炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yaolu012": {
+    "buyPrice": 100,
+    "dsc": "按传说之中太上老君兜率宫中丹炉铸造而成的炼药炉。虽然并无神力，但设计精巧，又炼药无数，练出的药物药效奇高。",
+    "id": "yaolu012",
+    "name": "兜率炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "year4jiaju1": {
+    "buyPrice": 100,
+    "dsc": "以金丝楠木制成的椅子，木料上乘，在日光之下，可见木中隐隐的金丝。",
+    "id": "year4jiaju1",
+    "itemCanSale": 1,
+    "name": "楠木金丝椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "year4jiaju2": {
+    "buyPrice": 100,
+    "dsc": "以楠木刨成镜台，正中镶一圆形铜镜，镜边衬玛瑙数颗，极是奢华。",
+    "id": "year4jiaju2",
+    "itemCanSale": 1,
+    "name": "楠木玛瑙镜",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "year4jiaju3": {
+    "buyPrice": 100,
+    "dsc": "共有四扇的楠木屏风，上绘一幅碧海青天图，画工高超，高贵典雅。",
+    "id": "year4jiaju3",
+    "itemCanSale": 1,
+    "name": "楠木碧海屏",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yigui001": {
+    "dsc": "测试专用",
+    "id": "yigui001",
+    "name": "衣柜",
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi001": {
+    "buyPrice": 10,
+    "dsc": "一把十分大气的太师椅。",
+    "id": "yizi001",
+    "name": "太师椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi002": {
+    "buyPrice": 10,
+    "dsc": "一个小小的木凳。",
+    "id": "yizi002",
+    "name": "木凳",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi003": {
+    "buyPrice": 10,
+    "dsc": "一把松木制成的交椅。",
+    "id": "yizi003",
+    "name": "交椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi004": {
+    "buyPrice": 10,
+    "dsc": "一把文椅，又被称为玫瑰椅。",
+    "id": "yizi004",
+    "name": "文椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi005": {
+    "buyPrice": 10,
+    "dsc": "一个四四方方的小木凳。",
+    "id": "yizi005",
+    "name": "小方凳",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi006": {
+    "buyPrice": 10,
+    "dsc": "一把竹子制成的椅子，坐上去吱呀作响。",
+    "id": "yizi006",
+    "name": "竹椅",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi007": {
+    "buyPrice": 100,
+    "dsc": "这交椅椅圈分三段以楔钉榫攒接而成，中间透雕麒麟葫芦、山石灵芝，下端作壸门式亮脚。",
+    "id": "yizi007",
+    "name": "圆后背交椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi008": {
+    "buyPrice": 100,
+    "dsc": "这椅子下半部作四面平内翻马蹄式，装饰极简。壶门牙子的曲线复杂而雅致。",
+    "id": "yizi008",
+    "name": "雕花靠背椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi009": {
+    "buyPrice": 100,
+    "dsc": "此椅腿足较细，榫头露出少许，既舒展大方，又内敛庄重。",
+    "id": "yizi009",
+    "name": "扇面官帽椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi010": {
+    "buyPrice": 100,
+    "dsc": "这把椅子座面下安壶门式样的券口牙子，线条圆熟、劲挺，轮廓优雅。",
+    "id": "yizi010",
+    "name": "透雕背圈椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi011": {
+    "buyPrice": 100,
+    "dsc": "此方凳有束腰和托泥，造型讲究，用。面心镶整块掐丝珐琅，疏密有致，繁而不乱。",
+    "id": "yizi011",
+    "name": "珐琅心方凳",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi012": {
+    "buyPrice": 100,
+    "dsc": "这椅子外观集合精巧玲珑和清秀儒雅，背面为镂空方格拼接而成，表面显出淡淡光泽。",
+    "id": "yizi012",
+    "name": "乌木扶手椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的云纹交椅。椅子把手雕刻着云纹，背面则是一只振翅欲飞的仙鹤，雕工细腻，栩栩如生、",
+    "id": "yizi013",
+    "name": "紫檀云纹椅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yizi014": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木所制成的八宝方凳。面为整齐的方正形状，腿为柔和的曲线，其形如玉壶一般。",
+    "id": "yizi014",
+    "name": "黄梨八宝凳",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "yulujingshui1": {
+    "dsc": "这是一桶打自玉露井的井水，水温极低，水质清澈甘冽，非同寻常。",
+    "id": "yulujingshui1",
+    "name": "玉露井水",
+    "type": "消耗品",
+    "unit": "个"
+  },
+  "yxyjiaju001": {
+    "buyPrice": 10,
+    "dsc": "西洋女士所用的梳妆台。通体白漆，其上流云纹饰为西洋巧匠精心雕刻而成。正中一面椭圆形镜子，下设三个小抽屉。",
+    "id": "yxyjiaju001",
+    "itemCanSale": 1,
+    "name": "轻奢梳妆台",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhaotai001": {
+    "id": "zhaotai001",
+    "name": "灶台",
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao001": {
+    "buyPrice": 10,
+    "dsc": "百瓷烧制的花瓶，里面插着几朵花。-",
+    "id": "zhenbao001",
+    "name": "白瓷花瓶",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao002": {
+    "buyPrice": 10,
+    "dsc": "一个陶制的方形花盆，里面栽种着奇珍异草。",
+    "id": "zhenbao002",
+    "name": "陶土花盆",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao003": {
+    "buyPrice": 10,
+    "dsc": "金丝制成的鸟笼，一只云雀站在其中，发出婉转的歌声。",
+    "id": "zhenbao003",
+    "name": "金丝鸟笼",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao004": {
+    "buyPrice": 10,
+    "dsc": "此琴为仲尼式古琴，琴面髹黑漆，金徽玉足，琴背有长方形龙池，龙池上方镌有行书“寒泉漱石”四字。",
+    "id": "zhenbao004",
+    "name": "寒泉漱石琴",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao005": {
+    "buyPrice": 10,
+    "dsc": "次瓶由龙泉窑烧制。该瓶外壁刻花卉纹，肩部有 5个六面形管流，有盖，表面施浅绿色釉。",
+    "id": "zhenbao005",
+    "name": "龙泉五管瓶",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao006": {
+    "buyPrice": 10,
+    "dsc": "该爵杯用青玉制成，满沁，古韵苍遒，雕琢精细，器身布满网纹、卷云纹等。",
+    "id": "zhenbao006",
+    "name": "玉爵杯",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao007": {
+    "buyPrice": 100,
+    "dsc": "这是一个香炉。该炉腹部鼓起，两侧有耳、口略外撇、圈足。表面釉质肥厚，布满黑色网状开片，底足露胎处显出褐色胎。",
+    "id": "zhenbao007",
+    "name": "哥窑双耳炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao008": {
+    "buyPrice": 100,
+    "dsc": "该盘底部有“正德年制”四字二行楷书款，敞口，浅弧壁，圈足。以青花为饰，里外均绘龙穿花纹饰，釉面莹润，白中闪青。",
+    "id": "zhenbao008",
+    "name": "青花龙纹盘",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao009": {
+    "buyPrice": 100,
+    "dsc": "该凤尾瓶形制优美，颈上绘蕉叶纹，肩上花卉为饰，腹以红色绘龙和花卉，颜色搭配得当，色彩鲜艳，绘工流畅。",
+    "id": "zhenbao009",
+    "name": "五彩凤尾瓶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao010": {
+    "buyPrice": 100,
+    "dsc": "全称为粉彩缠枝花卉墨盒。该墨盒四方口，外壁、顶盖均以粉彩绘缠枝花卉纹，顶盖有一四方描金开光，器型精致小巧，高雅大方。",
+    "id": "zhenbao010",
+    "name": "粉彩墨盒",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao011": {
+    "buyPrice": 100,
+    "dsc": "此图乃是刺绣之作。整幅为圆形，雌雄双鸟交错，布局繁密，群鸟姿态生动。",
+    "id": "zhenbao011",
+    "name": "百鸟朝凤图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao012": {
+    "buyPrice": 100,
+    "dsc": "该雕像玉质温润纯净，具油脂光泽。雕琢精湛，章法严谨，功力显见，人物活灵活现，栩栩如生。",
+    "id": "zhenbao012",
+    "name": "白玉雕和尚",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao013": {
+    "buyPrice": 100,
+    "dsc": "该炉仿青铜器鬲而制成，口外侈微折，颈短且直，腹扁圆略鼓，附三乳形足，造型古朴典雅，通体施青釉，釉质莹润。",
+    "id": "zhenbao013",
+    "name": "龙泉三足炉",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao014": {
+    "buyPrice": 100,
+    "dsc": "该壶头部作凤首，长颈，颈下部突起五道弦纹，长弧腹，圈 足。通体白釉，釉色晶莹剔透。划花莲花纹饰布满全身，器身开较大纹片，古朴典雅。",
+    "id": "zhenbao014",
+    "name": "凤首壶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao015": {
+    "buyPrice": 100,
+    "dsc": "这是一块造成假山的石头，太湖石犹如孤峰兀立，妙趣天成。上面空洞众多，给人以曲径通幽之感。",
+    "id": "zhenbao015",
+    "name": "太湖石山子",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao016": {
+    "buyPrice": 100,
+    "dsc": "该钺造型奇特，刃部两角反卷，有三个起缘的圆孔。銎呈管状，断面椭圆，上小下大，饰以四道突起的箍状装饰。",
+    "id": "zhenbao016",
+    "name": "三孔有銎钺",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhenbao017": {
+    "buyPrice": 100,
+    "dsc": "全名为青花轮花绶带纹葫芦瓶。此瓶绶带为耳，葫芦形器口细长，瓶周沿、绶带身及葫芦形器口分别饰以缠树花卉及云纹，绘法肆意舒展，流畅自如。",
+    "id": "zhenbao017",
+    "name": "青花葫芦瓶",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhongzhi001": {
+    "buyPrice": 1,
+    "dsc": "这是一颗萝卜的种子。",
+    "id": "zhongzhi001",
+    "name": "GRN萝卜种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi002": {
+    "buyPrice": 1,
+    "dsc": "这是一颗青菜的种子。",
+    "id": "zhongzhi002",
+    "name": "GRN青菜种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi003": {
+    "buyPrice": 1,
+    "dsc": "这是一颗土豆的种子。",
+    "id": "zhongzhi003",
+    "name": "GRN土豆种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi004": {
+    "buyPrice": 1,
+    "dsc": "这是一颗甘草的种子。",
+    "id": "zhongzhi004",
+    "name": "GRN甘草种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi005": {
+    "buyPrice": 1,
+    "dsc": "这是一颗曼陀罗花的种子。",
+    "id": "zhongzhi005",
+    "name": "HIC曼陀罗花种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi006": {
+    "buyPrice": 1,
+    "dsc": "这是一颗阴见的种子。",
+    "id": "zhongzhi006",
+    "name": "GRN阴见种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi007": {
+    "buyPrice": 1,
+    "dsc": "这是一颗防己的种子。",
+    "id": "zhongzhi007",
+    "name": "GRN防己种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi008": {
+    "buyPrice": 1,
+    "dsc": "这是一颗虞美人的种子。",
+    "id": "zhongzhi008",
+    "name": "HIC虞美人种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi009": {
+    "buyPrice": 1,
+    "dsc": "这是一颗半夏的种子。",
+    "id": "zhongzhi009",
+    "name": "GRN半夏种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi010": {
+    "buyPrice": 1,
+    "dsc": "这是一颗千金子的种子。",
+    "id": "zhongzhi010",
+    "name": "GRN千金子种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi011": {
+    "buyPrice": 1,
+    "dsc": "这是一颗白头翁的种子。",
+    "id": "zhongzhi011",
+    "name": "GRN白头翁种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi012": {
+    "buyPrice": 1,
+    "dsc": "这是一颗防风的种子。",
+    "id": "zhongzhi012",
+    "name": "GRN防风种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi013": {
+    "buyPrice": 1,
+    "dsc": "这是一颗鸡鸣草的种子。",
+    "id": "zhongzhi013",
+    "name": "GRN鸡鸣草种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi014": {
+    "buyPrice": 1,
+    "dsc": "这是一颗白附子的种子。",
+    "id": "zhongzhi014",
+    "name": "CYN白附子种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi015": {
+    "buyPrice": 1,
+    "dsc": "这是一颗使君子的种子。",
+    "id": "zhongzhi015",
+    "name": "CYN使君子种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi016": {
+    "buyPrice": 1,
+    "dsc": "这是一颗忍冬的种子。",
+    "id": "zhongzhi016",
+    "name": "CYN忍冬种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi017": {
+    "buyPrice": 1,
+    "dsc": "这是一颗七星海棠的种子。",
+    "id": "zhongzhi017",
+    "name": "PNK七星海棠种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi018": {
+    "buyPrice": 1,
+    "dsc": "这是一颗艾叶的种子。",
+    "id": "zhongzhi018",
+    "name": "CYN艾叶种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi019": {
+    "buyPrice": 1,
+    "dsc": "这是一颗草乌头的种子。",
+    "id": "zhongzhi019",
+    "name": "CYN草乌头种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi020": {
+    "buyPrice": 1,
+    "dsc": "这是一颗阳见的种子。",
+    "id": "zhongzhi020",
+    "name": "CYN阳见种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi021": {
+    "buyPrice": 1,
+    "dsc": "这是一颗雪莲花的种子。",
+    "id": "zhongzhi021",
+    "name": "WHT雪莲花种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi022": {
+    "buyPrice": 1,
+    "dsc": "这是一颗雷公藤的种子。",
+    "id": "zhongzhi022",
+    "name": "WHT雷公藤种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi023": {
+    "buyPrice": 1,
+    "dsc": "这是一颗万年青的种子。",
+    "id": "zhongzhi023",
+    "name": "WHT万年青种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi024": {
+    "buyPrice": 1,
+    "dsc": "这是一颗无常草的种子。",
+    "id": "zhongzhi024",
+    "name": "WHT无常草种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi025": {
+    "buyPrice": 1,
+    "dsc": "这是一颗福寿草的种子。",
+    "id": "zhongzhi025",
+    "name": "HIY福寿草种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi026": {
+    "buyPrice": 1,
+    "dsc": "这是一颗阎罗愁的种子。",
+    "id": "zhongzhi026",
+    "name": "WHT阎罗愁种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhongzhi027": {
+    "buyPrice": 1,
+    "dsc": "这是一颗彼岸花的种子。",
+    "id": "zhongzhi027",
+    "name": "WHT彼岸花种子NOR",
+    "salePrice": 1,
+    "type": "种子",
+    "unit": "颗"
+  },
+  "zhuozi001": {
+    "buyPrice": 10,
+    "dsc": "一张宽大的书桌，能放下不少书籍。",
+    "id": "zhuozi001",
+    "name": "书桌",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi002": {
+    "buyPrice": 10,
+    "dsc": "一张用于摆放茶具的小几。",
+    "id": "zhuozi002",
+    "name": "小几",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi003": {
+    "buyPrice": 10,
+    "dsc": "一张方方正正的桌子。",
+    "id": "zhuozi003",
+    "name": "方桌",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi004": {
+    "buyPrice": 10,
+    "dsc": "一张雕刻着花纹的八仙桌。",
+    "id": "zhuozi004",
+    "name": "八仙桌",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi005": {
+    "buyPrice": 10,
+    "dsc": "一张桌腿为曲型的罗锅桌。",
+    "id": "zhuozi005",
+    "name": "罗锅桌",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi006": {
+    "buyPrice": 10,
+    "dsc": "一个桌面平整的画案。",
+    "id": "zhuozi006",
+    "name": "画案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi007": {
+    "buyPrice": 10,
+    "dsc": "一张四足八方香几。几面攒框，八角八方。牙子波折，状如锦袱。腿子三弯，亭亭玉立。",
+    "id": "zhuozi007",
+    "name": "八方香几",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi008": {
+    "buyPrice": 10,
+    "dsc": "香樟木制成的平头案。桌面手感温润，光泽如玉。",
+    "id": "zhuozi008",
+    "name": "香樟平头案",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi009": {
+    "buyPrice": 100,
+    "dsc": "全称为一腿三牙罗锅枨加卡子花方桌。牙条之间增设了云头纹卡子花，桌腿为甜瓜棱线脚。",
+    "id": "zhuozi009",
+    "name": "卡子花方桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi010": {
+    "buyPrice": 100,
+    "dsc": "不着装饰的翘头案。桌腿与牙条线条流畅，连接二者的插肩榫结构复杂精巧。",
+    "id": "zhuozi010",
+    "name": "青松翘头案",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi011": {
+    "buyPrice": 100,
+    "dsc": "紫衫木制成的束腰齐牙条炕桌。束腰三弯腿造型，腿足上雕着端威猛的兽面雕刻。",
+    "id": "zhuozi011",
+    "name": "紫衫束腰桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi012": {
+    "buyPrice": 100,
+    "dsc": "红木所制成的两卷角牙琴桌。四面平齐。腿四方，内翻马蹄足，内里为空，拍上去嗡嗡作响，能与琴声产生共鸣。",
+    "id": "zhuozi012",
+    "name": "红木牙琴桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi013": {
+    "buyPrice": 100,
+    "dsc": "紫檀木所制成的云纹桌。四角微微翘起，下设雕着云纹的霸王柞。",
+    "id": "zhuozi013",
+    "name": "紫檀云纹桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zhuozi014": {
+    "buyPrice": 100,
+    "dsc": "黄花梨木所制成的八宝桌。桌高三尺，桌腿为曲型，其上雕着数点梅花。",
+    "id": "zhuozi014",
+    "name": "黄梨八宝桌",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "个"
+  },
+  "zihua001": {
+    "buyPrice": 10,
+    "dsc": "一幅画着山水的图画。",
+    "id": "zihua001",
+    "name": "山水图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua002": {
+    "buyPrice": 10,
+    "dsc": "一幅雪下落梅图。",
+    "id": "zihua002",
+    "name": "落梅图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua003": {
+    "buyPrice": 10,
+    "dsc": "一幅画着栩栩如生仕女的图画。",
+    "id": "zihua003",
+    "name": "仕女图",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua004": {
+    "buyPrice": 10,
+    "dsc": "一幅行书写就的字帖。",
+    "id": "zihua004",
+    "name": "行书字帖",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua005": {
+    "buyPrice": 10,
+    "dsc": "一幅草书写就的字帖，字里行间十分狂放。",
+    "id": "zihua005",
+    "name": "草书字帖",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua006": {
+    "buyPrice": 10,
+    "dsc": "不知何人抄写的金刚经经文的一部分。",
+    "id": "zihua006",
+    "name": "金刚经文",
+    "salePrice": 10,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua007": {
+    "buyPrice": 100,
+    "dsc": "此画不知出自何人之手，但画功了得，画中人衣袂飘飘、仗剑而行，简直呼之欲出，非常传神。",
+    "id": "zihua007",
+    "name": "白衣剑侠图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua008": {
+    "buyPrice": 100,
+    "dsc": "此画乃是刘松年所画。全作用笔变化多端，衣纹流畅罗汉头後的圆光，及三树枝柯掩映，层次分明。全画敷色妍丽，繁缛精美，皆臻绝纱。",
+    "id": "zihua008",
+    "name": "罗汉图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua009": {
+    "buyPrice": 100,
+    "dsc": "此画乃是唐寅真作。画中线条清细，色彩艳丽清雅，体态优美，造型准确，笔简意赅，饶有意趣。",
+    "id": "zihua009",
+    "name": "嫦娥执桂图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua010": {
+    "buyPrice": 100,
+    "dsc": "此画画功老道、浑然天成，让人感受不到一丝烟火气，细细品之，更觉得禅意盈胸。作者已经不可考。",
+    "id": "zihua010",
+    "name": "达摩面壁图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua011": {
+    "buyPrice": 100,
+    "dsc": "此画乃李真真迹。人物脸部五官以细笔勾描，而剃净的头颅、下颚的于腮则以淡墨晕染。",
+    "id": "zihua011",
+    "name": "不空金刚",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua012": {
+    "buyPrice": 100,
+    "dsc": "此画为周舫所作。画有六名妇女，云髻高耸，顶戴各种不同的折枝花朵，两眉画作蛾翅状，为中晚唐以后流行的贵妇造形。",
+    "id": "zihua012",
+    "name": "簪花仕女图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua013": {
+    "buyPrice": 100,
+    "dsc": "此画乃是荆浩真迹。华中山岩质感坚硬，由左下而右上的斜线折曲繁密的排列，细腻圆熟。",
+    "id": "zihua013",
+    "name": "匡庐图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua014": {
+    "buyPrice": 100,
+    "dsc": "此画是董源所画。此画中展现一片泽国风光，芦丛坡渚及矮丘寒林等，于远景沼泽以破墨层层渲染，而林叶以湿墨点擦成，写尽了江南水气充沛的感觉。",
+    "id": "zihua014",
+    "name": "寒林重汀",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua015": {
+    "buyPrice": 100,
+    "dsc": "此画乃是董源真迹。这幅图卷首画几名着色小人物伫立岸边，有一红衣朝官正乘船驶来，隔着辽阔的江水，远处山峦在烟岚中起伏。",
+    "id": "zihua015",
+    "name": "潇湘图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua016": {
+    "buyPrice": 100,
+    "dsc": "此画乃是李成真迹。画中构图采“平远”形式，前景数株松树立于烟雾之中，其后一片迷蒙分向左右两方伸展至远景山峦。松树枝干肌理、尖细松针描画细腻。",
+    "id": "zihua016",
+    "name": "小寒林图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua017": {
+    "buyPrice": 100,
+    "dsc": "此画乃是李成真迹。画中近、中景林木，一概是枝桠虬曲、叶落尽净的“寒林”，山岩显著的轮廓线以及细密的短直皴笔。",
+    "id": "zihua017",
+    "name": "晴峦萧寺",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua018": {
+    "buyPrice": 100,
+    "dsc": "此画乃是巨然所作。此画左上方有“宣文阁宝”印，画中山石皆以短笔披麻皴画成，轮廓线是用粗笔擦成，而自山顶到坡脚皆作小石堆叠。",
+    "id": "zihua018",
+    "name": "萧翼赚兰亭",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua019": {
+    "buyPrice": 100,
+    "dsc": "此画是巨然真迹。“兰若”是梵话所谓的“佛寺”，这幅作品即是画一处佛院坐落的清幽山林。",
+    "id": "zihua019",
+    "name": "溪山兰若",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua020": {
+    "buyPrice": 100,
+    "dsc": "画幅右下角行旅队后的林叶间，藏有“范宽”二字。以画构图是自山下仰望山颠的“高远”形式。",
+    "id": "zihua020",
+    "name": "溪山行旅",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua021": {
+    "buyPrice": 100,
+    "dsc": "HIR这是米芾的行书作品。米芾的行书可谓是王羲之、颜真卿之后的又一座书法高峰。NOR",
+    "id": "zihua021",
+    "name": "章圣天临殿记",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua022": {
+    "buyPrice": 100,
+    "dsc": "HIR这是柳公权《神策军碑》的唐拓本，可谓吉光片羽，十分珍贵。NOR",
+    "id": "zihua022",
+    "name": "神策军碑",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua023": {
+    "buyPrice": 100,
+    "dsc": "HIR相传是张旭肚痛时自诊的一纸医案。这幅作品开头的三个字，写得还比较规正，从第四字开始，便每行一笔到底，将草书的情境表现发挥到了极致。NOR",
+    "id": "zihua023",
+    "name": "肚痛帖",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua024": {
+    "buyPrice": 100,
+    "dsc": "此贴乃怀素所作。其笔法活泼飞动，笔下生风，“心手相师势转奇，诡形怪状翻合宜”，是一篇情愫奔腾激荡，“泼墨大写意”般的抒情之作。",
+    "id": "zihua024",
+    "name": "自叙帖",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua025": {
+    "buyPrice": 100,
+    "dsc": "HIR由赵孟頫所作。画里描绘的是初秋时节，牧马人在荒野牧马的情景。画面中有十几匹不同造型的马，体态肥硕健壮、姿态各异。NOR",
+    "id": "zihua025",
+    "name": "秋郊饮马图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua026": {
+    "buyPrice": 100,
+    "dsc": "HIR由赵孟坚所作。松、竹、梅画法各异，充满韵致。NOR",
+    "id": "zihua026",
+    "name": "岁寒三友图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua027": {
+    "buyPrice": 100,
+    "dsc": "HIR此画由王冕所作，是他晚年画梅艺术臻于化境的杰作。NOR",
+    "id": "zihua027",
+    "name": "墨梅图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua028": {
+    "buyPrice": 100,
+    "dsc": "HIR由文征明所作。此画根据屈原《九歌》的湘君、湘夫人二章而作。人物造型形象古雅，体态修长，长袖飘逸，衣裙曳地，承晋人遗风。NOR",
+    "id": "zihua028",
+    "name": "湘君湘夫人图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua029": {
+    "buyPrice": 100,
+    "dsc": "HIR由徐渭所作。此画笔墨飞舞，纵横淋漓，虽说画葡萄，却不求形似，但趁一时之兴，痛泻心中垒块而已。NOR",
+    "id": "zihua029",
+    "name": "葡萄图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua030": {
+    "buyPrice": 100,
+    "dsc": "HIR由宋徽宗赵佶所写的草书长卷。笔势奔放流畅，变幻莫测，一气呵成，颇为壮观，是继张旭、怀素之后的杰作。NOR",
+    "id": "zihua030",
+    "name": "草书千字文",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua031": {
+    "buyPrice": 100,
+    "dsc": "YEL此画乃是黄公望作品。以富春江为背景，画面用墨淡雅，山和水的布置疏密得当，墨色浓淡干湿并用，极富于变化。NOR",
+    "id": "zihua031",
+    "name": "富春山居图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua032": {
+    "buyPrice": 100,
+    "dsc": "HIM颜真卿的书法作品，被誉为“天下行书第二”，又与《兰亭序》、《黄州寒食帖》并称天下三大行书。NOR",
+    "id": "zihua032",
+    "name": "祭侄文稿",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua033": {
+    "buyPrice": 100,
+    "dsc": "HIM苏轼行书的代表作。在书法史上影响很大，被称为“天下第三行书”，也是苏轼书法作品中的上乘。NOR",
+    "id": "zihua033",
+    "name": "黄州寒食帖",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua034": {
+    "buyPrice": 100,
+    "dsc": "HIM王羲之的书法作品，全文只有二十八字，被誉为“二十八骊珠”，历代称为“天下法书第一”。NOR",
+    "id": "zihua034",
+    "name": "快雪时晴帖",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua035": {
+    "buyPrice": 100,
+    "dsc": "HIM东晋顾恺之的画作，是由多个故事情节组成的类似连环画而又融会贯通的长卷，被誉为绘画始祖。NOR",
+    "id": "zihua035",
+    "name": "洛神赋图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  },
+  "zihua036": {
+    "buyPrice": 100,
+    "dsc": "HIM由王希孟创作的绢本画卷作品，以长卷形式，立足传统，画面细致入微，烟波浩渺的江河、层峦起伏的群山构成了一幅美妙的江南山水图，是水墨山水的大成之作。NOR",
+    "id": "zihua036",
+    "name": "千里江山图",
+    "salePrice": 100,
+    "type": "家具",
+    "unit": "幅"
+  }
+}

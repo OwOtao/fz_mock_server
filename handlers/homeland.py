@@ -4,6 +4,7 @@ import copy
 import hashlib
 import time
 
+from handlers.familytype_data import HX_TABLE
 from protocol import build_response_body
 from server import route
 
@@ -43,6 +44,8 @@ def _normalize_room(room, mid, rid_base):
     return out
 
 
+DEFAULT_HX_ID = "huxing002"
+
 DEFAULT_HOUSE = {
     "fqId": "yangzhou002",
     "houseName": "普通房屋",
@@ -53,55 +56,134 @@ DEFAULT_HOUSE = {
     "mapId": "fb10",
     "mid": 14750,
     "name": "HIY简屋(壹)NOR",
+    "hxId": DEFAULT_HX_ID,
     "roomnum": 9,
     "status": 1,
     "type": "房契",
 }
 
-# huxing002(简屋小户) 官方户型布局, 与 assets/res/script/others/familytype.lua
-# 的 ["huxing002"] 房间连接及 ["户型总览"][2] 的 mapAppearance/mapAppearanceIndex 一致。
-# roomType 映射来自 familylist.lua: 屋外=tsfangjian002 门前=tsfangjian003
-# 大门=tsfangjian004 卧室=tsfangjian011 仓库=tsfangjian005 练功房=tsfangjian009
-# 长廊=ptfangjian001
-DEFAULT_ROOMS = [
-    {"fjId": "fb320_01", "name": "屋外", "desc": "这里是屋外，是一片小小的开阔地", "roomType": "tsfangjian002", "mapHide": 0, "up": "fb320_02"},
-    {"fjId": "fb320_02", "name": "门前", "desc": "宅院门前", "roomType": "tsfangjian003", "mapHide": 0, "down": "fb320_01", "up": "fb320_03"},
-    {"fjId": "fb320_03", "name": "大门", "desc": "宅院大门", "roomType": "tsfangjian004", "mapHide": 0, "down": "fb320_02", "up": "fb320_05"},
-    {"fjId": "fb320_04", "name": "卧室", "desc": "卧室", "roomType": "tsfangjian011", "mapHide": 0, "right": "fb320_05"},
-    {"fjId": "fb320_05", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_03", "left": "fb320_04", "up": "fb320_06"},
-    {"fjId": "fb320_06", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_05", "up": "fb320_08"},
-    {"fjId": "fb320_07", "name": "练功房", "desc": "练功房", "roomType": "tsfangjian009", "mapHide": 0, "right": "fb320_08"},
-    {"fjId": "fb320_08", "name": "长廊", "desc": "这是一条普通的长廊，没有什么奇特之处。", "roomType": "ptfangjian001", "mapHide": 0, "down": "fb320_06", "left": "fb320_07", "right": "fb320_09"},
-    {"fjId": "fb320_09", "name": "仓库", "desc": "仓库", "roomType": "tsfangjian005", "mapHide": 0, "left": "fb320_08"},
-]
+DEFAULT_STEWARD_ID = "guanjia1001"
+DEFAULT_STEWARD = {
+    "objId": DEFAULT_STEWARD_ID,
+    "rwId": DEFAULT_STEWARD_ID,
+    "job": "guanjia001",
+    "jobType": "guanjia001",
+    "name": "权令枫",
+    "sex": "男",
+    "age": 50,
+    "looks": 20,
+    "defaultZhongCheng": 691,
+    "speedZhongCheng": 10,
+    "factor": "",
+    "trait1": "texing001",
+    "trait2": "texing013",
+    "trait3": "",
+    "character": "xingge004",
+    "flag": 0,
+    "modal": "moban010",
+    "leave_day": 0,
+    "traitVal": 0,
+    "shenShi": "",
+    "mobanSkill": {
+        "hanbingguizhua": 290,
+        "jibenbianfa": 290,
+        "jibendaofa": 290,
+        "jibengunfa": 290,
+        "jibenjianfa": 290,
+        "jibenneigong": 290,
+        "jibenqinggong": 290,
+        "jibenquanjiao": 290,
+        "jibenzhaojia": 290,
+        "taijiquan": 290,
+    },
+    "extra": {
+        "naoshi": 0,
+        "shenshi_status": 0,
+    },
+}
 
-# 以下三个字段原样抠自 familytype.lua ["户型总览"]["2"] (huxing002 简屋小户),
-# 已脚本逐字节比对一致, 与真实服务端行为相同(服务端即照抄该表下发)。勿手改。
-HX_MAP_APPEARANCE = "\n".join([
-    "房间—长廊—房间",
-    "　　　　▏",
-    "　　　长廊",
-    "　　　　▏",
-    "房间—长廊",
-    "　　　　▏",
-    "　　　大门",
-    "　　　　▏",
-    "　　　门前",
-    "　　　　▏",
-    "　　　屋外",
-])
-HX_MAP_APPEARANCE_INDEX = "\n".join([
-    "fb320_07,fb320_08,fb320_09",
-    "fb320_06",
-    "fb320_04,fb320_05",
-    "fb320_03",
-    "fb320_02",
-    "fb320_01",
-])
-HX_ENTRY_ROOM = "fb320_02"
+# 全部户型 mapAppearance / mapAppearanceIndex / 房间图原样抠自
+# familytype.lua ["户型总览"] 与 ["huxing00N"], 见 handlers/familytype_data.py。
+DEFAULT_ROOMS = HX_TABLE[DEFAULT_HX_ID]["rooms"]
+HX_MAP_APPEARANCE = HX_TABLE[DEFAULT_HX_ID]["mapAppearance"]
+HX_MAP_APPEARANCE_INDEX = HX_TABLE[DEFAULT_HX_ID]["mapAppearanceIndex"]
+HX_ENTRY_ROOM = HX_TABLE[DEFAULT_HX_ID]["entryRoom"]
+_HX_ROOM_PREFIX = HX_TABLE[DEFAULT_HX_ID]["roomPrefix"]
 
-# huxing002 布局下合法的房间 ID 前缀(含扩建生成的新房间)
-_HX_ROOM_PREFIX = "fb320_"
+
+def _hx_spec(hx_id):
+    hx_id = str(hx_id or "") or DEFAULT_HX_ID
+    return HX_TABLE.get(hx_id) or HX_TABLE[DEFAULT_HX_ID]
+
+
+def _default_employee_fjid(spec):
+    for room in spec.get("rooms") or []:
+        if isinstance(room, dict) and room.get("name") == "卧室":
+            return str(room.get("fjId") or "")
+    return str(spec.get("entryRoom") or "")
+
+
+def _is_steward(employee):
+    if not isinstance(employee, dict):
+        return False
+    job = str(employee.get("job") or employee.get("jobType") or "")
+    rw_id = str(employee.get("rwId") or employee.get("objId") or "")
+    return job == "guanjia001" or rw_id == DEFAULT_STEWARD_ID
+
+
+def _has_steward(bucket):
+    employees = bucket.get("employees") if isinstance(bucket, dict) else None
+    if not isinstance(employees, dict):
+        return False
+    return any(_is_steward(value) for value in employees.values())
+
+
+def _seed_default_steward(bucket, spec):
+    """已处理初始管家(isDispose)但未雇佣时, 客户端不会 createInitialGuanJia。
+    此时必须在 roomperson 下发 rwId=guanjia1001, 否则地图上没有管家、呼唤管家也找不到。
+    """
+    employees = bucket.setdefault("employees", {})
+    if not isinstance(employees, dict):
+        employees = {}
+        bucket["employees"] = employees
+    if _has_steward(bucket):
+        return False
+    steward = copy.deepcopy(DEFAULT_STEWARD)
+    steward["fjId"] = _default_employee_fjid(spec)
+    steward["mid"] = _int((bucket.get("house") or {}).get("mid"), 0)
+    employees[DEFAULT_STEWARD_ID] = steward
+    return True
+
+
+def _ensure_layout(bucket):
+    """按 house.hxId 对齐官方户型; 房间前缀对不上则重置为该户型布局。"""
+    house = bucket.setdefault("house", {})
+    if not isinstance(house, dict):
+        house = {}
+        bucket["house"] = house
+    hx_id = str(house.get("hxId") or "") or DEFAULT_HX_ID
+    spec = _hx_spec(hx_id)
+    house["hxId"] = spec["hxId"]
+    prefix = spec["roomPrefix"]
+    rooms = bucket.get("rooms")
+    stale = not rooms or any(
+        not isinstance(room, dict)
+        or not str(room.get("fjId", "")).startswith(prefix)
+        for room in rooms
+    )
+    changed = False
+    if stale:
+        bucket["rooms"] = copy.deepcopy(spec["rooms"])
+        default_fj = _default_employee_fjid(spec)
+        for employee in (bucket.get("employees") or {}).values():
+            if isinstance(employee, dict) and not str(employee.get("fjId", "")).startswith(prefix):
+                employee["fjId"] = default_fj
+        changed = True
+    if _seed_default_steward(bucket, spec):
+        changed = True
+    if changed:
+        bucket["updated_at"] = int(time.time())
+    return spec, changed
 
 
 def _userid(ctx):
@@ -168,6 +250,9 @@ def _user_bucket(ctx, userid, create=True):
             root["users"][key] = bucket
             root["mid_owners"].setdefault(mid, userid)
             state._changed()
+        _spec, changed = _ensure_layout(bucket)
+        if changed:
+            state._changed()
         return bucket
 
 
@@ -183,11 +268,11 @@ def _owned_bucket(ctx, userid, mid=None, create=True):
     return bucket, ""
 
 
-def _employee_payload(employee):
+def _employee_payload(employee, default_fjid=None):
     value = copy.deepcopy(employee)
     value.setdefault("rwId", value.get("objId"))
     value.setdefault("objId", value.get("rwId"))
-    value.setdefault("fjId", "fb320_04")
+    value.setdefault("fjId", default_fjid or HX_ENTRY_ROOM)
     value.setdefault("job", value.get("jobType", "puren001"))
     value.setdefault("jobType", value.get("job", "puren001"))
     value.setdefault("modal", "moban001")
@@ -205,33 +290,21 @@ def _employee_payload(employee):
 
 
 def _map_data(ctx, userid, bucket):
-    house = bucket["house"]
-    mid = _int(house.get("mid"), 0)
-    rooms = copy.deepcopy(bucket.get("rooms") or DEFAULT_ROOMS)
-    # 迁移: bucket 里持久化的房间若不是当前 huxing002 布局(旧版 room_* 等),
-    # 与全图 mapAppearanceIndex 的 fb320_* ID 对不上, 直接重置为官方布局。
-    stale = not rooms or any(
-        not isinstance(room, dict)
-        or not str(room.get("fjId", "")).startswith(_HX_ROOM_PREFIX)
-        for room in rooms
-    )
+    spec, stale = _ensure_layout(bucket)
     if stale:
-        rooms = copy.deepcopy(DEFAULT_ROOMS)
-        bucket["rooms"] = copy.deepcopy(DEFAULT_ROOMS)
-        # 雇员所在房间同步迁移到新布局(默认卧室 fb320_04)
-        for employee in bucket.get("employees", {}).values():
-            if isinstance(employee, dict) and not str(employee.get("fjId", "")).startswith(_HX_ROOM_PREFIX):
-                employee["fjId"] = "fb320_04"
-        bucket["updated_at"] = int(time.time())
         with ctx["state"]._lock:
             ctx["state"]._changed()
+    house = bucket["house"]
+    mid = _int(house.get("mid"), 0)
+    rooms = copy.deepcopy(bucket.get("rooms") or spec["rooms"])
     # 补齐客户端移动/渲染所需的全部房间字段(含 stepMusic)
     rooms = [_normalize_room(room, mid, 690000 + i)
              for i, room in enumerate(rooms)]
     employees = []
     now = int(time.time())
+    default_fj = _default_employee_fjid(spec)
     for value in bucket.get("employees", {}).values():
-        employee = _employee_payload(value)
+        employee = _employee_payload(value, default_fj)
         stay_until = _int(employee.get("extra", {}).get("stay_room_time"), 0)
         if stay_until > now:
             continue
@@ -255,17 +328,17 @@ def _map_data(ctx, userid, bucket):
         "usermap": {
             "mid": mid,
             "fbId": "",
-            "hxId": house.get("hxId") or "huxing002",
+            "hxId": spec["hxId"],
             "location": house.get("location") or "",
             "fqId": house.get("fqId") or "yangzhou002",
             "dpId": house.get("dpId") or "",
             "uid": userid,
             "name": house.get("name") or house.get("houseName") or "家园",
             "desc": house.get("desc") or "",
-            "entryRoom": house.get("entryRoom") or HX_ENTRY_ROOM,
-            "BGM": house.get("BGM") or "bgm001",
-            "mapAppearance": house.get("mapAppearance") or HX_MAP_APPEARANCE,
-            "mapAppearanceIndex": house.get("mapAppearanceIndex") or HX_MAP_APPEARANCE_INDEX,
+            "entryRoom": spec["entryRoom"],
+            "BGM": spec.get("BGM") or "bgm001",
+            "mapAppearance": spec["mapAppearance"],
+            "mapAppearanceIndex": spec["mapAppearanceIndex"],
             "extra": {},
             "isChangeName": "N",
             "loc_mark": loc_mark,
@@ -295,7 +368,9 @@ def get_house_info(ctx):
     bucket, error = _owned_bucket(ctx, userid)
     if error:
         return build_response_body({}, errcode=404, errmsg=error)
-    return build_response_body(copy.deepcopy(bucket["house"]))
+    house = copy.deepcopy(bucket["house"])
+    house["person"] = _has_steward(bucket)
+    return build_response_body(house)
 
 
 @route(["POST"], "get_user_map")
@@ -354,7 +429,11 @@ def get_all_rooms(ctx):
     bucket, error = _owned_bucket(ctx, userid)
     if error:
         return build_response_body({}, errcode=404, errmsg=error)
-    return build_response_body({"list": copy.deepcopy(bucket.get("rooms") or DEFAULT_ROOMS)})
+    spec, stale = _ensure_layout(bucket)
+    if stale:
+        with ctx["state"]._lock:
+            ctx["state"]._changed()
+    return build_response_body({"list": copy.deepcopy(bucket.get("rooms") or spec["rooms"])})
 
 
 @route(["POST"], "save_employee_list")
@@ -408,8 +487,14 @@ def add_employee(ctx):
     employee["rwId"] = obj_id
     employee["job"] = employee.get("job") or employee.get("jobType") or ("guanjia001" if _int(body.get("npcId"), 0) == 0 else "puren001")
     employee["jobType"] = employee.get("jobType") or employee["job"]
-    employee = _employee_payload(employee)
-    bucket.setdefault("employees", {})[obj_id] = employee
+    spec, _stale = _ensure_layout(bucket)
+    employee = _employee_payload(employee, _default_employee_fjid(spec))
+    employees = bucket.setdefault("employees", {})
+    if _is_steward(employee):
+        for key, existing in list(employees.items()):
+            if key != obj_id and _is_steward(existing):
+                employees.pop(key, None)
+    employees[obj_id] = employee
     bucket["updated_at"] = int(time.time())
     with ctx["state"]._lock:
         ctx["state"]._changed()
@@ -450,7 +535,8 @@ def update_employee_extra(ctx):
         if not isinstance(employee, dict):
             return build_response_body({}, errcode=404, errmsg="employee not found")
         if update.get("fjId") is not None:
-            employee["fjId"] = str(update.get("fjId") or "fb320_04")
+            spec, _stale = _ensure_layout(bucket)
+            employee["fjId"] = str(update.get("fjId") or _default_employee_fjid(spec))
         extra = update.get("extra")
         if isinstance(extra, dict):
             employee.setdefault("extra", {}).update(copy.deepcopy(extra))
@@ -476,7 +562,8 @@ def update_employee_data(ctx):
     employee["defaultZhongCheng"] = max(0, _int(employee.get("defaultZhongCheng"), 0) + _int(body.get("zc_val"), 0))
     with ctx["state"]._lock:
         ctx["state"]._changed()
-    return build_response_body(_employee_payload(employee))
+    spec, _stale = _ensure_layout(bucket)
+    return build_response_body(_employee_payload(employee, _default_employee_fjid(spec)))
 
 
 @route(["POST"], "delete_employee")
@@ -518,7 +605,9 @@ def get_all_persons(ctx):
     bucket, error = _owned_bucket(ctx, userid)
     if error:
         return build_response_body({}, errcode=404, errmsg=error)
-    return build_response_body({"list": [_employee_payload(v) for v in bucket.get("employees", {}).values()]})
+    spec, _stale = _ensure_layout(bucket)
+    default_fj = _default_employee_fjid(spec)
+    return build_response_body({"list": [_employee_payload(v, default_fj) for v in bucket.get("employees", {}).values()]})
 
 
 _GUAIKE_YINPIAO = 200

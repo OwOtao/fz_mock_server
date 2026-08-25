@@ -26,6 +26,7 @@ from handlers.basic import (
     upgrade_user_bag,
 )
 from handlers.practice import get_xin_shen_value, recover_xin_shen_value
+from handlers.familytype_data import HX_TABLE
 from handlers.homeland import (
     add_employee,
     delete_employee,
@@ -640,6 +641,7 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(house["errcode"], 0)
         mid = house["data"]["mid"]
         self.assertEqual(mid, 14750)
+        self.assertTrue(house["data"]["person"])
 
         user_info = get_game_user_info_2(ctx)
         self.assertEqual(user_info["errcode"], 0)
@@ -794,6 +796,81 @@ class StateStoreTest(unittest.TestCase):
         item_counts = {item["itemId"]: item["count"] for item in archive["items"]}
         self.assertEqual(item_counts["qiannengdan"], 1)
         self.assertEqual(item_counts["jingmai102"], 1)
+
+    def test_get_user_map_returns_familytype_appearance_for_each_hxid(self):
+        userid = 9048162375
+        expected_hx = (
+            "huxing001", "huxing002", "huxing003", "huxing004",
+            "huxing005", "huxing006", "huxing008", "huxing009",
+            "huxing010", "huxing011", "huxing012",
+        )
+        self.assertEqual(tuple(sorted(HX_TABLE)), tuple(sorted(expected_hx)))
+        for hx_id in expected_hx:
+            spec = HX_TABLE[hx_id]
+            store = StateStore(initial={
+                "accounts": {str(userid): {"userid": userid}},
+                "archives": {},
+            }, autosave=False)
+            ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+            house = get_house_info(ctx)
+            self.assertEqual(house["errcode"], 0)
+            mid = house["data"]["mid"]
+            with store._lock:
+                bucket = store._normalize_homeland(store._state)["users"][str(userid)]
+                bucket["house"]["hxId"] = hx_id
+                bucket["rooms"] = [{"fjId": "room_stale", "name": "旧房间"}]
+            mapped = get_user_map({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"mid": mid, "userid": userid, "ver": 0},
+            })
+            self.assertEqual(mapped["errcode"], 0, hx_id)
+            usermap = mapped["data"]["usermap"]
+            self.assertEqual(usermap["hxId"], hx_id)
+            self.assertEqual(usermap["entryRoom"], spec["entryRoom"])
+            self.assertEqual(usermap["BGM"], spec["BGM"])
+            self.assertEqual(usermap["mapAppearance"], spec["mapAppearance"])
+            self.assertEqual(usermap["mapAppearanceIndex"], spec["mapAppearanceIndex"])
+            room_ids = [room["fjId"] for room in mapped["data"]["maproom"]]
+            self.assertEqual(len(room_ids), len(spec["rooms"]), hx_id)
+            self.assertTrue(all(fjid.startswith(spec["roomPrefix"]) for fjid in room_ids), hx_id)
+            self.assertIn(spec["entryRoom"], room_ids)
+            for room in mapped["data"]["maproom"]:
+                self.assertEqual(room["stepMusic"], "jiaobu", room["fjId"])
+            roomperson = mapped["data"]["roomperson"]
+            self.assertEqual([person["rwId"] for person in roomperson], ["guanjia1001"], hx_id)
+            self.assertIn(roomperson[0]["fjId"], room_ids)
+            self.assertEqual(roomperson[0]["job"], "guanjia001")
+
+    def test_get_user_map_includes_default_hired_steward(self):
+        userid = 9048162376
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        self.assertTrue(house["data"]["person"])
+        mid = house["data"]["mid"]
+        mapped = get_user_map({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "userid": userid, "ver": 0},
+        })
+        self.assertEqual(mapped["errcode"], 0)
+        room_ids = {room["fjId"] for room in mapped["data"]["maproom"]}
+        persons = mapped["data"]["roomperson"]
+        self.assertEqual(len(persons), 1)
+        steward = persons[0]
+        self.assertEqual(steward["rwId"], "guanjia1001")
+        self.assertEqual(steward["job"], "guanjia001")
+        self.assertEqual(steward["jobType"], "guanjia001")
+        self.assertEqual(steward["name"], "权令枫")
+        self.assertEqual(steward["modal"], "moban010")
+        self.assertIn(steward["fjId"], room_ids)
+        extra = steward.get("extra") or {}
+        self.assertNotIn("stay_room_time", extra)
 
     def test_concurrent_account_ids_are_unique(self):
         store = StateStore()
