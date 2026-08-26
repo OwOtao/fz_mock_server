@@ -302,12 +302,14 @@ class UpdateProxyTest(unittest.TestCase):
         self.assertEqual(result["errcode"], 0)
         self.assertIsInstance(result["data"], list)
         self.assertEqual(result["data"][0]["name"], "签到活动")
+        self.assertEqual(result["data"][0]["id"], 14)
+        self.assertEqual(result["data"][0]["activity_id"], "qiandao")
         self.assertEqual(result["data"][0]["status"], 1)
         self.assertEqual(result["data"][0]["is_open"], 1)
 
-    def test_spring_festival_status_returns_clickable_action_state(self):
+    def test_sign_list_returns_client_required_mark_data(self):
         request = urllib.request.Request(
-            "http://127.0.0.1:%d/api/v5/get_spring_festival_status/1" % self.server.server_port,
+            "http://127.0.0.1:%d/api/v5/get_sign_list" % self.server.server_port,
             headers={"userid": "778899"},
             method="GET",
         )
@@ -318,6 +320,27 @@ class UpdateProxyTest(unittest.TestCase):
             response.close()
         result = json.loads(jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8"))
         self.assertEqual(result["errcode"], 0)
+        self.assertIsInstance(result["data"], dict)
+        self.assertEqual(len(result["data"]["beginDate"]), 8)
+        self.assertEqual(len(result["data"]["endDate"]), 8)
+        self.assertIsInstance(result["data"]["signedList"], list)
+        self.assertEqual(result["data"]["yuanbao"], 20)
+        self.assertEqual(result["data"]["prizeId"], 15)
+
+    def test_spring_festival_status_returns_clickable_action_state(self):
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_spring_festival_status/14" % self.server.server_port,
+            headers={"userid": "778899"},
+            method="GET",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8"))
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["id"], 14)
         self.assertEqual(result["data"]["is_open"], 1)
         self.assertEqual(result["data"]["status"], 1)
         self.assertIsInstance(result["data"]["rule_desc"], list)

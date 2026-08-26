@@ -2,6 +2,7 @@
 
 import time
 import hmac
+from datetime import date, datetime, timedelta
 
 import config
 
@@ -1079,24 +1080,197 @@ def get_game_activity(ctx):
     return _ok({"id": _tail(ctx), "enabled": False})
 
 
+SIGN_IN_ACTIVITY_ID = "qiandao"
+SIGN_IN_SEASON_DAYS = 49
+SIGN_IN_SEASON_EPOCH = date(2026, 7, 15)
+SIGN_IN_SEASON_EPOCH_ID = 73
+SIGN_IN_MAKEUP_COST = 20
+
+
+def _sign_today():
+    return datetime.fromtimestamp(time.time()).date()
+
+
+def _sign_season(today=None):
+    today = today or _sign_today()
+    cycle = (today - SIGN_IN_SEASON_EPOCH).days // SIGN_IN_SEASON_DAYS
+    begin = SIGN_IN_SEASON_EPOCH + timedelta(days=cycle * SIGN_IN_SEASON_DAYS)
+    return SIGN_IN_SEASON_EPOCH_ID + cycle, begin, begin + timedelta(days=SIGN_IN_SEASON_DAYS - 1)
+
+
+def _sign_date(value):
+    try:
+        return datetime.strptime(str(value), "%Y%m%d").date()
+    except (TypeError, ValueError):
+        return None
+
+
+def _next_sign_prize(history_count, claimed_prizes):
+    claimed = {_as_int(value, 0) for value in claimed_prizes}
+    milestone = 15
+    while milestone in claimed:
+        milestone = 30 if milestone == 15 else milestone + 30
+    return milestone
+
+
+def _sign_bucket(ctx, userid):
+    account = ctx["state"].ensure_account(userid)
+    season_id, begin, _ = _sign_season()
+    with ctx["state"]._lock:
+        user = ctx["state"]._state.setdefault("activity_users", {}).setdefault(str(userid), {})
+        bucket = user.setdefault(SIGN_IN_ACTIVITY_ID, {})
+        changed = False
+        if _as_int(bucket.get("season_id"), 0) != season_id:
+            bucket["season_id"] = season_id
+            bucket["signed_list"] = []
+            changed = True
+        for key, default in (
+            ("signed_list", []),
+            ("claimed_prizes", []),
+            ("transactions", {}),
+        ):
+            if not isinstance(bucket.get(key), type(default)):
+                bucket[key] = default
+                changed = True
+        history_count = max(_as_int(bucket.get("history_sign_count"), 0), 0)
+        if bucket.get("history_sign_count") != history_count:
+            bucket["history_sign_count"] = history_count
+            changed = True
+        created_at = _as_int(account.get("created_at"), int(time.time()))
+        create_date = datetime.fromtimestamp(created_at).date()
+        if create_date < begin:
+            create_date = begin
+        create_value = create_date.strftime("%Y%m%d")
+        if bucket.get("create_date") != create_value:
+            bucket["create_date"] = create_value
+            changed = True
+        if changed:
+            ctx["state"]._changed()
+        return bucket
+
+
+def _sign_payload(ctx, userid):
+    season_id, begin, end = _sign_season()
+    with ctx["state"]._lock:
+        bucket = _sign_bucket(ctx, userid)
+        signed_list = sorted({
+            str(value) for value in bucket["signed_list"]
+            if _sign_date(value) is not None
+        })
+        history_count = max(_as_int(bucket.get("history_sign_count"), 0), 0)
+        return {
+            "beginDate": begin.strftime("%Y%m%d"),
+            "endDate": end.strftime("%Y%m%d"),
+            "seasonId": season_id,
+            "signedList": signed_list,
+            "historySignCount": history_count,
+            "prizeList": [],
+            "prizeId": _next_sign_prize(history_count, bucket["claimed_prizes"]),
+            "yuanbao": SIGN_IN_MAKEUP_COST,
+            "createDate": bucket["create_date"],
+        }
+
+
 @route(["GET"], "get_sign_list")
 def get_sign_list(ctx):
-    return _ok([])
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    return _ok(_sign_payload(ctx, userid))
 
 
 @route(["POST"], "get_sign_prize")
 def get_sign_prize(ctx):
-    return _ok({"received": True})
+    userid = _userid(ctx)
+    body = _body(ctx)
+    sign_date = _sign_date(body.get("date"))
+    trans_id = str(body.get("trans_id") or "").strip()
+    item_id = str(body.get("item_id") or "").strip()
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    if sign_date is None or not trans_id or not item_id:
+        return build_response_body({}, errcode=400, errmsg="invalid sign request")
+
+    today = _sign_today()
+    _, begin, end = _sign_season(today)
+    if sign_date < begin or sign_date > end or sign_date > today:
+        return build_response_body({}, errcode=400, errmsg="invalid sign date")
+
+    with ctx["state"]._lock:
+        bucket = _sign_bucket(ctx, userid)
+        transactions = bucket["transactions"]
+        if trans_id in transactions:
+            return _ok(dict(transactions[trans_id]))
+        sign_value = sign_date.strftime("%Y%m%d")
+        if sign_value < bucket["create_date"]:
+            return build_response_body({}, errcode=400, errmsg="sign date predates account")
+        if sign_value in bucket["signed_list"]:
+            return build_response_body({}, errcode=2, errmsg="date already signed")
+
+        if sign_date < today:
+            account = ctx["state"]._state["accounts"][str(userid)]
+            balance = max(_as_int(account.get("yuanbao"), DEFAULT_YUANBAO), 0)
+            if balance < SIGN_IN_MAKEUP_COST:
+                return build_response_body({}, errcode=1, errmsg="元宝不足")
+            account["yuanbao"] = balance - SIGN_IN_MAKEUP_COST
+            account["updated_at"] = int(time.time())
+
+        result = {
+            "yinpiao": 0,
+            "yuanbao": 0,
+            "daily_point": 10 if sign_date == today else 0,
+        }
+        bucket["signed_list"].append(sign_value)
+        bucket["signed_list"].sort()
+        bucket["history_sign_count"] = max(
+            _as_int(bucket.get("history_sign_count"), 0), 0
+        ) + 1
+        transactions[trans_id] = dict(result)
+        if len(transactions) > 200:
+            transactions.pop(next(iter(transactions)))
+        ctx["state"]._changed()
+        return _ok(result)
 
 
 @route(["POST"], "get_sign_history_prize")
 def get_sign_history_prize(ctx):
-    return _ok({"received": True})
+    userid = _userid(ctx)
+    body = _body(ctx)
+    trans_id = str(body.get("trans_id") or "").strip()
+    prize_id = _as_int(body.get("prize_id"), 0)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    if not trans_id or prize_id <= 0:
+        return build_response_body({}, errcode=400, errmsg="invalid prize request")
+    with ctx["state"]._lock:
+        bucket = _sign_bucket(ctx, userid)
+        transactions = bucket["transactions"]
+        if trans_id in transactions:
+            return _ok(dict(transactions[trans_id]))
+        expected = _next_sign_prize(
+            bucket["history_sign_count"], bucket["claimed_prizes"]
+        )
+        if prize_id != expected or bucket["history_sign_count"] < prize_id:
+            return build_response_body({}, errcode=1, errmsg="sign count is not enough")
+        bucket["claimed_prizes"].append(prize_id)
+        result = {"received": True, "prize_id": prize_id}
+        transactions[trans_id] = dict(result)
+        ctx["state"]._changed()
+        return _ok(result)
 
 
 @route(["POST"], "check_failed_normal_sign")
 def check_failed_normal_sign(ctx):
-    return _ok({"recovered": True})
+    userid = _userid(ctx)
+    trans_id = str(_body(ctx).get("trans_id") or "").strip()
+    if userid <= 0 or not trans_id:
+        return build_response_body({}, errcode=400, errmsg="invalid transaction")
+    with ctx["state"]._lock:
+        bucket = _sign_bucket(ctx, userid)
+        result = bucket["transactions"].get(trans_id)
+        if result is None:
+            return build_response_body({}, errcode=1, errmsg="transaction not found")
+        return _ok(dict(result))
 
 
 @route(["GET"], "get_daily_point")
@@ -1224,15 +1398,25 @@ def challengemap_unfinished(ctx):
 
 SPRING_FESTIVAL_ACTIONS = [
     {
-        "id": 1,
-        "activity_id": "sign_in",
+        "id": 14,
+        "activity_id": "qiandao",
         "name": "签到活动",
         "status": 1,
         "is_open": 1,
-        "remain_time": 0,
-        "time": "长期开放",
-        "desc": "每日签到可领取奖励",
-        "gift": "签到奖励",
+        "is_show": 1,
+        "remain_time": max(1798732799 - int(time.time()), 0),
+        "time": "每日",
+        "desc": "每日签到，即可获得丰厚奖励，每日必领",
+        "gift": "丰厚的奖励",
+        "start": "2016-01-20 00:00:00",
+        "end": "2026-12-31 23:59:59",
+        "sort": "1",
+        "rule_desc": [
+            "1.每日签到可获得奖励，漏签的天数可以花费20元宝补领，累计签到天数达到指定要求可领取随机面具。",
+            "2.双存档共享签到进度。",
+            "3.传承保留签到获得的奖励，保留活动进度。",
+            "4.重置保留签到获得的元宝，不保留其他奖励，保留活动进度。",
+        ],
     },
 ]
 
@@ -1244,15 +1428,17 @@ def get_spring_festival_list(ctx):
 
 @route(["GET"], "get_spring_festival_status")
 def get_spring_festival_status(ctx):
-    return _ok({
-        "id": (ctx.get("route_tail") or [None])[0],
-        "is_open": 1,
-        "status": 1,
-        "rule_desc": [],
-        "detail_desc": [],
-        "start": 0,
-        "end": 0,
-    })
+    action_id = _as_int((ctx.get("route_tail") or [None])[0], 0)
+    action = next(
+        (dict(value) for value in SPRING_FESTIVAL_ACTIONS if value["id"] == action_id),
+        None,
+    )
+    if action is None:
+        return build_response_body({}, errcode=404, errmsg="activity not found")
+    action["start"] = 1453219200
+    action["end"] = 1798732799
+    action["detail_desc"] = []
+    return _ok(action)
 
 
 @route(["POST"], "get_user_group")

@@ -4,6 +4,7 @@ import json
 import os
 import tempfile
 import threading
+import time
 import unittest
 from unittest import mock
 
@@ -20,6 +21,8 @@ from handlers.basic import (
     get_devote_point,
     get_email_info,
     get_email_reward,
+    get_sign_list,
+    get_sign_prize,
     get_spring_festival_list,
     get_group_rank,
     get_user_group,
@@ -650,8 +653,46 @@ class StateStoreTest(unittest.TestCase):
         spring = get_spring_festival_list(dict(base_ctx))
         self.assertIsInstance(spring["data"], list)
         self.assertEqual(spring["data"][0]["name"], "签到活动")
+        self.assertEqual(spring["data"][0]["id"], 14)
+        self.assertEqual(spring["data"][0]["activity_id"], "qiandao")
         self.assertEqual(spring["data"][0]["status"], 1)
         self.assertEqual(spring["data"][0]["is_open"], 1)
+
+        sign = get_sign_list(dict(base_ctx))
+        self.assertEqual(sign["errcode"], 0)
+        self.assertEqual(
+            set(sign["data"]),
+            {
+                "beginDate", "endDate", "seasonId", "signedList",
+                "historySignCount", "prizeList", "prizeId", "yuanbao",
+                "createDate",
+            },
+        )
+        self.assertEqual(len(sign["data"]["beginDate"]), 8)
+        self.assertEqual(len(sign["data"]["endDate"]), 8)
+        self.assertIsInstance(sign["data"]["signedList"], list)
+        self.assertEqual(sign["data"]["prizeId"], 15)
+
+        today = time.strftime("%Y%m%d", time.localtime())
+        claim_ctx = dict(base_ctx, body={
+            "trans_id": "sign-today-1",
+            "date": today,
+            "item_id": "qiandao1",
+            "is_homeland": 1,
+        })
+        claimed = get_sign_prize(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(claimed["data"]["daily_point"], 10)
+        self.assertIn(today, get_sign_list(dict(base_ctx))["data"]["signedList"])
+        self.assertEqual(get_sign_list(dict(base_ctx))["data"]["historySignCount"], 1)
+
+        replay = get_sign_prize(claim_ctx)
+        self.assertEqual(replay, claimed)
+        duplicate = get_sign_prize(dict(claim_ctx, body=dict(
+            claim_ctx["body"], trans_id="sign-today-2"
+        )))
+        self.assertEqual(duplicate["errcode"], 2)
+        self.assertEqual(get_sign_list(dict(base_ctx))["data"]["historySignCount"], 1)
 
         info_ctx = dict(base_ctx, body={"familyId": "huashan"})
         info = get_teacher_build_info(info_ctx)
@@ -685,6 +726,31 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(rank["data"][0]["userid"], userid)
         self.assertEqual(rank["data"][0]["kongfu"], 0)
         self.assertEqual(rank["data"][0]["prestige"], 100)
+
+    def test_sign_in_state_persists_across_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            first = StateStore(path)
+            userid = first.ensure_account()["userid"]
+            today = time.strftime("%Y%m%d", time.localtime())
+            ctx = {
+                "state": first,
+                "headers": {"userid": str(userid)},
+                "body": {
+                    "trans_id": "persisted-sign-1",
+                    "date": today,
+                    "item_id": "qiandao1",
+                },
+            }
+            self.assertEqual(get_sign_prize(ctx)["errcode"], 0)
+
+            second = StateStore(path)
+            restored = get_sign_list({
+                "state": second,
+                "headers": {"userid": str(userid)},
+            })
+            self.assertEqual(restored["data"]["signedList"], [today])
+            self.assertEqual(restored["data"]["historySignCount"], 1)
 
     def test_legacy_teacher_build_idle_state_is_normalized(self):
         store = StateStore(initial={
