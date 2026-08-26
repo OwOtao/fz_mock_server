@@ -292,6 +292,19 @@ def build_response_body(data, errcode=0, errmsg="", status=0):
     return {"status": status, "errcode": errcode, "errmsg": errmsg, "data": data}
 
 
+def build_raw_response(body, status=200, headers=None):
+    return {
+        "_raw_response": True,
+        "status_code": int(status),
+        "headers": dict(headers or {}),
+        "body": body if isinstance(body, bytes) else str(body).encode("utf-8"),
+    }
+
+
+def is_raw_response(payload):
+    return isinstance(payload, dict) and payload.get("_raw_response") is True
+
+
 def make_response(payload, encrypt=None, skip_sign=None, group_name=None):
     """组装 HTTP 响应。
 

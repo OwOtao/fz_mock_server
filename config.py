@@ -41,6 +41,12 @@ SEED_IMPORT_ON_START = True
 # 后续注册账号扩展预留: 新注册默认空号(不克隆种子档)
 REGISTER_CLONE_SEED = False
 ADMIN_API_TOKEN = _os.getenv("MOCK_ADMIN_API_TOKEN", "")
+MOCK_DEVICE_UUID = _os.getenv(
+    "MOCK_DEVICE_UUID",
+    "guanfangd0b80cf7aa09ea3538329b0d",
+)
+UPDATE_UPSTREAM_BASE = _os.getenv("MOCK_UPDATE_UPSTREAM_BASE", "http://update.xiaohoutiaotiao.com/v1")
+UPDATE_UPSTREAM_TIMEOUT = float(_os.getenv("MOCK_UPDATE_UPSTREAM_TIMEOUT", "10"))
 
 # ---------------------------------------------------------------------------
 # JM 加密密钥组
@@ -86,6 +92,8 @@ RESPONSE_GROUP = "FZJH03"
 RESPONSE_GROUP_BY_PATH = {
     "api/service/get_game_config": "default",
     "api/service/exchange_publickey": "default",
+    "api/service_android/get_uuid": "default",
+    "api/service_android/update_uuid": "default",
     "api/service_android/get_version_info": "FZJH03",
     "api/service_android/report_ads_info": "FZJH03",
     "v1/checkUpdate": "default",

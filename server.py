@@ -110,6 +110,7 @@ class Handler(BaseHTTPRequestHandler):
             "method": method,
             "path": path,
             "query": query,
+            "query_string": parsed.query,
             "headers": headers,
             "body": body,
             "raw_body": raw_body,
@@ -155,7 +156,22 @@ class Handler(BaseHTTPRequestHandler):
             self._respond_json(protocol.build_response_body(
                 None, errcode=404, errmsg="not handled"), path)
             return
+        if protocol.is_raw_response(result):
+            self._respond_raw(result)
+            return
         self._respond_json(result, path)
+
+    def _respond_raw(self, payload):
+        body = payload.get("body", b"")
+        if not isinstance(body, bytes):
+            body = str(body).encode("utf-8")
+        self.send_response(int(payload.get("status_code", 200)))
+        for key, value in (payload.get("headers") or {}).items():
+            if str(key).lower() != "content-length":
+                self.send_header(str(key), str(value))
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _respond_json(self, payload, path=None):
         url = self.path or ""

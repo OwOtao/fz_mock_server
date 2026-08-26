@@ -491,6 +491,23 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(conflict["errcode"], 409)
         self.assertEqual(store.get_archive(userid)["money"], 982000)
 
+    def test_device_uuid_persists_across_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            first = StateStore(path)
+            expected_uuid = "guanfangd0b80cf7aa09ea3538329b0d"
+            device_uuid = first.get_or_create_device_uuid(expected_uuid)
+            self.assertEqual(device_uuid, expected_uuid)
+            self.assertEqual(
+                first.get_or_create_device_uuid("guanfang-other"),
+                device_uuid,
+            )
+            second = StateStore(path)
+            self.assertEqual(
+                second.get_or_create_device_uuid("guanfang-other"),
+                device_uuid,
+            )
+
     def test_json_persistence_and_corrupt_file(self):
         with tempfile.TemporaryDirectory() as directory:
             path = os.path.join(directory, "state.json")
@@ -631,7 +648,10 @@ class StateStoreTest(unittest.TestCase):
         challenge = challengemap_unfinished(dict(base_ctx))
         self.assertEqual(challenge["data"], {"status": 0})
         spring = get_spring_festival_list(dict(base_ctx))
-        self.assertEqual(spring["data"], [])
+        self.assertIsInstance(spring["data"], list)
+        self.assertEqual(spring["data"][0]["name"], "签到活动")
+        self.assertEqual(spring["data"][0]["status"], 1)
+        self.assertEqual(spring["data"][0]["is_open"], 1)
 
         info_ctx = dict(base_ctx, body={"familyId": "huashan"})
         info = get_teacher_build_info(info_ctx)

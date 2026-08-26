@@ -2,9 +2,12 @@
 
 import json
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 
 import config
-from protocol import build_response_body, make_nonce, sign_response
+from protocol import build_raw_response, build_response_body, make_nonce, sign_response
 from server import route
 
 
@@ -13,6 +16,63 @@ PUBLIC_KEYS = [
     {"k": "880e42c8075b8f400cd72f21451c0866", "h": "FZJH03", "i": "PcIQIZifRalhZ88n"},
     {"k": "0228482afef78be8b948ad8b08b24da7", "h": "FXXF03"},
 ]
+
+HOP_BY_HOP_HEADERS = {
+    "connection",
+    "keep-alive",
+    "proxy-authenticate",
+    "proxy-authorization",
+    "proxy-connection",
+    "te",
+    "trailer",
+    "transfer-encoding",
+    "upgrade",
+}
+UPDATE_REQUEST_HEADERS = {
+    "accept-encoding",
+    "channel",
+    "device",
+    "hotver",
+    "nouce",
+    "package",
+    "platform",
+    "sig",
+    "time",
+    "user-agent",
+    "userid",
+    "uuid",
+    "ver",
+}
+UPDATE_RESPONSE_LIMIT = 8 * 1024 * 1024
+UPDATE_RESPONSE_PREFIX = b"4a4848553032"
+
+
+class _SameHostRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def __init__(self, hostname):
+        self.hostname = hostname
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        parsed = urllib.parse.urlparse(newurl)
+        if parsed.scheme not in {"http", "https"} or parsed.hostname != self.hostname:
+            raise urllib.error.URLError("cross-host redirect blocked")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def _filter_proxy_headers(headers, exclude=()):
+    values = dict(headers or {})
+    connection_headers = {
+        item.strip().lower()
+        for key, value in values.items()
+        if str(key).lower() == "connection"
+        for item in str(value).split(",")
+        if item.strip()
+    }
+    blocked = HOP_BY_HOP_HEADERS | connection_headers | {item.lower() for item in exclude}
+    return {
+        key: value
+        for key, value in values.items()
+        if str(key).lower() not in blocked
+    }
 
 # get_game_config 的 data 字段: 客户端 createGetResponseFunction 会对
 # responseData.data (string) 做 json.decode(JMForLua:decrypt(...)),
@@ -103,8 +163,17 @@ def report_ads_info(ctx):
 
 @route(["GET"], "service_android/get_uuid")
 def get_uuid(ctx):
-    uuid = ctx.get("headers", {}).get("uuid") or "mock-device-uuid"
-    return build_response_body({"uuid": uuid, "id": uuid})
+    uuid = ctx["state"].get_or_create_device_uuid(config.MOCK_DEVICE_UUID)
+    return {"errcode": 0, "data": {"uuid": uuid}}
+
+
+@route(["POST"], "service_android/update_uuid")
+def update_uuid(ctx):
+    new_uuid = str(ctx.get("body", {}).get("new_uuid") or "").strip()
+    current_uuid = ctx["state"].get_or_create_device_uuid(config.MOCK_DEVICE_UUID)
+    if not ctx.get("encrypted") or new_uuid != current_uuid:
+        return {"errcode": 1}
+    return {"errcode": 0}
 
 
 @route(["GET"], "v1/get_time")
@@ -119,16 +188,58 @@ def update_game_version(ctx):
 
 @route(["GET"], "v1/checkUpdate")
 def check_update(ctx):
-    """Java/native 更新检查器调用。errcode=1 表示无需更新。
-    真实响应格式: {"errcode":1,"errmsg":"opps"} (JHHU02 加密)"""
-    return {"errcode": 1, "errmsg": "opps"}
+    return _proxy_update_response(ctx, "checkUpdate")
 
 
 @route(["GET"], "v1/getMd5List")
 def get_md5_list(ctx):
-    """资源 MD5 校验列表。checkUpdate 返回 errcode=1 时不会调用此接口,
-    但作为兜底返回空列表。"""
-    return {"errcode": 0, "data": {"originalMd5List": {}}}
+    return _proxy_update_response(ctx, "getMd5List")
+
+
+def _proxy_failure():
+    return build_raw_response(
+        b"upstream request failed", 502,
+        {"Content-Type": "text/plain; charset=utf-8"})
+
+
+def _read_update_response(response):
+    content_length = response.headers.get("Content-Length")
+    if content_length is not None and int(content_length) > UPDATE_RESPONSE_LIMIT:
+        raise ValueError("upstream response too large")
+    body = response.read(UPDATE_RESPONSE_LIMIT + 1)
+    if len(body) > UPDATE_RESPONSE_LIMIT:
+        raise ValueError("upstream response too large")
+    if response.status == 200 and not body.lower().startswith(UPDATE_RESPONSE_PREFIX):
+        raise ValueError("invalid upstream response")
+    headers = _filter_proxy_headers(response.headers.items(), exclude={"content-length"})
+    headers["Content-Length"] = str(len(body))
+    return build_raw_response(body, response.status, headers)
+
+
+def _proxy_update_response(ctx, endpoint):
+    try:
+        base = str(getattr(config, "UPDATE_UPSTREAM_BASE", "") or "").strip()
+        parsed_base = urllib.parse.urlparse(base)
+        if parsed_base.scheme not in {"http", "https"} or not parsed_base.hostname:
+            raise ValueError("invalid upstream URL")
+        timeout = float(config.UPDATE_UPSTREAM_TIMEOUT)
+        if timeout <= 0:
+            raise ValueError("invalid upstream timeout")
+        url = base.rstrip("/") + "/" + endpoint
+        if ctx.get("query_string"):
+            url += "?" + ctx["query_string"]
+        request = urllib.request.Request(url, method="GET")
+        for key, value in (ctx.get("headers") or {}).items():
+            if str(key).lower() in UPDATE_REQUEST_HEADERS:
+                request.add_header(key, value)
+        opener = urllib.request.build_opener(_SameHostRedirectHandler(parsed_base.hostname))
+        try:
+            with opener.open(request, timeout=timeout) as response:
+                return _read_update_response(response)
+        except urllib.error.HTTPError as error:
+            return _read_update_response(error)
+    except (AttributeError, OSError, TypeError, ValueError, urllib.error.URLError):
+        return _proxy_failure()
 
 
 # ---------------------------------------------------------------------------
@@ -193,6 +304,11 @@ def get_server_resource_count(ctx):
 
 @route(["POST"], "upload_fzjh_stat")
 def upload_fzjh_stat(ctx):
+    return build_response_body({"ok": True})
+
+
+@route(["POST"], "upload_weapon_repair_log")
+def upload_weapon_repair_log(ctx):
     return build_response_body({"ok": True})
 
 

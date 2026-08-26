@@ -9,6 +9,7 @@ from protocol import build_response_body
 from server import route
 
 
+ACTIVITY_LIST_RAND_T = 1787731490.8493
 def _userid(ctx):
     try:
         return int(ctx.get("headers", {}).get("userid", 0))
@@ -415,17 +416,44 @@ def get_goods(ctx):
     return _ok(_goods_detail(item))
 
 
-@route(["POST"], "get_goods_2")
-def get_goods_2(ctx):
-    item_key = _tail(ctx)
-    item = _find_store_item(item_key)
-    if item is None:
-        return build_response_body({}, errcode=404, errmsg="goods not found")
-    detail = _goods_detail(item)
-    others = _body(ctx)
-    if others:
-        detail["others"] = others
-    return _ok(detail)
+@route(["GET", "POST"], "get_user_shenbings")
+def get_user_shenbings(ctx):
+    userid = _userid(ctx)
+    role = ctx["state"].get_archive(userid) if userid > 0 else None
+    role = role if isinstance(role, dict) else {}
+    shen_bing_items = role.get("shenBingItems")
+    if not isinstance(shen_bing_items, list):
+        shen_bing_items = []
+    return _ok({"shenBingItems": shen_bing_items})
+
+
+@route(["POST"], "get_ckitems_list")
+def get_ckitems_list(ctx):
+    body = _body(ctx)
+    userid = _userid(ctx)
+    role = ctx["state"].get_archive(userid) if userid > 0 else None
+    role = role if isinstance(role, dict) else {}
+    source = role.get("ckitems")
+    values = source if isinstance(source, list) else []
+    items = []
+    for value in values:
+        if not isinstance(value, dict):
+            continue
+        item_id = value.get("itemId") or value.get("id")
+        if not item_id:
+            continue
+        items.append({
+            "itemId": item_id,
+            "total": _as_int(value.get("total", value.get("count", 0)), 0),
+            "info": value.get("info", ""),
+            "update_time": value.get("update_time", 0),
+        })
+    try:
+        local_ver = int(body.get("ver", 0) or 0)
+    except (TypeError, ValueError):
+        local_ver = 0
+    size = max(_as_int(role.get("ckLimit"), 55), 0)
+    return _ok({"ver": max(local_ver, 1), "list": items, "size": size})
 
 
 @route(["GET"], "get_buy_order_id")
@@ -1018,10 +1046,27 @@ def add_user_prestige(ctx):
     })
 
 
-@route(["GET", "POST"], "get_activity_list")
+@route(["POST"], "get_activity_list")
 def get_activity_list(ctx):
-    # ControllLayer 启动后用 POST 拉取; 仅 GET 会触发 method not allowed
-    return _ok(ctx["state"].get_activities(_tail(ctx)))
+    response = _ok({
+        "isClick": "Y",
+        "isSign": "N",
+        "list": [
+            "江湖秘宝",
+            "江湖夺宝",
+            "香囊密阁",
+            "藏经阁",
+            "江湖珍品阁",
+            "签到活动",
+            "秘境探险",
+            "首充活动",
+            "限时礼包累计奖励",
+            "地宫古迹",
+            "每日任务",
+        ],
+    })
+    response["rand_t"] = ACTIVITY_LIST_RAND_T
+    return response
 
 
 @route(["GET"], "del_activity_cache")
@@ -1177,9 +1222,37 @@ def challengemap_unfinished(ctx):
     return _ok({"status": 0})
 
 
+SPRING_FESTIVAL_ACTIONS = [
+    {
+        "id": 1,
+        "activity_id": "sign_in",
+        "name": "签到活动",
+        "status": 1,
+        "is_open": 1,
+        "remain_time": 0,
+        "time": "长期开放",
+        "desc": "每日签到可领取奖励",
+        "gift": "签到奖励",
+    },
+]
+
+
 @route(["GET"], "get_spring_festival_list")
 def get_spring_festival_list(ctx):
-    return _ok([])
+    return _ok([dict(action) for action in SPRING_FESTIVAL_ACTIONS])
+
+
+@route(["GET"], "get_spring_festival_status")
+def get_spring_festival_status(ctx):
+    return _ok({
+        "id": (ctx.get("route_tail") or [None])[0],
+        "is_open": 1,
+        "status": 1,
+        "rule_desc": [],
+        "detail_desc": [],
+        "start": 0,
+        "end": 0,
+    })
 
 
 @route(["POST"], "get_user_group")

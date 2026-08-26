@@ -4,6 +4,7 @@ import copy
 import json
 import logging
 import os
+import secrets
 import tempfile
 import threading
 import time
@@ -15,7 +16,7 @@ log = logging.getLogger("mock_server.state")
 
 
 class StateStore:
-    VERSION = 3
+    VERSION = 4
     DEFAULT_USER_ID = 1000000001
 
     def __init__(self, json_path=None, initial=None, autosave=True, archives_dir=None):
@@ -39,6 +40,7 @@ class StateStore:
     def _empty_state(self):
         return {
             "version": self.VERSION,
+            "device_uuid": None,
             "next_ids": {
                 "userid": self.DEFAULT_USER_ID,
                 "order_id": 1,
@@ -337,6 +339,17 @@ class StateStore:
             result = callback(self._state)
             self._changed()
             return copy.deepcopy(result)
+
+    def get_or_create_device_uuid(self, default_uuid=None):
+        with self._lock:
+            device_uuid = str(self._state.get("device_uuid") or "").strip()
+            if not device_uuid:
+                device_uuid = str(default_uuid or "").strip()
+                if not device_uuid:
+                    device_uuid = "guanfang" + secrets.token_hex(12)
+                self._state["device_uuid"] = device_uuid
+                self._changed()
+            return device_uuid
 
     def _next(self, name, prefix=None):
         value = self._state["next_ids"][name]
