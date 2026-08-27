@@ -319,6 +319,64 @@ class UpdateProxyTest(unittest.TestCase):
         self.assertFalse(result["data"]["accepted"])
         self.assertEqual(result["data"]["added_point"], 0)
 
+    def test_store_main_tab_matches_capture_and_purchase_flow(self):
+        userid = 779004
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_store_list_4"
+            % self.server.server_port,
+            headers={"userid": str(userid)},
+            method="GET",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        category = result["data"]["list"][1]
+        self.assertEqual(category["classId"], "store_goods")
+        self.assertEqual(category["name"], "商城")
+        self.assertEqual(len(category["items"]), 11)
+        self.assertEqual(category["items"][0]["itemId"], "xiyanshui")
+        self.assertEqual(category["items"][0]["price"], 50)
+        self.assertEqual(category["items"][-1]["itemId"], "diligent")
+        self.assertEqual(category["items"][-1]["price"], 250)
+
+        payload = jm_crypto.encrypt(
+            json.dumps({
+                "id": 3,
+                "itemId": "xiyanshui",
+                "quantity": 1,
+                "client_trans_id": "http-buy-xiyanshui",
+                "discount": 0,
+            }, separators=(",", ":")).encode("utf-8"),
+            group_name="FZJH03",
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/buy_goods_3/xiyanshui"
+            % self.server.server_port,
+            data=payload,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "userid": str(userid),
+            },
+            method="POST",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["itemId"], "xiyanshui")
+        self.assertEqual(result["data"]["remove_yuanbao"], 50)
+        self.assertEqual(result["data"]["total_yuanbao"], 9949)
+
     def test_store_level_tab_and_purchase_flow(self):
         userid = 779001
         request = urllib.request.Request(

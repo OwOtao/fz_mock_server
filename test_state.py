@@ -67,6 +67,41 @@ from state import StateStore
 
 
 class StateStoreTest(unittest.TestCase):
+    def test_store_main_items_match_capture(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        category = listed["data"]["list"][1]
+        self.assertEqual(category["classId"], "store_goods")
+        self.assertEqual(category["name"], "商城")
+        self.assertEqual(
+            [item["itemId"] for item in category["items"]],
+            [
+                "xiyanshui", "dundifu", "fenshenfu", "guanfugongwen",
+                "byfenshenfu", "jingxinwan", "jingmai105", "shimenbuff1",
+                "yuhuiling", "drxiang02", "diligent",
+            ],
+        )
+        self.assertEqual(
+            [item["price"] for item in category["items"]],
+            [50, 10, 10, 300, 1800, 50, 100, 1200, 1800, 10, 250],
+        )
+        self.assertEqual(category["items"][0]["name"], "RAN洗颜水")
+        self.assertEqual(category["items"][0]["id"], 3)
+        self.assertEqual(category["items"][4]["number"], 0)
+        self.assertEqual(category["items"][4]["share"], "(当前角色绑定)")
+        self.assertEqual(category["items"][4]["expired_time"], 1788865826)
+        self.assertIn("\n入梦概率：40%\n", category["items"][9]["dsc1"])
+        self.assertEqual(category["items"][10]["to"], "0")
+
+        detail = get_goods(dict(base_ctx, route_tail=["byfenshenfu"]))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["id"], "11")
+        self.assertEqual(detail["data"]["price"], 1800)
+        self.assertEqual(detail["data"]["share"], "(当前角色绑定)")
+
     def test_get_goods_2_returns_fenshenfu_and_uses_resource_price(self):
         store = StateStore(autosave=False)
         userid = store.ensure_account()["userid"]
@@ -78,7 +113,7 @@ class StateStoreTest(unittest.TestCase):
             body={"mark": {"isFreeSingle": False}},
         ))
         self.assertEqual(detail["errcode"], 0)
-        self.assertEqual(detail["data"]["id"], "fenshenfu")
+        self.assertEqual(detail["data"]["id"], "5")
         self.assertEqual(detail["data"]["itemId"], "fenshenfu")
         self.assertEqual(detail["data"]["name"], "分身符")
         self.assertEqual(detail["data"]["price"], 10)
@@ -91,7 +126,7 @@ class StateStoreTest(unittest.TestCase):
             base_ctx,
             route_tail=["fenshenfu"],
             body={
-                "id": "fenshenfu",
+                "id": 5,
                 "itemId": "fenshenfu",
                 "quantity": 1,
                 "client_trans_id": "buy-fenshenfu",
