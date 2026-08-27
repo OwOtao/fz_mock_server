@@ -171,6 +171,194 @@ _STORE_TEST_ITEMS = [
         "extra": {},
     },
 ]
+_STORE_DIRECT_ITEMS = [
+    {
+        "id": "fenshenfu",
+        "itemId": "fenshenfu",
+        "itype": 10,
+        "name": "分身符",
+        "dsc": "一张画满咒文的纸符 ，可以用来创造一个分身。",
+        "icon": "",
+        "price": 10,
+        "number": 1,
+        "Inventory": -1,
+        "quota": -1,
+        "viewtype": 0,
+        "extra": {},
+    },
+]
+_STORE_LEVEL_ITEMS = [
+    {
+        "id": 4135,
+        "itemId": "volume_2",
+        "itype": 11,
+        "inde": 0,
+        "name": "声震武林卷",
+        "price": 100,
+        "number": 1,
+        "dsc1": "购买后可开启【声震武林卷】第一章至第十章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "Image/UI/StoreUI/juanzhou1.png",
+        "to": None,
+        "from": None,
+        "create_time": "2019-04-26 16:53:17",
+        "update_time": None,
+    },
+    {
+        "id": 4136,
+        "itemId": "volume_3",
+        "itype": 11,
+        "inde": 0,
+        "name": "柳玄风卷(上)",
+        "price": 200,
+        "number": 1,
+        "dsc1": "购买后可开启【柳玄风卷上】第一章至第十章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "Image/UI/StoreUI/juanzhou1.png",
+        "to": None,
+        "from": None,
+        "create_time": "2019-04-26 16:54:21",
+        "update_time": None,
+    },
+    {
+        "id": 4137,
+        "itemId": "volume_4",
+        "itype": 11,
+        "inde": 0,
+        "name": "柳玄风卷(下)",
+        "price": 150,
+        "number": 1,
+        "dsc1": "购买后可开启【柳玄风卷下】第一章至第五章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "",
+        "to": None,
+        "from": None,
+        "create_time": "2019-04-26 16:55:03",
+        "update_time": None,
+    },
+    {
+        "id": 4138,
+        "itemId": "volume_5",
+        "itype": 11,
+        "inde": 0,
+        "name": "章作之卷",
+        "price": 150,
+        "number": 1,
+        "dsc1": "购买后可开启【章作之卷】第一章至第五章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "",
+        "to": None,
+        "from": None,
+        "create_time": "2019-04-26 16:55:47",
+        "update_time": None,
+    },
+    {
+        "id": 4139,
+        "itemId": "volume_6",
+        "itype": 11,
+        "inde": 0,
+        "name": "折掌镇海卷",
+        "price": 100,
+        "number": 1,
+        "dsc1": "购买后可开启【折掌镇海卷】第一章至第五章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "",
+        "to": None,
+        "from": None,
+        "create_time": "2019-04-26 16:56:20",
+        "update_time": None,
+    },
+    {
+        "id": 4795,
+        "itemId": "volume_7",
+        "itype": 11,
+        "inde": 0,
+        "name": "藏锋破阵卷",
+        "price": 100,
+        "number": 1,
+        "dsc1": "购买后可开启【藏锋破阵卷】第一章至第五章。",
+        "dsc2": "",
+        "share": None,
+        "icon": "",
+        "to": None,
+        "from": None,
+        "create_time": "2020-01-06 17:43:26",
+        "update_time": None,
+    },
+]
+
+_LIMITED_GIFT_DESCRIPTION = "这是一个古色古香的丝绸袋子，据说里面装着不少好东西。"
+
+
+def _limited_gift(store_id, item_id, name, price, client_exp=None):
+    return {
+        "id": store_id,
+        "itemId": item_id,
+        "itype": 100,
+        "inde": 0,
+        "name": name,
+        "price": price,
+        "number": 1,
+        "dsc1": _LIMITED_GIFT_DESCRIPTION,
+        "dsc2": "",
+        "share": "",
+        "icon": "Image/UI/StoreUI/jinnang2.png",
+        "to": 0,
+        "from": 0,
+        "client_exp": list(client_exp or []),
+    }
+
+
+_STORE_LIMITED_ITEMS = [
+    _limited_gift(8429, "libao1409", "限时礼包(兰秋)", 588),
+    _limited_gift(8430, "libao1410", "限时礼包(建中)", 588),
+    _limited_gift(8431, "libao1411", "限时礼包(新秋)", 488),
+    _limited_gift(8432, "libao1412", "兵器秘籍礼包", 388),
+    _limited_gift(8433, "libao1413", "拳脚秘籍礼包", 388),
+    _limited_gift(8434, "libao1414", "轻内秘籍礼包", 388),
+    _limited_gift(
+        8435,
+        "libao1415",
+        "新秀礼包",
+        258,
+        [{
+            "field": "age",
+            "op": "<",
+            "v1": "19",
+            "v2": "",
+            "dsc": "年龄不符合购买要求!",
+        }],
+    ),
+    _limited_gift(8436, "libao1416", "每日礼包", 158),
+    _limited_gift(8437, "libao1417", "名士礼包(立秋)", 588),
+    _limited_gift(8438, "libao1418", "名士礼包(处暑)", 588),
+    _limited_gift(8439, "libao1419", "悠悠入梦礼", 188),
+    _limited_gift(8440, "libao1420", "八月幸运福袋", 100),
+    _limited_gift(8441, "libao1421", "武学升级礼包", 200),
+    _limited_gift(8442, "libao1422", "不醉不归礼包", 400),
+    _limited_gift(8443, "libao1423", "经脉调息礼包", 200),
+    _limited_gift(8444, "libao1424", "神兵淬炼礼包", 688),
+    {
+        "id": 7772884,
+        "itemId": "xinshoulibao1",
+        "itype": 0,
+        "inde": 9999,
+        "name": "新手礼包",
+        "price": 0,
+        "number": 1,
+        "dsc1": "使用后可获得分身符3张、遁地符3张、洗颜水1个、潜能丹1个。",
+        "dsc2": "新手豪华大礼，助你畅游江湖。",
+        "share": "",
+        "icon": "Image/UI/StoreUI/xinshoulibao1.png",
+        "to": 0,
+        "from": 0,
+    },
+]
 
 
 def _as_int(value, default=0):
@@ -184,7 +372,7 @@ def _find_store_item(item_key):
     key = str(item_key or "")
     if not key:
         return None
-    for item in _STORE_TEST_ITEMS:
+    for item in _STORE_TEST_ITEMS + _STORE_DIRECT_ITEMS + _STORE_LEVEL_ITEMS + _STORE_LIMITED_ITEMS:
         if str(item.get("itemId")) == key or str(item.get("id")) == key:
             return dict(item)
     return None
@@ -193,13 +381,15 @@ def _find_store_item(item_key):
 def _goods_detail(item):
     dsc = str(item.get("dsc") or "")
     mid = max(1, len(dsc) // 2)
+    dsc1 = item.get("dsc1")
+    dsc2 = item.get("dsc2")
     return {
         "id": str(item.get("id") or ""),
         "itemId": str(item.get("itemId") or ""),
         "name": str(item.get("name") or ""),
         "price": _as_int(item.get("price"), 1),
-        "dsc1": dsc[:mid] if dsc else "",
-        "dsc2": dsc[mid:] if dsc else "",
+        "dsc1": str(dsc1) if dsc1 is not None else (dsc[:mid] if dsc else ""),
+        "dsc2": str(dsc2) if dsc2 is not None else (dsc[mid:] if dsc else ""),
         "icon": str(item.get("icon") or ""),
         "discount": 0,
         "share": "",
@@ -241,10 +431,22 @@ def _store_list_payload(yuanbao=DEFAULT_YUANBAO):
     return {
         "status": "OPEN",
         "list": [
-            {"name": "限时", "items": []},
-            {"name": "商城", "items": [dict(x) for x in _STORE_TEST_ITEMS]},
-            {"name": "关卡", "items": []},
-            {"name": "神功", "items": []},
+            {
+                "classId": "xianshi_goods",
+                "name": "限时",
+                "items": [dict(x) for x in _STORE_LIMITED_ITEMS],
+            },
+            {
+                "classId": "store_goods",
+                "name": "商城",
+                "items": [dict(x) for x in _STORE_TEST_ITEMS],
+            },
+            {
+                "classId": "fuben_goods",
+                "name": "关卡",
+                "items": [dict(x) for x in _STORE_LEVEL_ITEMS],
+            },
+            {"classId": "shengong_goods", "name": "神功", "items": []},
         ],
         "yuanbao": int(yuanbao),
         "eleven": 0,
@@ -333,6 +535,26 @@ def get_store_list(ctx):
     return _ok(_store_list_payload(yuanbao))
 
 
+@route(["GET", "POST"], "get_limit_package")
+def get_limit_package(ctx):
+    item = _find_store_item(_tail(ctx))
+    if item is None or _as_int(item.get("itype"), 0) != 100:
+        return build_response_body({}, errcode=404, errmsg="limited package not found")
+    return _ok({
+        "price": _as_int(item.get("price"), 0),
+        "limit_num": 99,
+        "beyond": 500,
+        "end_time": int(time.time()) + 365 * 86400,
+        "list": [{
+            "itemId": "jiu106",
+            "number": 1,
+            "imagePath": "Image/UI/StoreUI/juhuajiu100.png",
+        }],
+        "buy_times": 0,
+        "special_reward_itemId": "",
+    })
+
+
 @route(["GET"], "get_applestore_list")
 def get_app_store_list(ctx):
     return _ok([])
@@ -415,6 +637,18 @@ def get_goods(ctx):
     if item is None:
         return build_response_body({}, errcode=404, errmsg="goods not found")
     return _ok(_goods_detail(item))
+
+
+@route(["POST"], "get_goods_2")
+def get_goods_2(ctx):
+    item = _find_store_item(_tail(ctx))
+    if item is None:
+        return build_response_body({}, errcode=404, errmsg="goods not found")
+    detail = _goods_detail(item)
+    others = _body(ctx)
+    if others:
+        detail["others"] = others
+    return _ok(detail)
 
 
 @route(["GET", "POST"], "get_user_shenbings")
@@ -1271,6 +1505,105 @@ def check_failed_normal_sign(ctx):
         if result is None:
             return build_response_body({}, errcode=1, errmsg="transaction not found")
         return _ok(dict(result))
+
+
+TRAINING_ACTIVITY_ID = "limited_time_experience"
+TRAINING_TASK_RULES = {
+    "yiwen": (1, 2),
+    "tiaoxi": (1, 1),
+    "chuangmen": (1, 2),
+    "dream": (1, 2),
+    "jina": (1, 1),
+    "feizei": (1, 1),
+    "nanyang": (1, 2),
+    "gusi": (1, 2),
+    "songxin": (1, 1),
+    "guaji": (1, 1),
+    "smketou": (3, 1),
+    "smjyshuaxin": (1, 1),
+    "paihangbang": (1, 1),
+    "meirijifen": (60, 1),
+    "qjduantixiuxing": (1, 2),
+    "qjjiqiaoxiuxing": (1, 2),
+    "ymchongmai": (1, 3),
+}
+
+
+def _training_bucket(ctx, userid):
+    ctx["state"].ensure_account(userid)
+    user = ctx["state"]._state.setdefault("activity_users", {}).setdefault(
+        str(userid), {}
+    )
+    bucket = user.setdefault(TRAINING_ACTIVITY_ID, {})
+    changed = False
+    point = max(_as_int(bucket.get("point"), 0), 0)
+    completion_times = max(_as_int(bucket.get("completion_times"), 0), 0)
+    tasks = bucket.get("tasks")
+    if not isinstance(tasks, dict):
+        tasks = {}
+        changed = True
+    if bucket.get("point") != point:
+        changed = True
+    if bucket.get("completion_times") != completion_times:
+        changed = True
+    bucket.update({
+        "point": point,
+        "completion_times": completion_times,
+        "tasks": tasks,
+    })
+    if changed:
+        ctx["state"]._changed()
+    return bucket
+
+
+@route(["POST"], "add_training_task_point")
+def add_training_task_point(ctx):
+    userid = _userid(ctx)
+    body = _body(ctx)
+    tid = str(body.get("tid") or "").strip()
+    task_list = body.get("taskList")
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    if not tid or len(tid) > 64 or not isinstance(task_list, list) or len(task_list) > 100:
+        return build_response_body({}, errcode=400, errmsg="invalid training task request")
+    if any(not isinstance(value, str) or not value.strip() for value in task_list):
+        return build_response_body({}, errcode=400, errmsg="invalid training task pool")
+
+    task_pool = {value.strip() for value in task_list}
+    rule = TRAINING_TASK_RULES.get(tid)
+    accepted = tid in task_pool and rule is not None
+    with ctx["state"]._lock:
+        bucket = _training_bucket(ctx, userid)
+        task = bucket["tasks"].get(tid)
+        if not isinstance(task, dict):
+            task = {"count": 0, "completed": False}
+
+        required, score = rule or (1, 0)
+        count = min(max(_as_int(task.get("count"), 0), 0), required)
+        completed = bool(task.get("completed"))
+        added_point = 0
+        if accepted and not completed:
+            count = min(count + 1, required)
+            if count >= required:
+                completed = True
+                added_point = score
+                bucket["point"] += score
+                bucket["completion_times"] += 1
+            task = {"count": count, "completed": completed}
+            bucket["tasks"][tid] = task
+            bucket["updated_at"] = int(time.time())
+            ctx["state"]._changed()
+
+        return _ok({
+            "tid": tid,
+            "accepted": accepted,
+            "completed": completed,
+            "progress": count,
+            "required": required,
+            "added_point": added_point,
+            "point": bucket["point"],
+            "completion_times": bucket["completion_times"],
+        })
 
 
 @route(["GET"], "get_daily_point")

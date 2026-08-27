@@ -375,7 +375,8 @@ def get_manage_payment(ctx):
 
 @route(["GET", "POST"], "get_limit_package")
 def get_limit_package(ctx):
-    return build_response_body({"list": []})
+    from handlers.basic import get_limit_package as get_limit_package_handler
+    return get_limit_package_handler(ctx)
 
 
 @route(["GET", "POST"], "get_discount_coupon")

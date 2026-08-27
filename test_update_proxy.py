@@ -287,6 +287,203 @@ class UpdateProxyTest(unittest.TestCase):
         self.assertEqual(result["errcode"], 0)
         self.assertTrue(result["data"]["ok"])
 
+    def test_add_training_task_point_route_accepts_inactive_activity(self):
+        userid = 778899
+        payload = jm_crypto.encrypt(
+            json.dumps(
+                {"tid": "guaji", "taskList": []},
+                separators=(",", ":"),
+            ).encode("utf-8"),
+            group_name="FZJH03",
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/add_training_task_point"
+            % self.server.server_port,
+            data=payload,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "userid": str(userid),
+            },
+            method="POST",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["tid"], "guaji")
+        self.assertFalse(result["data"]["accepted"])
+        self.assertEqual(result["data"]["added_point"], 0)
+
+    def test_store_level_tab_and_purchase_flow(self):
+        userid = 779001
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_store_list_4"
+            % self.server.server_port,
+            headers={"userid": str(userid)},
+            method="GET",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        level_category = result["data"]["list"][2]
+        self.assertEqual(level_category["classId"], "fuben_goods")
+        self.assertEqual(level_category["name"], "关卡")
+        self.assertEqual(len(level_category["items"]), 6)
+        self.assertEqual(level_category["items"][0]["itemId"], "volume_2")
+        self.assertEqual(level_category["items"][0]["price"], 100)
+
+        payload = jm_crypto.encrypt(
+            json.dumps({
+                "id": 4135,
+                "itemId": "volume_2",
+                "quantity": 1,
+                "client_trans_id": "http-buy-volume-2",
+                "discount": 0,
+            }, separators=(",", ":")).encode("utf-8"),
+            group_name="FZJH03",
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/buy_goods_3/volume_2"
+            % self.server.server_port,
+            data=payload,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "userid": str(userid),
+            },
+            method="POST",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["itemId"], "volume_2")
+        self.assertEqual(result["data"]["remove_yuanbao"], 100)
+        self.assertEqual(result["data"]["total_yuanbao"], 9899)
+
+    def test_store_limited_tab_package_and_purchase_flow(self):
+        userid = 779002
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_store_list_4"
+            % self.server.server_port,
+            headers={"userid": str(userid)},
+            method="GET",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        limited_category = result["data"]["list"][0]
+        self.assertEqual(limited_category["classId"], "xianshi_goods")
+        self.assertEqual(limited_category["name"], "限时")
+        self.assertEqual(len(limited_category["items"]), 17)
+        self.assertEqual(limited_category["items"][0]["itemId"], "libao1409")
+        self.assertEqual(limited_category["items"][0]["price"], 588)
+
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_limit_package/libao1409"
+            % self.server.server_port,
+            headers={"userid": str(userid)},
+            method="GET",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["price"], 588)
+        self.assertEqual(result["data"]["list"][0]["itemId"], "jiu106")
+
+        payload = jm_crypto.encrypt(
+            json.dumps({
+                "id": 8440,
+                "itemId": "libao1420",
+                "quantity": 1,
+                "client_trans_id": "http-buy-libao-1420",
+                "discount": 0,
+            }, separators=(",", ":")).encode("utf-8"),
+            group_name="FZJH03",
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/buy_goods_3/libao1420"
+            % self.server.server_port,
+            data=payload,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "userid": str(userid),
+            },
+            method="POST",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["itemId"], "libao1420")
+        self.assertEqual(result["data"]["remove_yuanbao"], 100)
+        self.assertEqual(result["data"]["total_yuanbao"], 9899)
+
+    def test_get_goods_2_fenshenfu_encrypted_http_flow(self):
+        userid = 779003
+        payload = jm_crypto.encrypt(
+            json.dumps({
+                "mark": {"isFreeSingle": False},
+            }, separators=(",", ":")).encode("utf-8"),
+            group_name="FZJH03",
+        ).encode("utf-8")
+        request = urllib.request.Request(
+            "http://127.0.0.1:%d/api/v5/get_goods_2/fenshenfu"
+            % self.server.server_port,
+            data=payload,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "userid": str(userid),
+            },
+            method="POST",
+        )
+        response = urllib.request.urlopen(request, timeout=3)
+        try:
+            body = response.read().decode("utf-8")
+        finally:
+            response.close()
+        result = json.loads(
+            jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
+        )
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(result["data"]["itemId"], "fenshenfu")
+        self.assertEqual(result["data"]["name"], "分身符")
+        self.assertEqual(result["data"]["price"], 10)
+        self.assertEqual(
+            result["data"]["others"],
+            {"mark": {"isFreeSingle": False}},
+        )
+
     def test_spring_festival_list_returns_lua_compatible_actions(self):
         request = urllib.request.Request(
             "http://127.0.0.1:%d/api/v5/get_spring_festival_list" % self.server.server_port,

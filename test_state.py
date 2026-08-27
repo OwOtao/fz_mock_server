@@ -12,8 +12,10 @@ import config
 import protocol
 
 from handlers.basic import (
+    add_training_task_point,
     add_devote_point,
     admin_send_email,
+    buy_goods,
     challengemap_unfinished,
     delete_email,
     delete_processed_emails,
@@ -25,6 +27,10 @@ from handlers.basic import (
     get_sign_prize,
     get_spring_festival_list,
     get_group_rank,
+    get_goods,
+    get_goods_2,
+    get_limit_package,
+    get_store_list,
     get_user_group,
     read_email,
     upgrade_user_bag,
@@ -61,6 +67,182 @@ from state import StateStore
 
 
 class StateStoreTest(unittest.TestCase):
+    def test_get_goods_2_returns_fenshenfu_and_uses_resource_price(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        detail = get_goods_2(dict(
+            base_ctx,
+            route_tail=["fenshenfu"],
+            body={"mark": {"isFreeSingle": False}},
+        ))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["id"], "fenshenfu")
+        self.assertEqual(detail["data"]["itemId"], "fenshenfu")
+        self.assertEqual(detail["data"]["name"], "分身符")
+        self.assertEqual(detail["data"]["price"], 10)
+        self.assertEqual(
+            detail["data"]["others"],
+            {"mark": {"isFreeSingle": False}},
+        )
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["fenshenfu"],
+            body={
+                "id": "fenshenfu",
+                "itemId": "fenshenfu",
+                "quantity": 1,
+                "client_trans_id": "buy-fenshenfu",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 10)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9989)
+
+    def test_store_limited_items_match_capture_and_open_package(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        limited_category = listed["data"]["list"][0]
+        self.assertEqual(limited_category["classId"], "xianshi_goods")
+        self.assertEqual(limited_category["name"], "限时")
+        self.assertEqual(len(limited_category["items"]), 17)
+        self.assertEqual(
+            [item["itemId"] for item in limited_category["items"][:4]],
+            ["libao1409", "libao1410", "libao1411", "libao1412"],
+        )
+        self.assertEqual(
+            [item["price"] for item in limited_category["items"][:4]],
+            [588, 588, 488, 388],
+        )
+        self.assertEqual(limited_category["items"][0]["name"], "限时礼包(兰秋)")
+        self.assertEqual(limited_category["items"][6]["client_exp"][0]["v1"], "19")
+        self.assertEqual(limited_category["items"][-1]["itemId"], "xinshoulibao1")
+        self.assertEqual(limited_category["items"][-1]["price"], 0)
+
+        package = get_limit_package(dict(base_ctx, route_tail=["libao1409"]))
+        self.assertEqual(package["errcode"], 0)
+        self.assertEqual(package["data"]["price"], 588)
+        self.assertGreater(package["data"]["end_time"], int(time.time()))
+        self.assertEqual(package["data"]["list"][0]["itemId"], "jiu106")
+        self.assertEqual(package["data"]["list"][0]["number"], 1)
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["libao1420"],
+            body={
+                "id": 8440,
+                "itemId": "libao1420",
+                "quantity": 1,
+                "client_trans_id": "buy-libao-1420",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 100)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9899)
+
+    def test_store_level_items_match_capture_and_use_real_price(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        categories = listed["data"]["list"]
+        level_category = categories[2]
+        self.assertEqual(level_category["classId"], "fuben_goods")
+        self.assertEqual(level_category["name"], "关卡")
+        self.assertEqual(
+            [item["itemId"] for item in level_category["items"]],
+            ["volume_2", "volume_3", "volume_4", "volume_5", "volume_6", "volume_7"],
+        )
+        self.assertEqual(
+            [item["price"] for item in level_category["items"]],
+            [100, 200, 150, 150, 100, 100],
+        )
+
+        detail = get_goods(dict(base_ctx, route_tail=["volume_3"]))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["name"], "柳玄风卷(上)")
+        self.assertEqual(detail["data"]["price"], 200)
+        self.assertEqual(
+            detail["data"]["dsc1"],
+            "购买后可开启【柳玄风卷上】第一章至第十章。",
+        )
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["volume_3"],
+            body={
+                "id": 4136,
+                "itemId": "volume_3",
+                "quantity": 1,
+                "client_trans_id": "buy-volume-3",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 200)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9799)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9799)
+
+    def test_add_training_task_point_accumulates_and_is_idempotent(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "smketou", "taskList": ["guaji", "smketou"]},
+        }
+
+        first = add_training_task_point(ctx)
+        second = add_training_task_point(ctx)
+        third = add_training_task_point(ctx)
+        replay = add_training_task_point(ctx)
+
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["progress"], 1)
+        self.assertFalse(first["data"]["completed"])
+        self.assertEqual(second["data"]["progress"], 2)
+        self.assertEqual(third["data"]["added_point"], 1)
+        self.assertTrue(third["data"]["completed"])
+        self.assertEqual(third["data"]["point"], 1)
+        self.assertEqual(third["data"]["completion_times"], 1)
+        self.assertEqual(replay["data"]["added_point"], 0)
+        self.assertEqual(replay["data"]["point"], 1)
+        self.assertEqual(replay["data"]["completion_times"], 1)
+
+        bucket = store.snapshot()["activity_users"][str(userid)]["limited_time_experience"]
+        self.assertEqual(bucket["tasks"]["smketou"]["count"], 3)
+        self.assertTrue(bucket["tasks"]["smketou"]["completed"])
+
+    def test_add_training_task_point_is_noop_for_inactive_task(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        response = add_training_task_point({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "guaji", "taskList": []},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertFalse(response["data"]["accepted"])
+        self.assertFalse(response["data"]["completed"])
+        self.assertEqual(response["data"]["added_point"], 0)
+        self.assertEqual(response["data"]["point"], 0)
+
+        invalid = add_training_task_point({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "guaji", "taskList": "guaji"},
+        })
+        self.assertEqual(invalid["errcode"], 400)
+
     def test_account_archive_isolation_and_copying(self):
         store = StateStore()
         account = store.ensure_account()
