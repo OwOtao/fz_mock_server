@@ -56,8 +56,19 @@ RESPONSE_GROUP = "FZJH03"
 | 名称 | 32 字符 hex 串 | 说明 |
 |---|---|---|
 | `FZJH01` | `ae9b363b80d5cc594973ecce1f4d546d` | hex 解码 16B → AES-128 |
-| `JHHU01` | `9B5A96B0F4A1EC60DB88349E3B926765` | hex 解码 16B → AES-128 |
+| `JHHU01` | `9B5A96B0F4A1EC60DB88349E3B926765` | **实测(2026-08-31)**: ASCII 32B 直接作 AES-256 密钥 + IV `34857d973953e44a`; hex 解码 16B(AES-128) 解不开 |
 | `JHHU02` | `cbIhHHuYQIJ1JkwlLupIvNIvdQDfNxSF` | 非 hex，直接用 ASCII 32B |
+
+### update 服务器响应加密组按 `ver` 头选择 (实测)
+
+上游 `update.xiaohoutiaotiao.com/v1/checkUpdate|getMd5List` 根据请求头 `ver` 决定响应加密组:
+- `ver=2.1.01` → 魔数 `JHHU01` (key `9B5A96B0F4A1EC60DB88349E3B926765` ASCII 32B, IV `34857d973953e44a`)
+- `ver=2.1.02` → 魔数 `JHHU02` (default 组)
+
+checkUpdate 响应解密样例:
+```json
+{"errcode":0,"data":{"cdn":"http:\/\/cdn1.xiaohoutiaotiao.com\/113\/fzjh\/41df055263159c9f54bbc548119d298c","md5":"90605363d13316bdf6e3f05b01148c0f","new_ver":35903}}
+```
 
 ---
 

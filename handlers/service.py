@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
 import time
 import urllib.error
 import urllib.parse
@@ -9,6 +10,16 @@ import urllib.request
 import config
 from protocol import build_raw_response, build_response_body, make_nonce, sign_response
 from server import route
+
+log = logging.getLogger("mock_server")
+
+
+def _short_headers(headers, limit=600):
+    result = {}
+    for key, value in dict(headers or {}).items():
+        text = str(value)
+        result[str(key)] = text if len(text) <= limit else text[:limit] + "..."
+    return result
 
 
 PUBLIC_KEYS = [
@@ -44,7 +55,8 @@ UPDATE_REQUEST_HEADERS = {
     "ver",
 }
 UPDATE_RESPONSE_LIMIT = 8 * 1024 * 1024
-UPDATE_RESPONSE_PREFIX = b"4a4848553032"
+# 上游按请求 ver 决定响应加密组: 2.1.01 -> JHHU01(4a4848553031), 2.1.02 -> JHHU02(4a4848553032)
+UPDATE_RESPONSE_PREFIXES = (b"4a4848553032", b"4a4848553031")
 
 
 class _SameHostRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -209,7 +221,11 @@ def _read_update_response(response):
     body = response.read(UPDATE_RESPONSE_LIMIT + 1)
     if len(body) > UPDATE_RESPONSE_LIMIT:
         raise ValueError("upstream response too large")
-    if response.status == 200 and not body.lower().startswith(UPDATE_RESPONSE_PREFIX):
+    if response.status == 200 and not body.lower().startswith(UPDATE_RESPONSE_PREFIXES):
+        log.warning("update upstream invalid body: status=%s len=%s head=%r accepted=%s resp_headers=%s",
+                    response.status, len(body), body[:200],
+                    [p.decode() for p in UPDATE_RESPONSE_PREFIXES],
+                    _short_headers(response.headers.items()))
         raise ValueError("invalid upstream response")
     headers = _filter_proxy_headers(response.headers.items(), exclude={"content-length"})
     headers["Content-Length"] = str(len(body))
@@ -229,16 +245,26 @@ def _proxy_update_response(ctx, endpoint):
         if ctx.get("query_string"):
             url += "?" + ctx["query_string"]
         request = urllib.request.Request(url, method="GET")
+        forwarded = {}
         for key, value in (ctx.get("headers") or {}).items():
             if str(key).lower() in UPDATE_REQUEST_HEADERS:
                 request.add_header(key, value)
+                forwarded[key] = value
+        log.info("update proxy %s url=%s query=%r forwarded=%s incoming=%s",
+                 endpoint, url, ctx.get("query_string"),
+                 _short_headers(forwarded), _short_headers(ctx.get("headers")))
         opener = urllib.request.build_opener(_SameHostRedirectHandler(parsed_base.hostname))
         try:
             with opener.open(request, timeout=timeout) as response:
                 return _read_update_response(response)
         except urllib.error.HTTPError as error:
+            log.warning("update upstream HTTPError %s endpoint=%s location=%s resp_headers=%s",
+                        error.code, endpoint, error.headers.get("Location"),
+                        _short_headers(error.headers.items()))
             return _read_update_response(error)
-    except (AttributeError, OSError, TypeError, ValueError, urllib.error.URLError):
+    except (AttributeError, OSError, TypeError, ValueError, urllib.error.URLError) as e:
+        log.warning("update proxy failed: endpoint=%s error=%s: %s incoming=%s",
+                    endpoint, type(e).__name__, e, _short_headers(ctx.get("headers")))
         return _proxy_failure()
 
 
