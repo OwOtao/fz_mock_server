@@ -485,6 +485,83 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(claimed["errcode"], 0)
         self.assertEqual(store.get_archive(userid)["items"][0]["count"], 2)
 
+    def test_admin_mail_routes_money_and_gold_to_client_applied_attrs(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "money": 10,
+            "gold": 20,
+            "currencyVersion": 1,
+            "dataVer": 1,
+        }, data_ver=1)
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-money-gold",
+                "userid": userid,
+                "title": "本地货币奖励",
+                "content": "领取",
+                "rewards": {
+                    "net_attrs": [
+                        {"id": "yuanbao", "num": 30},
+                        {"id": "money", "num": 100},
+                    ],
+                    "new_currencys": [
+                        {"id": "yinpiao", "num": 40},
+                        {"id": "gold", "num": 200},
+                    ],
+                },
+            },
+        })
+        mail_id = sent["data"]["mail_id"]
+
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(
+            [(reward["id"], reward["num"]) for reward in email["loc_attrs"]],
+            [("money", 100), ("gold", 200)],
+        )
+        self.assertEqual([reward["id"] for reward in email["net_attrs"]], ["yuanbao"])
+        self.assertEqual([reward["id"] for reward in email["new_currencys"]], ["yinpiao"])
+
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "id": mail_id,
+                "retrievables": [reward["onlyId"] for reward in email["loc_attrs"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        })
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual([reward["id"] for reward in claimed["data"]["loc_attrs"]], ["money", "gold"])
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["money"], 110)
+        self.assertEqual(archive["gold"], 220)
+        self.assertNotIn("money", store.get_account(userid)["currencies"])
+        self.assertNotIn("gold", store.get_account(userid)["currencies"])
+
+    def test_queued_mail_reclassifies_legacy_money_and_gold_rewards(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.add_mail(userid, {
+            "title": "旧格式奖励",
+            "content": "领取",
+            "rewards": {
+                "net_attrs": [{"id": "money", "num": 7}],
+                "new_currencys": [{"id": "gold", "num": 9}],
+            },
+        })
+
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual([reward["id"] for reward in email["loc_attrs"]], ["money", "gold"])
+        self.assertEqual(email["net_attrs"], [])
+        self.assertEqual(email["new_currencys"], [])
+
     def test_admin_mail_requires_configured_token(self):
         store = StateStore()
         userid = store.ensure_account()["userid"]

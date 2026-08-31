@@ -934,6 +934,23 @@ def update_order_state(ctx):
     return _ok({"updated": True})
 
 
+_LOCAL_ROLE_ATTR_REWARD_IDS = frozenset(("money", "gold"))
+
+
+def _move_local_role_attr_rewards(rewards):
+    """Lua only applies role attributes returned in loc_attrs."""
+    local_attrs = rewards.setdefault("loc_attrs", [])
+    for key in ("net_attrs", "new_currencys"):
+        remote_values = []
+        for value in rewards.get(key, []):
+            if str(value.get("id") or "") in _LOCAL_ROLE_ATTR_REWARD_IDS:
+                local_attrs.append(value)
+            else:
+                remote_values.append(value)
+        rewards[key] = remote_values
+    return rewards
+
+
 def _mail_rewards(item):
     rewards = item.get("rewards") if isinstance(item.get("rewards"), dict) else {}
     result = {}
@@ -953,7 +970,7 @@ def _mail_rewards(item):
                     reward.setdefault("name", reward["id"])
                 normalized.append(reward)
         result[key] = normalized
-    return result
+    return _move_local_role_attr_rewards(result)
 
 
 def _mail_payload(item):
@@ -998,6 +1015,7 @@ def _normalize_mail_rewards(body):
         key: _valid_reward_list(source.get(key))
         for key in ("loc_items", "net_items", "loc_attrs", "net_attrs", "new_currencys", "title_items")
     }
+    _move_local_role_attr_rewards(rewards)
     for key, values in rewards.items():
         for index, value in enumerate(values):
             value["onlyId"] = "%s-%d" % (key, index + 1)
@@ -1079,7 +1097,7 @@ def _apply_archive_rewards(state, userid, rewards, data_ver, currency_version):
         else:
             found["count"] = max(_as_int(found.get("count"), 0), 0) + amount
 
-    for value in rewards["net_attrs"] + rewards["new_currencys"]:
+    for value in rewards["loc_attrs"] + rewards["net_attrs"] + rewards["new_currencys"]:
         currency_id = str(value.get("id") or "")
         amount = _as_int(value.get("num"), 0)
         if not currency_id or amount <= 0:
