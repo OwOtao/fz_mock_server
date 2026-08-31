@@ -40,6 +40,9 @@ mock_server/
 ├── item_json/              # 物品数据（JSON）
 ├── fzjh_lua/               # 客户端反编译 Lua 源码（参考）
 ├── so/                     # 抓包数据（.har）与 so 库
+├── tools/                  # 解密入口、Frida 工具及本地分析依赖
+├── research/               # 密码/SO 分析、样本与更新包快照
+├── docs/                   # 密钥和逆向分析文档
 ├── test_state.py           # 状态与接口测试
 ├── test_update_proxy.py    # 更新代理测试
 ├── test_crypto.py          # 加密测试
@@ -102,3 +105,4 @@ python -m unittest test_state test_update_proxy -v
 - `fzjh_lua/`：客户端反编译 Lua 源码，包含 UI、地图、技能、商城等完整逻辑
 - `so/ProxyPin*.har`：抓包数据，用于协议分析
 - `item_json/`：物品、奖励、商城数据
+- `docs/research-assets.md`：工具、样本和大型本地制品的完整索引

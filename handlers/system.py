@@ -3,7 +3,7 @@
 示例/基础接口: 登录链路三件套
 ==============================
 覆盖客户端启动的核心请求。其余业务接口按需逐个补齐
-(协议字典见 d:/DTest/ds/fzjh_lua/protocol_inventory.json)。
+(协议字典见 fzjh_lua/protocol_inventory.json)。
 """
 
 import logging

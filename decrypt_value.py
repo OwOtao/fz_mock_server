@@ -4,7 +4,8 @@ import sys, os, binascii, json, zipfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import jm_crypto
 
-raw = open("value.md", "rb").read().strip()
+ROOT = os.path.dirname(os.path.abspath(__file__))
+raw = open(os.path.join(ROOT, "research", "samples", "value.md"), "rb").read().strip()
 b = binascii.unhexlify(raw)
 assert b[:6] == b"FXXF01"
 enc = b[6:]
@@ -28,7 +29,7 @@ for v in [
     keys.add(v)
 
 # 从 APK 读 rodata 二进制 key
-APK = r"E:\Leidian14\Picutres\leidian9Picutres\product_fangzhijianghu_guanfang_2.1.02.apk"
+APK = os.path.join(ROOT, "tools", "frida", "fzjh_base.apk")
 try:
     z = zipfile.ZipFile(APK)
     so = z.read("lib/arm64-v8a/libcocos2dlua.so")

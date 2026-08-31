@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Auto-generated from lua_out/assets/res/script/others/familytype.lua
+# Auto-generated from fzjh_lua/assets/res/script/others/familytype.lua
 # Do not edit by hand. Re-run mock_server/_extract_familytype.py to refresh.
 # mapAppearance / mapAppearanceIndex are copied verbatim from ["户型总览"].
 

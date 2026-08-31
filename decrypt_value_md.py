@@ -118,8 +118,8 @@ def main():
     ap = argparse.ArgumentParser(description="解密 value.md (JM AES 密文)")
     ap.add_argument(
         "--input", "-i",
-        default=os.path.join(ROOT, "value.md"),
-        help="输入密文 hex 文件 (默认 mock_server/value.md)",
+        default=os.path.join(ROOT, "research", "samples", "value.md"),
+        help="输入密文 hex 文件 (默认 research/samples/value.md)",
     )
     ap.add_argument(
         "--output", "-o",

@@ -7,7 +7,7 @@ import zipfile
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
-sys.path.insert(0, os.path.dirname(ROOT))   # d:/DTest/ds (decrypt_fzjh_lua.py)
+sys.path.insert(0, os.path.join(ROOT, "tools"))
 
 import jm_crypto  # noqa: E402
 
@@ -32,8 +32,8 @@ dec_zh = jm_crypto.decrypt(enc_zh, "default").decode("utf-8")
 check("roundtrip utf8", dec_zh == plain_zh)
 
 # 2. APK 真实 lua 密文交叉验证
-APK = r"E:\Leidian14\Picutres\leidian9Picutres\product_fangzhijianghu_guanfang_2.1.02.apk"
-LUA_OUT = r"d:\DTest\ds\lua_out"
+APK = os.path.join(ROOT, "tools", "frida", "fzjh_base.apk")
+LUA_OUT = os.path.join(ROOT, "fzjh_lua")
 z = zipfile.ZipFile(APK)
 for name in ["assets/src/main.lua", "assets/src/res_path.lua",
              "assets/res/MainScene.lua", "assets/src/config.lua"]:

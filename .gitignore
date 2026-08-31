@@ -9,3 +9,14 @@ get_game_config_raw.bin
 data/
 state.json
 archives/
+
+# Large local reverse-engineering artifacts (kept on disk, not in Git)
+tools/frida/frida-server-*
+tools/frida/*.apk
+tools/frida/*.so
+tools/frida/*.har
+tools/frida/local_save/
+research/binaries/
+research/legacy/*.bundle
+research/updatePath_android_2.1.02/
+research/so_analysis/so_exports_full.json

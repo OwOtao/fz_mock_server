@@ -1,0 +1,12 @@
+{
+  "type": "aesMap",
+  "reason": "initial",
+  "base": "0x400020800000",
+  "map": "0x400021de7cc0",
+  "header": "0x400021de7cc0",
+  "root": "0x0",
+  "left": "0x7239cf51fa90",
+  "right": "0x7239cf51f890",
+  "count": 125592616960016,
+  "nodes": []
+}

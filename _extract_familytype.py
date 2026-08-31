@@ -12,8 +12,7 @@ import sys
 
 FAMILYTYPE = os.path.join(
     os.path.dirname(__file__),
-    "..",
-    "lua_out",
+    "fzjh_lua",
     "assets",
     "res",
     "script",
@@ -22,8 +21,7 @@ FAMILYTYPE = os.path.join(
 )
 FAMILYLIST = os.path.join(
     os.path.dirname(__file__),
-    "..",
-    "lua_out",
+    "fzjh_lua",
     "assets",
     "res",
     "script",
@@ -345,7 +343,7 @@ def main():
 
     header = (
         "# -*- coding: utf-8 -*-\n"
-        "# Auto-generated from lua_out/assets/res/script/others/familytype.lua\n"
+        "# Auto-generated from fzjh_lua/assets/res/script/others/familytype.lua\n"
         "# Do not edit by hand. Re-run mock_server/_extract_familytype.py to refresh.\n"
         "# mapAppearance / mapAppearanceIndex are copied verbatim from [\"户型总览\"].\n\n"
     )

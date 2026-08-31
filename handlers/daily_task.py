@@ -4,7 +4,7 @@
   POST add_daily_task_point
   POST get_daily_task_reward
 
-任务配置来自 lua_out/assets/res/script/activity/dailyTask.lua
+任务配置来自 fzjh_lua/assets/res/script/activity/dailyTask.lua
 奖励商品元宝 id 来自 store/shoplist.lua: 400034 (itemId=yuanbao)
 """
 
