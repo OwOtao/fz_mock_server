@@ -1,0 +1,33 @@
+{
+  "index": 72,
+  "startedDateTime": "2026-09-01T14:50:44.904707Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/1",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "EviiVl",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "492bd942fa664596ac7e80869b9f9a60",
+    "time": "1788273937.0139",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a483033f3ce3eb1583798b0c635acdd5f8e052c",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":1,\"name\":\"首充活动\",\"desc\":\"首次充值，3天登录好礼领不停。\",\"gift\":\"面具、潜能丹、武功秘籍、菩提子\",\"start\":1499392800,\"end\":1798732799,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_desc\":[\"玩家首次充值送好礼！只要玩家满足对应的首充条件，则可以连续3天登录游戏，都可以获得丰厚好礼。\",\"传承或重置都将使活动进度清空。\"],\"sort\":\"100\",\"create_time\":\"2017-04-07 18:40:49\",\"update_time\":\"2025-11-12 15:37:47\",\"activity_id\":\"shouchong\",\"rule_desc\":[\"1.大侠首次充值金额达到6元，即可解锁首充活动奖励，当天开始即可在活动界面领取丰厚奖励，持续三天。\",\"2.双存档互不影响。\",\"3.传承保留活动获得的奖励，不保留活动进度。\",\"4.重置不保留活动获得的奖励，不保留活动进度。\"]},\"rand_t\":1788274244.7616}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"首充活动\",\n    \"desc\": \"首次充值，3天登录好礼领不停。\",\n    \"gift\": \"面具、潜能丹、武功秘籍、菩提子\",\n    \"start\": 1499392800,\n    \"end\": 1798732799,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_desc\": [\n      \"玩家首次充值送好礼！只要玩家满足对应的首充条件，则可以连续3天登录游戏，都可以获得丰厚好礼。\",\n      \"传承或重置都将使活动进度清空。\"\n    ],\n    \"sort\": \"100\",\n    \"create_time\": \"2017-04-07 18:40:49\",\n    \"update_time\": \"2025-11-12 15:37:47\",\n    \"activity_id\": \"shouchong\",\n    \"rule_desc\": [\n      \"1.大侠首次充值金额达到6元，即可解锁首充活动奖励，当天开始即可在活动界面领取丰厚奖励，持续三天。\",\n      \"2.双存档互不影响。\",\n      \"3.传承保留活动获得的奖励，不保留活动进度。\",\n      \"4.重置不保留活动获得的奖励，不保留活动进度。\"\n    ]\n  },\n  \"rand_t\": 1788274244.7616\n}"
+}

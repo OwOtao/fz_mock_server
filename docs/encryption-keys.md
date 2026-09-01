@@ -33,7 +33,21 @@ RESPONSE_GROUP = "FZJH03"
 
 ## 2. 运行时动态密钥（exchange_publickey 明文）
 
-`/api/service/exchange_publickey` 实际响应解密后的公钥列表：
+`/api/service/exchange_publickey` 实际响应解密后的公钥列表（**每次会话轮换**）：
+
+2026-09-01 抓包（ProxyPin9-1_22_57_26.har，客户端 2.1.01，响应用 **JHHU01** 静态组加密）：
+
+```json
+[
+  {"k": "3541a91c710ecd1e70fdff9a60c909c6", "h": "FZJH02"},
+  {"k": "56611ad7cd284ae04c1432748fa5c761", "h": "FZJH03"},
+  {"k": "3541a91c710ecd1e70fdff9a60c909c6", "h": "FXXF03"}
+]
+```
+
+> 注意：本次 FZJH03 项**未下发 `i` 字段**，实测 IV 用默认 `34857d973953e44a`（而非 `PcIQIZifRalhZ88n`）。
+
+2026-08-24 抓包（ProxyPin8-24_14_40_30.har，响应用 JHHU02 default 组加密）：
 
 ```json
 [
@@ -44,8 +58,10 @@ RESPONSE_GROUP = "FZJH03"
 ```
 
 说明：
-- `h` = 协议 magic，`k` = key，`i` = iv。
+- `h` = 协议 magic，`k` = key，`i` = iv（缺省用默认 IV `34857d973953e44a`）。
 - `FZJH03` 是带 iv 的唯一 HTTP 生产组（AES-256-CBC，key 直接用 32 字符 ASCII 字节）。
+- **主 API 服务器（android.fzjh.xiaohoutiaotiao.com）的 exchange_publickey / get_game_config 响应加密组随客户端版本选择**：2.1.01 → `JHHU01` 静态组（同 update 服务器），2.1.02 → `JHHU02` default 组。
+- 会话密钥解密工具：`decrypt_har_91.py`（批量解密 HAR，输出 `f:\AI\fzjh\har_decrypt_91\`）。
 
 ---
 

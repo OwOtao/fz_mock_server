@@ -1,5 +1,6 @@
 import json
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.request
@@ -453,11 +454,11 @@ class UpdateProxyTest(unittest.TestCase):
         self.assertEqual(limited_category["classId"], "xianshi_goods")
         self.assertEqual(limited_category["name"], "限时")
         self.assertEqual(len(limited_category["items"]), 17)
-        self.assertEqual(limited_category["items"][0]["itemId"], "libao1409")
+        self.assertEqual(limited_category["items"][0]["itemId"], "libao1425")
         self.assertEqual(limited_category["items"][0]["price"], 588)
 
         request = urllib.request.Request(
-            "http://127.0.0.1:%d/api/v5/get_limit_package/libao1409"
+            "http://127.0.0.1:%d/api/v5/get_limit_package/libao1425"
             % self.server.server_port,
             headers={"userid": str(userid)},
             method="GET",
@@ -472,20 +473,23 @@ class UpdateProxyTest(unittest.TestCase):
         )
         self.assertEqual(result["errcode"], 0)
         self.assertEqual(result["data"]["price"], 588)
-        self.assertEqual(result["data"]["list"][0]["itemId"], "jiu106")
+        self.assertEqual(result["data"]["list"][0]["itemId"], "2021bingqicanpian1")
+        self.assertEqual(result["data"]["list"][0]["number"], 1)
+        self.assertEqual(result["data"]["limit_num"], 15)
+        self.assertGreater(result["data"]["end_time"], int(time.time()))
 
         payload = jm_crypto.encrypt(
             json.dumps({
-                "id": 8440,
-                "itemId": "libao1420",
+                "id": 8495,
+                "itemId": "libao1436",
                 "quantity": 1,
-                "client_trans_id": "http-buy-libao-1420",
+                "client_trans_id": "http-buy-libao-1436",
                 "discount": 0,
             }, separators=(",", ":")).encode("utf-8"),
             group_name="FZJH03",
         ).encode("utf-8")
         request = urllib.request.Request(
-            "http://127.0.0.1:%d/api/v5/buy_goods_3/libao1420"
+            "http://127.0.0.1:%d/api/v5/buy_goods_3/libao1436"
             % self.server.server_port,
             data=payload,
             headers={
@@ -503,7 +507,7 @@ class UpdateProxyTest(unittest.TestCase):
             jm_crypto.decrypt(body, group_name="FZJH03").decode("utf-8")
         )
         self.assertEqual(result["errcode"], 0)
-        self.assertEqual(result["data"]["itemId"], "libao1420")
+        self.assertEqual(result["data"]["itemId"], "libao1436")
         self.assertEqual(result["data"]["remove_yuanbao"], 100)
         self.assertEqual(result["data"]["total_yuanbao"], 9899)
 

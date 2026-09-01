@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import copy
+import json
+import os
 import time
 import hmac
 from datetime import date, datetime, timedelta
@@ -446,15 +449,15 @@ def _limited_gift(store_id, item_id, name, price, client_exp=None):
 
 
 _STORE_LIMITED_ITEMS = [
-    _limited_gift(8429, "libao1409", "限时礼包(兰秋)", 588),
-    _limited_gift(8430, "libao1410", "限时礼包(建中)", 588),
-    _limited_gift(8431, "libao1411", "限时礼包(新秋)", 488),
-    _limited_gift(8432, "libao1412", "兵器秘籍礼包", 388),
-    _limited_gift(8433, "libao1413", "拳脚秘籍礼包", 388),
-    _limited_gift(8434, "libao1414", "轻内秘籍礼包", 388),
+    _limited_gift(8484, "libao1425", "限时礼包(桂秋)", 588),
+    _limited_gift(8485, "libao1426", "限时礼包(商吕)", 588),
+    _limited_gift(8486, "libao1427", "限时礼包(竹春)", 488),
+    _limited_gift(8487, "libao1428", "兵器秘籍礼包", 388),
+    _limited_gift(8488, "libao1429", "拳脚秘籍礼包", 388),
+    _limited_gift(8489, "libao1430", "轻内秘籍礼包", 388),
     _limited_gift(
-        8435,
-        "libao1415",
+        8490,
+        "libao1431",
         "新秀礼包",
         258,
         [{
@@ -465,15 +468,15 @@ _STORE_LIMITED_ITEMS = [
             "dsc": "年龄不符合购买要求!",
         }],
     ),
-    _limited_gift(8436, "libao1416", "每日礼包", 158),
-    _limited_gift(8437, "libao1417", "名士礼包(立秋)", 588),
-    _limited_gift(8438, "libao1418", "名士礼包(处暑)", 588),
-    _limited_gift(8439, "libao1419", "悠悠入梦礼", 188),
-    _limited_gift(8440, "libao1420", "八月幸运福袋", 100),
-    _limited_gift(8441, "libao1421", "武学升级礼包", 200),
-    _limited_gift(8442, "libao1422", "不醉不归礼包", 400),
-    _limited_gift(8443, "libao1423", "经脉调息礼包", 200),
-    _limited_gift(8444, "libao1424", "神兵淬炼礼包", 688),
+    _limited_gift(8491, "libao1432", "每日礼包", 158),
+    _limited_gift(8492, "libao1433", "名士礼包(中秋)", 588),
+    _limited_gift(8493, "libao1434", "名士礼包(秋分)", 588),
+    _limited_gift(8494, "libao1435", "悠悠入梦礼", 188),
+    _limited_gift(8495, "libao1436", "九月幸运福袋", 100),
+    _limited_gift(8496, "libao1437", "武学升级礼包", 200),
+    _limited_gift(8497, "libao1438", "不醉不归礼包", 400),
+    _limited_gift(8498, "libao1439", "经脉调息礼包", 200),
+    _limited_gift(8499, "libao1440", "神兵淬炼礼包", 688),
     {
         "id": 7772884,
         "itemId": "xinshoulibao1",
@@ -490,6 +493,182 @@ _STORE_LIMITED_ITEMS = [
         "from": 0,
     },
 ]
+
+
+def _pack_reward(name, price, image, number, item_id):
+    return {"name": name, "price": price, "imagePath": image, "number": number, "itemId": item_id}
+
+
+# 限时礼包明细: 抓包自 so/entries/*_libao*.json (get_limit_package/libaoXXXX)。
+# libao1431(新秀礼包) 抓包中因年龄限制未打开, 明细为按同档礼包合成的兜底数据。
+_LIMITED_PACKAGE_DETAILS = {
+    "libao1425": {
+        "id": 1529, "total_price": 1000, "price": 588, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("兵器武学录", 0, "Image/UI/StoreUI/shujuan6.png", 1, "2021bingqicanpian1"),
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 5, "xinggongsan"),
+            _pack_reward("潜能丹", 0, "Image/UI/StoreUI/qiannengdan.png", 5, "qiannengdan"),
+            _pack_reward("RED醉梦生NOR", 500, "Image/UI/StoreUI/juhuajiu100.png", 2, "jiu106"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1426": {
+        "id": 1530, "total_price": 410, "price": 588, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("拳脚武学录", 0, "Image/UI/StoreUI/shujuan5.png", 1, "2021quanjiaocanpian1"),
+            _pack_reward("静心丸", 50, "Image/UI/StoreUI/jingxinwan.png", 5, "jingxinwan"),
+            _pack_reward("流云甘露", 80, "Image/UI/StoreUI/liuyunganlu.png", 2, "liuyunganlu"),
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 5, "xinggongsan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1427": {
+        "id": 1531, "total_price": 30, "price": 488, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("门派顶级残页", 0, "Image/UI/StoreUI/canye.png", 1, "menpaicanye4"),
+            _pack_reward("HIR散人顶级残页NOR", 10, "Image/UI/StoreUI/canye.png", 1, "sanren8"),
+            _pack_reward("门派高级残页", 0, "Image/UI/StoreUI/canye.png", 2, "menpaicanye3"),
+            _pack_reward("HIY散人高级残页NOR", 10, "Image/UI/StoreUI/canye.png", 2, "sanren7"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1428": {
+        "id": 1532, "total_price": 1000, "price": 388, "limit_num": 20, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("兵器武学秘籍", 0, "Image/UI/StoreUI/shuxiang.png", 2, "21bqwuxuemiji"),
+            _pack_reward("RED醉梦生NOR", 500, "Image/UI/StoreUI/juhuajiu100.png", 2, "jiu106"),
+            _pack_reward("HIY三才丹NOR", 0, "Image/UI/StoreUI/sancaidan.png", 1, "sancaidan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1429": {
+        "id": 1533, "total_price": 1000, "price": 388, "limit_num": 20, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("拳脚武学秘籍", 0, "Image/UI/StoreUI/shuxiang.png", 2, "21qjwuxuemiji"),
+            _pack_reward("RED醉梦生NOR", 500, "Image/UI/StoreUI/juhuajiu100.png", 2, "jiu106"),
+            _pack_reward("HIY三才丹NOR", 0, "Image/UI/StoreUI/sancaidan.png", 1, "sancaidan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1430": {
+        "id": 1534, "total_price": 1000, "price": 388, "limit_num": 20, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("轻内武学秘籍", 0, "Image/UI/StoreUI/shuxiang.png", 2, "21qnwuxuemiji"),
+            _pack_reward("RED醉梦生NOR", 500, "Image/UI/StoreUI/juhuajiu100.png", 2, "jiu106"),
+            _pack_reward("HIY三才丹NOR", 0, "Image/UI/StoreUI/sancaidan.png", 1, "sancaidan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1431": {
+        "id": 1535, "total_price": 100, "price": 258, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 5, "xinggongsan"),
+            _pack_reward("潜能丹", 0, "Image/UI/StoreUI/qiannengdan.png", 5, "qiannengdan"),
+            _pack_reward("静心丸", 50, "Image/UI/StoreUI/jingxinwan.png", 3, "jingxinwan"),
+            _pack_reward("银票票据(200)", 0, "Image/UI/StoreUI/yinpiao1.png", 1, "homemoney200"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1432": {
+        "id": 1536, "total_price": 100, "price": 158, "limit_num": 31, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("静心丸", 50, "Image/UI/StoreUI/jingxinwan.png", 2, "jingxinwan"),
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 2, "xinggongsan"),
+            _pack_reward("银票票据(200)", 0, "Image/UI/StoreUI/yinpiao1.png", 1, "homemoney200"),
+            _pack_reward("潜能丹", 0, "Image/UI/StoreUI/qiannengdan.png", 2, "qiannengdan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1433": {
+        "id": 1537, "total_price": 400, "price": 588, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("江湖轻功录", 0, "Image/UI/StoreUI/miji.png", 1, "2021qinggongcanpian1"),
+            _pack_reward("潜能丹", 0, "Image/UI/StoreUI/qiannengdan.png", 5, "qiannengdan"),
+            _pack_reward("流云甘露", 80, "Image/UI/StoreUI/liuyunganlu.png", 5, "liuyunganlu"),
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 5, "xinggongsan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1434": {
+        "id": 1538, "total_price": 400, "price": 588, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("江湖内功录", 0, "Image/UI/StoreUI/miji.png", 1, "2021neigongcanpian1"),
+            _pack_reward("潜能丹", 0, "Image/UI/StoreUI/qiannengdan.png", 5, "qiannengdan"),
+            _pack_reward("流云甘露", 80, "Image/UI/StoreUI/liuyunganlu.png", 5, "liuyunganlu"),
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 5, "xinggongsan"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1435": {
+        "id": 1539, "total_price": 500050, "price": 188, "limit_num": 15, "beyond": 500,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("艾香", 10, "Image/UI/StoreUI/xiang.png", 5, "drxiang02"),
+            _pack_reward("沉香", 0, "Image/UI/StoreUI/xiang.png", 5, "drxiang04"),
+            _pack_reward("苏合香", 0, "Image/UI/StoreUI/xiang.png", 5, "drxiang03"),
+            _pack_reward("HIM特制檀香NOR", 100000, "Image/UI/StoreUI/xiang.png", 5, "jingmai100"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1436": {
+        "id": 1540, "total_price": 1, "price": 100, "limit_num": 155, "beyond": 300,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("未知", 1, "Image/UI/StoreUI/jinnang2.png", 1, "newfudai240"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1437": {
+        "id": 1541, "total_price": 240, "price": 200, "limit_num": 62, "beyond": 300,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("行功散", 0, "Image/UI/StoreUI/shenlishan.png", 3, "xinggongsan"),
+            _pack_reward("流云甘露", 80, "Image/UI/StoreUI/liuyunganlu.png", 3, "liuyunganlu"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1438": {
+        "id": 1542, "total_price": 1500, "price": 400, "limit_num": 31, "beyond": 300,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("RED醉梦生NOR", 500, "Image/UI/StoreUI/juhuajiu100.png", 3, "jiu106"),
+            _pack_reward("清风醉", 0, "Image/UI/StoreUI/juhuajiu100.png", 3, "jiu107"),
+            _pack_reward("十里香", 0, "Image/UI/StoreUI/juhuajiu100.png", 3, "jiu108"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1439": {
+        "id": 1543, "total_price": 200, "price": 200, "limit_num": 31, "beyond": 300,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("HIY经脉丹NOR", 10, "Image/UI/StoreUI/dabuwan.png", 5, "jingmai103"),
+            _pack_reward("HIY真气丹NOR", 20, "Image/UI/StoreUI/zhuzi.png", 5, "jingmai101"),
+            _pack_reward("HIC醒身丸NOR", 10, "Image/UI/StoreUI/dabuwan.png", 5, "jingmai102"),
+        ],
+        "special_reward_itemId": "",
+    },
+    "libao1440": {
+        "id": 1544, "total_price": 400350, "price": 688, "limit_num": 62, "beyond": 300,
+        "begin_time": 1788192001, "end_time": 1790783999,
+        "list": [
+            _pack_reward("如意", 0, "Image/UI/StoreUI/ruyi.png", 5, "cuilianruyi"),
+            _pack_reward("HIW一盒黄金", 200, "Image/UI/StoreUI/yiheyuanbao.png", 1, "yidaigold2"),
+            _pack_reward("HIM无烟煤NOR", 80000, "Image/UI/StoreUI/wuyanmei.png", 5, "duanzaoranliao3"),
+            _pack_reward("HIM融铁煤NOR", 30, "Image/UI/StoreUI/wuyanmei.png", 5, "duanzaoranliao4"),
+        ],
+        "special_reward_itemId": "",
+    },
+}
 
 
 def _as_int(value, default=0):
@@ -723,22 +902,18 @@ def get_store_list(ctx):
 
 @route(["GET", "POST"], "get_limit_package")
 def get_limit_package(ctx):
-    item = _find_store_item(_tail(ctx))
-    if item is None or _as_int(item.get("itype"), 0) != 100:
+    """限时礼包明细 (get_limit_package/libaoXXXX)。数据抓包自上游。"""
+    detail = _LIMITED_PACKAGE_DETAILS.get(_tail(ctx))
+    if detail is None:
         return build_response_body({}, errcode=404, errmsg="limited package not found")
-    return _ok({
-        "price": _as_int(item.get("price"), 0),
-        "limit_num": 99,
-        "beyond": 500,
-        "end_time": int(time.time()) + 365 * 86400,
-        "list": [{
-            "itemId": "jiu106",
-            "number": 1,
-            "imagePath": "Image/UI/StoreUI/juhuajiu100.png",
-        }],
-        "buy_times": 0,
-        "special_reward_itemId": "",
-    })
+    payload = dict(detail)
+    payload["list"] = [dict(reward) for reward in detail["list"]]
+    now = int(time.time())
+    if payload["end_time"] <= now:
+        # 抓包活动窗口已过: 顺延 30 天, 保证礼包详情可打开
+        payload["end_time"] = now + 30 * 86400
+    payload.setdefault("buy_times", 0)
+    return _ok(payload)
 
 
 @route(["GET"], "get_applestore_list")
@@ -814,6 +989,368 @@ def view_currency_by_type(ctx):
     if currency_type == "yinpiao":
         data["costYb"] = _YINPIAO_EXCHANGE_COST_YB
     return _ok(data)
+
+
+# 招式突破(续卷)道具表: skillUpItem01~24, 与客户端 breakThroughItems.lua 一一对应。
+# 客户端 VolumeBoxPresent 会对每个 id 调 getBreakThroughItem(id) 并 assert,
+# 因此只能返回表内 id, 且只返回持有数量 > 0 的道具。
+_ZHAO_UPGRADE_MATTER_IDS = tuple("skillUpItem%02d" % i for i in range(1, 25))
+
+
+@route(["GET", "POST"], "get_zhao_upgrade_matters")
+def get_zhao_upgrade_matters(ctx):
+    """续卷箱: 获取招式突破相关道具数量列表。
+
+    请求: {currencyVersion}  响应: {matters_list: [{id, num}, ...]}
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    matters_list = [
+        {"id": item_id, "num": _currency_balance(ctx, userid, item_id)}
+        for item_id in _ZHAO_UPGRADE_MATTER_IDS
+    ]
+    matters_list = [item for item in matters_list if item["num"] > 0]
+    return _ok({"matters_list": matters_list})
+
+
+def _build_zhao_break_through_table():
+    """按 zhaoBreakThrough.lua 规律生成招式突破配置表。
+
+    每类主动技能(activeSkillType) 1~10 重:
+      - 类型 1~8: id = 100000+(type-1)*10000+重数, 10 重消耗对应 skillUpItem01~08 x2
+      - 类型 0:   id = 180000+重数, 最高 9 重(无消耗)
+      - 武学等级要求: 1~8 重=1 级, 9 重=600 级, 10 重=1050 级
+    客户端未突破时默认取 9 重配置(getZhaoDefaultBreId)。
+    """
+    table = {}
+    for skill_type in range(0, 9):
+        base = 180000 if skill_type == 0 else 100000 + (skill_type - 1) * 10000
+        for level in range(1, 10 if skill_type == 0 else 11):
+            table["%d" % (base + level)] = {
+                "skill": 1 if level <= 8 else (600 if level == 9 else 1050),
+                "activeSkillType": skill_type,
+                "Blevel": level,
+                "reitem": ([("skillUpItem%02d" % skill_type, 2)]
+                           if level == 10 else []),
+            }
+    return table
+
+
+_ZHAO_BREAK_THROUGH = _build_zhao_break_through_table()
+
+
+@route(["POST"], "zhao_upgrade")
+def zhao_upgrade(ctx):
+    """招式突破: 消耗续卷将招式提升到下一重。
+
+    请求: {id=目标突破配置id, zhao_id, currencyVersion}
+    成功: {reitem_list=[{id,num}], currencyVersion}
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    body = _body(ctx)
+    bre_id = str(body.get("id") or "")
+    zhao_id = str(body.get("zhao_id") or "")
+    if not bre_id or not zhao_id:
+        return build_response_body({}, errcode=1, errmsg="invalid breakthrough request")
+    bre = _ZHAO_BREAK_THROUGH.get(bre_id)
+    if bre is None:
+        return build_response_body({}, errcode=1, errmsg="unknown breakthrough id")
+
+    with ctx["state"]._lock:
+        archive = ctx["state"].get_archive(userid)
+        if not isinstance(archive, dict) or not archive:
+            return build_response_body({}, errcode=404, errmsg="archive not found")
+        zhao_break_data = archive.setdefault("zhaoBreakData", {})
+        current = _ZHAO_BREAK_THROUGH.get(str(zhao_break_data.get(zhao_id) or ""))
+        current_level = current["Blevel"] if current else 9
+        if bre["Blevel"] != current_level + 1:
+            return build_response_body({}, errcode=1, errmsg="breakthrough level invalid")
+
+        account = ctx["state"]._state["accounts"].setdefault(str(userid), {"userid": userid})
+        currencies = account.setdefault("currencies", {})
+
+        def _balance(item_id):
+            return max(_as_int(archive.get(item_id), 0),
+                       _as_int(currencies.get(item_id), 0))
+
+        for item_id, num in bre["reitem"]:
+            if _balance(item_id) < num:
+                return build_response_body({}, errcode=2, errmsg="所需续卷数量不足")
+
+        reitem_list = []
+        for item_id, num in bre["reitem"]:
+            remaining = _balance(item_id) - num
+            archive[item_id] = remaining
+            currencies[item_id] = remaining
+            reitem_list.append({"id": item_id, "num": num})
+
+        zhao_break_data[zhao_id] = bre_id
+        currency_version = max(
+            _as_int(archive.get("currencyVersion"), 0),
+            _as_int(body.get("currencyVersion"), 0),
+            _as_int(account.get("currency_version"), 0),
+        ) + 1
+        archive["currencyVersion"] = currency_version
+        account["currency_version"] = currency_version
+        ctx["state"].put_archive(userid, archive)
+        ctx["state"]._changed()
+    return _ok({"reitem_list": reitem_list, "currencyVersion": currency_version})
+
+
+# 续卷商人(天都峰 墨无锋)兑换表: 货币为 功法学识(dmartial)。
+# 初卷(01-08)/通卷(09-16)/悟卷(17-24) 三档价格, 上游无抓包数据, 价格为 mock 设定。
+_MATTERS_SHOP_CURRENCY = "dmartial"
+_MATTERS_SHOP_GOODS = tuple(
+    (item_id, 1, 20 if index < 8 else (40 if index < 16 else 80))
+    for index, item_id in enumerate(_ZHAO_UPGRADE_MATTER_IDS)
+)
+_MATTERS_SHOP_CATALOG = {goods[0]: goods for goods in _MATTERS_SHOP_GOODS}
+
+
+@route(["POST"], "matters_shop_info")
+def matters_shop_info(ctx):
+    """续卷商人: 获取/刷新兑换列表。type 1 获取 / 2 刷新。
+
+    请求: {type, currencyVersion}
+    成功: {matters_list, goods_list, yuanbao_num, currency_number,
+           currency_name, isRefreshLimit, currencyVersion}
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    matters_list = [
+        {"id": item_id, "num": _currency_balance(ctx, userid, item_id)}
+        for item_id in _ZHAO_UPGRADE_MATTER_IDS
+    ]
+    matters_list = [item for item in matters_list if item["num"] > 0]
+    goods_list = [
+        {"key": item_id, "id": item_id, "num": num, "price": price}
+        for item_id, num, price in _MATTERS_SHOP_GOODS
+    ]
+    archive = ctx["state"].get_archive(userid) or {}
+    account = ctx["state"].get_account(userid) or {}
+    currency_version = max(
+        _as_int(archive.get("currencyVersion"), 0),
+        _as_int(account.get("currency_version"), 0),
+    )
+    return _ok({
+        "matters_list": matters_list,
+        "goods_list": goods_list,
+        "yuanbao_num": 0,  # 刷新免费
+        "currency_number": _currency_balance(ctx, userid, _MATTERS_SHOP_CURRENCY),
+        "currency_name": "功法学识",
+        "isRefreshLimit": False,  # 刷新不限次
+        "currencyVersion": currency_version,
+    })
+
+
+@route(["POST"], "buy_matters")
+def buy_matters(ctx):
+    """续卷商人: 功法学识兑换续卷。
+
+    请求: {goodsKey, currencyVersion}
+    成功: {reward={id,num}, currencyVersion}
+    功法学识不足: errcode=2
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    body = _body(ctx)
+    goods_key = str(body.get("goodsKey") or body.get("goods_key") or "")
+    goods = _MATTERS_SHOP_CATALOG.get(goods_key)
+    if goods is None:
+        return build_response_body({}, errcode=1, errmsg="goods not found")
+    item_id, num, price = goods
+
+    with ctx["state"]._lock:
+        archive = ctx["state"].get_archive(userid)
+        if not isinstance(archive, dict) or not archive:
+            return build_response_body({}, errcode=404, errmsg="archive not found")
+        account = ctx["state"]._state["accounts"].setdefault(str(userid), {"userid": userid})
+        currencies = account.setdefault("currencies", {})
+
+        def _balance(key):
+            return max(_as_int(archive.get(key), 0),
+                       _as_int(currencies.get(key), 0))
+
+        currency_balance = _balance(_MATTERS_SHOP_CURRENCY)
+        if currency_balance < price:
+            return build_response_body({}, errcode=2, errmsg="功法学识不足")
+
+        # 扣除功法学识, 发放续卷(archive 与 account 同步)
+        remaining = currency_balance - price
+        archive[_MATTERS_SHOP_CURRENCY] = remaining
+        currencies[_MATTERS_SHOP_CURRENCY] = remaining
+        item_balance = _balance(item_id) + num
+        archive[item_id] = item_balance
+        currencies[item_id] = item_balance
+
+        currency_version = max(
+            _as_int(archive.get("currencyVersion"), 0),
+            _as_int(body.get("currencyVersion"), 0),
+            _as_int(account.get("currency_version"), 0),
+        ) + 1
+        archive["currencyVersion"] = currency_version
+        account["currency_version"] = currency_version
+        ctx["state"].put_archive(userid, archive)
+        ctx["state"]._changed()
+    return _ok({"reward": {"id": item_id, "num": num}, "currencyVersion": currency_version})
+
+
+# 活动积分商店(充值积分兑换): 数据抓包自 so/har_decrypt_91/entries/098_get_shop_info.json。
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_POINT_SHOP_CURRENCY = "chongzhijifen"
+_POINT_SHOP_FILES = {
+    "zhounianqin_cz": os.path.join(_ROOT, "item_json", "shop_zhounianqin_cz.json"),
+}
+_POINT_SHOPS = {}
+
+
+def _load_point_shop(shop_id):
+    if shop_id not in _POINT_SHOPS:
+        path = _POINT_SHOP_FILES.get(shop_id)
+        if path is None:
+            return None
+        with open(path, encoding="utf-8") as f:
+            _POINT_SHOPS[shop_id] = json.load(f)
+    return _POINT_SHOPS[shop_id]
+
+
+@route(["POST"], "get_shop_info")
+def get_shop_info(ctx):
+    """活动积分商店(AnniversaryCelebrationConversionLayer)。
+
+    请求: {shop_id}  响应: {shop_info, total_points, isDis, disInfo}
+    total_points 为用户当前活动积分(chongzhijifen)。
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    shop_id = str(_body(ctx).get("shop_id") or "")
+    shop_info = _load_point_shop(shop_id)
+    if shop_info is None:
+        return build_response_body({}, errcode=404, errmsg="shop not found")
+    return _ok({
+        "shop_info": shop_info,
+        "total_points": _currency_balance(ctx, userid, _POINT_SHOP_CURRENCY),
+        "isDis": False,
+        "disInfo": False,
+    })
+
+
+def _find_point_shop_goods(shop_info, item_id):
+    for items in (shop_info.get("goods") or {}).values():
+        for goods in items:
+            if str(goods.get("itemId")) == item_id:
+                return goods
+    return None
+
+
+def _point_shop_bucket(state, userid):
+    root = state._state.setdefault("point_shop", {})
+    bucket = root.get(str(userid))
+    if not isinstance(bucket, dict):
+        bucket = {"transactions": {}, "counts": {}}
+        root[str(userid)] = bucket
+    if not isinstance(bucket.get("transactions"), dict):
+        bucket["transactions"] = {}
+    if not isinstance(bucket.get("counts"), dict):
+        bucket["counts"] = {}
+    return bucket
+
+
+@route(["POST"], "shop_exchange_goods")
+def shop_exchange_goods(ctx):
+    """活动积分商店兑换。
+
+    请求: {itemId, client_trans_id, shop_id, number, dataVer, currencyVersion}
+    成功: {reward={itemId,number,itype,name}, romove_point, total_points,
+           isDis, currencyVersion}
+    奖励道具由客户端本地入包; 服务端负责扣积分、限购与幂等。
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    body = _body(ctx)
+    item_id = str(body.get("itemId") or "")
+    shop_id = str(body.get("shop_id") or "")
+    client_trans_id = str(body.get("client_trans_id") or "")
+    number = max(_as_int(body.get("number"), 0), 0)
+    if not item_id or not client_trans_id or number <= 0:
+        return build_response_body({}, errcode=1, errmsg="invalid exchange request")
+    shop_info = _load_point_shop(shop_id)
+    if shop_info is None:
+        return build_response_body({}, errcode=404, errmsg="shop not found")
+    goods = _find_point_shop_goods(shop_info, item_id)
+    if goods is None:
+        return build_response_body({}, errcode=1, errmsg="goods not found")
+
+    # 限购: is_again=N 时限购 times 次(与 extra.limit 一致), Y 不限
+    limit = None
+    if str(goods.get("is_again") or "N") == "N":
+        limit = max(_as_int(goods.get("times"), 0), 0)
+    unit_price = max(_as_int(goods.get("price"), 0), 0)
+    total_cost = unit_price * number
+    signature = json.dumps(
+        {"itemId": item_id, "shop_id": shop_id, "number": number},
+        ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+    with ctx["state"]._lock:
+        bucket = _point_shop_bucket(ctx["state"], userid)
+        previous = bucket["transactions"].get(client_trans_id)
+        if isinstance(previous, dict):
+            if previous.get("signature") != signature:
+                return build_response_body({}, errcode=409, errmsg="client_trans_id conflict")
+            return copy.deepcopy(previous.get("response"))
+
+        count_key = "%s/%s" % (shop_id, item_id)
+        if limit is not None and _as_int(bucket["counts"].get(count_key), 0) + number > limit:
+            return build_response_body({}, errcode=1, errmsg="您已经达到购买上限")
+
+        archive = ctx["state"].get_archive(userid)
+        if not isinstance(archive, dict) or not archive:
+            return build_response_body({}, errcode=404, errmsg="archive not found")
+        account = ctx["state"]._state["accounts"].setdefault(str(userid), {"userid": userid})
+        currencies = account.setdefault("currencies", {})
+        balance = max(_as_int(archive.get(_POINT_SHOP_CURRENCY), 0),
+                      _as_int(currencies.get(_POINT_SHOP_CURRENCY), 0))
+        if balance < total_cost:
+            return build_response_body({}, errcode=1, errmsg="充值积分不足")
+
+        remaining = balance - total_cost
+        archive[_POINT_SHOP_CURRENCY] = remaining
+        currencies[_POINT_SHOP_CURRENCY] = remaining
+        currency_version = max(
+            _as_int(archive.get("currencyVersion"), 0),
+            _as_int(body.get("currencyVersion"), 0),
+            _as_int(account.get("currency_version"), 0),
+        ) + 1
+        archive["currencyVersion"] = currency_version
+        account["currency_version"] = currency_version
+        ctx["state"].put_archive(userid, archive)
+
+        bucket["counts"][count_key] = _as_int(bucket["counts"].get(count_key), 0) + number
+        response = _ok({
+            "reward": {
+                "itemId": item_id,
+                "number": max(_as_int(goods.get("number"), 1), 1) * number,
+                "itype": _as_int(goods.get("itype"), 1),
+                "name": goods.get("name") or item_id,
+            },
+            "romove_point": total_cost,
+            "total_points": remaining,
+            "isDis": False,
+            "currencyVersion": currency_version,
+        })
+        bucket["transactions"][client_trans_id] = {
+            "signature": signature,
+            "response": copy.deepcopy(response),
+        }
+        ctx["state"]._changed()
+    return response
 
 
 @route(["GET", "POST"], "get_goods")
@@ -2205,6 +2742,22 @@ SPRING_FESTIVAL_ACTIONS = [
             "3.传承保留签到获得的奖励，保留活动进度。",
             "4.重置保留签到获得的元宝，不保留其他奖励，保留活动进度。",
         ],
+    },
+    {
+        "id": 19,
+        "activity_id": "chongzhijifenduihuan",
+        "name": "充值积分兑换",
+        "status": 1,
+        "is_open": 1,
+        "is_show": 1,
+        "remain_time": max(1790783999 - int(time.time()), 0),
+        "time": "2026-09-01 00:00:00 至 2026-09-30 23:59:59",
+        "desc": "使用充值积分兑换物品",
+        "gift": "珍稀道具，武功秘籍等丰厚奖励",
+        "start": 1788192000,
+        "end": 1790783999,
+        "sort": 2,
+        "detail_desc": [""],
     },
 ]
 

@@ -1,0 +1,33 @@
+{
+  "index": 63,
+  "startedDateTime": "2026-09-01T14:50:57.170846Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_payMask_gift_info",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "PKhzvi",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "7fdb92f87c71a9c0b4b1bdbe1e01590b",
+    "time": "1788273937.0148",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a4830333eb8d33a57037a6694e3dc5e0d51c1b9",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"activityName\":\"墨千秋的赠礼\",\"activityDesc\":[\"在招财进宝获得鹿胶后，前往家园找绣女(忠诚度需达到7级)可制作以下面具。面具制作成功后，在奖励发放时间内可领取赠礼。佩戴以下面具，前往平安小镇寻找墨千秋，可以开启面具专属剧情，完成剧情即可获得面具升级道具。\"],\"giftList\":[{\"id\":4,\"state\":1}]},\"rand_t\":1788274256.9409}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"activityName\": \"墨千秋的赠礼\",\n    \"activityDesc\": [\n      \"在招财进宝获得鹿胶后，前往家园找绣女(忠诚度需达到7级)可制作以下面具。面具制作成功后，在奖励发放时间内可领取赠礼。佩戴以下面具，前往平安小镇寻找墨千秋，可以开启面具专属剧情，完成剧情即可获得面具升级道具。\"\n    ],\n    \"giftList\": [\n      {\n        \"id\": 4,\n        \"state\": 1\n      }\n    ]\n  },\n  \"rand_t\": 1788274256.9409\n}"
+}

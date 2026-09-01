@@ -1,0 +1,33 @@
+{
+  "index": 74,
+  "startedDateTime": "2026-09-01T14:50:40.078617Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/58",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "SCuIsd",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "d6b327447ec608fc03556e2709b0602f",
+    "time": "1788273937.0137",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a48303385f234dd2ee63e94e0477fa1b3dfb8e0",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":58,\"name\":\"酆都鬼节\",\"desc\":\"酆都全时段开放，且佩戴面具提高当日的冥币获取上限\",\"gift\":\"冥币\",\"start\":1787760000,\"end\":1789055999,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_time\":\"2026年08月27日0点0分0秒 至 2026年09月10日23点59分59秒\",\"detail_desc\":[\"生在阳间有散场，死归地府又何妨。相传，每年七月十五日，阎罗王打开地狱之门“鬼门关”，让关押的鬼类出来自由活动，直至七月结束才回归地府。而阳间之人也可进入酆都鬼门，以观地狱之景。\",\"\",\"活动规则：\",\"1.在活动时间内，酆都全时段开放，可在苏州城内进入。\",\"2.酆都内冥币周常任务：孟婆奈何桥、崔判官生死簿、钟馗抓鬼、鬼界堡祭品产出的冥币额外增加25%，若有佩戴夜叉、牛头、马面面具，则产出冥币可额外增加至50%。\",\"3.新增冥币商人处售卖的道具，活动时间结束后，新增道具依然可以在冥币商人处购买。\"],\"sort\":\"57\",\"create_time\":\"2019-03-28 10:14:20\",\"update_time\":\"2026-08-26 15:42:45\",\"activity_id\":\"addmingbiupper\"},\"rand_t\":1788274239.8603}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 58,\n    \"name\": \"酆都鬼节\",\n    \"desc\": \"酆都全时段开放，且佩戴面具提高当日的冥币获取上限\",\n    \"gift\": \"冥币\",\n    \"start\": 1787760000,\n    \"end\": 1789055999,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_time\": \"2026年08月27日0点0分0秒 至 2026年09月10日23点59分59秒\",\n    \"detail_desc\": [\n      \"生在阳间有散场，死归地府又何妨。相传，每年七月十五日，阎罗王打开地狱之门“鬼门关”，让关押的鬼类出来自由活动，直至七月结束才回归地府。而阳间之人也可进入酆都鬼门，以观地狱之景。\",\n      \"\",\n      \"活动规则：\",\n      \"1.在活动时间内，酆都全时段开放，可在苏州城内进入。\",\n      \"2.酆都内冥币周常任务：孟婆奈何桥、崔判官生死簿、钟馗抓鬼、鬼界堡祭品产出的冥币额外增加25%，若有佩戴夜叉、牛头、马面面具，则产出冥币可额外增加至50%。\",\n      \"3.新增冥币商人处售卖的道具，活动时间结束后，新增道具依然可以在冥币商人处购买。\"\n    ],\n    \"sort\": \"57\",\n    \"create_time\": \"2019-03-28 10:14:20\",\n    \"update_time\": \"2026-08-26 15:42:45\",\n    \"activity_id\": \"addmingbiupper\"\n  },\n  \"rand_t\": 1788274239.8603\n}"
+}

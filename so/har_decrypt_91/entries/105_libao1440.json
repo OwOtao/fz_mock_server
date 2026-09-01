@@ -1,0 +1,33 @@
+{
+  "index": 105,
+  "startedDateTime": "2026-09-01T14:49:39.392914Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_limit_package/libao1440",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "iGsHjW",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "0ebbc22a70aac0ab8c812907b6ae706a",
+    "time": "1788273937.0106",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a483033de50cc83cc2ce8bdafc825d5b6c8062e",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":1544,\"total_price\":400350,\"price\":688,\"limit_num\":62,\"beyond\":300,\"begin_time\":1788192001,\"end_time\":1790783999,\"list\":[{\"name\":\"如意\",\"price\":0,\"imagePath\":\"Image\\/UI\\/StoreUI\\/ruyi.png\",\"number\":5,\"itemId\":\"cuilianruyi\"},{\"name\":\"HIW一盒黄金\",\"price\":200,\"imagePath\":\"Image\\/UI\\/StoreUI\\/yiheyuanbao.png\",\"number\":1,\"itemId\":\"yidaigold2\"},{\"name\":\"HIM无烟煤NOR\",\"price\":80000,\"imagePath\":\"Image\\/UI\\/StoreUI\\/wuyanmei.png\",\"number\":5,\"itemId\":\"duanzaoranliao3\"},{\"name\":\"HIM融铁煤NOR\",\"price\":30,\"imagePath\":\"Image\\/UI\\/StoreUI\\/wuyanmei.png\",\"number\":5,\"itemId\":\"duanzaoranliao4\"}],\"special_reward_itemId\":\"\",\"buy_times\":0},\"rand_t\":1788274179.1982}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 1544,\n    \"total_price\": 400350,\n    \"price\": 688,\n    \"limit_num\": 62,\n    \"beyond\": 300,\n    \"begin_time\": 1788192001,\n    \"end_time\": 1790783999,\n    \"list\": [\n      {\n        \"name\": \"如意\",\n        \"price\": 0,\n        \"imagePath\": \"Image/UI/StoreUI/ruyi.png\",\n        \"number\": 5,\n        \"itemId\": \"cuilianruyi\"\n      },\n      {\n        \"name\": \"HIW一盒黄金\",\n        \"price\": 200,\n        \"imagePath\": \"Image/UI/StoreUI/yiheyuanbao.png\",\n        \"number\": 1,\n        \"itemId\": \"yidaigold2\"\n      },\n      {\n        \"name\": \"HIM无烟煤NOR\",\n        \"price\": 80000,\n        \"imagePath\": \"Image/UI/StoreUI/wuyanmei.png\",\n        \"number\": 5,\n        \"itemId\": \"duanzaoranliao3\"\n      },\n      {\n        \"name\": \"HIM融铁煤NOR\",\n        \"price\": 30,\n        \"imagePath\": \"Image/UI/StoreUI/wuyanmei.png\",\n        \"number\": 5,\n        \"itemId\": \"duanzaoranliao4\"\n      }\n    ],\n    \"special_reward_itemId\": \"\",\n    \"buy_times\": 0\n  },\n  \"rand_t\": 1788274179.1982\n}"
+}

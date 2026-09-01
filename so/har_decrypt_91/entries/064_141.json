@@ -1,0 +1,33 @@
+{
+  "index": 64,
+  "startedDateTime": "2026-09-01T14:50:56.823567Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/141",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "nwwZMc",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "9d00070dc625edd005e594cb994ad51f",
+    "time": "1788273937.0147",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a4830338ed1217632fff18e04199d440df45db4",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":141,\"name\":\"墨千秋的赠礼\",\"desc\":\"制作特殊面具送好礼，点击面具名称可预览\",\"gift\":\"笃志\",\"start\":1732636800,\"end\":1861891199,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_desc\":[\"在招财进宝获得鹿胶后，前往家园找绣女(忠诚度需达到7级)可制作以下面具。面具制作成功后，在奖励发放时间内可领取赠礼。佩戴以下面具，前往平安小镇寻找墨千秋，可以开启面具专属剧情，完成剧情即可获得面具升级道具。\"],\"sort\":\"107\",\"create_time\":\"2024-11-27 17:36:04\",\"update_time\":\"2026-06-10 15:34:08\",\"activity_id\":\"paymaskgift\",\"rule_desc\":[\"1.不同面具拥有不同的赠礼间隔时间\",\"2.若在活动开始前完成面具制作，则在领取时间开启后首日可领取赠礼。在领取时间开启后制作面具，则制作成功的当天，可立即领取赠礼\",\"3.下一次领取赠礼的时间，为上一次领取赠礼的时间与奖励间隔时间相加\",\"4.赠礼数量不会累积，若已到领取时间未领取奖励，则不会出现下一次领取奖励的时间，直到领取赠礼。\",\"5.听说佩戴相应的面具去平安小镇找墨千秋，会有奇遇发生\",\"6.点击面具名称可对面具进行预览\"]},\"rand_t\":1788274256.6489}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 141,\n    \"name\": \"墨千秋的赠礼\",\n    \"desc\": \"制作特殊面具送好礼，点击面具名称可预览\",\n    \"gift\": \"笃志\",\n    \"start\": 1732636800,\n    \"end\": 1861891199,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_desc\": [\n      \"在招财进宝获得鹿胶后，前往家园找绣女(忠诚度需达到7级)可制作以下面具。面具制作成功后，在奖励发放时间内可领取赠礼。佩戴以下面具，前往平安小镇寻找墨千秋，可以开启面具专属剧情，完成剧情即可获得面具升级道具。\"\n    ],\n    \"sort\": \"107\",\n    \"create_time\": \"2024-11-27 17:36:04\",\n    \"update_time\": \"2026-06-10 15:34:08\",\n    \"activity_id\": \"paymaskgift\",\n    \"rule_desc\": [\n      \"1.不同面具拥有不同的赠礼间隔时间\",\n      \"2.若在活动开始前完成面具制作，则在领取时间开启后首日可领取赠礼。在领取时间开启后制作面具，则制作成功的当天，可立即领取赠礼\",\n      \"3.下一次领取赠礼的时间，为上一次领取赠礼的时间与奖励间隔时间相加\",\n      \"4.赠礼数量不会累积，若已到领取时间未领取奖励，则不会出现下一次领取奖励的时间，直到领取赠礼。\",\n      \"5.听说佩戴相应的面具去平安小镇找墨千秋，会有奇遇发生\",\n      \"6.点击面具名称可对面具进行预览\"\n    ]\n  },\n  \"rand_t\": 1788274256.6489\n}"
+}

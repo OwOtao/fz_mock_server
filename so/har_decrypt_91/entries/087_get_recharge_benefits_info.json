@@ -1,0 +1,33 @@
+{
+  "index": 87,
+  "startedDateTime": "2026-09-01T14:50:06.998870Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_recharge_benefits_info",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "qKJkDq",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "a56f58e02168aac02611b7370a157c20",
+    "time": "1788273937.0124",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a483033e3b17210b2f502f16824854468446fc4",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"giftList\":[{\"giftId\":1,\"ridList\":[1001,1002,1003,1004],\"giftIcon\":\"Image\\/UI\\/StoreUI\\/xiangzi1.png\",\"giftName\":\"福利礼包\",\"giftType\":1},{\"giftId\":2,\"ridList\":[2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011],\"giftIcon\":\"Image\\/UI\\/StoreUI\\/xiangzi1.png\",\"giftName\":\"幸运礼包\",\"giftType\":2}],\"goodsList\":{\"1001\":{\"goodsId\":\"300006\",\"num\":1},\"1002\":{\"goodsId\":\"400005\",\"num\":200},\"1003\":{\"goodsId\":\"400017\",\"num\":40},\"1004\":{\"goodsId\":\"300004\",\"num\":1},\"2001\":{\"goodsId\":\"300530\",\"num\":1},\"2002\":{\"goodsId\":\"200013\",\"num\":1},\"2003\":{\"goodsId\":\"200014\",\"num\":1},\"2004\":{\"goodsId\":\"200015\",\"num\":1},\"2005\":{\"goodsId\":\"200016\",\"num\":1},\"2006\":{\"goodsId\":\"300035\",\"num\":1},\"2007\":{\"goodsId\":\"200020\",\"num\":2},\"2008\":{\"goodsId\":\"200018\",\"num\":2},\"2009\":{\"goodsId\":\"200019\",\"num\":2},\"2010\":{\"goodsId\":\"300036\",\"num\":2},\"2011\":{\"goodsId\":\"300014\",\"num\":1}},\"rewardList\":[{\"id\":1,\"needMoney\":6,\"giftList\":[{\"giftId\":1,\"giftNum\":1}],\"state\":\"0\"},{\"id\":2,\"needMoney\":30,\"giftList\":[{\"giftId\":1,\"giftNum\":5},{\"giftId\":2,\"giftNum\":1}],\"state\":\"0\"},{\"id\":3,\"needMoney\":60,\"giftList\":[{\"giftId\":1,\"giftNum\":5},{\"giftId\":2,\"giftNum\":3}],\"state\":\"0\"},{\"id\":4,\"needMoney\":90,\"giftList\":[{\"giftId\":1,\"giftNum\":10},{\"giftId\":2,\"giftNum\":6}],\"state\":\"0\"}],\"totalRecharge\":\"0\"},\"rand_t\":1788274206.7695}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"giftList\": [\n      {\n        \"giftId\": 1,\n        \"ridList\": [\n          1001,\n          1002,\n          1003,\n          1004\n        ],\n        \"giftIcon\": \"Image/UI/StoreUI/xiangzi1.png\",\n        \"giftName\": \"福利礼包\",\n        \"giftType\": 1\n      },\n      {\n        \"giftId\": 2,\n        \"ridList\": [\n          2001,\n          2002,\n          2003,\n          2004,\n          2005,\n          2006,\n          2007,\n          2008,\n          2009,\n          2010,\n          2011\n        ],\n        \"giftIcon\": \"Image/UI/StoreUI/xiangzi1.png\",\n        \"giftName\": \"幸运礼包\",\n        \"giftType\": 2\n      }\n    ],\n    \"goodsList\": {\n      \"1001\": {\n        \"goodsId\": \"300006\",\n        \"num\": 1\n      },\n      \"1002\": {\n        \"goodsId\": \"400005\",\n        \"num\": 200\n      },\n      \"1003\": {\n        \"goodsId\": \"400017\",\n        \"num\": 40\n      },\n      \"1004\": {\n        \"goodsId\": \"300004\",\n        \"num\": 1\n      },\n      \"2001\": {\n        \"goodsId\": \"300530\",\n        \"num\": 1\n      },\n      \"2002\": {\n        \"goodsId\": \"200013\",\n        \"num\": 1\n      },\n      \"2003\": {\n        \"goodsId\": \"200014\",\n        \"num\": 1\n      },\n      \"2004\": {\n        \"goodsId\": \"200015\",\n        \"num\": 1\n      },\n      \"2005\": {\n        \"goodsId\": \"200016\",\n        \"num\": 1\n      },\n      \"2006\": {\n        \"goodsId\": \"300035\",\n        \"num\": 1\n      },\n      \"2007\": {\n        \"goodsId\": \"200020\",\n        \"num\": 2\n      },\n      \"2008\": {\n        \"goodsId\": \"200018\",\n        \"num\": 2\n      },\n      \"2009\": {\n        \"goodsId\": \"200019\",\n        \"num\": 2\n      },\n      \"2010\": {\n        \"goodsId\": \"300036\",\n        \"num\": 2\n      },\n      \"2011\": {\n        \"goodsId\": \"300014\",\n        \"num\": 1\n      }\n    },\n    \"rewardList\": [\n      {\n        \"id\": 1,\n        \"needMoney\": 6,\n        \"giftList\": [\n          {\n            \"giftId\": 1,\n            \"giftNum\": 1\n          }\n        ],\n        \"state\": \"0\"\n      },\n      {\n        \"id\": 2,\n        \"needMoney\": 30,\n        \"giftList\": [\n          {\n            \"giftId\": 1,\n            \"giftNum\": 5\n          },\n          {\n            \"giftId\": 2,\n            \"giftNum\": 1\n          }\n        ],\n        \"state\": \"0\"\n      },\n      {\n        \"id\": 3,\n        \"needMoney\": 60,\n        \"giftList\": [\n          {\n            \"giftId\": 1,\n            \"giftNum\": 5\n          },\n          {\n            \"giftId\": 2,\n            \"giftNum\": 3\n          }\n        ],\n        \"state\": \"0\"\n      },\n      {\n        \"id\": 4,\n        \"needMoney\": 90,\n        \"giftList\": [\n          {\n            \"giftId\": 1,\n            \"giftNum\": 10\n          },\n          {\n            \"giftId\": 2,\n            \"giftNum\": 6\n          }\n        ],\n        \"state\": \"0\"\n      }\n    ],\n    \"totalRecharge\": \"0\"\n  },\n  \"rand_t\": 1788274206.7695\n}"
+}

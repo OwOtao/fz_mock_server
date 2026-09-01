@@ -1,0 +1,33 @@
+{
+  "index": 79,
+  "startedDateTime": "2026-09-01T14:50:18.852008Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_fistFootShop_info",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "iYsqDa",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "aa3cbbdcf274a217099b8668ae7d889e",
+    "time": "1788273937.0132",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a48303378bd29bc581eb7400a93f4ec1d6ec3a0",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"activityName\":\"通武积市\",\"activityDesc\":[\"活动时间：2026年08月27日15点- 2026年09月10日14点59分59秒\",\"活动期间，可以通过消耗元宝随机获得三个奖励档位的固身元气和特性见解，消耗元宝越多可获得的奖励越多。每次活动只可以选择一次期间所要消耗的元宝额度。每下一个档位会在购买后次日0点解锁，全部档位购买完成或【特惠购买倒计时】结束后，可开启活动期间唯一一次的【特惠购买】，奖励可根据当前已购买档位提升最终奖励倍数！\"],\"dailyDefaultCost\":2000,\"dailySelectCost\":0,\"specialOfferState\":0,\"specialOfferStartDate\":1788937199,\"specialOfferOrder\":[],\"discountRate\":0,\"dailySelectList\":[]},\"rand_t\":1788274218.6219}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"activityName\": \"通武积市\",\n    \"activityDesc\": [\n      \"活动时间：2026年08月27日15点- 2026年09月10日14点59分59秒\",\n      \"活动期间，可以通过消耗元宝随机获得三个奖励档位的固身元气和特性见解，消耗元宝越多可获得的奖励越多。每次活动只可以选择一次期间所要消耗的元宝额度。每下一个档位会在购买后次日0点解锁，全部档位购买完成或【特惠购买倒计时】结束后，可开启活动期间唯一一次的【特惠购买】，奖励可根据当前已购买档位提升最终奖励倍数！\"\n    ],\n    \"dailyDefaultCost\": 2000,\n    \"dailySelectCost\": 0,\n    \"specialOfferState\": 0,\n    \"specialOfferStartDate\": 1788937199,\n    \"specialOfferOrder\": [],\n    \"discountRate\": 0,\n    \"dailySelectList\": []\n  },\n  \"rand_t\": 1788274218.6219\n}"
+}

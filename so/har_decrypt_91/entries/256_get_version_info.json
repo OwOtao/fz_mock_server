@@ -1,0 +1,31 @@
+{
+  "index": 256,
+  "startedDateTime": "2026-09-01T14:45:21.341234Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/service_android/get_version_info",
+  "method": "POST",
+  "status": 200,
+  "request_headers": {
+    "pkname": "com.xhtt.app.fzjh",
+    "sig": "",
+    "ver": "2.1.01",
+    "nouce": "",
+    "channel": "guanfang",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "time": "0",
+    "hotver": "0",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "userid": "",
+    "platform": "android",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive",
+    "Accept-Encoding": "gzip",
+    "Content-Length": "0"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"lowestVersionCode\":3,\"versionCode\":10,\"versionName\":\"1.1.0\",\"desc\":\"新APK\",\"url\":\"http:\\/\\/cdn.xiaohoutiaotiao.com\\/android\\/product_fangzhijianghu_ppyxt_2.1.01.apk\",\"md5\":\"303c58e7014055da0f735b052a506123\",\"isOpen\":\"yes\",\"fzbUrl\":\"http:\\/\\/cdn.xiaohoutiaotiao.com\\/android\\/game\\/config\"},\"sig\":{\"time\":\"1788273921.0151\",\"nouce\":\"rgGbEF\",\"signature\":\"2eb76b8f72950393ffb9178c1c34f9e7\"}}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"lowestVersionCode\": 3,\n    \"versionCode\": 10,\n    \"versionName\": \"1.1.0\",\n    \"desc\": \"新APK\",\n    \"url\": \"http://cdn.xiaohoutiaotiao.com/android/product_fangzhijianghu_ppyxt_2.1.01.apk\",\n    \"md5\": \"303c58e7014055da0f735b052a506123\",\n    \"isOpen\": \"yes\",\n    \"fzbUrl\": \"http://cdn.xiaohoutiaotiao.com/android/game/config\"\n  },\n  \"sig\": {\n    \"time\": \"1788273921.0151\",\n    \"nouce\": \"rgGbEF\",\n    \"signature\": \"2eb76b8f72950393ffb9178c1c34f9e7\"\n  }\n}"
+}

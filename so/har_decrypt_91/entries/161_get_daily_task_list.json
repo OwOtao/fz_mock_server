@@ -1,0 +1,33 @@
+{
+  "index": 161,
+  "startedDateTime": "2026-09-01T14:47:46.677817Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_daily_task_list",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "uKSIvE",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "7aef523b43115f8884723cac5d525152",
+    "time": "1788273937.005",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a483033788003e7e4133b1c2789aaa40c118053",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"act_name\":\"每日任务\",\"detail_time\":\"\",\"detail_desc\":[\"每日完成指定任务可以获得积分，积分积累到一定数量即可领取宝箱，需求越高的宝箱，可获得的奖励越丰厚。任务及积分进度每日刷新，请及时完成和领取。\"],\"daily_point\":80,\"reward_list\":[{\"rid\":1,\"grade\":60,\"reward\":[{\"id\":\"400038\",\"num\":200},{\"id\":\"300143\",\"num\":1}],\"state\":1},{\"rid\":2,\"grade\":180,\"reward\":[{\"id\":\"400038\",\"num\":200},{\"id\":\"300142\",\"num\":1}],\"state\":0},{\"rid\":3,\"grade\":300,\"reward\":[{\"id\":\"300004\",\"num\":1},{\"id\":\"300143\",\"num\":2},{\"id\":\"400017\",\"num\":10}],\"state\":0},{\"rid\":4,\"grade\":420,\"reward\":[{\"id\":\"300058\",\"num\":2},{\"id\":\"300142\",\"num\":2},{\"id\":\"400017\",\"num\":10},{\"id\":\"400056\",\"num\":1}],\"state\":0},{\"rid\":5,\"grade\":550,\"reward\":[{\"id\":\"300007\",\"num\":1},{\"id\":\"300230\",\"num\":2},{\"id\":\"400017\",\"num\":20},{\"id\":\"400005\",\"num\":200}],\"state\":0}],\"task_list\":[{\"tid\":1,\"state\":0},{\"tid\":2,\"state\":0},{\"tid\":3,\"state\":0},{\"tid\":4,\"state\":0},{\"tid\":5,\"state\":0},{\"tid\":6,\"state\":1},{\"tid\":7,\"state\":0},{\"tid\":8,\"state\":0},{\"tid\":9,\"state\":1},{\"tid\":10,\"state\":0},{\"tid\":11,\"state\":0}]},\"rand_t\":1788274066.4793}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"act_name\": \"每日任务\",\n    \"detail_time\": \"\",\n    \"detail_desc\": [\n      \"每日完成指定任务可以获得积分，积分积累到一定数量即可领取宝箱，需求越高的宝箱，可获得的奖励越丰厚。任务及积分进度每日刷新，请及时完成和领取。\"\n    ],\n    \"daily_point\": 80,\n    \"reward_list\": [\n      {\n        \"rid\": 1,\n        \"grade\": 60,\n        \"reward\": [\n          {\n            \"id\": \"400038\",\n            \"num\": 200\n          },\n          {\n            \"id\": \"300143\",\n            \"num\": 1\n          }\n        ],\n        \"state\": 1\n      },\n      {\n        \"rid\": 2,\n        \"grade\": 180,\n        \"reward\": [\n          {\n            \"id\": \"400038\",\n            \"num\": 200\n          },\n          {\n            \"id\": \"300142\",\n            \"num\": 1\n          }\n        ],\n        \"state\": 0\n      },\n      {\n        \"rid\": 3,\n        \"grade\": 300,\n        \"reward\": [\n          {\n            \"id\": \"300004\",\n            \"num\": 1\n          },\n          {\n            \"id\": \"300143\",\n            \"num\": 2\n          },\n          {\n            \"id\": \"400017\",\n            \"num\": 10\n          }\n        ],\n        \"state\": 0\n      },\n      {\n        \"rid\": 4,\n        \"grade\": 420,\n        \"reward\": [\n          {\n            \"id\": \"300058\",\n            \"num\": 2\n          },\n          {\n            \"id\": \"300142\",\n            \"num\": 2\n          },\n          {\n            \"id\": \"400017\",\n            \"num\": 10\n          },\n          {\n            \"id\": \"400056\",\n            \"num\": 1\n          }\n        ],\n        \"state\": 0\n      },\n      {\n        \"rid\": 5,\n        \"grade\": 550,\n        \"reward\": [\n          {\n            \"id\": \"300007\",\n            \"num\": 1\n          },\n          {\n            \"id\": \"300230\",\n            \"num\": 2\n          },\n          {\n            \"id\": \"400017\",\n            \"num\": 20\n          },\n          {\n            \"id\": \"400005\",\n            \"num\": 200\n          }\n        ],\n        \"state\": 0\n      }\n    ],\n    \"task_list\": [\n      {\n        \"tid\": 1,\n        \"state\": 0\n      },\n      {\n        \"tid\": 2,\n        \"state\": 0\n      },\n      {\n        \"tid\": 3,\n        \"state\": 0\n      },\n      {\n        \"tid\": 4,\n        \"state\": 0\n      },\n      {\n        \"tid\": 5,\n        \"state\": 0\n      },\n      {\n        \"tid\": 6,\n        \"state\": 1\n      },\n      {\n        \"tid\": 7,\n        \"state\": 0\n      },\n      {\n        \"tid\": 8,\n        \"state\": 0\n      },\n      {\n        \"tid\": 9,\n        \"state\": 1\n      },\n      {\n        \"tid\": 10,\n        \"state\": 0\n      },\n      {\n        \"tid\": 11,\n        \"state\": 0\n      }\n    ]\n  },\n  \"rand_t\": 1788274066.4793\n}"
+}

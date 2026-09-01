@@ -1,0 +1,33 @@
+{
+  "index": 67,
+  "startedDateTime": "2026-09-01T14:50:52.960980Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/84",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "ucfiEz",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "f9451d0d4fafa0697434c6b720b5fac5",
+    "time": "1788273937.0144",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a4830333deaa9383b63689f2fdcd7bf9d4562ad",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":84,\"name\":\"地宫古迹\",\"desc\":\"帮助神秘老者，进入神秘地宫，有丰厚奖励等你拿。\",\"gift\":\"卷轴、书卷、经验、潜能\",\"start\":1612264879,\"end\":1866972102,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_desc\":[\"1、神秘老者的弟子程墟进入神秘地宫，却一去不返。老者不求财物，只求能找回他弟子的消息，快去助他一臂之力。\",\"2、地宫内部机关重重，可能有诸多宝物和一些玄奥的武学线索，前往找到程墟并带离地宫，提交任务有机会获得奖励。\",\"3、每周可领取一次，完成进度越完整，获得奖励越丰厚。\",\"4、重复进入地宫将会立即刷新进度，奖励将以最新进度为准。未提交任务奖励将不会保留至第二周，请务必及时领取本周奖励。\"],\"sort\":\"104\",\"create_time\":\"2021-02-03 19:22:40\",\"update_time\":\"2024-10-16 16:59:33\",\"activity_id\":\"digongguji\"},\"rand_t\":1788274252.789}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 84,\n    \"name\": \"地宫古迹\",\n    \"desc\": \"帮助神秘老者，进入神秘地宫，有丰厚奖励等你拿。\",\n    \"gift\": \"卷轴、书卷、经验、潜能\",\n    \"start\": 1612264879,\n    \"end\": 1866972102,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_desc\": [\n      \"1、神秘老者的弟子程墟进入神秘地宫，却一去不返。老者不求财物，只求能找回他弟子的消息，快去助他一臂之力。\",\n      \"2、地宫内部机关重重，可能有诸多宝物和一些玄奥的武学线索，前往找到程墟并带离地宫，提交任务有机会获得奖励。\",\n      \"3、每周可领取一次，完成进度越完整，获得奖励越丰厚。\",\n      \"4、重复进入地宫将会立即刷新进度，奖励将以最新进度为准。未提交任务奖励将不会保留至第二周，请务必及时领取本周奖励。\"\n    ],\n    \"sort\": \"104\",\n    \"create_time\": \"2021-02-03 19:22:40\",\n    \"update_time\": \"2024-10-16 16:59:33\",\n    \"activity_id\": \"digongguji\"\n  },\n  \"rand_t\": 1788274252.789\n}"
+}

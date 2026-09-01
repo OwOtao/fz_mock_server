@@ -1,0 +1,28 @@
+{
+  "index": 243,
+  "startedDateTime": "2026-09-01T14:45:22.319060Z",
+  "url": "http://update.xiaohoutiaotiao.com/v1/checkUpdate",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "hotver": "35903",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "platform": "android",
+    "channel": "guanfang",
+    "package": "com.xhtt.app.fzjh",
+    "userid": "",
+    "time": "0.000200",
+    "sig": "29e7891b2e1b3bfb4dd51a94e4a20dcc",
+    "nouce": "aJAlIG",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "update.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":1,\"errmsg\":\"opps\"}",
+  "response_plain_pretty": "{\n  \"errcode\": 1,\n  \"errmsg\": \"opps\"\n}"
+}

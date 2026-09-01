@@ -1,0 +1,33 @@
+{
+  "index": 91,
+  "startedDateTime": "2026-09-01T14:50:03.320139Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/14",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "WzpOpM",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "ff46a2dc36f3db7408e9e3fcea7e9a0d",
+    "time": "1788273937.012",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a4830330cad605de59f9fcd2f4592956c271e3a",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":14,\"name\":\"签到活动\",\"desc\":\"每日签到，即可获得丰厚奖励，每日必领\",\"gift\":\"丰厚的奖励\",\"start\":1453219200,\"end\":1798732799,\"status\":1,\"is_open\":1,\"is_show\":1,\"sort\":\"1\",\"create_time\":\"2017-04-07 18:40:49\",\"update_time\":\"2025-11-12 15:38:35\",\"activity_id\":\"qiandao\",\"rule_desc\":[\"1.每日签到可获得奖励，漏签的天数可以花费20元宝补领，累计签到天数达到指定要求可领取随机面具。\",\"2.双存档共享签到进度。\",\"3.传承保留签到获得的奖励，保留活动进度。\",\"4.重置保留签到获得的元宝，不保留其他奖励，保留活动进度。\"]},\"rand_t\":1788274203.1007}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 14,\n    \"name\": \"签到活动\",\n    \"desc\": \"每日签到，即可获得丰厚奖励，每日必领\",\n    \"gift\": \"丰厚的奖励\",\n    \"start\": 1453219200,\n    \"end\": 1798732799,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"sort\": \"1\",\n    \"create_time\": \"2017-04-07 18:40:49\",\n    \"update_time\": \"2025-11-12 15:38:35\",\n    \"activity_id\": \"qiandao\",\n    \"rule_desc\": [\n      \"1.每日签到可获得奖励，漏签的天数可以花费20元宝补领，累计签到天数达到指定要求可领取随机面具。\",\n      \"2.双存档共享签到进度。\",\n      \"3.传承保留签到获得的奖励，保留活动进度。\",\n      \"4.重置保留签到获得的元宝，不保留其他奖励，保留活动进度。\"\n    ]\n  },\n  \"rand_t\": 1788274203.1007\n}"
+}

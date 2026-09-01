@@ -14,7 +14,7 @@ PORT = 8080
 
 # 客户端 Game:getDomain() 会指向的域名(完整 = DOMAIN .. API_PREFIX .. url)
 # 模拟器通过此 IP 访问宿主机
-DOMAIN = "http://10.10.16.55:8080"
+DOMAIN = "http://192.168.5.10:8080"
 API_PREFIX = "api/v5/"
 
 # 响应加密(整体加密)。置 False 可发明文便于调试

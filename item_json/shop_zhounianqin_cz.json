@@ -1,0 +1,3610 @@
+{
+ "id": 12399,
+ "shop_id": "zhounianqin_cz",
+ "is_open": "Y",
+ "channel": "kxyxzx",
+ "create_time": "2026-08-26 17:12:34",
+ "update_time": "2026-08-26 17:12:34",
+ "currency": "8",
+ "shop_extra": null,
+ "goods": {
+  "tuijian": [
+   {
+    "id": 746322,
+    "sid": 12399,
+    "itemId": "xinbawangqiangfa",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 44,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200007,
+    "itype": 1,
+    "name": "霸王枪法",
+    "dsc": "相传这是昔日楚霸王所使的枪法，招式大开大合一往无前。霸王天生神力，单手持枪比寻常人双手持枪还要灵活。",
+    "times": 1
+   },
+   {
+    "id": 746323,
+    "sid": 12399,
+    "itemId": "yidaoliu",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 43,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200024,
+    "itype": 1,
+    "name": "一刀流",
+    "dsc": "名震日本的武学，集东瀛剑道的精华，并吸收了一些中原武学的优点，既有刀法的凌厉，也有剑法的迅捷。",
+    "times": 1
+   },
+   {
+    "id": 746324,
+    "sid": 12399,
+    "itemId": "chunjieleiji4",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 45,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200025,
+    "itype": 1,
+    "name": "虚空踏步",
+    "dsc": "此功非内力深厚之人不可练，练至高深之处，可虚空连踏数十步，精妙无比。",
+    "times": 1
+   },
+   {
+    "id": 746325,
+    "sid": 12399,
+    "itemId": "jiulongbianfa",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 47,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200028,
+    "itype": 1,
+    "name": "九龙鞭法",
+    "dsc": "淮南一老武师所创，此鞭法之精髓在于，虽只一鞭在手，但施展之时，却犹如九条鞭子齐攻对手，使对手防无可防，遂得名九龙鞭法。",
+    "times": 1
+   },
+   {
+    "id": 746326,
+    "sid": 12399,
+    "itemId": "yuanxiaoleiji4",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 40,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200045,
+    "itype": 1,
+    "name": "五行遁法",
+    "dsc": "五行遁法源自《遁甲天书》，相传此书乃是乌角先生得天所授，却也不知真假，习得此术者每日可使用七七四十九次遁地之术。",
+    "times": 1
+   },
+   {
+    "id": 746327,
+    "sid": 12399,
+    "itemId": "yuanxiaoleiji3",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 39,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200055,
+    "itype": 1,
+    "name": "长生诀(金)",
+    "dsc": "江湖失传已久的神功，因久未使用，如今存放于该宝箱中，打开即可获得对应武功残篇。",
+    "times": 1
+   },
+   {
+    "id": 746328,
+    "sid": 12399,
+    "itemId": "chunjieleiji2",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 41,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200056,
+    "itype": 1,
+    "name": "太玄经",
+    "dsc": "这是江湖先贤从西汉扬雄所著的《太玄经》中悟出的部分武学，玄妙无比，非常人所能修炼。可与梦天掌互备。",
+    "times": 1
+   },
+   {
+    "id": 746330,
+    "sid": 12399,
+    "itemId": "caiweijianfabox1",
+    "price": 5000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 46,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200058,
+    "itype": 1,
+    "name": "采薇剑法",
+    "dsc": "相传，孤竹国国君的二位皇子为反对周王的主张，不食周粟。兄弟二人隐居首阳山采薇而食，创下这门名留青史的采薇剑法。",
+    "times": 1
+   },
+   {
+    "id": 746331,
+    "sid": 12399,
+    "itemId": "tiancantuifa",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 48,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200059,
+    "itype": 1,
+    "name": "天残腿法",
+    "dsc": "天残腿法相传乃是数百年前的天残老人所创，其招式灵动飘逸，劲力极大，是一门极为高深的武学。",
+    "times": 1
+   },
+   {
+    "id": 746332,
+    "sid": 12399,
+    "itemId": "yuenvjianfabox1",
+    "price": 5000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 49,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200060,
+    "itype": 1,
+    "name": "越女剑法",
+    "dsc": "相传，越国有位姑娘从白猿身上领悟了一套剑法，女子来到军中，将剑法传于士兵，却不肯留下姓名。后来，人们便将这套剑法称为越女剑法。",
+    "times": 1
+   },
+   {
+    "id": 746333,
+    "sid": 12399,
+    "itemId": "bdjhmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 54,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200061,
+    "itype": 1,
+    "name": "拔刀居合秘籍",
+    "dsc": "这是一本一刀流的秘籍，内有一刀流的绝学招式——拔刀斩、居合斩的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746334,
+    "sid": 12399,
+    "itemId": "bawangmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 55,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200062,
+    "itype": 1,
+    "name": "霸王秘籍",
+    "dsc": "这是一本霸王枪法的秘籍，内有霸王枪法的绝学招式——力拔山兮的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746335,
+    "sid": 12399,
+    "itemId": "niekongbumiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 56,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200063,
+    "itype": 1,
+    "name": "蹑空步秘籍",
+    "dsc": "这是一本蹑空步的秘籍，内有虚空踏步绝学招式——蹑空步的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746336,
+    "sid": 12399,
+    "itemId": "caiweimiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 57,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200064,
+    "itype": 1,
+    "name": "采薇秘籍",
+    "dsc": "这是一本采薇剑法的秘籍，内有采薇剑法的绝学招式——孤竹傲、首阳归的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746337,
+    "sid": 12399,
+    "itemId": "jiulongshitianmiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 2,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 58,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200065,
+    "itype": 1,
+    "name": "九龙噬天秘籍",
+    "dsc": "这是九龙鞭法的秘籍，内有九龙鞭法的绝学招式——九龙噬天的秘籍残页十张。",
+    "times": 2
+   },
+   {
+    "id": 746338,
+    "sid": 12399,
+    "itemId": "tiancanmiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 59,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200066,
+    "itype": 1,
+    "name": "天残秘籍",
+    "dsc": "这是一本天残秘籍，内有天残腿法的绝学招式——天残地缺的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746339,
+    "sid": 12399,
+    "itemId": "jiayimiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 60,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200067,
+    "itype": 1,
+    "name": "破立秘籍",
+    "dsc": "这是一本焕衣神功的秘籍，内有焕衣神功的绝学招式——破而后立的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746340,
+    "sid": 12399,
+    "itemId": "taixuangongmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 61,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200068,
+    "itype": 1,
+    "name": "太玄经秘籍",
+    "dsc": "这是一本太玄经的秘籍，内有太玄经的绝学招式——深藏身与名、千里不留行的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746341,
+    "sid": 12399,
+    "itemId": "yuenvjianfamiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 62,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200069,
+    "itype": 1,
+    "name": "越女秘籍",
+    "dsc": "这是一本越女剑法的秘籍，内有越女剑法的绝学招式——竹影剑气、疾刃突进的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746342,
+    "sid": 12399,
+    "itemId": "jiu106",
+    "price": 160,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 6,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300003,
+    "itype": 1,
+    "name": "醉梦生",
+    "dsc": "这是一坛醉梦生，相传此酒可以让人忘却烦恼，醉生梦死。",
+    "times": 10
+   },
+   {
+    "id": 746345,
+    "sid": 12399,
+    "itemId": "fuelbox1",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 13,
+    "type": [
+     "T",
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300035,
+    "itype": 1,
+    "name": "燧人氏煤炭箱",
+    "dsc": "这是一个燧人氏煤炭箱，精装着无烟煤和融铁煤各15个。",
+    "times": 5
+   },
+   {
+    "id": 746346,
+    "sid": 12399,
+    "itemId": "putizi1",
+    "price": 75,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 94,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300037,
+    "itype": 1,
+    "name": "菩提子",
+    "dsc": "菩提子使用可提升快速提升内力值。",
+    "times": 30
+   },
+   {
+    "id": 746365,
+    "sid": 12399,
+    "itemId": "baixuehuicuibox01",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 12,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300244,
+    "itype": 1,
+    "name": "百学荟萃箱",
+    "dsc": "少侠可开出相马术、炼丹术、占星术、追踪术、鲁班术、相面术、仵作术、岐黄之术、墨家机关术、庙算之术、武穆遗书秘籍中的一种。",
+    "times": 10
+   },
+   {
+    "id": 746371,
+    "sid": 12399,
+    "itemId": "zhounianqidaoju1",
+    "price": 250,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 23,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300250,
+    "itype": 1,
+    "name": "潜能丹(5颗)",
+    "dsc": "内藏五颗潜能丹,潜能丹使用后会提升大量人物潜能。",
+    "times": 30
+   },
+   {
+    "id": 746372,
+    "sid": 12399,
+    "itemId": "zhounianqidaoju3",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 24,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300251,
+    "itype": 1,
+    "name": "静心丸(10瓶)",
+    "dsc": "内藏十瓶静心丸，静心丸使用后可以提升闭关修炼成功率，并且不会走火入魔。",
+    "times": 20
+   },
+   {
+    "id": 746376,
+    "sid": 12399,
+    "itemId": "dingzhiwan",
+    "price": 60,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 28,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300255,
+    "itype": 2,
+    "name": "定志丸",
+    "dsc": "只有服药者体内存在来自他人的内力时，才能抵御此药引起的真气紊乱，否则内力尽失；经脉培元时使用、提高获得特殊经脉天赋的几率，需要至少传承一次。",
+    "times": 5
+   },
+   {
+    "id": 746377,
+    "sid": 12399,
+    "itemId": "szjdj2",
+    "price": 6800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 38,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300256,
+    "itype": 2,
+    "name": "信笺",
+    "dsc": "凌小姐的信笺，上面用簪花小楷写着几行字，笺底绘有独特的菊花暗纹，难以仿制。（这是一份来自恋人间的信任，可让你获取天下武学至宝灵照经）",
+    "times": 1
+   },
+   {
+    "id": 746379,
+    "sid": 12399,
+    "itemId": "newfudai238",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 1,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 301313,
+    "itype": 1,
+    "name": "江湖桂月福袋",
+    "dsc": "凭运气能开出戏曲面具(孔明)，玉露项链、流云甘露、行功散、静心丸、碎银、黄金、潜能丹、遁地符中的一种。",
+    "times": 40
+   },
+   {
+    "id": 746380,
+    "sid": 12399,
+    "itemId": "newfudai239",
+    "price": 60,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 2,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 301314,
+    "itype": 1,
+    "name": "江湖仲秋福袋",
+    "dsc": "凭运气能开出戏曲面具(山鬼)、天马、虎蛟、行功散、门派顶级残页、干草人偶、静心丸、潜能丹、黄金中的一种。",
+    "times": 30
+   },
+   {
+    "id": 746381,
+    "sid": 12399,
+    "itemId": "ningshendan",
+    "price": 5,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 300,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 95,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400002,
+    "itype": 10,
+    "name": "凝神丹",
+    "dsc": "一颗褐色浑圆的丹药，散发出淡淡的药味，服用后静心凝神，练功事半功倍。",
+    "times": 300
+   },
+   {
+    "id": 746382,
+    "sid": 12399,
+    "itemId": "accpoint",
+    "price": 5,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 600,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 93,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400003,
+    "itype": 6,
+    "name": "固身元气",
+    "dsc": "养气固身，神采焕发，做什么都必然倍道而进。",
+    "times": 600
+   },
+   {
+    "id": 746383,
+    "sid": 12399,
+    "itemId": "minditem4",
+    "price": 1880,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 92,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400004,
+    "itype": 6,
+    "name": "聚心丹",
+    "dsc": "一个精致的紫金葫芦中装着的丹药，取之伴有阵阵奇特香气，相传服用此丹可使人神清气爽心旷神怡。",
+    "times": 3
+   },
+   {
+    "id": 746384,
+    "sid": 12399,
+    "itemId": "minditem2",
+    "price": 380,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 90,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400006,
+    "itype": 6,
+    "name": "谧心丸",
+    "dsc": "通体青色的药丸，闻之似有淡淡幽香，服用后可使人心神安定。",
+    "times": 3
+   },
+   {
+    "id": 746385,
+    "sid": 12399,
+    "itemId": "minditem1",
+    "price": 190,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 89,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400009,
+    "itype": 6,
+    "name": "清心散",
+    "dsc": "一包用白色油纸包裹的朱色粉末，据说出自名声显赫的医药世家，服用可令人舒心安神。",
+    "times": 3
+   },
+   {
+    "id": 746386,
+    "sid": 12399,
+    "itemId": "minditem3",
+    "price": 750,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 91,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400010,
+    "itype": 6,
+    "name": "凝心露",
+    "dsc": "翠绿透彻的玉瓶中装着的半透明药液，闻之清香阵阵，凝心露功效颇为奇特，服用令可人心神饱满全身清爽。",
+    "times": 3
+   },
+   {
+    "id": 746387,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi001",
+    "price": 150,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 84,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400011,
+    "itype": 5,
+    "name": "复思之书",
+    "dsc": "此乃复思之书，使用该书卷可以将任何招式完全重置。但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746388,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi002",
+    "price": 50,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 85,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400012,
+    "itype": 5,
+    "name": "弃定之书",
+    "dsc": "此乃弃定之书，使用该书卷可以将精妙招式完全重置，但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746389,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi003",
+    "price": 75,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 86,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400013,
+    "itype": 5,
+    "name": "重思之书",
+    "dsc": "此乃重思之书，使用该书卷可以将超凡招式完全重置，但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746390,
+    "sid": 12399,
+    "itemId": "gailiangshengpin002",
+    "price": 125,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 2,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 88,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400015,
+    "itype": 5,
+    "name": "超群之书",
+    "dsc": "此乃超群之书，使用该书卷可以将普通招式提升至超凡招式。",
+    "times": 2
+   },
+   {
+    "id": 746391,
+    "sid": 12399,
+    "itemId": "gailiangshengpin004",
+    "price": 85,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 87,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400016,
+    "itype": 5,
+    "name": "跃兴之书",
+    "dsc": "此乃跃兴之书，使用该书卷可以将精妙招式提升至超凡招式。",
+    "times": 3
+   },
+   {
+    "id": 746392,
+    "sid": 12399,
+    "itemId": "sanren8",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 53,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500007,
+    "itype": 1,
+    "name": "散人顶级残页",
+    "dsc": "这是散人顶级残页，可开出散人顶级残页。",
+    "times": 40
+   },
+   {
+    "id": 746393,
+    "sid": 12399,
+    "itemId": "wangshengjilecanye",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 63,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500065,
+    "itype": 1,
+    "name": "往生极乐残页",
+    "dsc": "记载着「往生功」的特殊招式——「往生极乐」的秘籍残页",
+    "times": 3
+   },
+   {
+    "id": 746396,
+    "sid": 12399,
+    "itemId": "menpaicanye4",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 51,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500579,
+    "itype": 1,
+    "name": "门派顶级残页",
+    "dsc": "这是门派顶级残页，打开可获得对应门派的顶级技能残页宝箱。",
+    "times": 40
+   },
+   {
+    "id": 746397,
+    "sid": 12399,
+    "itemId": "BoldAndUncaringcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 66,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500638,
+    "itype": 1,
+    "name": "一无忌惮残页",
+    "dsc": "记载着「无惧战」的特殊招式——「一无忌惮」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746398,
+    "sid": 12399,
+    "itemId": "AdvantageCowEnemycanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 67,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500639,
+    "itype": 1,
+    "name": "以势怯敌残页",
+    "dsc": "记载着「无惧战」的特殊招式——「以势怯敌」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746399,
+    "sid": 12399,
+    "itemId": "RegardDeathAsLifecanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 64,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500640,
+    "itype": 1,
+    "name": "视死若生残页",
+    "dsc": "记载着「何惧死」的特殊招式——「视死若生」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746400,
+    "sid": 12399,
+    "itemId": "ResurrectTheDeadcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 65,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500641,
+    "itype": 1,
+    "name": "起死回骸残页",
+    "dsc": "记载着「何惧死」的特殊招式——「起死回骸」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746401,
+    "sid": 12399,
+    "itemId": "furyDeludeAfflictcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 68,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500816,
+    "itype": 1,
+    "name": "嗔痴乱意残页",
+    "dsc": "记载着「狂骨鞭法」的特殊招式——「嗔痴乱意」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746402,
+    "sid": 12399,
+    "itemId": "seizeEverFibcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 69,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500817,
+    "itype": 1,
+    "name": "疯缠百骸残页",
+    "dsc": "记载着「狂骨鞭法」的特殊招式——「疯缠百骸」的秘籍残页。",
+    "times": 3
+   }
+  ],
+  "shuxing": [
+   {
+    "id": 746347,
+    "sid": 12399,
+    "itemId": "xisuidan01",
+    "price": 80,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 29,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300177,
+    "itype": 2,
+    "name": "臂力洗髓丹",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓十点臂力，需要先天臂力达到三十点才可使用。",
+    "times": 20
+   },
+   {
+    "id": 746348,
+    "sid": 12399,
+    "itemId": "xisuidan02",
+    "price": 80,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 30,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300178,
+    "itype": 2,
+    "name": "根骨洗髓丹",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓十点根骨，需要先天根骨达到三十点才可使用。",
+    "times": 20
+   },
+   {
+    "id": 746349,
+    "sid": 12399,
+    "itemId": "xisuidan03",
+    "price": 80,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 31,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300179,
+    "itype": 2,
+    "name": "身法洗髓丹",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓十点身法，需要先天身法达到三十点才可使用。",
+    "times": 20
+   },
+   {
+    "id": 746350,
+    "sid": 12399,
+    "itemId": "xisuidan04",
+    "price": 80,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 32,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300180,
+    "itype": 2,
+    "name": "悟性洗髓丹",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓十点悟性，需要先天悟性达到三十点才可使用。",
+    "times": 20
+   },
+   {
+    "id": 746351,
+    "sid": 12399,
+    "itemId": "xisuidan05",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 60,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 33,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300181,
+    "itype": 2,
+    "name": "臂力洗髓丹(小)",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓一点臂力，需要先天臂力达到三十点才可使用。",
+    "times": 60
+   },
+   {
+    "id": 746352,
+    "sid": 12399,
+    "itemId": "xisuidan06",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 60,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 34,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300182,
+    "itype": 2,
+    "name": "根骨洗髓丹(小)",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓一点根骨，需要先天根骨达到三十点才可使用。",
+    "times": 60
+   },
+   {
+    "id": 746353,
+    "sid": 12399,
+    "itemId": "xisuidan07",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 60,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 35,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300183,
+    "itype": 2,
+    "name": "身法洗髓丹(小)",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓一点身法，需要先天身法达到三十点才可使用。",
+    "times": 60
+   },
+   {
+    "id": 746354,
+    "sid": 12399,
+    "itemId": "xisuidan08",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 60,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 36,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300184,
+    "itype": 2,
+    "name": "悟性洗髓丹(小)",
+    "dsc": "这是一种特殊的丹药，十分名贵，据说可以用来洗髓，每次可以洗髓一点悟性，需要先天悟性达到三十点才可使用。",
+    "times": 60
+   },
+   {
+    "id": 746369,
+    "sid": 12399,
+    "itemId": "liuyunganlus",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 21,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300248,
+    "itype": 1,
+    "name": "流云甘露(5瓶)",
+    "dsc": "这是一个精美的小盒子，里面装着5瓶流云甘露。",
+    "times": 10
+   },
+   {
+    "id": 746370,
+    "sid": 12399,
+    "itemId": "zhounianqidaoju4",
+    "price": 300,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 22,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300249,
+    "itype": 1,
+    "name": "天香玉露(10瓶)",
+    "dsc": "内藏十瓶天香玉露，据说使用后会提升人物的精力。",
+    "times": 10
+   },
+   {
+    "id": 746371,
+    "sid": 12399,
+    "itemId": "zhounianqidaoju1",
+    "price": 250,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 23,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300250,
+    "itype": 1,
+    "name": "潜能丹(5颗)",
+    "dsc": "内藏五颗潜能丹,潜能丹使用后会提升大量人物潜能。",
+    "times": 30
+   },
+   {
+    "id": 746372,
+    "sid": 12399,
+    "itemId": "zhounianqidaoju3",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 24,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300251,
+    "itype": 1,
+    "name": "静心丸(10瓶)",
+    "dsc": "内藏十瓶静心丸，静心丸使用后可以提升闭关修炼成功率，并且不会走火入魔。",
+    "times": 20
+   },
+   {
+    "id": 746373,
+    "sid": 12399,
+    "itemId": "jingmaiyangcheng2",
+    "price": 400,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 25,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300252,
+    "itype": 1,
+    "name": "经脉修复包",
+    "dsc": "这里面包含了许多修复经脉所需的物品，包含经脉丹20个，真气丹10个，安神丹5个，渡元丹1个。",
+    "times": 5
+   },
+   {
+    "id": 746374,
+    "sid": 12399,
+    "itemId": "jingmaiyangcheng3",
+    "price": 400,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 26,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300253,
+    "itype": 1,
+    "name": "经脉养成包",
+    "dsc": "这里面包含了许多养成经脉所需的物品，包含醒身丸20个，特制檀香3个，渡元丹2个。",
+    "times": 5
+   },
+   {
+    "id": 746375,
+    "sid": 12399,
+    "itemId": "jingmaiyangcheng1",
+    "price": 400,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 27,
+    "type": [
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300254,
+    "itype": 1,
+    "name": "经脉提升包",
+    "dsc": "这里面包含了许多提升经脉所需的物品，包含醒身丸10个，真气丹10个，春元丹3个，安神丹10个。",
+    "times": 5
+   },
+   {
+    "id": 746376,
+    "sid": 12399,
+    "itemId": "dingzhiwan",
+    "price": 60,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 28,
+    "type": [
+     "T",
+     "S"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300255,
+    "itype": 2,
+    "name": "定志丸",
+    "dsc": "只有服药者体内存在来自他人的内力时，才能抵御此药引起的真气紊乱，否则内力尽失；经脉培元时使用、提高获得特殊经脉天赋的几率，需要至少传承一次。",
+    "times": 5
+   }
+  ],
+  "wuxue": [
+   {
+    "id": 746322,
+    "sid": 12399,
+    "itemId": "xinbawangqiangfa",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 44,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200007,
+    "itype": 1,
+    "name": "霸王枪法",
+    "dsc": "相传这是昔日楚霸王所使的枪法，招式大开大合一往无前。霸王天生神力，单手持枪比寻常人双手持枪还要灵活。",
+    "times": 1
+   },
+   {
+    "id": 746323,
+    "sid": 12399,
+    "itemId": "yidaoliu",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 43,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200024,
+    "itype": 1,
+    "name": "一刀流",
+    "dsc": "名震日本的武学，集东瀛剑道的精华，并吸收了一些中原武学的优点，既有刀法的凌厉，也有剑法的迅捷。",
+    "times": 1
+   },
+   {
+    "id": 746324,
+    "sid": 12399,
+    "itemId": "chunjieleiji4",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 45,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200025,
+    "itype": 1,
+    "name": "虚空踏步",
+    "dsc": "此功非内力深厚之人不可练，练至高深之处，可虚空连踏数十步，精妙无比。",
+    "times": 1
+   },
+   {
+    "id": 746325,
+    "sid": 12399,
+    "itemId": "jiulongbianfa",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 47,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200028,
+    "itype": 1,
+    "name": "九龙鞭法",
+    "dsc": "淮南一老武师所创，此鞭法之精髓在于，虽只一鞭在手，但施展之时，却犹如九条鞭子齐攻对手，使对手防无可防，遂得名九龙鞭法。",
+    "times": 1
+   },
+   {
+    "id": 746326,
+    "sid": 12399,
+    "itemId": "yuanxiaoleiji4",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 40,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200045,
+    "itype": 1,
+    "name": "五行遁法",
+    "dsc": "五行遁法源自《遁甲天书》，相传此书乃是乌角先生得天所授，却也不知真假，习得此术者每日可使用七七四十九次遁地之术。",
+    "times": 1
+   },
+   {
+    "id": 746327,
+    "sid": 12399,
+    "itemId": "yuanxiaoleiji3",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 39,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200055,
+    "itype": 1,
+    "name": "长生诀(金)",
+    "dsc": "江湖失传已久的神功，因久未使用，如今存放于该宝箱中，打开即可获得对应武功残篇。",
+    "times": 1
+   },
+   {
+    "id": 746328,
+    "sid": 12399,
+    "itemId": "chunjieleiji2",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 41,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200056,
+    "itype": 1,
+    "name": "太玄经",
+    "dsc": "这是江湖先贤从西汉扬雄所著的《太玄经》中悟出的部分武学，玄妙无比，非常人所能修炼。可与梦天掌互备。",
+    "times": 1
+   },
+   {
+    "id": 746329,
+    "sid": 12399,
+    "itemId": "jiayishengong",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 42,
+    "type": [
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200057,
+    "itype": 1,
+    "name": "焕衣神功",
+    "dsc": "此内功心法讲究破而后立，据说修炼者需经历重重磨难才有希望神功大成，一旦大成，几同脱胎换骨、超凡入圣。",
+    "times": 1
+   },
+   {
+    "id": 746330,
+    "sid": 12399,
+    "itemId": "caiweijianfabox1",
+    "price": 5000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 46,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200058,
+    "itype": 1,
+    "name": "采薇剑法",
+    "dsc": "相传，孤竹国国君的二位皇子为反对周王的主张，不食周粟。兄弟二人隐居首阳山采薇而食，创下这门名留青史的采薇剑法。",
+    "times": 1
+   },
+   {
+    "id": 746331,
+    "sid": 12399,
+    "itemId": "tiancantuifa",
+    "price": 4000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 48,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200059,
+    "itype": 1,
+    "name": "天残腿法",
+    "dsc": "天残腿法相传乃是数百年前的天残老人所创，其招式灵动飘逸，劲力极大，是一门极为高深的武学。",
+    "times": 1
+   },
+   {
+    "id": 746332,
+    "sid": 12399,
+    "itemId": "yuenvjianfabox1",
+    "price": 5000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 49,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200060,
+    "itype": 1,
+    "name": "越女剑法",
+    "dsc": "相传，越国有位姑娘从白猿身上领悟了一套剑法，女子来到军中，将剑法传于士兵，却不肯留下姓名。后来，人们便将这套剑法称为越女剑法。",
+    "times": 1
+   },
+   {
+    "id": 746333,
+    "sid": 12399,
+    "itemId": "bdjhmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 54,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200061,
+    "itype": 1,
+    "name": "拔刀居合秘籍",
+    "dsc": "这是一本一刀流的秘籍，内有一刀流的绝学招式——拔刀斩、居合斩的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746334,
+    "sid": 12399,
+    "itemId": "bawangmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 55,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200062,
+    "itype": 1,
+    "name": "霸王秘籍",
+    "dsc": "这是一本霸王枪法的秘籍，内有霸王枪法的绝学招式——力拔山兮的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746335,
+    "sid": 12399,
+    "itemId": "niekongbumiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 56,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200063,
+    "itype": 1,
+    "name": "蹑空步秘籍",
+    "dsc": "这是一本蹑空步的秘籍，内有虚空踏步绝学招式——蹑空步的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746336,
+    "sid": 12399,
+    "itemId": "caiweimiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 57,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200064,
+    "itype": 1,
+    "name": "采薇秘籍",
+    "dsc": "这是一本采薇剑法的秘籍，内有采薇剑法的绝学招式——孤竹傲、首阳归的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746337,
+    "sid": 12399,
+    "itemId": "jiulongshitianmiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 2,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 58,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200065,
+    "itype": 1,
+    "name": "九龙噬天秘籍",
+    "dsc": "这是九龙鞭法的秘籍，内有九龙鞭法的绝学招式——九龙噬天的秘籍残页十张。",
+    "times": 2
+   },
+   {
+    "id": 746338,
+    "sid": 12399,
+    "itemId": "tiancanmiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 59,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200066,
+    "itype": 1,
+    "name": "天残秘籍",
+    "dsc": "这是一本天残秘籍，内有天残腿法的绝学招式——天残地缺的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746339,
+    "sid": 12399,
+    "itemId": "jiayimiji",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 60,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200067,
+    "itype": 1,
+    "name": "破立秘籍",
+    "dsc": "这是一本焕衣神功的秘籍，内有焕衣神功的绝学招式——破而后立的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746340,
+    "sid": 12399,
+    "itemId": "taixuangongmiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 61,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200068,
+    "itype": 1,
+    "name": "太玄经秘籍",
+    "dsc": "这是一本太玄经的秘籍，内有太玄经的绝学招式——深藏身与名、千里不留行的秘籍残页十张。",
+    "times": 3
+   },
+   {
+    "id": 746341,
+    "sid": 12399,
+    "itemId": "yuenvjianfamiji",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 62,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 200069,
+    "itype": 1,
+    "name": "越女秘籍",
+    "dsc": "这是一本越女剑法的秘籍，内有越女剑法的绝学招式——竹影剑气、疾刃突进的秘籍残页各十张。",
+    "times": 3
+   },
+   {
+    "id": 746377,
+    "sid": 12399,
+    "itemId": "szjdj2",
+    "price": 6800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 38,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300256,
+    "itype": 2,
+    "name": "信笺",
+    "dsc": "凌小姐的信笺，上面用簪花小楷写着几行字，笺底绘有独特的菊花暗纹，难以仿制。（这是一份来自恋人间的信任，可让你获取天下武学至宝灵照经）",
+    "times": 1
+   },
+   {
+    "id": 746392,
+    "sid": 12399,
+    "itemId": "sanren8",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 53,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500007,
+    "itype": 1,
+    "name": "散人顶级残页",
+    "dsc": "这是散人顶级残页，可开出散人顶级残页。",
+    "times": 40
+   },
+   {
+    "id": 746393,
+    "sid": 12399,
+    "itemId": "wangshengjilecanye",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 63,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500065,
+    "itype": 1,
+    "name": "往生极乐残页",
+    "dsc": "记载着「往生功」的特殊招式——「往生极乐」的秘籍残页",
+    "times": 3
+   },
+   {
+    "id": 746394,
+    "sid": 12399,
+    "itemId": "sanren7",
+    "price": 120,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 52,
+    "type": [
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500568,
+    "itype": 1,
+    "name": "散人高级残页",
+    "dsc": "这是散人高级残页，可开出散人高级残页。",
+    "times": 40
+   },
+   {
+    "id": 746395,
+    "sid": 12399,
+    "itemId": "menpaicanye3",
+    "price": 120,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 50,
+    "type": [
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500578,
+    "itype": 1,
+    "name": "门派高级残页",
+    "dsc": "这是门派高级残页，打开可获得对应门派的高级技能残页宝箱。",
+    "times": 40
+   },
+   {
+    "id": 746396,
+    "sid": 12399,
+    "itemId": "menpaicanye4",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 51,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500579,
+    "itype": 1,
+    "name": "门派顶级残页",
+    "dsc": "这是门派顶级残页，打开可获得对应门派的顶级技能残页宝箱。",
+    "times": 40
+   },
+   {
+    "id": 746397,
+    "sid": 12399,
+    "itemId": "BoldAndUncaringcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 66,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500638,
+    "itype": 1,
+    "name": "一无忌惮残页",
+    "dsc": "记载着「无惧战」的特殊招式——「一无忌惮」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746398,
+    "sid": 12399,
+    "itemId": "AdvantageCowEnemycanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 67,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500639,
+    "itype": 1,
+    "name": "以势怯敌残页",
+    "dsc": "记载着「无惧战」的特殊招式——「以势怯敌」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746399,
+    "sid": 12399,
+    "itemId": "RegardDeathAsLifecanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 64,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500640,
+    "itype": 1,
+    "name": "视死若生残页",
+    "dsc": "记载着「何惧死」的特殊招式——「视死若生」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746400,
+    "sid": 12399,
+    "itemId": "ResurrectTheDeadcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 65,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500641,
+    "itype": 1,
+    "name": "起死回骸残页",
+    "dsc": "记载着「何惧死」的特殊招式——「起死回骸」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746401,
+    "sid": 12399,
+    "itemId": "furyDeludeAfflictcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 68,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500816,
+    "itype": 1,
+    "name": "嗔痴乱意残页",
+    "dsc": "记载着「狂骨鞭法」的特殊招式——「嗔痴乱意」的秘籍残页。",
+    "times": 3
+   },
+   {
+    "id": 746402,
+    "sid": 12399,
+    "itemId": "seizeEverFibcanye",
+    "price": 350,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 69,
+    "type": [
+     "T",
+     "W"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 500817,
+    "itype": 1,
+    "name": "疯缠百骸残页",
+    "dsc": "记载着「狂骨鞭法」的特殊招式——「疯缠百骸」的秘籍残页。",
+    "times": 3
+   }
+  ],
+  "shenbing": [
+   {
+    "id": 746345,
+    "sid": 12399,
+    "itemId": "fuelbox1",
+    "price": 200,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 13,
+    "type": [
+     "T",
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300035,
+    "itype": 1,
+    "name": "燧人氏煤炭箱",
+    "dsc": "这是一个燧人氏煤炭箱，精装着无烟煤和融铁煤各15个。",
+    "times": 5
+   },
+   {
+    "id": 746355,
+    "sid": 12399,
+    "itemId": "shenbingbox1",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 14,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300226,
+    "itype": 1,
+    "name": "神兵精炼箱(剑)",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个剑类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746356,
+    "sid": 12399,
+    "itemId": "shenbingbox2",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 15,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300227,
+    "itype": 1,
+    "name": "神兵精炼箱(刀)",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个刀类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746357,
+    "sid": 12399,
+    "itemId": "shenbingbox3",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 16,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300228,
+    "itype": 1,
+    "name": "枪棍精炼箱",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个枪棍类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746358,
+    "sid": 12399,
+    "itemId": "shenbingbox4",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 17,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300229,
+    "itype": 1,
+    "name": "神鞭精炼箱",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个鞭类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746366,
+    "sid": 12399,
+    "itemId": "shenbingbox5",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 18,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300245,
+    "itype": 1,
+    "name": "神兵精炼箱(双持)",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个双持类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746367,
+    "sid": 12399,
+    "itemId": "shenbingbox6",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 19,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300246,
+    "itype": 1,
+    "name": "乐器精炼箱",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个乐器类神兵淬炼材料。",
+    "times": 5
+   },
+   {
+    "id": 746368,
+    "sid": 12399,
+    "itemId": "shenbingbox7",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 20,
+    "type": [
+     "H"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300247,
+    "itype": 1,
+    "name": "暗器精炼箱",
+    "dsc": "这是一个古朴的铁箱子。打开后可获得20个暗器类神兵淬炼材料。",
+    "times": 5
+   }
+  ],
+  "guashi": [
+   {
+    "id": 746403,
+    "sid": 12399,
+    "itemId": "waiguan1",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 77,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700015,
+    "itype": 1,
+    "name": "藤木坠",
+    "dsc": "一条藤木坠，略微粗糙的手艺雕琢而成，造型奇特而古怪。",
+    "times": 1
+   },
+   {
+    "id": 746404,
+    "sid": 12399,
+    "itemId": "waiguan2",
+    "price": 800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 78,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700016,
+    "itype": 1,
+    "name": "竹编斗笠",
+    "dsc": "一顶竹编斗笠，平平无奇，但江湖中似乎有个不成文的规定，凡戴斗笠的，多半都是“高手”。",
+    "times": 1
+   },
+   {
+    "id": 746405,
+    "sid": 12399,
+    "itemId": "waiguan3",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 79,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700017,
+    "itype": 1,
+    "name": "铁手环",
+    "dsc": "普通的铁手环，并无什么花样，但于习武之人而言，它既可是一件伤人利器，也可增强手臂防护。",
+    "times": 1
+   },
+   {
+    "id": 746406,
+    "sid": 12399,
+    "itemId": "waiguan4",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 80,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700018,
+    "itype": 1,
+    "name": "银带钩",
+    "dsc": "一个银带钩，细长短小，呈匍匐的兽状，因为年代久远，边角略有磨损，但可以看出是出自巧匠之手。",
+    "times": 1
+   },
+   {
+    "id": 746407,
+    "sid": 12399,
+    "itemId": "waiguan5",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 81,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700019,
+    "itype": 1,
+    "name": "同心结",
+    "dsc": "用红色锦带编成连环回纹的花样，因其两结相连，取永结同心之意，七夕节常被用来向心仪之人表白。",
+    "times": 1
+   },
+   {
+    "id": 746408,
+    "sid": 12399,
+    "itemId": "waiguan7",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 82,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700020,
+    "itype": 1,
+    "name": "春晓披风",
+    "dsc": "一件靛青色的棉布披风，厚度略薄，形制普通，坊市的布庄里随处可见。",
+    "times": 1
+   },
+   {
+    "id": 746409,
+    "sid": 12399,
+    "itemId": "waiguan9",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 83,
+    "type": [
+     "G"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 700021,
+    "itype": 1,
+    "name": "浮云伞",
+    "dsc": "上绘浮云数朵的油纸伞，伞架和伞柄以上等的嫩竹经多道工序制成。易于开合，结实耐用。",
+    "times": 1
+   }
+  ],
+  "mianju": [
+   {
+    "id": 746315,
+    "sid": 12399,
+    "itemId": "mianju1029",
+    "price": 1800,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 74,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100042,
+    "itype": 1,
+    "name": "盈姑娘",
+    "dsc": "这是一张盈姑娘的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746316,
+    "sid": 12399,
+    "itemId": "mianju1075",
+    "price": 2400,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 75,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100049,
+    "itype": 1,
+    "name": "蓉姑娘",
+    "dsc": "这是一张蓉姑娘的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746317,
+    "sid": 12399,
+    "itemId": "mianju1012",
+    "price": 1750,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 73,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100084,
+    "itype": 1,
+    "name": "杨大侠",
+    "dsc": "这是一张杨大侠的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746318,
+    "sid": 12399,
+    "itemId": "mianju1101",
+    "price": 1500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 72,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100146,
+    "itype": 1,
+    "name": "厌胜老祖",
+    "dsc": "这是一张厌胜老祖的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746319,
+    "sid": 12399,
+    "itemId": "mianju1009",
+    "price": 600,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 71,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100159,
+    "itype": 1,
+    "name": "苗姑娘",
+    "dsc": "这是一张苗姑娘的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746320,
+    "sid": 12399,
+    "itemId": "mianju1008",
+    "price": 600,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 70,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100169,
+    "itype": 1,
+    "name": "郭小姐",
+    "dsc": "这是一张郭小姐的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   },
+   {
+    "id": 746321,
+    "sid": 12399,
+    "itemId": "mianju1265",
+    "price": 3000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 76,
+    "type": [
+     "M"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 100225,
+    "itype": 1,
+    "name": "飞将",
+    "dsc": "这是一张飞将的戏曲面具，乃是江湖艺人所制，其质地光滑细腻，也不知是由什么制作而成的。",
+    "times": 1
+   }
+  ],
+  "default": [
+   {
+    "id": 746342,
+    "sid": 12399,
+    "itemId": "jiu106",
+    "price": 160,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 6,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300003,
+    "itype": 1,
+    "name": "醉梦生",
+    "dsc": "这是一坛醉梦生，相传此酒可以让人忘却烦恼，醉生梦死。",
+    "times": 10
+   },
+   {
+    "id": 746343,
+    "sid": 12399,
+    "itemId": "xinggongsan",
+    "price": 50,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 37,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300005,
+    "itype": 1,
+    "name": "行功散",
+    "dsc": "可减少练功时间一小时。",
+    "times": 30
+   },
+   {
+    "id": 746344,
+    "sid": 12399,
+    "itemId": "tiangongshi1",
+    "price": 100,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 4,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300014,
+    "itype": 1,
+    "name": "天工石",
+    "dsc": "这是一颗天工石,可以用于提升装饰箱的容量。",
+    "times": 10
+   },
+   {
+    "id": 746346,
+    "sid": 12399,
+    "itemId": "putizi1",
+    "price": 75,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 94,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:34",
+    "gid": 300037,
+    "itype": 1,
+    "name": "菩提子",
+    "dsc": "菩提子使用可提升快速提升内力值。",
+    "times": 30
+   },
+   {
+    "id": 746359,
+    "sid": 12399,
+    "itemId": "jiaozifudai01",
+    "price": 50,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 5,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300238,
+    "itype": 2,
+    "name": "八方通行福袋",
+    "dsc": "打开福袋后，可随机获得20到40个游字令。",
+    "times": 10
+   },
+   {
+    "id": 746360,
+    "sid": 12399,
+    "itemId": "zgwine1",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 5,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 7,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300239,
+    "itype": 1,
+    "name": "周公酒箱",
+    "dsc": "这是一个周公酒酒箱，里面装着12瓶寻常难见的周公酒，可以说是宝物一件了。",
+    "times": 5
+   },
+   {
+    "id": 746361,
+    "sid": 12399,
+    "itemId": "drxianglu03",
+    "price": 990,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 8,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300240,
+    "itype": 2,
+    "name": "银月炉",
+    "dsc": "以纯银制成的熏香炉，炉面光滑，白若霜雪。",
+    "times": 1
+   },
+   {
+    "id": 746362,
+    "sid": 12399,
+    "itemId": "drxianglu04",
+    "price": 1500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 9,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300241,
+    "itype": 1,
+    "name": "金炽炉",
+    "dsc": "纯金制成的熏香炉，正面刻朱雀神兽。",
+    "times": 1
+   },
+   {
+    "id": 746363,
+    "sid": 12399,
+    "itemId": "menkecard1",
+    "price": 180,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 20,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 10,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300242,
+    "itype": 2,
+    "name": "沧浪帖",
+    "dsc": "这是一张烫金拜帖，在江湖中享有盛名，很多人梦寐以求。带着它去拜访苏州的沧浪居士，可了解门客招募事宜，使用后需当天完成招募。若不满足招募条件，则无法招募对应门客。",
+    "times": 20
+   },
+   {
+    "id": 746364,
+    "sid": 12399,
+    "itemId": "duanzaobooks2",
+    "price": 1000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 11,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300243,
+    "itype": 1,
+    "name": "锻造图谱盒",
+    "dsc": "这是一个锻造图谱盒，打开后可以获得1本锻造图谱（只会获得高级或顶级锻造图谱）。",
+    "times": 10
+   },
+   {
+    "id": 746365,
+    "sid": 12399,
+    "itemId": "baixuehuicuibox01",
+    "price": 500,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 12,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300244,
+    "itype": 1,
+    "name": "百学荟萃箱",
+    "dsc": "少侠可开出相马术、炼丹术、占星术、追踪术、鲁班术、相面术、仵作术、岐黄之术、墨家机关术、庙算之术、武穆遗书秘籍中的一种。",
+    "times": 10
+   },
+   {
+    "id": 746378,
+    "sid": 12399,
+    "itemId": "jiaren005",
+    "price": 6000,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 1,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 3,
+    "type": [
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 300257,
+    "itype": 2,
+    "name": "鲁班奇偶",
+    "dsc": "传闻此物乃天工巧匠鲁班所传至宝，形态栩栩如生，全身各处布有精密机关，构造巧妙。年代久远，却不见丝毫锈迹和腐坏！",
+    "times": 1
+   },
+   {
+    "id": 746379,
+    "sid": 12399,
+    "itemId": "newfudai238",
+    "price": 10,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 40,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 1,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 301313,
+    "itype": 1,
+    "name": "江湖桂月福袋",
+    "dsc": "凭运气能开出戏曲面具(孔明)，玉露项链、流云甘露、行功散、静心丸、碎银、黄金、潜能丹、遁地符中的一种。",
+    "times": 40
+   },
+   {
+    "id": 746380,
+    "sid": 12399,
+    "itemId": "newfudai239",
+    "price": 60,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 30,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 2,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 301314,
+    "itype": 1,
+    "name": "江湖仲秋福袋",
+    "dsc": "凭运气能开出戏曲面具(山鬼)、天马、虎蛟、行功散、门派顶级残页、干草人偶、静心丸、潜能丹、黄金中的一种。",
+    "times": 30
+   },
+   {
+    "id": 746381,
+    "sid": 12399,
+    "itemId": "ningshendan",
+    "price": 5,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 300,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 95,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400002,
+    "itype": 10,
+    "name": "凝神丹",
+    "dsc": "一颗褐色浑圆的丹药，散发出淡淡的药味，服用后静心凝神，练功事半功倍。",
+    "times": 300
+   },
+   {
+    "id": 746382,
+    "sid": 12399,
+    "itemId": "accpoint",
+    "price": 5,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 600,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 93,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400003,
+    "itype": 6,
+    "name": "固身元气",
+    "dsc": "养气固身，神采焕发，做什么都必然倍道而进。",
+    "times": 600
+   },
+   {
+    "id": 746383,
+    "sid": 12399,
+    "itemId": "minditem4",
+    "price": 1880,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 92,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400004,
+    "itype": 6,
+    "name": "聚心丹",
+    "dsc": "一个精致的紫金葫芦中装着的丹药，取之伴有阵阵奇特香气，相传服用此丹可使人神清气爽心旷神怡。",
+    "times": 3
+   },
+   {
+    "id": 746384,
+    "sid": 12399,
+    "itemId": "minditem2",
+    "price": 380,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 90,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400006,
+    "itype": 6,
+    "name": "谧心丸",
+    "dsc": "通体青色的药丸，闻之似有淡淡幽香，服用后可使人心神安定。",
+    "times": 3
+   },
+   {
+    "id": 746385,
+    "sid": 12399,
+    "itemId": "minditem1",
+    "price": 190,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 89,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400009,
+    "itype": 6,
+    "name": "清心散",
+    "dsc": "一包用白色油纸包裹的朱色粉末，据说出自名声显赫的医药世家，服用可令人舒心安神。",
+    "times": 3
+   },
+   {
+    "id": 746386,
+    "sid": 12399,
+    "itemId": "minditem3",
+    "price": 750,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 91,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400010,
+    "itype": 6,
+    "name": "凝心露",
+    "dsc": "翠绿透彻的玉瓶中装着的半透明药液，闻之清香阵阵，凝心露功效颇为奇特，服用令可人心神饱满全身清爽。",
+    "times": 3
+   },
+   {
+    "id": 746387,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi001",
+    "price": 150,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 84,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400011,
+    "itype": 5,
+    "name": "复思之书",
+    "dsc": "此乃复思之书，使用该书卷可以将任何招式完全重置。但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746388,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi002",
+    "price": 50,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 85,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400012,
+    "itype": 5,
+    "name": "弃定之书",
+    "dsc": "此乃弃定之书，使用该书卷可以将精妙招式完全重置，但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746389,
+    "sid": 12399,
+    "itemId": "glczwanquanchongzhi003",
+    "price": 75,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 10,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 86,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400013,
+    "itype": 5,
+    "name": "重思之书",
+    "dsc": "此乃重思之书，使用该书卷可以将超凡招式完全重置，但招式品质不会发生变化。",
+    "times": 10
+   },
+   {
+    "id": 746390,
+    "sid": 12399,
+    "itemId": "gailiangshengpin002",
+    "price": 125,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 2,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 88,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400015,
+    "itype": 5,
+    "name": "超群之书",
+    "dsc": "此乃超群之书，使用该书卷可以将普通招式提升至超凡招式。",
+    "times": 2
+   },
+   {
+    "id": 746391,
+    "sid": 12399,
+    "itemId": "gailiangshengpin004",
+    "price": 85,
+    "number": 1,
+    "is_again": "N",
+    "extra": {
+     "limit": 3,
+     "start": "2021-01-01 00:00:00",
+     "end": "2026-09-30 23:59:59"
+    },
+    "is_inherit": "Y",
+    "inde": 87,
+    "type": [
+     "T",
+     "D"
+    ],
+    "update_time": "2026-08-26 17:12:35",
+    "gid": 400016,
+    "itype": 5,
+    "name": "跃兴之书",
+    "dsc": "此乃跃兴之书，使用该书卷可以将精妙招式提升至超凡招式。",
+    "times": 3
+   }
+  ]
+ },
+ "typeName": {
+  "tuijian": {
+   "name": "推荐",
+   "index": 1
+  },
+  "shuxing": {
+   "name": "属性",
+   "index": 2
+  },
+  "wuxue": {
+   "name": "武学",
+   "index": 3
+  },
+  "shenbing": {
+   "name": "神兵",
+   "index": 4
+  },
+  "guashi": {
+   "name": "挂饰",
+   "index": 5
+  },
+  "mianju": {
+   "name": "面具",
+   "index": 6
+  },
+  "default": {
+   "name": "其他",
+   "index": 7
+  }
+ }
+}

@@ -1,0 +1,33 @@
+{
+  "index": 133,
+  "startedDateTime": "2026-09-01T14:48:54.316707Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_limit_package/libao1427",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "XjAQGP",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "844f014c27d3c7f20f8c1df31563a3ed",
+    "time": "1788273937.0078",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a48303315e637e4728119317d6226815b1c9c89",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":1531,\"total_price\":30,\"price\":488,\"limit_num\":15,\"beyond\":500,\"begin_time\":1788192001,\"end_time\":1790783999,\"list\":[{\"name\":\"门派顶级残页\",\"price\":0,\"imagePath\":\"Image\\/UI\\/StoreUI\\/canye.png\",\"number\":1,\"itemId\":\"menpaicanye4\"},{\"name\":\"HIR散人顶级残页NOR\",\"price\":10,\"imagePath\":\"Image\\/UI\\/StoreUI\\/canye.png\",\"number\":1,\"itemId\":\"sanren8\"},{\"name\":\"门派高级残页\",\"price\":0,\"imagePath\":\"Image\\/UI\\/StoreUI\\/canye.png\",\"number\":2,\"itemId\":\"menpaicanye3\"},{\"name\":\"HIY散人高级残页NOR\",\"price\":10,\"imagePath\":\"Image\\/UI\\/StoreUI\\/canye.png\",\"number\":2,\"itemId\":\"sanren7\"}],\"special_reward_itemId\":\"\",\"buy_times\":0},\"rand_t\":1788274134.1332}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 1531,\n    \"total_price\": 30,\n    \"price\": 488,\n    \"limit_num\": 15,\n    \"beyond\": 500,\n    \"begin_time\": 1788192001,\n    \"end_time\": 1790783999,\n    \"list\": [\n      {\n        \"name\": \"门派顶级残页\",\n        \"price\": 0,\n        \"imagePath\": \"Image/UI/StoreUI/canye.png\",\n        \"number\": 1,\n        \"itemId\": \"menpaicanye4\"\n      },\n      {\n        \"name\": \"HIR散人顶级残页NOR\",\n        \"price\": 10,\n        \"imagePath\": \"Image/UI/StoreUI/canye.png\",\n        \"number\": 1,\n        \"itemId\": \"sanren8\"\n      },\n      {\n        \"name\": \"门派高级残页\",\n        \"price\": 0,\n        \"imagePath\": \"Image/UI/StoreUI/canye.png\",\n        \"number\": 2,\n        \"itemId\": \"menpaicanye3\"\n      },\n      {\n        \"name\": \"HIY散人高级残页NOR\",\n        \"price\": 10,\n        \"imagePath\": \"Image/UI/StoreUI/canye.png\",\n        \"number\": 2,\n        \"itemId\": \"sanren7\"\n      }\n    ],\n    \"special_reward_itemId\": \"\",\n    \"buy_times\": 0\n  },\n  \"rand_t\": 1788274134.1332\n}"
+}

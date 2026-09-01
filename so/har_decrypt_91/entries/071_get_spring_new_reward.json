@@ -1,0 +1,33 @@
+{
+  "index": 71,
+  "startedDateTime": "2026-09-01T14:50:45.397604Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_new_reward",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "KJJlOk",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "b37ea0721189b6cada024b973bca1c2a",
+    "time": "1788273937.014",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a48303313669ed9ad4fdbe376ed84018b925210",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":1,\"name\":\"首充活动\",\"desc\":\"首次充值，3天登录好礼领不停。\",\"gift\":\"面具、潜能丹、武功秘籍、菩提子\",\"start\":1499392800,\"end\":1798732799,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_desc\":[\"玩家首次充值送好礼！只要玩家满足对应的首充条件，则可以连续3天登录游戏，都可以获得丰厚好礼。\",\"传承或重置都将使活动进度清空。\"],\"sort\":\"100\",\"create_time\":\"2017-04-07 18:40:49\",\"update_time\":\"2025-11-12 15:37:47\",\"activity_id\":\"shouchong\",\"rule_desc\":[\"1.大侠首次充值金额达到6元，即可解锁首充活动奖励，当天开始即可在活动界面领取丰厚奖励，持续三天。\",\"2.双存档互不影响。\",\"3.传承保留活动获得的奖励，不保留活动进度。\",\"4.重置不保留活动获得的奖励，不保留活动进度。\"],\"hasup\":0,\"base\":[{\"day\":1,\"status\":0,\"desc\":\"潜能丹*2\\n菩提子*2\\n五煞神掌*1\\n碎银*10000\",\"reward\":[{\"name\":\"潜能丹\",\"num\":2,\"itemId\":\"qiannengdan\",\"type\":1},{\"name\":\"菩提子\",\"num\":2,\"itemId\":\"putizi1\",\"type\":1},{\"name\":\"五煞神掌\",\"num\":1,\"itemId\":\"chunjieleiji1\",\"type\":1},{\"name\":\"碎银\",\"num\":10000,\"itemId\":\"money\",\"type\":2}]},{\"day\":2,\"status\":0,\"desc\":\"遁地符*20\\n分身符*20\\n潜能丹*2\\n天香玉露*2\",\"reward\":[{\"name\":\"遁地符\",\"num\":20,\"itemId\":\"dundifu\",\"type\":1},{\"name\":\"分身符\",\"num\":20,\"itemId\":\"fenshenfu\",\"type\":1},{\"name\":\"潜能丹\",\"num\":2,\"itemId\":\"qiannengdan\",\"type\":1},{\"name\":\"天香玉露\",\"num\":2,\"itemId\":\"tianxiangyulu1\",\"type\":1}]},{\"day\":3,\"status\":0,\"desc\":\"戏曲面具(岳小妹)*1\\n潜能丹*2\\n门派顶级残页*1\\n散人顶级残页*1\",\"imagePath\":\"Image\\/UI\\/AttrUI\\/mianju\\/yuelingsan2.png\",\"reward\":[{\"name\":\"戏曲面具(岳小妹)\",\"num\":1,\"itemId\":\"mianju1011\",\"type\":1},{\"name\":\"潜能丹\",\"num\":2,\"itemId\":\"qiannengdan\",\"type\":1},{\"name\":\"门派顶级残页\",\"num\":1,\"itemId\":\"menpaicanye4\",\"type\":1},{\"name\":\"散人顶级残页\",\"num\":1,\"itemId\":\"sanren8\",\"type\":1}]}]},\"rand_t\":1788274245.2428}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"首充活动\",\n    \"desc\": \"首次充值，3天登录好礼领不停。\",\n    \"gift\": \"面具、潜能丹、武功秘籍、菩提子\",\n    \"start\": 1499392800,\n    \"end\": 1798732799,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_desc\": [\n      \"玩家首次充值送好礼！只要玩家满足对应的首充条件，则可以连续3天登录游戏，都可以获得丰厚好礼。\",\n      \"传承或重置都将使活动进度清空。\"\n    ],\n    \"sort\": \"100\",\n    \"create_time\": \"2017-04-07 18:40:49\",\n    \"update_time\": \"2025-11-12 15:37:47\",\n    \"activity_id\": \"shouchong\",\n    \"rule_desc\": [\n      \"1.大侠首次充值金额达到6元，即可解锁首充活动奖励，当天开始即可在活动界面领取丰厚奖励，持续三天。\",\n      \"2.双存档互不影响。\",\n      \"3.传承保留活动获得的奖励，不保留活动进度。\",\n      \"4.重置不保留活动获得的奖励，不保留活动进度。\"\n    ],\n    \"hasup\": 0,\n    \"base\": [\n      {\n        \"day\": 1,\n        \"status\": 0,\n        \"desc\": \"潜能丹*2\\n菩提子*2\\n五煞神掌*1\\n碎银*10000\",\n        \"reward\": [\n          {\n            \"name\": \"潜能丹\",\n            \"num\": 2,\n            \"itemId\": \"qiannengdan\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"菩提子\",\n            \"num\": 2,\n            \"itemId\": \"putizi1\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"五煞神掌\",\n            \"num\": 1,\n            \"itemId\": \"chunjieleiji1\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"碎银\",\n            \"num\": 10000,\n            \"itemId\": \"money\",\n            \"type\": 2\n          }\n        ]\n      },\n      {\n        \"day\": 2,\n        \"status\": 0,\n        \"desc\": \"遁地符*20\\n分身符*20\\n潜能丹*2\\n天香玉露*2\",\n        \"reward\": [\n          {\n            \"name\": \"遁地符\",\n            \"num\": 20,\n            \"itemId\": \"dundifu\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"分身符\",\n            \"num\": 20,\n            \"itemId\": \"fenshenfu\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"潜能丹\",\n            \"num\": 2,\n            \"itemId\": \"qiannengdan\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"天香玉露\",\n            \"num\": 2,\n            \"itemId\": \"tianxiangyulu1\",\n            \"type\": 1\n          }\n        ]\n      },\n      {\n        \"day\": 3,\n        \"status\": 0,\n        \"desc\": \"戏曲面具(岳小妹)*1\\n潜能丹*2\\n门派顶级残页*1\\n散人顶级残页*1\",\n        \"imagePath\": \"Image/UI/AttrUI/mianju/yuelingsan2.png\",\n        \"reward\": [\n          {\n            \"name\": \"戏曲面具(岳小妹)\",\n            \"num\": 1,\n            \"itemId\": \"mianju1011\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"潜能丹\",\n            \"num\": 2,\n            \"itemId\": \"qiannengdan\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"门派顶级残页\",\n            \"num\": 1,\n            \"itemId\": \"menpaicanye4\",\n            \"type\": 1\n          },\n          {\n            \"name\": \"散人顶级残页\",\n            \"num\": 1,\n            \"itemId\": \"sanren8\",\n            \"type\": 1\n          }\n        ]\n      }\n    ]\n  },\n  \"rand_t\": 1788274245.2428\n}"
+}

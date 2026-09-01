@@ -1,0 +1,33 @@
+{
+  "index": 73,
+  "startedDateTime": "2026-09-01T14:50:42.523464Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_spring_festival_status/70",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2410DPN6CC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfang31419d4e600594d775af71d8\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.01\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "35903",
+    "nouce": "AhahpP",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "03784586726da4d96cba21e38465ec96",
+    "time": "1788273937.0138",
+    "timezone": "8",
+    "userid": "9048162373",
+    "uuid": "guanfang31419d4e600594d775af71d8",
+    "ver": "2.1.01",
+    "vercode": "465a4a4830330797571988e1c9ea806dbdfbad66f427",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2410DPN6CC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"id\":70,\"name\":\"无间会武\",\"desc\":\"活动期间在无间林里进行pk、做任务，获取丰厚奖励\",\"gift\":\"游字令、美誉、声望等\",\"start\":1788105600,\"end\":1788710399,\"status\":1,\"is_open\":1,\"is_show\":1,\"detail_time\":\"2026年08月31日活动开启 至 2026年09月06日23时59分。\",\"detail_desc\":[\"活动期间，在平安小镇寻找抱剑侠客，去无间林进行PK，无论胜负每日前三次均有奖励。每日在无间林里寻找 “云霓”“张老伯”做任务，完成任务可得经验、潜能。另外每日在无间林里寻找“李铁”做任务，可得到游字令、经验、潜能，并且有可能掉落特殊材料。\",\"特殊材料可以去平安小镇小镇西口找打铁匠打造武器。\"],\"sort\":\"83\",\"create_time\":\"2020-06-10 09:53:24\",\"update_time\":\"2026-08-26 15:44:32\",\"activity_id\":\"weekwjhw\"},\"rand_t\":1788274242.3061}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"id\": 70,\n    \"name\": \"无间会武\",\n    \"desc\": \"活动期间在无间林里进行pk、做任务，获取丰厚奖励\",\n    \"gift\": \"游字令、美誉、声望等\",\n    \"start\": 1788105600,\n    \"end\": 1788710399,\n    \"status\": 1,\n    \"is_open\": 1,\n    \"is_show\": 1,\n    \"detail_time\": \"2026年08月31日活动开启 至 2026年09月06日23时59分。\",\n    \"detail_desc\": [\n      \"活动期间，在平安小镇寻找抱剑侠客，去无间林进行PK，无论胜负每日前三次均有奖励。每日在无间林里寻找 “云霓”“张老伯”做任务，完成任务可得经验、潜能。另外每日在无间林里寻找“李铁”做任务，可得到游字令、经验、潜能，并且有可能掉落特殊材料。\",\n      \"特殊材料可以去平安小镇小镇西口找打铁匠打造武器。\"\n    ],\n    \"sort\": \"83\",\n    \"create_time\": \"2020-06-10 09:53:24\",\n    \"update_time\": \"2026-08-26 15:44:32\",\n    \"activity_id\": \"weekwjhw\"\n  },\n  \"rand_t\": 1788274242.3061\n}"
+}
