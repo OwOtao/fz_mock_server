@@ -728,8 +728,11 @@ class StateStore:
         return {
             "email": device.get("email", ""),
             "phone": device.get("phone", ""),
-            "is_bind": bool(device.get("bound")),
-            "is_logout": bool(device.get("is_logout")),
+            # Legacy Lua callers compare these flags with numeric table keys
+            # ([1] / [0]); JSON booleans are decoded as Lua booleans and do
+            # not match those keys.
+            "is_bind": 1 if device.get("bound") else 0,
+            "is_logout": 1 if device.get("is_logout") else 0,
             "auth": device.get("auth", False),
         }
 

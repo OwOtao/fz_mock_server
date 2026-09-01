@@ -1407,14 +1407,166 @@ def delete_processed_emails(ctx):
     return _ok({"delete_ids": delete_ids})
 
 
+_RANKING_PAGE_SIZE = 10
+
+# Keep ranking labels in sync with the client resources:
+#   assets/res/script/family/family.lua
+#   assets/res/script/skill/kongfuDesc.lua
+_RANKING_FAMILY_NAMES = {
+    "baituoshan": "鸩羽山",
+    "dali": "天龙寺",
+    "emei": "峨眉派",
+    "gaibang": "丐帮",
+    "guanfu": "官府",
+    "gumu": "问情宫",
+    "haijing": "海鲸帮",
+    "huashan": "华山",
+    "jinqianbang": "财神帮",
+    "kongtong": "崆峒派",
+    "kunlun": "昆仑派",
+    "luoyue": "落月山庄",
+    "mingjiao": "明教",
+    "mizong": "雪山寺",
+    "murong": "燕氏皇族",
+    "quanzhen": "全真教",
+    "riyueshenjiao": "拜日教",
+    "seclusion": "归隐",
+    "shaolin": "少林派",
+    "tangmen": "唐门",
+    "taohuadao": "蓬莱岛",
+    "tianjingmen": "天竞门",
+    "tianshan": "虚渺宫",
+    "tiezhang": "伏龙山",
+    "wudang": "武当派",
+    "wudu": "万灵谷",
+    "xingxiu": "天狼教",
+    "yongyelou": "永夜楼",
+    "youming": "幽冥教",
+}
+_RANKING_WANDERER_FAMILIES = {"", "0", "none", "jianghu", "youxia", "散人", "游侠", "江湖"}
+_KONGFU_DESCRIPTIONS = (
+    (0, "ALS不堪一击"), (20, "ALS毫不足虑"), (30, "ALS不足挂齿"),
+    (40, "ALS初学乍练"), (50, "ALS勉勉强强"), (60, "ALS初窥门径"),
+    (70, "ALS初出茅庐"), (80, "ALS略知一二"), (90, "ALS普普通通"),
+    (100, "ALS平平淡淡"), (110, "ALS平淡无奇"), (120, "ALS粗通皮毛"),
+    (130, "ALS半生不熟"), (140, "ALS马马虎虎"), (150, "ALS略有小成"),
+    (160, "ALS已有小成"), (170, "ALS鹤立鸡群"), (180, "ALS驾轻就熟"),
+    (190, "ALS青出于蓝"), (200, "AQS融会贯通"), (210, "AQS心领神会"),
+    (220, "AQS炉火纯青"), (230, "AQS了然于胸"), (240, "AQS略有大成"),
+    (250, "AQS已有大成"), (270, "AQS豁然贯通"), (290, "AQS出类拔萃"),
+    (300, "AQS无可匹敌"), (330, "AQS技冠群雄"), (350, "AQS神乎其技"),
+    (370, "AQS出神入化"), (390, "AQS非同凡响"), (400, "ALSS傲视群雄"),
+    (430, "ALSS登峰造极"), (450, "ALSS无与伦比"), (470, "ALSS所向披靡"),
+    (500, "ALSS一代宗师"), (525, "ALSS精深奥妙"), (550, "ALSS神功盖世"),
+    (575, "ALSS举世无双"), (600, "ASHS惊世骇俗"), (625, "ASHS撼天动地"),
+    (650, "ASHS震古铄今"), (675, "ASHS超凡入圣"), (700, "ZHS威震寰宇"),
+    (725, "ZHS空前绝后"), (750, "ZHS天人合一"), (775, "ZHS深藏不露"),
+    (800, "XNS深不可测"), (850, "XNS返璞归真"), (900, "WHT罕有敌手"),
+    (950, "WHT技艺超群"), (1000, "HIW冠绝一时"), (1050, "HIW万夫莫当"),
+    (1100, "HIW盖世无双"),
+)
+
+
+def _ranking_number(value, default=0):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _ranking_family(role):
+    family = role.get("menpai") or role.get("real_menpai") or role.get("family") or role.get("familyId")
+    if isinstance(family, dict):
+        family = family.get("name") or family.get("id")
+    family = str(family or "").strip()
+    family_key = family.lower()
+    if family_key in _RANKING_WANDERER_FAMILIES:
+        return "江湖浪人"
+    return _RANKING_FAMILY_NAMES.get(family_key, family)
+
+
+def _ranking_kongfu_description(kongfu):
+    description = "看不出武功强弱"
+    for threshold, value in _KONGFU_DESCRIPTIONS:
+        if kongfu < threshold:
+            break
+        description = value
+    return description
+
+
+def _ranking_user(ctx, userid):
+    account = ctx["state"].get_account(userid) or {}
+    role = ctx["state"].get_archive(userid) or {}
+    exp = _ranking_number(role.get("exp"), 0)
+    kongfu = _ranking_number(role.get("kongfu"), exp / 100000.0)
+    name = account.get("name") or role.get("name") or "玩家%s" % userid
+    portrait = role.get("portrait") or ""
+    if isinstance(portrait, dict):
+        portrait = portrait.get("itemId") or portrait.get("id") or ""
+    entry = {
+        "userid": userid,
+        "name": name,
+        "lv": int(_ranking_number(role.get("lv"), 1)),
+        "exp": exp,
+        "jingyan": exp,
+        "kongfu": kongfu,
+        "money": _ranking_number(role.get("money"), 0),
+        "gold": _ranking_number(role.get("gold"), 0),
+        "yueli": _ranking_number(role.get("yueli"), 0),
+        "xiayi": _ranking_number(role.get("xiayi"), 0),
+        "sex": role.get("sex") or "男",
+        "looks": int(_ranking_number(role.get("looks"), 20)),
+        "menpai": _ranking_family(role),
+        "real_menpai": _ranking_family(role),
+        "portrait": portrait,
+        "head": role.get("head") or "",
+        "inheritCount": int(_ranking_number(role.get("inheritCount"), 0)),
+        "dsc": role.get("kongfuDsc") or _ranking_kongfu_description(kongfu),
+        "score": kongfu,
+        "yueka": "NO",
+    }
+    return entry
+
+
+def _legacy_ranking_board(ctx, board_type="default", page=1):
+    userid = _userid(ctx)
+    if userid > 0 and ctx["state"].get_account(userid) is not None:
+        ctx["state"].upsert_ranking(board_type, userid, _ranking_user(ctx, userid))
+    ranking = ctx["state"].get_rankings(board_type, page, _RANKING_PAGE_SIZE)
+    values = ranking["list"]
+    for value in values:
+        value["sort"] = value.pop("rank", 0)
+    total = ranking["total"]
+    total_page = max(1, (total + _RANKING_PAGE_SIZE - 1) // _RANKING_PAGE_SIZE)
+    mine = next((value.copy() for value in values if int(value.get("userid", 0)) == userid), None)
+    return {
+        "title": "高手榜",
+        "type": "total_board",
+        "header": ["名次", "昵称", "武学造诣"],
+        "body": {"list": values, "mine": mine},
+        "total_nums": total,
+        "board_type": str(board_type),
+        "total_page": total_page,
+        "nums": _RANKING_PAGE_SIZE,
+    }
+
+
 @route(["POST"], "get_rank_list_4")
 def get_rank_list(ctx):
-    return _ok(ctx["state"].get_rankings("default", _body(ctx).get("page", 1)))
+    userid = _userid(ctx)
+    if userid <= 0 or ctx["state"].get_account(userid) is None:
+        return build_response_body([], errcode=552, errmsg="userid not found")
+    page = _body(ctx).get("page", 1)
+    return _ok([_legacy_ranking_board(ctx, "default", page)])
 
 
 @route(["POST"], "get_board")
 def get_board(ctx):
-    return _ok(ctx["state"].get_rankings(_tail(ctx), _body(ctx).get("page", 1)))
+    userid = _userid(ctx)
+    if userid <= 0 or ctx["state"].get_account(userid) is None:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    board_type = _tail(ctx, default="default")
+    return _ok(_legacy_ranking_board(ctx, board_type, _body(ctx).get("page", 1)))
 
 
 @route(["POST"], "get_user_info")
@@ -1425,6 +1577,16 @@ def get_user_info(ctx):
 
 @route(["GET"], "is_changed_name")
 def is_changed_name(ctx):
+    userid = _userid(ctx)
+    account = ctx["state"].get_account(userid) if userid > 0 else None
+    if account is None:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    name = str(account.get("name") or "").strip()
+    changed = bool(account.get("ranking_name_changed")) or (
+        bool(name) and name != "无名小辈" and name != "玩家%s" % userid
+    )
+    if changed:
+        return build_response_body({"changed": True}, errcode=1, errmsg="name already changed")
     return _ok({"changed": False})
 
 
@@ -1433,7 +1595,12 @@ def update_username(ctx):
     name = _body(ctx).get("name", "")
     if not isinstance(name, str) or not name.strip():
         return build_response_body({}, errcode=400, errmsg="name is required")
-    ctx["state"].update_account(_userid(ctx), {"name": name})
+    userid = _userid(ctx)
+    if userid <= 0 or ctx["state"].get_account(userid) is None:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    name = name.strip()
+    ctx["state"].update_account(userid, {"name": name, "ranking_name_changed": True})
+    ctx["state"].upsert_ranking("default", userid, _ranking_user(ctx, userid))
     return _ok({"name": name})
 
 

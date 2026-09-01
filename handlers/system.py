@@ -426,8 +426,10 @@ def _device_action(ctx, action):
     body = _body_dict(ctx)
     email = body.get("email") or body.get("phone")
     userid = requested_userid
+    email_owner = None
     if action == "login" and email:
-        userid = ctx["state"].get_userid_by_email(email) or userid
+        email_owner = ctx["state"].get_userid_by_email(email)
+        userid = email_owner or userid
     if userid <= 0 or ctx["state"].get_account(userid) is None:
         return build_response_body({}, errcode=552, errmsg="account not found")
     if ctx.get("headers", {}).get("isbind") == "0" or ctx.get("headers", {}).get("isBind") == "0":
@@ -435,10 +437,34 @@ def _device_action(ctx, action):
         return build_response_body({})
     code = str(body.get("verify_code", ""))
     try:
+        # The legacy transfer UI can submit the mock code directly without
+        # calling send_email first. Initialize only an empty verification
+        # session; an existing target must still match exactly.
+        device = ctx["state"].get_device(requested_userid)
+        if (
+            email
+            and code == "123456"
+            and not device.get("verify_target")
+            and not device.get("verify_code")
+        ):
+            ctx["state"].set_email_code(
+                requested_userid,
+                email,
+                "123456",
+                "login" if action == "login" else action,
+                int(time.time()) + 1800,
+            )
         ctx["state"].validate_email_code(requested_userid, email, code)
         if action == "bind":
             ctx["state"].bind_device(userid, email, code)
         elif action == "login":
+            # On old clients this is the only visible email action. If the
+            # address has no owner, bind the current archive before switching.
+            if email_owner is None:
+                if ctx["state"].get_archive(requested_userid) is None:
+                    raise ValueError("archive not found")
+                ctx["state"].bind_device(requested_userid, email, code)
+                userid = requested_userid
             device_uuid = ctx.get("headers", {}).get("uuid") or ""
             ctx["state"].set_active_archive(device_uuid, userid)
         else:

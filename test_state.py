@@ -30,10 +30,14 @@ from handlers.basic import (
     get_group_rank,
     get_goods,
     get_goods_2,
+    get_board,
     get_limit_package,
+    get_rank_list,
     get_store_list,
     get_user_group,
+    is_changed_name,
     read_email,
+    update_username,
     upgrade_user_bag,
     view_currency_by_type,
 )
@@ -55,6 +59,7 @@ from handlers.homeland import (
 from handlers.system import (
     create_account,
     download_user_file_2,
+    get_email,
     get_game_user_info_2,
     login_device,
     send_email,
@@ -399,6 +404,80 @@ class StateStoreTest(unittest.TestCase):
         updated = store.update_order(order["order_id"], {"status": "success"})
         self.assertEqual(updated["status"], "success")
 
+    def test_get_email_returns_legacy_numeric_binding_flags(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        unbound = get_email(ctx)
+        self.assertEqual(unbound["errcode"], 0)
+        self.assertIs(type(unbound["data"]["is_bind"]), int)
+        self.assertIs(type(unbound["data"]["is_logout"]), int)
+        self.assertEqual(unbound["data"]["is_bind"], 0)
+        self.assertEqual(unbound["data"]["is_logout"], 0)
+
+        store.bind_device(userid, "rank@example.com")
+        bound = get_email(ctx)
+        self.assertEqual(bound["data"]["email"], "rank@example.com")
+        self.assertEqual(bound["data"]["is_bind"], 1)
+        self.assertEqual(bound["data"]["is_logout"], 0)
+
+        store.unbind_device(userid)
+        logged_out = get_email(ctx)
+        self.assertEqual(logged_out["data"]["is_bind"], 0)
+        self.assertEqual(logged_out["data"]["is_logout"], 1)
+
+    def test_ranking_name_state_and_legacy_board_contract(self):
+        store = StateStore()
+        userid = store.ensure_account(defaults={"name": "无名小辈"})["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "name": "无名小辈",
+            "lv": 175,
+            "exp": 577763,
+            "money": 600000000,
+            "gold": 6000000,
+            "kongfu": 59.9,
+            "sex": "男",
+            "looks": 18,
+            "family": {"name": "youxia"},
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        initial = is_changed_name(ctx)
+        self.assertEqual(initial["errcode"], 0)
+        self.assertFalse(initial["data"]["changed"])
+
+        renamed = update_username(dict(ctx, body={"name": "哈基米"}))
+        self.assertEqual(renamed["errcode"], 0)
+        self.assertEqual(store.get_account(userid)["name"], "哈基米")
+        self.assertTrue(store.get_account(userid)["ranking_name_changed"])
+
+        changed = is_changed_name(ctx)
+        self.assertEqual(changed["errcode"], 1)
+        self.assertTrue(changed["data"]["changed"])
+
+        response = get_rank_list(dict(ctx, body={"page": 1}))
+        self.assertEqual(response["errcode"], 0)
+        self.assertIsInstance(response["data"], list)
+        board = response["data"][0]
+        self.assertEqual(board["title"], "高手榜")
+        self.assertEqual(board["type"], "total_board")
+        self.assertEqual(board["header"], ["名次", "昵称", "武学造诣"])
+        self.assertEqual(board["board_type"], "default")
+        self.assertEqual(board["total_page"], 1)
+        self.assertEqual(board["nums"], 10)
+        self.assertEqual(board["body"]["list"][0]["name"], "哈基米")
+        self.assertEqual(board["body"]["list"][0]["sort"], 1)
+        self.assertEqual(board["body"]["list"][0]["dsc"], "ALS勉勉强强")
+        self.assertEqual(board["body"]["list"][0]["menpai"], "江湖浪人")
+        self.assertEqual(board["body"]["list"][0]["real_menpai"], "江湖浪人")
+
+        page = get_board(dict(ctx, body={"page": 1}, route_tail=["default"]))
+        self.assertEqual(page["errcode"], 0)
+        self.assertEqual(page["data"]["title"], "高手榜")
+        self.assertEqual(page["data"]["body"]["list"][0]["userid"], userid)
+
     def test_email_binding_is_unique(self):
         store = StateStore()
         first = store.ensure_account()["userid"]
@@ -471,6 +550,46 @@ class StateStoreTest(unittest.TestCase):
             "headers": {"userid": str(current), "uuid": "device-1"},
         })
         self.assertEqual(download["data"][0]["userid"], original)
+
+    def test_legacy_transfer_binds_unowned_email_with_mock_code(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"userid": userid, "name": "当前角色"})
+
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "legacy-transfer"},
+            "body": {"email": " New@Example.COM ", "verify_code": 123456},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["userid"], userid)
+        self.assertEqual(store.get_email(userid)["email"], "new@example.com")
+        self.assertTrue(store.get_email(userid)["is_bind"])
+        self.assertEqual(store.get_userid_by_email("new@example.com"), userid)
+        self.assertEqual(store.get_active_archive("legacy-transfer")["userid"], userid)
+
+    def test_legacy_transfer_does_not_replace_pending_verify_target(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"userid": userid, "name": "当前角色"})
+        store.set_email_code(
+            userid,
+            "expected@example.com",
+            "123456",
+            "login",
+            expires_at=int(time.time()) + 60,
+        )
+
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "legacy-transfer"},
+            "body": {"email": "other@example.com", "verify_code": 123456},
+        })
+
+        self.assertEqual(response["errcode"], 400)
+        self.assertEqual(response["errmsg"], "invalid verify target")
+        self.assertIsNone(store.get_userid_by_email("other@example.com"))
 
     def test_admin_mail_delivery_and_reward_claim_are_idempotent(self):
         store = StateStore()
