@@ -112,6 +112,9 @@ def _fight_result(userid, fight, result, current_cnt):
 
 
 DEFAULT_YUANBAO = 9999
+_TIMED_STORE_GOODS = {
+    "byfenshenfu": 30 * 24 * 60 * 60,
+}
 _BAG_UPGRADE_COSTS = (
     0, 12000, 48000, 84000, 120000, 156000, 192000, 228000,
     264000, 300000, 336000, 372000, 408000, 444000, 480000,
@@ -211,7 +214,6 @@ _STORE_TEST_ITEMS = [
         "from": None,
         "create_time": "2017-02-13 17:09:38",
         "update_time": None,
-        "expired_time": 1788865826,
     },
     {
         "id": 12,
@@ -507,12 +509,52 @@ def _find_store_item(item_key):
     return None
 
 
-def _goods_detail(item):
+def _timed_good_expired_at_values(account, orders, userid, item_id):
+    item_id = str(item_id or "")
+    duration = _TIMED_STORE_GOODS.get(item_id)
+    if userid <= 0 or duration is None:
+        return 0
+    account = account if isinstance(account, dict) else {}
+    expired_times = account.get("store_goods_expired_at")
+    if isinstance(expired_times, dict) and item_id in expired_times:
+        return max(_as_int(expired_times.get(item_id), 0), 0)
+
+    purchases = []
+    for order in (orders or {}).values():
+        if not isinstance(order, dict):
+            continue
+        if _as_int(order.get("userid"), 0) != userid or order.get("status") != "success":
+            continue
+        order_item_id = order.get("item_id")
+        if not order_item_id and isinstance(order.get("payload"), dict):
+            order_item_id = order["payload"].get("itemId")
+        if str(order_item_id or "") != item_id:
+            continue
+        purchases.append((
+            max(_as_int(order.get("created_at"), 0), 0),
+            max(_as_int(order.get("quantity"), 1), 1),
+        ))
+    expired_at = 0
+    for created_at, quantity in sorted(purchases):
+        expired_at = max(expired_at, created_at) + duration * quantity
+    return expired_at
+
+
+def _timed_good_expired_at(ctx, userid, item_id):
+    """Return the entitlement, rebuilding purchases made by older versions."""
+    state = ctx["state"]
+    with state._lock:
+        account = state._state.setdefault("accounts", {}).get(str(userid)) or {}
+        orders = state._state.setdefault("orders", {})
+        return _timed_good_expired_at_values(account, orders, userid, item_id)
+
+
+def _goods_detail(item, expired_time=None):
     dsc = str(item.get("dsc") or "")
     mid = max(1, len(dsc) // 2)
     dsc1 = item.get("dsc1")
     dsc2 = item.get("dsc2")
-    return {
+    detail = {
         "id": str(item.get("id") or ""),
         "itemId": str(item.get("itemId") or ""),
         "name": str(item.get("name") or ""),
@@ -530,6 +572,9 @@ def _goods_detail(item):
         "viewtype": _as_int(item.get("viewtype"), 0),
         "extra": item.get("extra") if isinstance(item.get("extra"), dict) else {},
     }
+    if expired_time is not None:
+        detail["expired_time"] = max(_as_int(expired_time, 0), 0)
+    return detail
 
 
 def _get_yuanbao_balance(ctx, userid):
@@ -555,8 +600,16 @@ def _set_yuanbao_balance(ctx, userid, value):
     return value
 
 
-def _store_list_payload(yuanbao=DEFAULT_YUANBAO):
+def _store_list_payload(yuanbao=DEFAULT_YUANBAO, timed_goods=None):
     # StoreLayer 默认 goodsType=2 -> list[2] 名称必须是“商城”
+    timed_goods = timed_goods if isinstance(timed_goods, dict) else {}
+    store_items = []
+    for source in _STORE_TEST_ITEMS:
+        item = dict(source)
+        item_id = str(item.get("itemId") or "")
+        if item_id in _TIMED_STORE_GOODS:
+            item["expired_time"] = max(_as_int(timed_goods.get(item_id), 0), 0)
+        store_items.append(item)
     return {
         "status": "OPEN",
         "list": [
@@ -568,7 +621,7 @@ def _store_list_payload(yuanbao=DEFAULT_YUANBAO):
             {
                 "classId": "store_goods",
                 "name": "商城",
-                "items": [dict(x) for x in _STORE_TEST_ITEMS],
+                "items": store_items,
             },
             {
                 "classId": "fuben_goods",
@@ -661,7 +714,11 @@ def get_config_fuben(ctx):
 def get_store_list(ctx):
     userid = _userid(ctx)
     yuanbao = _get_yuanbao_balance(ctx, userid) if userid > 0 else DEFAULT_YUANBAO
-    return _ok(_store_list_payload(yuanbao))
+    timed_goods = {
+        item_id: _timed_good_expired_at(ctx, userid, item_id)
+        for item_id in _TIMED_STORE_GOODS
+    }
+    return _ok(_store_list_payload(yuanbao, timed_goods))
 
 
 @route(["GET", "POST"], "get_limit_package")
@@ -765,7 +822,11 @@ def get_goods(ctx):
     item = _find_store_item(item_key)
     if item is None:
         return build_response_body({}, errcode=404, errmsg="goods not found")
-    return _ok(_goods_detail(item))
+    expired_time = None
+    item_id = str(item.get("itemId") or "")
+    if item_id in _TIMED_STORE_GOODS:
+        expired_time = _timed_good_expired_at(ctx, _userid(ctx), item_id)
+    return _ok(_goods_detail(item, expired_time))
 
 
 @route(["POST"], "get_goods_2")
@@ -773,11 +834,34 @@ def get_goods_2(ctx):
     item = _find_store_item(_tail(ctx))
     if item is None:
         return build_response_body({}, errcode=404, errmsg="goods not found")
-    detail = _goods_detail(item)
+    item_id = str(item.get("itemId") or "")
+    expired_time = None
+    if item_id in _TIMED_STORE_GOODS:
+        expired_time = _timed_good_expired_at(ctx, _userid(ctx), item_id)
+    detail = _goods_detail(item, expired_time)
     others = _body(ctx)
     if others:
         detail["others"] = others
     return _ok(detail)
+
+
+@route(["POST"], "check_goods_valid")
+def check_goods_valid(ctx):
+    userid = _userid(ctx)
+    item_ids = _body(ctx).get("itemIds")
+    if not isinstance(item_ids, list):
+        item_ids = []
+    now = int(time.time())
+    values = []
+    for value in item_ids:
+        item_id = str(value or "")
+        expired_time = _timed_good_expired_at(ctx, userid, item_id)
+        values.append({
+            "itemId": item_id,
+            "number": 1 if expired_time > now else 0,
+            "expired_time": expired_time,
+        })
+    return _ok(values)
 
 
 @route(["GET", "POST"], "get_user_shenbings")
@@ -862,34 +946,91 @@ def buy_goods(ctx):
         cost = max(int(unit_price * quantity * 0.5), 0)
     else:
         cost = unit_price * quantity
-    balance = _get_yuanbao_balance(ctx, userid)
-    if balance < cost:
+    state = ctx["state"]
+    state.ensure_account(userid)
+    now = int(time.time())
+    item_id = str(item.get("itemId") or "")
+
+    def apply_purchase(current):
+        accounts = current.setdefault("accounts", {})
+        account = accounts.setdefault(str(userid), {"userid": userid})
+        orders = current.setdefault("orders", {})
+        for existing in orders.values():
+            if not isinstance(existing, dict):
+                continue
+            if _as_int(existing.get("userid"), 0) != userid:
+                continue
+            if str(existing.get("client_trans_id") or "") != str(client_trans_id):
+                continue
+            if existing.get("status") == "success":
+                return {"duplicate": True, "order": existing}
+
+        balance = max(_as_int(account.get("yuanbao"), DEFAULT_YUANBAO), 0)
+        if balance < cost:
+            return {"insufficient": True, "balance": balance}
+        total = balance - cost
+        account["yuanbao"] = total
+        account["updated_at"] = now
+
+        expired_time = None
+        duration = _TIMED_STORE_GOODS.get(item_id)
+        if duration is not None:
+            current_expiry = _timed_good_expired_at_values(
+                account, orders, userid, item_id,
+            )
+            expired_time = max(current_expiry, now) + duration * quantity
+            expired_times = account.get("store_goods_expired_at")
+            if not isinstance(expired_times, dict):
+                expired_times = {}
+                account["store_goods_expired_at"] = expired_times
+            expired_times[item_id] = expired_time
+
+        order_id = state._next("order_id", "order")
+        trans_id = state._next("order_id", "trans")
+        order = {
+            "order_id": order_id,
+            "trans_id": trans_id,
+            "userid": userid,
+            "status": "success",
+            "payload": dict(body),
+            "created_at": now,
+            "updated_at": now,
+            "item_id": item_id,
+            "shop_id": item.get("id"),
+            "quantity": quantity,
+            "remove_yuanbao": cost,
+            "total_yuanbao": total,
+            "client_trans_id": client_trans_id,
+        }
+        if expired_time is not None:
+            order["expired_time"] = expired_time
+        orders[trans_id] = order
+        return {"duplicate": False, "order": order}
+
+    purchase = state.mutate(apply_purchase)
+    if purchase.get("insufficient"):
         return build_response_body(
-            {"total_yuanbao": balance, "remove_yuanbao": 0},
+            {"total_yuanbao": purchase["balance"], "remove_yuanbao": 0},
             errcode=1,
             errmsg="元宝不足，购买失败！",
         )
-    total = _set_yuanbao_balance(ctx, userid, balance - cost)
-    order = ctx["state"].create_order(userid, body)
-    ctx["state"].update_order(order["trans_id"], {
-        "status": "success",
-        "item_id": item.get("itemId"),
-        "shop_id": item.get("id"),
-        "quantity": quantity,
-        "remove_yuanbao": cost,
-        "total_yuanbao": total,
-        "client_trans_id": client_trans_id,
-    })
-    return build_response_body({
-        "total_yuanbao": total,
-        "remove_yuanbao": cost,
+    order = purchase["order"]
+    expired_time = order.get("expired_time")
+    if item_id in _TIMED_STORE_GOODS:
+        expired_time = _timed_good_expired_at(ctx, userid, item_id)
+    response = {
+        "total_yuanbao": _as_int(order.get("total_yuanbao"), 0),
+        "remove_yuanbao": _as_int(order.get("remove_yuanbao"), 0),
         "special_reward": {},
         "activity": {},
         "client_trans_id": client_trans_id,
-        "itemId": item.get("itemId"),
+        "itemId": item_id,
         "id": item.get("id"),
         "quantity": quantity,
-    }, errcode=0, errmsg="", status=200)
+    }
+    if expired_time is not None:
+        response["expired_time"] = expired_time
+    return build_response_body(response, errcode=0, errmsg="", status=200)
 
 
 @route(["POST"], "check_fail_transaction_2")

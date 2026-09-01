@@ -17,6 +17,7 @@ from handlers.basic import (
     admin_send_email,
     buy_goods,
     challengemap_unfinished,
+    check_goods_valid,
     delete_email,
     delete_processed_emails,
     get_devote_list,
@@ -92,7 +93,7 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(category["items"][0]["id"], 3)
         self.assertEqual(category["items"][4]["number"], 0)
         self.assertEqual(category["items"][4]["share"], "(当前角色绑定)")
-        self.assertEqual(category["items"][4]["expired_time"], 1788865826)
+        self.assertEqual(category["items"][4]["expired_time"], 0)
         self.assertIn("\n入梦概率：40%\n", category["items"][9]["dsc1"])
         self.assertEqual(category["items"][10]["to"], "0")
 
@@ -101,6 +102,100 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(detail["data"]["id"], "11")
         self.assertEqual(detail["data"]["price"], 1800)
         self.assertEqual(detail["data"]["share"], "(当前角色绑定)")
+        self.assertEqual(detail["data"]["expired_time"], 0)
+
+    def test_monthly_clone_talisman_accumulates_and_replays_purchase(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+        duration = 30 * 24 * 60 * 60
+        first_now = 1800000000
+
+        with mock.patch("handlers.basic.time.time", return_value=first_now):
+            first = buy_goods(dict(
+                base_ctx,
+                route_tail=["byfenshenfu"],
+                body={
+                    "id": 11,
+                    "itemId": "byfenshenfu",
+                    "quantity": 1,
+                    "client_trans_id": "monthly-clone-1",
+                    "discount": 0,
+                },
+            ))
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["expired_time"], first_now + duration)
+        self.assertEqual(first["data"]["total_yuanbao"], 8199)
+
+        second_ctx = dict(
+            base_ctx,
+            route_tail=["byfenshenfu"],
+            body={
+                "id": 11,
+                "itemId": "byfenshenfu",
+                "quantity": 1,
+                "client_trans_id": "monthly-clone-2",
+                "discount": 0,
+            },
+        )
+        with mock.patch("handlers.basic.time.time", return_value=first_now + 10):
+            second = buy_goods(second_ctx)
+            replay = buy_goods(second_ctx)
+        expected_expiry = first_now + duration * 2
+        self.assertEqual(second["data"]["expired_time"], expected_expiry)
+        self.assertEqual(replay["data"]["expired_time"], expected_expiry)
+        self.assertEqual(second["data"]["total_yuanbao"], 6399)
+        self.assertEqual(replay["data"]["total_yuanbao"], 6399)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 6399)
+        self.assertEqual(len(store.snapshot()["orders"]), 2)
+
+        listed = get_store_list(base_ctx)
+        self.assertEqual(listed["data"]["list"][1]["items"][4]["expired_time"], expected_expiry)
+        detail = get_goods(dict(base_ctx, route_tail=["byfenshenfu"]))
+        self.assertEqual(detail["data"]["expired_time"], expected_expiry)
+        with mock.patch("handlers.basic.time.time", return_value=expected_expiry - 1):
+            active = check_goods_valid(dict(
+                base_ctx,
+                body={"itemIds": ["byfenshenfu"]},
+            ))
+        self.assertEqual(active["data"][0]["number"], 1)
+        with mock.patch("handlers.basic.time.time", return_value=expected_expiry + 1):
+            expired = check_goods_valid(dict(
+                base_ctx,
+                body={"itemIds": ["byfenshenfu"]},
+            ))
+        self.assertEqual(expired["data"][0]["number"], 0)
+
+    def test_monthly_clone_talisman_rebuilds_previous_successful_orders(self):
+        userid = 12345
+        duration = 30 * 24 * 60 * 60
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "yuanbao": 5000}},
+            "orders": {
+                "trans-1": {
+                    "userid": userid,
+                    "status": "success",
+                    "item_id": "byfenshenfu",
+                    "quantity": 1,
+                    "created_at": 1700000000,
+                },
+                "trans-2": {
+                    "userid": userid,
+                    "status": "success",
+                    "payload": {"itemId": "byfenshenfu"},
+                    "quantity": 1,
+                    "created_at": 1700000010,
+                },
+            },
+        }, autosave=False)
+        listed = get_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(
+            listed["data"]["list"][1]["items"][4]["expired_time"],
+            1700000000 + duration * 2,
+        )
 
     def test_get_goods_2_returns_fenshenfu_and_uses_resource_price(self):
         store = StateStore(autosave=False)
