@@ -342,7 +342,7 @@ def _map_data(ctx, userid, bucket):
             "BGM": spec.get("BGM") or "bgm001",
             "mapAppearance": spec["mapAppearance"],
             "mapAppearanceIndex": spec["mapAppearanceIndex"],
-            "extra": {},
+            "extra": copy.deepcopy(house.get("extra") or {}),
             "isChangeName": "N",
             "loc_mark": loc_mark,
             "loc_sort": loc_sort,

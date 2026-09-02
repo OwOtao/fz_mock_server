@@ -10,7 +10,8 @@
 - **商城系统**：限时礼包、武林卷轴、直购道具，支持购买与元宝扣减
 - **签到系统**：49 天赛季制签到、元宝补签、累计奖励领取
 - **家园系统**：多户型数据（从 `familytype.lua` 自动提取）、管家、房间布局
-- **活动系统**：春节活动、限时体验任务积分
+- **活动系统**：20 项活动总表、限时历练、十周年登录奖励、天缘奇盒、易金圩市、通武积市等
+- **远端仓储**：藏衣阁/玄兵洞清单、MD5 版本冲突、入库出库与客户端数据分页
 - **更新代理**：`checkUpdate` / `getMd5List` 透传至上游更新服务器
 - **邮件系统**：管理员邮件发送、深层 body 提取
 
@@ -36,7 +37,8 @@ mock_server/
 │   ├── fist.py             # 拳脚
 │   ├── teacher_build.py    # 师门
 │   ├── black_market.py     # 黑市
-│   └── familytype_data.py  # 户型数据（自动生成）
+│   ├── familytype_data.py  # 户型数据（自动生成）
+│   └── har_91.py           # 9 月 1 日抓包接口、活动配置与状态行为
 ├── item_json/              # 物品数据（JSON）
 ├── fzjh_lua/               # 客户端反编译 Lua 源码（参考）
 ├── so/                     # 抓包数据（.har）与 so 库
@@ -45,6 +47,7 @@ mock_server/
 ├── docs/                   # 密钥和逆向分析文档
 ├── test_state.py           # 状态与接口测试
 ├── test_update_proxy.py    # 更新代理测试
+├── test_har_91.py          # 9 月 1 日抓包接口回归测试
 ├── test_crypto.py          # 加密测试
 └── verify_archive_flow.py  # 存档流程验证
 ```
@@ -68,9 +71,9 @@ python run.py
 ### 运行测试
 
 ```bash
-python -m pytest test_state.py test_update_proxy.py -v
+python -m pytest test_state.py test_update_proxy.py test_har_91.py -v
 # 或
-python -m unittest test_state test_update_proxy -v
+python -m unittest test_state test_update_proxy test_har_91 -v
 ```
 
 ## 配置说明
