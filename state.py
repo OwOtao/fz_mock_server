@@ -8,11 +8,34 @@ import secrets
 import tempfile
 import threading
 import time
+from contextlib import contextmanager
 
 from archive_store import ArchiveStore, coerce_document, document_summary, extract_data_ver
 
 
 log = logging.getLogger("mock_server.state")
+
+_REPLACE_RETRY_DELAYS = (0.02, 0.04, 0.08, 0.16)
+
+
+def _replace_with_retry(source, target):
+    """Retry transient Windows sharing/access errors during atomic replace."""
+    for attempt in range(len(_REPLACE_RETRY_DELAYS) + 1):
+        try:
+            os.replace(source, target)
+            return
+        except PermissionError:
+            if attempt >= len(_REPLACE_RETRY_DELAYS):
+                raise
+            delay = _REPLACE_RETRY_DELAYS[attempt]
+            log.warning(
+                "state replace temporarily blocked; retrying in %.3fs (%d/%d): %s",
+                delay,
+                attempt + 1,
+                len(_REPLACE_RETRY_DELAYS),
+                target,
+            )
+            time.sleep(delay)
 
 
 class StateStore:
@@ -30,6 +53,8 @@ class StateStore:
             self.archives_dir = None
         self.archive_store = ArchiveStore(self.archives_dir) if self.archives_dir else None
         self._lock = threading.RLock()
+        self._deferred_save_depth = 0
+        self._deferred_save_pending = False
         self._state = self._empty_state()
         if initial is not None:
             self._state = self._normalize_state(initial)
@@ -288,7 +313,7 @@ class StateStore:
                 handle.write("\n")
                 handle.flush()
                 os.fsync(handle.fileno())
-            os.replace(temp_path, self.json_path)
+            _replace_with_retry(temp_path, self.json_path)
         except Exception:
             try:
                 os.unlink(temp_path)
@@ -298,8 +323,31 @@ class StateStore:
             raise
 
     def _changed(self):
-        if self.autosave:
+        if not self.autosave:
+            return
+        with self._lock:
+            if self._deferred_save_depth:
+                self._deferred_save_pending = True
+                return
             self._save_locked()
+
+    @contextmanager
+    def defer_saves(self):
+        """Hold the state lock and coalesce nested autosaves into one write."""
+        with self._lock:
+            self._deferred_save_depth += 1
+            try:
+                yield self
+            except BaseException:
+                self._deferred_save_depth -= 1
+                if self._deferred_save_depth == 0:
+                    self._deferred_save_pending = False
+                raise
+            else:
+                self._deferred_save_depth -= 1
+                if self._deferred_save_depth == 0 and self._deferred_save_pending:
+                    self._deferred_save_pending = False
+                    self._save_locked()
 
     def load(self):
         if not self.json_path:

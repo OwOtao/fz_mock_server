@@ -10,6 +10,7 @@ from unittest import mock
 
 import config
 import protocol
+from archive_store import ArchiveStore
 
 from handlers.basic import (
     add_training_task_point,
@@ -21,10 +22,12 @@ from handlers.basic import (
     check_goods_valid,
     delete_email,
     delete_processed_emails,
+    get_all_email_rewards,
     get_devote_list,
     get_devote_point,
     get_email_info,
     get_email_reward,
+    get_email_rewards_list,
     get_sign_list,
     get_sign_prize,
     get_shop_info,
@@ -41,6 +44,7 @@ from handlers.basic import (
     get_zhao_upgrade_matters,
     is_changed_name,
     matters_shop_info,
+    mask_upgrade,
     read_email,
     shop_exchange_goods,
     update_username,
@@ -80,6 +84,211 @@ from state import StateStore
 
 
 class StateStoreTest(unittest.TestCase):
+    def test_state_save_retries_transient_replace_permission_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] <= 2:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"):
+                store.mutate(
+                    lambda value: value.update({"replace_retry_probe": "saved"}) or "saved"
+                )
+
+            self.assertEqual(replace_mock.call_count, 3)
+            self.assertEqual(sleep_mock.call_count, 2)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                self.assertEqual(json.load(handle)["replace_retry_probe"], "saved")
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
+    def test_state_save_cleans_temp_after_replace_retry_exhausted(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+
+            with mock.patch(
+                "state.os.replace",
+                side_effect=PermissionError(5, "file remains locked", state_path),
+            ) as replace_mock, mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"), mock.patch("state.log.exception"):
+                with self.assertRaises(PermissionError):
+                    store.mutate(
+                        lambda value: value.update({"replace_retry_probe": "unsaved"})
+                    )
+
+            self.assertEqual(replace_mock.call_count, 5)
+            self.assertEqual(sleep_mock.call_count, 4)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                self.assertNotIn("replace_retry_probe", json.load(handle))
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
+    def test_archive_save_retries_transient_replace_permission_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            archive_store = ArchiveStore(os.path.join(temp_dir, "archives"))
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] <= 2:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("archive_store.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("archive_store.time.sleep") as sleep_mock, \
+                    mock.patch("archive_store.log.warning"):
+                archive_store.save(1000000001, {
+                    "userid": 1000000001,
+                    "name": "retry archive",
+                    "items": [],
+                }, data_ver=2)
+
+            self.assertEqual(replace_mock.call_count, 3)
+            self.assertEqual(sleep_mock.call_count, 2)
+            self.assertEqual(archive_store.load(1000000001)["role"]["name"], "retry archive")
+            self.assertFalse(
+                any(
+                    name.startswith(".archive-")
+                    for name in os.listdir(archive_store.root_dir)
+                )
+            )
+
+    def test_mail_claim_coalesces_state_autosaves(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            userid = store.ensure_account()["userid"]
+            store.put_archive(userid, {
+                "userid": userid,
+                "items": [],
+                "currencyVersion": 1,
+                "dataVer": 1,
+            }, data_ver=1)
+            mail = store.add_mail(userid, {
+                "title": "合并写入测试",
+                "content": "领取",
+                "rewards": {"net_items": [{"id": "retry-item", "num": 2}]},
+            })
+
+            real_replace = os.replace
+            replaced_targets = []
+
+            def recording_replace(source, target):
+                replaced_targets.append(os.path.normcase(os.path.abspath(target)))
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=recording_replace):
+                response = get_email_reward({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "body": {"email_id": mail["mail_id"]},
+                })
+
+            normalized_state_path = os.path.normcase(os.path.abspath(state_path))
+            normalized_archive_path = os.path.normcase(os.path.abspath(
+                store.archive_store.path_for(userid)
+            ))
+            self.assertEqual(response["errcode"], 0)
+            self.assertEqual(replaced_targets.count(normalized_state_path), 1)
+            self.assertEqual(replaced_targets.count(normalized_archive_path), 1)
+            self.assertEqual(len(replaced_targets), 2)
+            self.assertTrue(store.get_mail(userid, mail["mail_id"])["claimed"])
+            self.assertEqual(store.get_inventory_item_count(userid, "retry-item"), 2)
+
+    def test_read_email_recovers_from_transient_state_file_lock(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            userid = store.ensure_account()["userid"]
+            mail = store.add_mail(userid, {
+                "title": "读取重试测试",
+                "content": "临时占用后仍可读取",
+            })
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] == 1:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"):
+                response = read_email({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "body": {"id": mail["mail_id"]},
+                })
+
+            self.assertEqual(response["errcode"], 0)
+            self.assertEqual(replace_mock.call_count, 2)
+            sleep_mock.assert_called_once_with(0.02)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                persisted = json.load(handle)
+            persisted_mail = persisted["mail"][str(userid)][0]
+            self.assertTrue(persisted_mail["read"])
+
+    def test_concurrent_state_mutations_keep_complete_valid_json(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+            worker_count = 6
+            writes_per_worker = 5
+            barrier = threading.Barrier(worker_count)
+            failures = []
+
+            def write_values(worker_index):
+                try:
+                    barrier.wait()
+                    for write_index in range(writes_per_worker):
+                        key = "%d-%d" % (worker_index, write_index)
+
+                        def update(value, item_key=key):
+                            value.setdefault("concurrent_write_probe", {})[item_key] = True
+                            return item_key
+
+                        store.mutate(update)
+                except BaseException as exc:
+                    failures.append(exc)
+
+            threads = [
+                threading.Thread(target=write_values, args=(index,))
+                for index in range(worker_count)
+            ]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+
+            self.assertEqual(failures, [])
+            with open(state_path, "r", encoding="utf-8") as handle:
+                persisted = json.load(handle)
+            self.assertEqual(
+                len(persisted["concurrent_write_probe"]),
+                worker_count * writes_per_worker,
+            )
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
     def test_store_main_items_match_capture(self):
         store = StateStore(autosave=False)
         userid = store.ensure_account()["userid"]
@@ -726,6 +935,55 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(claimed["errcode"], 0)
         self.assertEqual(store.get_archive(userid)["items"][0]["count"], 2)
 
+    def test_mail_reward_routes_xinshen_item_to_practice_item_map(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-mail-minditem2",
+                "userid": userid,
+                "title": "心神道具",
+                "content": "领取谧心丸",
+                "rewards": {
+                    "net_items": [
+                        {"id": "minditem2", "name": "谧心丸", "num": 3},
+                        {"id": "jiu106", "name": "醉梦生", "num": 2},
+                    ],
+                },
+            },
+        })
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": sent["data"]["mail_id"], "retrievables": []},
+        }
+
+        claimed = get_email_reward(claim_ctx)
+        replay = get_email_reward(claim_ctx)
+
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(
+            [item["id"] for item in claimed["data"]["net_items"]],
+            ["minditem2", "jiu106"],
+        )
+        item_map = store.snapshot()["practice"][str(userid)]["itemMap"]
+        self.assertEqual(item_map["minditem2"]["count"], 3)
+        self.assertEqual(store.get_inventory_item_count(userid, "minditem2"), 0)
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 2)
+        archive_items = store.get_archive(userid)["items"]
+        self.assertNotIn("minditem2", {item["itemId"] for item in archive_items})
+        self.assertEqual(
+            next(item for item in archive_items if item["itemId"] == "jiu106")["count"],
+            2,
+        )
+        self.assertTrue(replay["data"]["replayed"])
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            3,
+        )
+
     def test_admin_mail_routes_money_and_gold_to_client_applied_attrs(self):
         store = StateStore()
         userid = store.ensure_account()["userid"]
@@ -784,6 +1042,251 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(archive["gold"], 220)
         self.assertNotIn("money", store.get_account(userid)["currencies"])
         self.assertNotIn("gold", store.get_account(userid)["currencies"])
+
+    def test_bulk_mail_preview_and_claim_follow_client_reward_protocol(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "items": [],
+            "money": 0,
+            "gold": 0,
+            "yuanbao": 0,
+            "yinpiao": 0,
+            "currencyVersion": 1,
+            "dataVer": 1,
+        }, data_ver=1)
+
+        first = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-first",
+                "userid": userid,
+                "title": "第一封",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [{"id": "xinggongsan", "num": 2}],
+                    "loc_attrs": [{"id": "money", "num": 11}],
+                    "net_items": [{"id": "jiu106", "num": 3}],
+                    "net_attrs": [{"id": "yuanbao", "num": 5}],
+                    "new_currencys": [{"id": "yinpiao", "num": 7}],
+                },
+            },
+        })
+        second = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-second",
+                "userid": userid,
+                "title": "第二封",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [{"id": "xinggongsan", "num": 4}],
+                    "loc_attrs": [{"id": "gold", "num": 13}],
+                    "net_items": [{"id": "jiu106", "num": 4}],
+                    "net_attrs": [{"id": "yuanbao", "num": 6}],
+                    "new_currencys": [{"id": "yinpiao", "num": 8}],
+                },
+            },
+        })
+
+        preview = get_email_rewards_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(preview["errcode"], 0)
+        reward_data = preview["data"]
+        self.assertEqual(set(reward_data), {
+            "loc_items", "net_items", "loc_attrs", "net_attrs",
+            "new_currencys", "title_items",
+        })
+        self.assertEqual([item["num"] for item in reward_data["loc_items"]], [2, 4])
+        self.assertEqual(len({item["onlyId"] for item in reward_data["loc_items"]}), 2)
+        self.assertTrue(all(item.get("name") == "jiu106" for item in reward_data["net_items"]))
+
+        retrievables = [
+            item["onlyId"]
+            for key in ("loc_items", "loc_attrs")
+            for item in reward_data[key]
+        ]
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "retrievables": retrievables,
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        }
+        claimed = get_all_email_rewards(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        claimed_data = claimed["data"]
+        self.assertEqual(
+            {item["id"] for item in claimed_data["is_getList"]},
+            {first["data"]["mail_id"], second["data"]["mail_id"]},
+        )
+        self.assertEqual(sum(item["num"] for item in claimed_data["loc_items"]), 6)
+        self.assertEqual(sum(item["num"] for item in claimed_data["net_items"]), 7)
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 7)
+        self.assertEqual(store.get_inventory_item_count(userid, "xinggongsan"), 0)
+
+        account = store.get_account(userid)
+        self.assertEqual(account["yuanbao"], 11)
+        self.assertEqual(account["currencies"]["yinpiao"], 15)
+        archive = store.get_archive(userid)
+        self.assertEqual(next(item for item in archive["items"] if item["itemId"] == "jiu106")["count"], 7)
+        self.assertEqual(archive["money"], 11)
+        self.assertEqual(archive["gold"], 13)
+        self.assertEqual(archive["yuanbao"], 11)
+        self.assertEqual(archive["yinpiao"], 15)
+        self.assertEqual(archive["dataVer"], claimed_data["dataVer"])
+        self.assertEqual(archive["currencyVersion"], claimed_data["currencyVersion"])
+        self.assertTrue(all(item["claimed"] for item in store.list_mail(userid)))
+
+        replay = get_all_email_rewards(claim_ctx)
+        self.assertEqual(replay["errcode"], 0)
+        self.assertEqual(replay["data"]["is_getList"], [])
+        self.assertTrue(all(not replay["data"][key] for key in (
+            "loc_items", "net_items", "loc_attrs", "net_attrs",
+            "new_currencys", "title_items",
+        )))
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 7)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 11)
+
+    def test_bulk_mail_claim_keeps_unselected_local_items_retrievable(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-partial",
+                "userid": userid,
+                "title": "背包筛选",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [
+                        {"id": "item-a", "num": 1},
+                        {"id": "item-b", "num": 1},
+                    ],
+                    "net_attrs": [{"id": "yuanbao", "num": 9}],
+                },
+            },
+        })
+        headers = {"userid": str(userid)}
+        preview = get_email_rewards_list({"state": store, "headers": headers})["data"]
+
+        first_claim = get_all_email_rewards({
+            "state": store,
+            "headers": headers,
+            "body": {
+                "retrievables": [preview["loc_items"][0]["onlyId"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        })
+        self.assertEqual(first_claim["errcode"], 0)
+        self.assertEqual(first_claim["data"]["is_getList"], [])
+        self.assertEqual([item["id"] for item in first_claim["data"]["loc_items"]], ["item-a"])
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9)
+        self.assertFalse(store.get_mail(userid, sent["data"]["mail_id"])["claimed"])
+
+        remaining = get_email_rewards_list({"state": store, "headers": headers})["data"]
+        self.assertEqual([item["id"] for item in remaining["loc_items"]], ["item-b"])
+        self.assertEqual(remaining["net_attrs"], [])
+        second_claim = get_all_email_rewards({
+            "state": store,
+            "headers": headers,
+            "body": {"retrievables": [remaining["loc_items"][0]["onlyId"]]},
+        })
+        self.assertEqual(
+            second_claim["data"]["is_getList"][0]["id"],
+            sent["data"]["mail_id"],
+        )
+        self.assertTrue(store.get_mail(userid, sent["data"]["mail_id"])["claimed"])
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9)
+
+    def test_bulk_mail_claim_routes_xinshen_items_once(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        headers = {"userid": str(userid)}
+        for index, count in enumerate((2, 4), start=1):
+            admin_send_email({
+                "state": store,
+                "headers": {},
+                "body": {
+                    "request_id": "bulk-mail-minditem2-%d" % index,
+                    "userid": userid,
+                    "title": "心神道具%d" % index,
+                    "content": "批量领取谧心丸",
+                    "rewards": {
+                        "net_items": [
+                            {"id": "minditem2", "name": "谧心丸", "num": count},
+                        ],
+                    },
+                },
+            })
+
+        preview = get_email_rewards_list({"state": store, "headers": headers})["data"]
+        self.assertEqual(
+            [(item["id"], item["name"], item["num"]) for item in preview["net_items"]],
+            [("minditem2", "谧心丸", 2), ("minditem2", "谧心丸", 4)],
+        )
+
+        claim_ctx = {
+            "state": store,
+            "headers": headers,
+            "body": {"retrievables": []},
+        }
+        claimed = get_all_email_rewards(claim_ctx)
+        replay = get_all_email_rewards(claim_ctx)
+
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(sum(item["num"] for item in claimed["data"]["net_items"]), 6)
+        self.assertEqual(len(claimed["data"]["is_getList"]), 2)
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            6,
+        )
+        self.assertEqual(store.get_inventory_item_count(userid, "minditem2"), 0)
+        self.assertNotIn(
+            "minditem2",
+            {item["itemId"] for item in store.get_archive(userid)["items"]},
+        )
+        self.assertEqual(replay["data"]["net_items"], [])
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            6,
+        )
+
+    def test_bulk_mail_claim_rejects_expired_mail_without_partial_credit(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        active = store.add_mail(userid, {
+            "title": "有效邮件",
+            "content": "领取",
+            "expired_time": int(time.time()) + 60,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 2}]},
+        })
+        expired = store.add_mail(userid, {
+            "title": "过期邮件",
+            "content": "领取",
+            "expired_time": int(time.time()) - 1,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 3}]},
+        })
+
+        response = get_all_email_rewards({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"retrievables": []},
+        })
+        self.assertEqual(response["errcode"], 2)
+        self.assertEqual(response["data"]["expired_ids"], [expired["mail_id"]])
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 0)
+        self.assertFalse(store.get_mail(userid, active["mail_id"])["claimed"])
+        self.assertFalse(store.get_mail(userid, expired["mail_id"])["claimed"])
 
     def test_queued_mail_reclassifies_legacy_money_and_gold_rewards(self):
         store = StateStore()
@@ -1875,6 +2378,126 @@ class StateStoreTest(unittest.TestCase):
         })
         self.assertEqual(stale_yinpiao["data"]["number"], 50)
         self.assertEqual(stale_yuanbao["data"]["number"], 100)
+
+    def test_mask_upgrade_consumes_zongheng_and_is_idempotent(self):
+        userid = 9048162379
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 23,
+                    "currencies": {"zongheng": 5000},
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 23,
+                    "zongheng": 5000,
+                },
+            },
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"params": [[8, 8]], "currencyVersion": 23},
+        }
+
+        response = mask_upgrade(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["currencyVersion"], 24)
+        self.assertEqual(store.get_archive(userid)["zongheng"], 4992)
+        self.assertEqual(store.get_account(userid)["currencies"]["zongheng"], 4992)
+
+        replay = mask_upgrade(ctx)
+        self.assertEqual(replay["errcode"], 0)
+        self.assertEqual(replay["data"]["currencyVersion"], 24)
+        self.assertEqual(store.get_archive(userid)["zongheng"], 4992)
+        self.assertEqual(store.get_account(userid)["currencies"]["zongheng"], 4992)
+
+    def test_mask_upgrade_supports_legacy_conditions_and_server_currencies(self):
+        userid = 9048162380
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 7,
+                    "currencies": {
+                        "yinpiao": 20,
+                        "spcl": 10,
+                        "paymaskmake": 7,
+                    },
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 7,
+                    "yinpiao": 20,
+                    "spcl": 10,
+                    "paymaskmake": 7,
+                    "money": 1000,
+                    "items": [{"itemId": "mask-material", "count": 5}],
+                },
+            },
+        }, autosave=False)
+        response = mask_upgrade({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "params": [
+                    {"type": 6, "num": "5"},
+                    {"type": 7, "num": "3"},
+                    {"type": 11, "num": "2"},
+                    {"type": 5, "num": "100"},
+                    {"type": 1, "num": "mask-material#2"},
+                ],
+                "currencyVersion": 7,
+            },
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        archive = store.get_archive(userid)
+        account = store.get_account(userid)
+        self.assertEqual(archive["yinpiao"], 15)
+        self.assertEqual(archive["spcl"], 7)
+        self.assertEqual(archive["paymaskmake"], 5)
+        self.assertEqual(account["currencies"]["yinpiao"], 15)
+        self.assertEqual(account["currencies"]["spcl"], 7)
+        self.assertEqual(account["currencies"]["paymaskmake"], 5)
+        self.assertEqual(archive["money"], 1000)
+        self.assertEqual(archive["items"][0]["count"], 5)
+
+    def test_mask_upgrade_rejects_insufficient_currency_without_partial_debit(self):
+        userid = 9048162381
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 3,
+                    "currencies": {"zongheng": 7, "yinpiao": 50},
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 3,
+                    "zongheng": 7,
+                    "yinpiao": 50,
+                },
+            },
+        }, autosave=False)
+        response = mask_upgrade({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"params": [[6, 10], [8, 8]], "currencyVersion": 3},
+        })
+
+        self.assertEqual(response["errcode"], 2)
+        self.assertEqual(response["errmsg"], "雪矾不足")
+        self.assertEqual(store.get_archive(userid)["zongheng"], 7)
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 50)
+        self.assertEqual(store.get_account(userid)["currency_version"], 3)
 
     def test_get_zhao_upgrade_matters_lists_owned_breakthrough_items(self):
         userid = 9048162379

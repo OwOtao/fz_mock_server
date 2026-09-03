@@ -36,6 +36,7 @@ log = logging.getLogger("mock_server.archive")
 
 SCHEMA = "fzjh.role_archive.v1"
 META_KEYS = ("_recordInfo", "_uploadMeta", "dataVer")
+_REPLACE_RETRY_DELAYS = (0.02, 0.04, 0.08, 0.16)
 
 
 def _now():
@@ -52,6 +53,26 @@ def _userid(value):
     return userid
 
 
+def _replace_with_retry(source, target):
+    """Retry transient Windows sharing/access errors during atomic replace."""
+    for attempt in range(len(_REPLACE_RETRY_DELAYS) + 1):
+        try:
+            os.replace(source, target)
+            return
+        except PermissionError:
+            if attempt >= len(_REPLACE_RETRY_DELAYS):
+                raise
+            delay = _REPLACE_RETRY_DELAYS[attempt]
+            log.warning(
+                "archive replace temporarily blocked; retrying in %.3fs (%d/%d): %s",
+                delay,
+                attempt + 1,
+                len(_REPLACE_RETRY_DELAYS),
+                target,
+            )
+            time.sleep(delay)
+
+
 def _atomic_write_json(path, payload):
     directory = os.path.dirname(os.path.abspath(path))
     os.makedirs(directory, exist_ok=True)
@@ -62,7 +83,7 @@ def _atomic_write_json(path, payload):
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temp_path, path)
+        _replace_with_retry(temp_path, path)
     except Exception:
         try:
             os.unlink(temp_path)

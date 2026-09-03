@@ -991,6 +991,171 @@ def view_currency_by_type(ctx):
     return _ok(data)
 
 
+_MASK_SERVER_CURRENCIES = {
+    6: "yinpiao",
+    7: "spcl",
+    8: "zongheng",
+    11: "paymaskmake",
+}
+_MASK_CURRENCY_NAMES = {
+    "yinpiao": "银票",
+    "spcl": "饰品材料",
+    "zongheng": "雪矾",
+    "paymaskmake": "鹿胶",
+}
+
+
+def _mask_upgrade_params(value):
+    """Normalize both current array conditions and the legacy object format."""
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except (TypeError, ValueError):
+            return None
+    if not isinstance(value, list):
+        return None
+
+    normalized = []
+    for condition in value:
+        if isinstance(condition, (list, tuple)):
+            if not condition:
+                return None
+            condition_type = _as_int(condition[0], -1)
+            normalized.append(list(condition))
+        elif isinstance(condition, dict):
+            condition_type = _as_int(condition.get("type"), -1)
+            normalized.append(dict(condition))
+        else:
+            return None
+        if condition_type < 1 or condition_type > 11:
+            return None
+    return normalized
+
+
+def _mask_condition_value(condition, index=1):
+    if isinstance(condition, list):
+        return condition[index] if len(condition) > index else None
+    return condition.get("num")
+
+
+def _mask_upgrade_requirements(params):
+    currencies = {}
+    prestige = 0
+    for condition in params:
+        condition_type = _as_int(
+            condition[0] if isinstance(condition, list) else condition.get("type"),
+            -1,
+        )
+        if condition_type in _MASK_SERVER_CURRENCIES:
+            amount = _as_int(_mask_condition_value(condition), -1)
+            if amount <= 0:
+                return None, None
+            currency_id = _MASK_SERVER_CURRENCIES[condition_type]
+            currencies[currency_id] = currencies.get(currency_id, 0) + amount
+        elif condition_type == 4:
+            amount = _as_int(_mask_condition_value(condition), -1)
+            if amount < 0:
+                return None, None
+            prestige = max(prestige, amount)
+    return currencies, prestige
+
+
+def _mask_upgrade_receipt_key(body, params):
+    if "currencyVersion" not in body:
+        return None
+    version = _as_int(body.get("currencyVersion"), -1)
+    if version < 0:
+        return None
+    canonical = json.dumps(params, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return "%d:%s" % (version, canonical)
+
+
+@route(["POST"], "mask_upgrade")
+def mask_upgrade(ctx):
+    """Validate mask conditions and consume currencies owned by the server."""
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+
+    body = _body(ctx)
+    params = _mask_upgrade_params(body.get("params"))
+    if params is None:
+        return build_response_body({}, errcode=1, errmsg="面具升级条件无效")
+    requirements, prestige_required = _mask_upgrade_requirements(params)
+    if requirements is None:
+        return build_response_body({}, errcode=1, errmsg="面具升级消耗无效")
+
+    receipt_key = _mask_upgrade_receipt_key(body, params)
+    with ctx["state"].defer_saves():
+        archive = ctx["state"].get_archive(userid)
+        if not isinstance(archive, dict) or not archive:
+            return build_response_body({}, errcode=404, errmsg="archive not found")
+        account = ctx["state"]._state.setdefault("accounts", {}).setdefault(
+            str(userid), {"userid": userid}
+        )
+        receipts = account.setdefault("mask_upgrade_receipts", {})
+        if receipt_key and receipt_key in receipts:
+            receipt = receipts[receipt_key]
+            return _ok({"currencyVersion": _as_int(receipt.get("currencyVersion"), 0)})
+
+        if prestige_required:
+            prestige_bucket = ctx["state"]._state.setdefault("prestige", {}).get(
+                str(userid), {}
+            )
+            prestige_balance = max(
+                _as_int(prestige_bucket.get("total"), 0),
+                _as_int(archive.get("prestige"), 0),
+                _as_int(archive.get("shengwang"), 0),
+                _as_int(archive.get("familyPrestige"), 0),
+            )
+            if prestige_balance < prestige_required:
+                return build_response_body({}, errcode=2, errmsg="师门声望不足")
+
+        currencies = account.setdefault("currencies", {})
+
+        def balance(currency_id):
+            return max(
+                _as_int(archive.get(currency_id), 0),
+                _as_int(currencies.get(currency_id), 0),
+            )
+
+        for currency_id, amount in requirements.items():
+            if balance(currency_id) < amount:
+                name = _MASK_CURRENCY_NAMES.get(currency_id, currency_id)
+                return build_response_body({}, errcode=2, errmsg=name + "不足")
+
+        current_version = max(
+            _as_int(archive.get("currencyVersion"), 0),
+            _as_int(account.get("currency_version"), 0),
+        )
+        if not requirements:
+            return _ok({"currencyVersion": current_version})
+
+        remaining = {
+            currency_id: balance(currency_id) - amount
+            for currency_id, amount in requirements.items()
+        }
+        currency_version = max(
+            current_version,
+            _as_int(body.get("currencyVersion"), 0),
+        ) + 1
+        for currency_id, value in remaining.items():
+            archive[currency_id] = value
+        archive["currencyVersion"] = currency_version
+        ctx["state"].put_archive(userid, archive)
+
+        for currency_id, value in remaining.items():
+            currencies[currency_id] = value
+        account["currency_version"] = currency_version
+        if receipt_key:
+            receipts[receipt_key] = {"currencyVersion": currency_version}
+            while len(receipts) > 64:
+                del receipts[next(iter(receipts))]
+        ctx["state"]._changed()
+
+    return _ok({"currencyVersion": currency_version})
+
+
 # 招式突破(续卷)道具表: skillUpItem01~24, 与客户端 breakThroughItems.lua 一一对应。
 # 客户端 VolumeBoxPresent 会对每个 id 调 getBreakThroughItem(id) 并 assert,
 # 因此只能返回表内 id, 且只返回持有数量 > 0 的道具。
@@ -1613,6 +1778,25 @@ def update_order_state(ctx):
 
 
 _LOCAL_ROLE_ATTR_REWARD_IDS = frozenset(("money", "gold"))
+_MAIL_REWARD_KEYS = (
+    "loc_items",
+    "net_items",
+    "loc_attrs",
+    "net_attrs",
+    "new_currencys",
+    "title_items",
+)
+_MAIL_CLIENT_SELECTED_REWARD_KEYS = frozenset(("loc_items", "loc_attrs"))
+_SERVER_MANAGED_MAIL_ITEM_IDS = frozenset((
+    "minditem1",
+    "minditem2",
+    "minditem3",
+    "minditem4",
+))
+
+
+def _empty_mail_rewards():
+    return {key: [] for key in _MAIL_REWARD_KEYS}
 
 
 def _move_local_role_attr_rewards(rewards):
@@ -1632,7 +1816,7 @@ def _move_local_role_attr_rewards(rewards):
 def _mail_rewards(item):
     rewards = item.get("rewards") if isinstance(item.get("rewards"), dict) else {}
     result = {}
-    for key in ("loc_items", "net_items", "loc_attrs", "net_attrs", "new_currencys", "title_items"):
+    for key in _MAIL_REWARD_KEYS:
         values = rewards.get(key)
         normalized = []
         if isinstance(values, list):
@@ -1649,6 +1833,48 @@ def _mail_rewards(item):
                 normalized.append(reward)
         result[key] = normalized
     return _move_local_role_attr_rewards(result)
+
+
+def _bulk_reward_only_id(mail_id, key, reward):
+    """Return an opaque, mail-scoped id that the client can round-trip."""
+    return "%s:%s:%s" % (mail_id, key, reward.get("onlyId", ""))
+
+
+def _bulk_mail_rewards(item, include_claimed=False):
+    """Flatten one mail's rewards for the bulk-preview/claim protocol."""
+    mail_id = str(item.get("mail_id") or "")
+    result = _empty_mail_rewards()
+    for key, values in _mail_rewards(item).items():
+        for value in values:
+            if not include_claimed and _as_int(value.get("state"), 0) == 1:
+                continue
+            reward = dict(value)
+            reward["onlyId"] = _bulk_reward_only_id(mail_id, key, value)
+            result[key].append(reward)
+    return result
+
+
+def _extend_mail_rewards(target, source):
+    for key in _MAIL_REWARD_KEYS:
+        target[key].extend(source.get(key, []))
+    return target
+
+
+def _grant_mail_net_items(state, userid, values):
+    """Grant normal server items and XinShen items to their owning stores."""
+    inventory = state._state.setdefault("inventory_items", {}).setdefault(str(userid), {})
+    for value in values:
+        item_id = str(value.get("id") or "")
+        amount = _as_int(value.get("num"), 0)
+        if not item_id or amount <= 0:
+            continue
+        if item_id in _SERVER_MANAGED_MAIL_ITEM_IDS:
+            practice = state._state.setdefault("practice", {}).setdefault(str(userid), {})
+            item_map = practice.setdefault("itemMap", {})
+            item = item_map.setdefault(item_id, {"count": 0})
+            item["count"] = max(_as_int(item.get("count"), 0), 0) + amount
+        else:
+            inventory[item_id] = max(_as_int(inventory.get(item_id), 0), 0) + amount
 
 
 def _mail_payload(item):
@@ -1691,7 +1917,7 @@ def _normalize_mail_rewards(body):
     source = body.get("rewards") if isinstance(body.get("rewards"), dict) else body
     rewards = {
         key: _valid_reward_list(source.get(key))
-        for key in ("loc_items", "net_items", "loc_attrs", "net_attrs", "new_currencys", "title_items")
+        for key in _MAIL_REWARD_KEYS
     }
     _move_local_role_attr_rewards(rewards)
     for key, values in rewards.items():
@@ -1761,6 +1987,8 @@ def _apply_archive_rewards(state, userid, rewards, data_ver, currency_version):
         amount = _as_int(value.get("num"), 0)
         if not item_id or amount <= 0:
             continue
+        if item_id in _SERVER_MANAGED_MAIL_ITEM_IDS:
+            continue
         found = None
         for item in items:
             if str(item.get("itemId")) == item_id:
@@ -1797,7 +2025,7 @@ def get_email_reward(ctx):
     email_id = body.get("email_id") or body.get("id")
     if userid <= 0 or not email_id:
         return build_response_body({}, errcode=550, errmsg="invalid email")
-    with ctx["state"]._lock:
+    with ctx["state"].defer_saves():
         item = ctx["state"].get_mail(userid, email_id)
         if item is None:
             return build_response_body({}, errcode=404, errmsg="email not found")
@@ -1816,10 +2044,7 @@ def get_email_reward(ctx):
                     for value in rewards[key]
                     if str(value.get("onlyId")) in selected
                 ]
-        inventory = ctx["state"]._state.setdefault("inventory_items", {}).setdefault(str(userid), {})
-        for value in rewards["net_items"]:
-            item_id = str(value["id"])
-            inventory[item_id] = max(_as_int(inventory.get(item_id), 0), 0) + value["num"]
+        _grant_mail_net_items(ctx["state"], userid, rewards["net_items"])
         account = ctx["state"]._state["accounts"].setdefault(str(userid), {"userid": userid})
         currencies = account.setdefault("currencies", {})
         for value in rewards["net_attrs"] + rewards["new_currencys"]:
@@ -1850,7 +2075,6 @@ def get_email_reward(ctx):
             currency_version,
         )
         ctx["state"].update_mail(userid, email_id, {"read": True, "claimed": True, "state": 2})
-        ctx["state"]._changed()
     result = {
         "email_id": email_id,
         "claimed": True,
@@ -1874,7 +2098,7 @@ def admin_send_email(ctx):
     content = str(_first_present(body, ("content", "contents", "text", "message", "desc", "description")) or "").strip()
     if not request_id or userid <= 0 or not title or not content:
         return build_response_body({}, errcode=400, errmsg="request_id, userid, title and content are required")
-    with ctx["state"]._lock:
+    with ctx["state"].defer_saves():
         existing = ctx["state"].get_mail_delivery(request_id)
         if existing is not None:
             if existing.get("userid") != userid:
@@ -1910,19 +2134,137 @@ def admin_send_email(ctx):
 
 @route(["GET"], "get_email_rewards_list")
 def get_email_rewards_list(ctx):
-    return _ok([item for item in ctx["state"].list_mail(_userid(ctx)) if not item.get("claimed")])
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    rewards = _empty_mail_rewards()
+    for item in ctx["state"].list_mail(userid):
+        if item.get("claimed") or item.get("deleted"):
+            continue
+        _extend_mail_rewards(rewards, _bulk_mail_rewards(item))
+    return _ok(rewards)
 
 
 @route(["POST"], "get_all_email_rewards")
 def get_all_email_rewards(ctx):
-    values = ctx["state"].list_mail(_userid(ctx))
-    for item in values:
-        if not item.get("claimed"):
-            try:
-                ctx["state"].update_mail(_userid(ctx), item.get("mail_id"), {"claimed": True})
-            except (KeyError, ValueError):
-                pass
-    return _ok(values)
+    userid = _userid(ctx)
+    body = _body(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+
+    requested = body.get("retrievables")
+    selected = {str(value) for value in requested} if isinstance(requested, list) else set()
+    now = int(time.time())
+
+    with ctx["state"].defer_saves():
+        values = [
+            item
+            for item in ctx["state"].list_mail(userid)
+            if not item.get("claimed") and not item.get("deleted")
+        ]
+        expired_ids = [
+            str(item.get("mail_id") or "")
+            for item in values
+            if _as_int(item.get("expired_time"), 0)
+            and _as_int(item.get("expired_time"), 0) <= now
+            and any(_mail_rewards(item).values())
+        ]
+        if expired_ids:
+            return build_response_body(
+                {"expired_ids": expired_ids},
+                errcode=2,
+                errmsg="email expired",
+            )
+
+        granted = _empty_mail_rewards()
+        mail_updates = []
+        is_get_list = []
+        for item in values:
+            mail_id = str(item.get("mail_id") or "")
+            rewards = _mail_rewards(item)
+            granted_from_mail = False
+            for key, reward_list in rewards.items():
+                for reward in reward_list:
+                    if _as_int(reward.get("state"), 0) != 0:
+                        continue
+                    bulk_only_id = _bulk_reward_only_id(mail_id, key, reward)
+                    if key in _MAIL_CLIENT_SELECTED_REWARD_KEYS and bulk_only_id not in selected:
+                        continue
+                    returned_reward = dict(reward)
+                    returned_reward["onlyId"] = bulk_only_id
+                    granted[key].append(returned_reward)
+                    reward["state"] = 1
+                    granted_from_mail = True
+
+            if not granted_from_mail:
+                continue
+            fully_claimed = all(
+                _as_int(reward.get("state"), 0) == 1
+                for reward_list in rewards.values()
+                for reward in reward_list
+            )
+            mail_updates.append((mail_id, rewards, fully_claimed))
+            if fully_claimed:
+                expired_at = _as_int(item.get("expired_time"), 0)
+                is_get_list.append({
+                    "id": mail_id,
+                    "expired_time": max(expired_at - now, 0) if expired_at else 0,
+                })
+
+        account = ctx["state"]._state["accounts"].setdefault(str(userid), {"userid": userid})
+        if any(granted.values()):
+            _grant_mail_net_items(ctx["state"], userid, granted["net_items"])
+
+            currencies = account.setdefault("currencies", {})
+            for value in granted["net_attrs"] + granted["new_currencys"]:
+                currency_id = str(value["id"])
+                if currency_id == "yuanbao":
+                    account["yuanbao"] = max(_as_int(account.get("yuanbao"), 0), 0) + value["num"]
+                else:
+                    currencies[currency_id] = max(_as_int(currencies.get(currency_id), 0), 0) + value["num"]
+
+            account["currency_version"] = max(
+                _as_int(account.get("currency_version"), 0),
+                _as_int(body.get("currencyVersion"), 0),
+            ) + 1
+            archive = ctx["state"].get_archive(userid) or {}
+            data_ver = max(
+                _as_int(archive.get("dataVer"), 0),
+                _as_int(body.get("dataVer"), 0),
+            ) + 1
+            currency_version = max(
+                _as_int(archive.get("currencyVersion"), 0),
+                _as_int(body.get("currencyVersion"), 0),
+                _as_int(account.get("currency_version"), 0),
+            )
+            _apply_archive_rewards(
+                ctx["state"],
+                userid,
+                granted,
+                data_ver,
+                currency_version,
+            )
+            for mail_id, rewards, fully_claimed in mail_updates:
+                ctx["state"].update_mail(userid, mail_id, {
+                    "read": True,
+                    "claimed": fully_claimed,
+                    "state": 2 if fully_claimed else 1,
+                    "rewards": rewards,
+                })
+        else:
+            archive = ctx["state"].get_archive(userid) or {}
+            data_ver = _as_int(archive.get("dataVer"), _as_int(body.get("dataVer"), 0))
+
+        result = {
+            "is_getList": is_get_list,
+            "dataVer": data_ver,
+            "currencyVersion": _as_int(
+                account.get("currency_version"),
+                _as_int(body.get("currencyVersion"), 0),
+            ),
+        }
+        result.update(granted)
+        return _ok(result)
 
 
 @route(["GET"], "delete_processed_emails")
@@ -1931,16 +2273,17 @@ def delete_processed_emails(ctx):
     if userid <= 0:
         return build_response_body({}, errcode=550, errmsg="invalid userid")
     delete_ids = []
-    for item in ctx["state"].list_mail(userid):
-        if item.get("deleted"):
-            continue
-        rewards = _mail_rewards(item)
-        has_rewards = any(rewards.values())
-        if item.get("claimed") or not has_rewards:
-            email_id = str(item.get("mail_id") or "")
-            if email_id:
-                ctx["state"].update_mail(userid, email_id, {"deleted": True})
-                delete_ids.append(email_id)
+    with ctx["state"].defer_saves():
+        for item in ctx["state"].list_mail(userid):
+            if item.get("deleted"):
+                continue
+            rewards = _mail_rewards(item)
+            has_rewards = any(rewards.values())
+            if item.get("claimed") or not has_rewards:
+                email_id = str(item.get("mail_id") or "")
+                if email_id:
+                    ctx["state"].update_mail(userid, email_id, {"deleted": True})
+                    delete_ids.append(email_id)
     return _ok({"delete_ids": delete_ids})
 
 
