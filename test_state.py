@@ -57,6 +57,7 @@ from handlers.familytype_data import HX_TABLE
 from handlers.homeland import (
     add_employee,
     buy_homeland,
+    buy_npc_goods,
     delete_employee,
     get_common_fuben,
     get_employee_data,
@@ -66,6 +67,7 @@ from handlers.homeland import (
     get_home_switch,
     get_house_info,
     get_house_store_list,
+    get_npc_store_list,
     get_user_map,
     update_employee_data,
     update_employee_extra,
@@ -2304,6 +2306,137 @@ class StateStoreTest(unittest.TestCase):
         with mock.patch("handlers.homeland.time.time", return_value=1004):
             next_refresh = get_house_store_list(ctx)
         self.assertNotEqual(refreshed["data"]["list"], next_refresh["data"]["list"])
+
+    def test_furniture_stores_cover_all_homeland_cities_and_specialties(self):
+        userid = 9048162390
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 12345},
+            }},
+        }, autosave=False)
+        expected_sizes = {
+            "004": 30,
+            "005": 20,
+            "006": 20,
+            "007": 36,
+            "008": 29,
+            "009": 12,
+            "010": 82,
+        }
+
+        for city in ("yangzhou", "suzhou", "xiangyang", "changan"):
+            for suffix, size in expected_sizes.items():
+                response = get_npc_store_list({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "route_tail": [city + suffix],
+                })
+                self.assertEqual(response["errcode"], 0)
+                self.assertEqual(response["data"]["point"], 12345)
+                self.assertEqual(response["data"]["unit"], "money")
+                self.assertEqual(len(response["data"]["list"]), size)
+                self.assertTrue(all(
+                    set(value) == {"itemId", "price", "unit"}
+                    and value["price"] > 0
+                    and value["unit"] == "money"
+                    for value in response["data"]["list"]
+                ))
+
+        basic = get_npc_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["yangzhou004"],
+        })["data"]["list"]
+        self.assertIn({"itemId": "zhuozi001", "price": 200, "unit": "money"}, basic)
+        self.assertNotIn("zhuozi007", {value["itemId"] for value in basic})
+        invalid = get_npc_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["yangzhou003"],
+        })
+        self.assertEqual(invalid["errcode"], 404)
+
+    def test_buy_npc_furniture_is_persistent_and_transaction_safe(self):
+        userid = 9048162391
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 1000},
+            }},
+            "archives": {str(userid): {
+                "name": "Furniture Buyer",
+                "money": 1000,
+                "items": [],
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "npc_id": "yangzhou004",
+                "itemId": "zhuozi001",
+                "client_trans_id": "furniture-order-1",
+            },
+        }
+
+        bought = buy_npc_goods(ctx)
+        replay = buy_npc_goods(ctx)
+
+        self.assertEqual(bought["errcode"], 0)
+        self.assertEqual(replay["data"], bought["data"])
+        self.assertEqual(bought["data"]["remove_point"], 200)
+        self.assertEqual(bought["data"]["point"], 800)
+        self.assertEqual(store.get_account(userid)["currencies"]["money"], 800)
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["money"], 800)
+        self.assertEqual(
+            next(value for value in archive["items"]
+                 if value["itemId"] == "zhuozi001")["count"],
+            1,
+        )
+
+        ctx["body"]["itemId"] = "yizi001"
+        conflict = buy_npc_goods(ctx)
+        self.assertEqual(conflict["errcode"], 409)
+        self.assertFalse(any(
+            value.get("itemId") == "yizi001" for value in store.get_archive(userid)["items"]
+        ))
+
+    def test_buy_npc_furniture_rejects_wrong_seller_and_insufficient_money(self):
+        userid = 9048162392
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 100},
+            }},
+            "archives": {str(userid): {"money": 100, "items": []}},
+        }, autosave=False)
+        base_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "npc_id": "yangzhou004",
+                "itemId": "zihua001",
+                "client_trans_id": "wrong-seller",
+            },
+        }
+
+        wrong_seller = buy_npc_goods(base_ctx)
+        self.assertEqual(wrong_seller["errcode"], 404)
+        base_ctx["body"].update({
+            "itemId": "zhuozi001",
+            "client_trans_id": "insufficient-money",
+        })
+        insufficient = buy_npc_goods(base_ctx)
+        self.assertEqual(insufficient["errcode"], 1)
+        self.assertEqual(insufficient["data"], {
+            "point": 100,
+            "cost": 200,
+            "unit": "money",
+        })
+        self.assertEqual(store.get_archive(userid)["items"], [])
+        self.assertEqual(store.get_account(userid)["currencies"]["money"], 100)
 
     def test_buy_homeland_rejects_insufficient_balance_without_creating_house(self):
         userid = 9048162383

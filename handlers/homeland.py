@@ -14,6 +14,7 @@ _HOME_OPEN_REWARD_YINPIAO = 1250
 _HOUSE_STORE_SIZE = 6
 _HOUSE_REFRESH_REPLAY_SECONDS = 3
 _HOUSE_PURCHASE_REPLAY_SECONDS = 30
+_NPC_STORE_TRANSACTION_LIMIT = 200
 
 
 # 房契模板源自 familylist.lua["房契模板"]。客户端只消费商店项的 fqId/cost，
@@ -74,6 +75,101 @@ _HOUSE_SELLERS = {
     "changan001": {"mapId": "fb25", "location": "长安城", "tier": "basic"},
     "changan002": {"mapId": "fb25", "location": "长安城", "tier": "premium"},
 }
+
+
+def _priced_series(prefix, prices):
+    """Build the immutable (item id, price) rows used by NPC furniture stores."""
+    return tuple(
+        ("%s%03d" % (prefix, index), price)
+        for index, price in enumerate(prices, 1)
+    )
+
+
+# Prices and grade ordering come from familylist.lua["家具"].  Keeping this
+# compact table in the server avoids parsing the 1 MB Lua resource per request.
+_FURNITURE_TABLES = _priced_series("zhuozi", (
+    200, 240, 250, 300, 280, 360, 400, 420, 430, 450, 640, 680, 750, 800,
+))
+_FURNITURE_CHAIRS = _priced_series("yizi", (
+    150, 100, 120, 160, 90, 110, 200, 240, 320, 340, 720, 750, 800, 850,
+))
+_FURNITURE_MIRRORS = _priced_series("jingtai", (
+    180, 160, 240, 270, 180, 250, 300, 360, 320, 380, 540, 600, 680, 720,
+))
+_FURNITURE_SCREENS = _priced_series("pingfeng", (
+    120, 130, 150, 100, 160, 200, 230, 250, 320, 400, 840, 920, 1000, 1200,
+))
+_FURNITURE_CABINETS = _priced_series("guizi", (
+    140, 180, 170, 220, 230, 250, 270, 280, 300, 320, 720, 740, 800, 850,
+))
+_FURNITURE_PAINTINGS = _priced_series("zihua", (
+    150, 240, 250, 260, 280, 290,
+    1000, 1100, 1200, 1350, 1080, 1250, 1300, 1100, 1300, 1080, 1180,
+    1250, 1400, 1500,
+    5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+    1200, 1200, 1500, 1500, 1500, 1500,
+))
+_FURNITURE_STATUES = _priced_series("diaoxiang", (
+    90, 120, 270, 240, 220, 300, 330, 400, 350, 370, 750, 780,
+))
+_FURNITURE_WEAPONS = _priced_series("bingqi", (
+    360, 380, 320, 450, 360, 330, 750, 800, 850, 900, 2200, 3000,
+))
+_FURNITURE_TREASURES = _priced_series("zhenbao", (
+    240, 400, 600, 1000, 1200, 1300, 1500, 2400, 2600, 2700, 3500,
+    3600, 6000, 6800, 7500, 8000, 9000,
+))
+_FURNITURE_BEDS = _priced_series("chuang", (
+    1600, 1800, 1800, 1800, 1500, 2000, 2700, 2700, 3100, 3500, 4500,
+    4800, 8100, 8400,
+))
+_FURNITURE_DESKS = _priced_series("shuan", (
+    150, 160, 180, 170, 160, 340, 360, 380, 420, 900, 950, 1080, 1200, 1400,
+))
+_FURNITURE_MEDICINE_FURNACES = _priced_series("yaolu", (
+    1000, 1200, 1400, 2000, 2100, 2300, 2700, 2900, 5000, 5400, 7200, 8000,
+))
+_FURNITURE_MATS = _priced_series("putuan", (
+    400, 450, 550, 640, 780, 850, 2200, 2600, 3200, 3600, 5600, 6000,
+))
+_FURNITURE_SMELTERS = _priced_series("ronglianlu", (
+    1000, 1200, 1500, 1800, 1900, 3600, 4200, 4800, 5600, 9800, 11000, 12000,
+))
+_FURNITURE_BUILDINGS = tuple((item_id, 5000) for item_id in (
+    "cangku001", "tudi01", "bagwooden001", "mapwooden001", "wooden001",
+    "zhaotai001", "door001", "shipingxiang001", "caan001", "jing001",
+    "desk001", "tingyuan001", "duanzaolu001", "qiangbi001", "yigui001",
+    "jtai001", "shugui001", "xianglu001",
+))
+
+_GENERIC_FURNITURE = (
+    _FURNITURE_TABLES,
+    _FURNITURE_CHAIRS,
+    _FURNITURE_MIRRORS,
+    _FURNITURE_SCREENS,
+    _FURNITURE_CABINETS,
+)
+
+# 004/005/006 follow the grade blocks shared by each normal furniture family:
+# six grade-0 rows, four grade-1 rows, and four grade-2/3 rows.  The remaining
+# sellers have explicit specialties described by their map NPC dialogue.
+_FURNITURE_STOCK_BY_SUFFIX = {
+    "004": tuple(row for family in _GENERIC_FURNITURE for row in family[:6]),
+    "005": tuple(row for family in _GENERIC_FURNITURE for row in family[6:10]),
+    "006": tuple(row for family in _GENERIC_FURNITURE for row in family[10:]),
+    "007": _FURNITURE_PAINTINGS,
+    "008": _FURNITURE_STATUES + _FURNITURE_TREASURES,
+    "009": _FURNITURE_WEAPONS,
+    "010": (
+        _FURNITURE_BEDS
+        + _FURNITURE_DESKS
+        + _FURNITURE_MEDICINE_FURNACES
+        + _FURNITURE_MATS
+        + _FURNITURE_SMELTERS
+        + _FURNITURE_BUILDINGS
+    ),
+}
+_FURNITURE_STORE_CITY_PREFIXES = ("yangzhou", "suzhou", "xiangyang", "changan")
 
 
 # 房间方向链接字段, 与真实服务端 get_user_map.maproom 一致(缺省用空串而非缺键)
@@ -333,6 +429,16 @@ def _seller_pool(npc_id):
     return list(_HOUSE_TEMPLATES.values())
 
 
+def _furniture_catalog(npc_id):
+    npc_id = str(npc_id or "").strip()
+    for prefix in _FURNITURE_STORE_CITY_PREFIXES:
+        if not npc_id.startswith(prefix):
+            continue
+        suffix = npc_id[len(prefix):]
+        return _FURNITURE_STOCK_BY_SUFFIX.get(suffix, ())
+    return ()
+
+
 def _house_offers(userid, npc_id, day, refresh_round):
     pool = _seller_pool(npc_id)
     if not pool:
@@ -388,6 +494,32 @@ def _sync_house_archive(state, userid, house, yinpiao):
         items.append({"id": next_id, "itemId": "fq100", "count": 1})
     else:
         contract["count"] = max(_int(contract.get("count"), 0), 1)
+    return state.put_archive(userid, archive)
+
+
+def _sync_npc_purchase_archive(state, userid, item_id, money):
+    """Persist a furniture purchase alongside the local client inventory update."""
+    archive = state.get_archive(userid)
+    if not isinstance(archive, dict):
+        return None
+    archive["money"] = max(_int(money), 0)
+    items = archive.get("items")
+    if not isinstance(items, list):
+        items = []
+        archive["items"] = items
+    item = next(
+        (value for value in items
+         if isinstance(value, dict) and value.get("itemId") == item_id),
+        None,
+    )
+    if item is None:
+        next_id = max(
+            [_int(value.get("id"), 0) for value in items if isinstance(value, dict)]
+            or [0]
+        ) + 1
+        items.append({"id": next_id, "itemId": item_id, "count": 1})
+    else:
+        item["count"] = max(_int(item.get("count"), 0), 0) + 1
     return state.put_archive(userid, archive)
 
 
@@ -602,6 +734,107 @@ def get_house_store_list(ctx):
         "costYb": 0,
         "removeYb": remove_yb,
     })
+
+
+@route(["GET"], "get_npc_store_list")
+def get_npc_store_list(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    tail = ctx.get("route_tail") or []
+    npc_id = str(tail[0] or "").strip() if len(tail) == 1 else ""
+    catalog = _furniture_catalog(npc_id)
+    if not catalog:
+        return build_response_body({}, errcode=404, errmsg="furniture seller not found")
+    return build_response_body({
+        "list": [
+            {"itemId": item_id, "price": price, "unit": "money"}
+            for item_id, price in catalog
+        ],
+        "point": _currency_balance(ctx, userid, "money"),
+        "unit": "money",
+    })
+
+
+@route(["POST"], "buy_npc_goods")
+def buy_npc_goods(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body(ctx)
+    npc_id = str(body.get("npc_id") or "").strip()
+    item_id = str(body.get("itemId") or "").strip()
+    trans_id = str(body.get("client_trans_id") or "").strip()
+    catalog = dict(_furniture_catalog(npc_id))
+    if not catalog:
+        return build_response_body({}, errcode=404, errmsg="furniture seller not found")
+    if item_id not in catalog:
+        return build_response_body({}, errcode=404, errmsg="item not sold by this seller")
+    if not trans_id:
+        return build_response_body({}, errcode=400, errmsg="client_trans_id required")
+    coupons_id = str(body.get("couponsId") or "").strip()
+    if coupons_id and coupons_id != "0":
+        return build_response_body({}, errcode=400, errmsg="coupon not supported by this seller")
+
+    state = ctx["state"]
+    now = int(time.time())
+    price = max(_int(catalog[item_id]), 0)
+    with state.defer_saves():
+        state.ensure_account(userid)
+        account = state._state["accounts"].setdefault(str(userid), {"userid": userid})
+        transactions = account.get("npc_store_transactions")
+        if not isinstance(transactions, dict):
+            transactions = {}
+            account["npc_store_transactions"] = transactions
+        receipt = transactions.get(trans_id)
+        if isinstance(receipt, dict):
+            if receipt.get("npc_id") == npc_id and receipt.get("itemId") == item_id:
+                data = receipt.get("data")
+                if isinstance(data, dict):
+                    return build_response_body(copy.deepcopy(data))
+            return build_response_body({}, errcode=409, errmsg="transaction id conflict")
+
+        balance = _currency_balance(ctx, userid, "money")
+        if balance < price:
+            return build_response_body(
+                {"point": balance, "cost": price, "unit": "money"},
+                errcode=1,
+                errmsg="\u788e\u94f6\u4e0d\u8db3",
+            )
+
+        new_balance = balance - price
+        currencies = account.get("currencies")
+        if not isinstance(currencies, dict):
+            currencies = {}
+            account["currencies"] = currencies
+        currencies["money"] = new_balance
+        account["updated_at"] = now
+        saved_archive = _sync_npc_purchase_archive(
+            state, userid, item_id, new_balance
+        )
+        data = {
+            "itemId": item_id,
+            "remove_point": price,
+            "point": new_balance,
+            "unit": "money",
+        }
+        if isinstance(saved_archive, dict) and "dataVer" in saved_archive:
+            data["dataVer"] = _int(saved_archive.get("dataVer"), 0)
+        transactions[trans_id] = {
+            "npc_id": npc_id,
+            "itemId": item_id,
+            "created_at": now,
+            "data": copy.deepcopy(data),
+        }
+        if len(transactions) > _NPC_STORE_TRANSACTION_LIMIT:
+            ordered = sorted(
+                transactions,
+                key=lambda key: _int((transactions.get(key) or {}).get("created_at"), 0),
+            )
+            for old_trans_id in ordered[:-_NPC_STORE_TRANSACTION_LIMIT]:
+                transactions.pop(old_trans_id, None)
+        state._changed()
+        return build_response_body(data)
 
 
 @route(["POST"], "buy_homeland")
