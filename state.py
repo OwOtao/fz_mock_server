@@ -104,7 +104,14 @@ class StateStore:
         if not isinstance(root, dict):
             root = {}
             state["homeland"] = root
-        for key in ("users", "mid_owners", "dp_owners"):
+        for key in (
+            "users",
+            "mid_owners",
+            "dp_owners",
+            "home_switch",
+            "house_stores",
+            "purchase_receipts",
+        ):
             if not isinstance(root.get(key), dict):
                 root[key] = {}
         try:

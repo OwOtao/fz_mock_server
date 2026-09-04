@@ -56,13 +56,16 @@ from handlers.practice import get_xin_shen_value, recover_xin_shen_value
 from handlers.familytype_data import HX_TABLE
 from handlers.homeland import (
     add_employee,
+    buy_homeland,
     delete_employee,
+    get_common_fuben,
     get_employee_data,
     get_employee_list,
     get_affair_list,
     get_guaike_reward,
     get_home_switch,
     get_house_info,
+    get_house_store_list,
     get_user_map,
     update_employee_data,
     update_employee_extra,
@@ -2155,6 +2158,262 @@ class StateStoreTest(unittest.TestCase):
             "body": {"mid": mid, "objId": "puren_test_1"},
         })
         self.assertEqual(deleted["errcode"], 0)
+
+    def test_common_fuben_allows_homeland_guide_without_claimed_land(self):
+        userid = 9048162380
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+
+        response = get_common_fuben({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"fbId": "fb10"},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"], {"usermap": []})
+        self.assertEqual(store._state["homeland"]["users"], {})
+
+    def test_common_fuben_returns_only_houses_on_requested_city_map(self):
+        store = StateStore(initial={
+            "homeland": {
+                "users": {
+                    "101": {"house": {
+                        "mid": 14750,
+                        "mapId": "fb10",
+                        "dpId": "yangzhou001",
+                        "dpRoomId": "fb301;fb301_12a1",
+                        "hxId": "huxing002",
+                        "name": "江湖小筑",
+                        "desc": "一处安静的宅院",
+                        "fqId": "yangzhou002",
+                    }},
+                    "102": {"house": {
+                        "mid": 14751,
+                        "mapId": "fb15",
+                        "dpId": "suzhou001",
+                        "hxId": "huxing003",
+                    }},
+                    "103": {"house": {
+                        "mid": 14752,
+                        "mapId": "fb10",
+                        "dpId": "",
+                        "hxId": "huxing002",
+                    }},
+                },
+            },
+        }, autosave=False)
+
+        response = get_common_fuben({
+            "state": store,
+            "headers": {"userid": "101"},
+            "body": {"fbId": "fb10"},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(len(response["data"]["usermap"]), 1)
+        house = response["data"]["usermap"][0]
+        self.assertEqual(house["mid"], 14750)
+        self.assertEqual(house["uid"], 101)
+        self.assertEqual(house["dpId"], "yangzhou001")
+        self.assertEqual(house["dpRoomId"], "fb301;fb301_12a1")
+        self.assertEqual(house["entryRoom"], HX_TABLE["huxing002"]["entryRoom"])
+        self.assertEqual(house["name"], "江湖小筑")
+
+    def test_home_switch_grants_yinpiao_once_and_persists_it(self):
+        userid = 9048162381
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "角色",
+                "yinpiao": 10,
+                "items": [],
+            }},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        first = get_home_switch(ctx)
+        replay = get_home_switch(ctx)
+
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"], {"open": True, "yinpiao": 1250})
+        self.assertEqual(replay["data"], {"open": True, "yinpiao": 0})
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 1260)
+        self.assertEqual(
+            store.get_account(userid)["currencies"]["yinpiao"],
+            1260,
+        )
+
+    def test_home_switch_does_not_regrant_legacy_house_owner(self):
+        userid = 9048162387
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "旧角色",
+                "yinpiao": 20,
+                "Homeland": {"fq": {
+                    "fqId": "yangzhou002",
+                    "mid": 14750,
+                }},
+            }},
+        }, autosave=False)
+
+        response = get_home_switch({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {},
+        })
+
+        self.assertEqual(response["data"], {"open": True, "yinpiao": 0})
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 20)
+
+    def test_house_store_has_client_fields_and_refresh_is_replay_safe(self):
+        userid = 9048162382
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"yinpiao": 20000},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "is_refresh": "N"},
+        }
+
+        with mock.patch("handlers.homeland.time.time", return_value=1000):
+            initial = get_house_store_list(ctx)
+        self.assertEqual(initial["errcode"], 0)
+        self.assertEqual(initial["data"]["point"], 20000)
+        self.assertIs(initial["data"]["isBuy"], False)
+        self.assertEqual(initial["data"]["costYb"], 0)
+        self.assertEqual(initial["data"]["removeYb"], 0)
+        self.assertEqual(len(initial["data"]["list"]), 6)
+        self.assertEqual(initial["data"]["list"][0], {
+            "fqId": "yangzhou001",
+            "cost": 1500,
+        })
+
+        ctx["body"]["is_refresh"] = "Y"
+        with mock.patch("handlers.homeland.time.time", return_value=1001):
+            refreshed = get_house_store_list(ctx)
+            replay = get_house_store_list(ctx)
+        self.assertEqual(refreshed["data"]["list"], replay["data"]["list"])
+        with mock.patch("handlers.homeland.time.time", return_value=1004):
+            next_refresh = get_house_store_list(ctx)
+        self.assertNotEqual(refreshed["data"]["list"], next_refresh["data"]["list"])
+
+    def test_buy_homeland_rejects_insufficient_balance_without_creating_house(self):
+        userid = 9048162383
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"yinpiao": 100},
+            }},
+        }, autosave=False)
+
+        response = buy_homeland({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "fqId": "yangzhou001"},
+        })
+
+        self.assertEqual(response["errcode"], 1)
+        self.assertEqual(response["errmsg"], "银票不足")
+        self.assertEqual(response["data"], {"point": 100, "cost": 1500})
+        self.assertEqual(store._state["homeland"]["users"], {})
+        self.assertEqual(
+            store.get_account(userid)["currencies"]["yinpiao"],
+            100,
+        )
+
+    def test_buy_homeland_persists_contract_and_replacement_keeps_assets(self):
+        userid = 9048162384
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "角色",
+                "yinpiao": 60000,
+                "items": [],
+                "Homeland": {"fq": []},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "fqId": "yangzhou001"},
+        }
+
+        with mock.patch("handlers.homeland.time.time", return_value=2000):
+            bought = buy_homeland(ctx)
+            replay = buy_homeland(ctx)
+        self.assertEqual(bought["errcode"], 0)
+        self.assertEqual(replay["data"], bought["data"])
+        self.assertEqual(bought["data"]["remove_point"], 1500)
+        self.assertEqual(bought["data"]["point"], 58500)
+        mid = bought["data"]["mid"]
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["yinpiao"], 58500)
+        self.assertEqual(archive["Homeland"]["fq"]["fqId"], "yangzhou001")
+        self.assertEqual(
+            next(item for item in archive["items"] if item["itemId"] == "fq100")["count"],
+            1,
+        )
+
+        bucket = store._state["homeland"]["users"][str(userid)]
+        bucket["house"].update({
+            "houseName": "旧宅名",
+            "dpId": "yangzhou201",
+            "dpRoomId": "fb301;fb301_01",
+            "location": "扬州央华七巷1号",
+            "isDispose": True,
+        })
+        bucket["employees"] = {
+            "guest1": {"rwId": "guest1", "fjId": "fb319_02", "mid": mid},
+        }
+        bucket["furniture"] = [{"fid": "furniture1", "fjId": "fb319_02"}]
+        ctx["body"] = {"npcId": "yangzhou002", "fqId": "yangzhou086"}
+        with mock.patch("handlers.homeland.time.time", return_value=2040):
+            replaced = buy_homeland(ctx)
+
+        self.assertEqual(replaced["errcode"], 0)
+        self.assertEqual(replaced["data"]["mid"], mid)
+        self.assertEqual(replaced["data"]["remove_point"], 32000)
+        self.assertEqual(replaced["data"]["point"], 26500)
+        bucket = store._state["homeland"]["users"][str(userid)]
+        self.assertEqual(bucket["house"]["hxId"], "huxing004")
+        self.assertEqual(bucket["house"]["houseName"], "旧宅名")
+        self.assertEqual(bucket["house"]["dpId"], "yangzhou201")
+        self.assertEqual(bucket["house"]["location"], "扬州央华七巷1号")
+        self.assertEqual(len(bucket["rooms"]), len(HX_TABLE["huxing004"]["rooms"]))
+        self.assertTrue(bucket["employees"]["guest1"]["fjId"].startswith("fb322_"))
+        self.assertEqual(bucket["furniture"], [{"fid": "furniture1", "fjId": "fb319_02"}])
+
+    def test_default_homelands_allocate_distinct_map_ids(self):
+        first_user = 9048162385
+        second_user = 9048162386
+        store = StateStore(initial={
+            "accounts": {
+                str(first_user): {"userid": first_user},
+                str(second_user): {"userid": second_user},
+            },
+        }, autosave=False)
+
+        first = get_house_info({
+            "state": store,
+            "headers": {"userid": str(first_user)},
+            "body": {},
+        })
+        second = get_house_info({
+            "state": store,
+            "headers": {"userid": str(second_user)},
+            "body": {},
+        })
+
+        self.assertEqual(first["data"]["mid"], 14750)
+        self.assertEqual(second["data"]["mid"], 14751)
 
     def test_get_guaike_reward_grants_yinpiao_gold_and_items(self):
         userid = 9048162374

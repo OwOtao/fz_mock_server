@@ -10,6 +10,70 @@ from protocol import build_response_body
 from server import route
 
 _GIVE_DAILY_LIMIT = 1
+_HOME_OPEN_REWARD_YINPIAO = 1250
+_HOUSE_STORE_SIZE = 6
+_HOUSE_REFRESH_REPLAY_SECONDS = 3
+_HOUSE_PURCHASE_REPLAY_SECONDS = 30
+
+
+# 房契模板源自 familylist.lua["房契模板"]。客户端只消费商店项的 fqId/cost，
+# 其余展示字段会按 fqId 从同一张本地表读取；服务端保留户型字段用于购房后建图。
+_SPECIAL_HOUSE_TEMPLATES = {
+    145: ("huxing005", "高山仰止"),
+    146: ("huxing006", "高门大户"),
+    148: ("huxing008", "山野逸趣"),
+    149: ("huxing009", "一画开天"),
+    150: ("huxing010", "清台乐歌"),
+    151: ("huxing011", "湖光水色"),
+    152: ("huxing012", "阳口悬钟"),
+}
+
+
+def _build_house_templates():
+    templates = {}
+    for index in list(range(1, 147)) + list(range(148, 154)):
+        if index == 1:
+            cost, hx_id, level, name = 1500, "huxing001", 0, "普通房屋"
+        elif index <= 3:
+            cost, hx_id, level, name = 6000, "huxing002", 1, "简屋"
+        elif index <= 15:
+            cost = 6000
+            hx_id = "huxing003" if index <= 7 else "huxing004"
+            level = 2 if index <= 7 else 3
+            name = "秀筑" if index <= 7 else "豪宅"
+        elif index <= 85:
+            cost, hx_id, level, name = 16000, "huxing003", 2, "秀筑"
+        elif index <= 144 or index == 153:
+            cost, hx_id, level, name = 32000, "huxing004", 3, "豪宅"
+        else:
+            hx_id, name = _SPECIAL_HOUSE_TEMPLATES[index]
+            cost, level = 50000, 4
+        templates["yangzhou%03d" % index] = {
+            "fqId": "yangzhou%03d" % index,
+            "cost": cost,
+            "hxId": hx_id,
+            "level": level,
+            "name": name,
+            "roomnum": len(HX_TABLE[hx_id]["rooms"]),
+        }
+    return templates
+
+
+_HOUSE_TEMPLATES = _build_house_templates()
+
+# 四个公共家园城的购房 NPC，及特殊扬州房商。001 房商出售入门/中档房，
+# 002 房商出售豪宅/特殊户型，正好覆盖 familylist.lua 的全部 152 张房契。
+_HOUSE_SELLERS = {
+    "yangzhou001": {"mapId": "fb10", "location": "扬州城", "tier": "basic"},
+    "yangzhou002": {"mapId": "fb10", "location": "扬州城", "tier": "premium"},
+    "yzmfnpc": {"mapId": "fb10", "location": "扬州城", "tier": "all"},
+    "suzhou001": {"mapId": "fb15", "location": "苏州城", "tier": "basic"},
+    "suzhou002": {"mapId": "fb15", "location": "苏州城", "tier": "premium"},
+    "xiangyang001": {"mapId": "fb20", "location": "襄阳城", "tier": "basic"},
+    "xiangyang002": {"mapId": "fb20", "location": "襄阳城", "tier": "premium"},
+    "changan001": {"mapId": "fb25", "location": "长安城", "tier": "basic"},
+    "changan002": {"mapId": "fb25", "location": "长安城", "tier": "premium"},
+}
 
 
 # 房间方向链接字段, 与真实服务端 get_user_map.maproom 一致(缺省用空串而非缺键)
@@ -182,7 +246,8 @@ def _ensure_layout(bucket):
             if isinstance(employee, dict) and not str(employee.get("fjId", "")).startswith(prefix):
                 employee["fjId"] = default_fj
         changed = True
-    if _seed_default_steward(bucket, spec):
+    # 新购房契由客户端走初始管家流程；只有已经处理过该流程的旧档案缺管家时补种。
+    if house.get("isDispose") and _seed_default_steward(bucket, spec):
         changed = True
     if changed:
         bucket["updated_at"] = int(time.time())
@@ -228,6 +293,104 @@ def _seed_house(ctx, userid):
     return house
 
 
+def _allocate_mid(root, userid, preferred=0):
+    """Claim a stable, unique homeland map id."""
+    def owner_of(mid):
+        owner = _int(root["mid_owners"].get(str(mid)), 0)
+        if owner > 0:
+            return owner
+        for key, bucket in root["users"].items():
+            house = bucket.get("house") if isinstance(bucket, dict) else None
+            if isinstance(house, dict) and _int(house.get("mid"), 0) == mid:
+                return _int(key, 0)
+        return 0
+
+    preferred = _int(preferred, 0)
+    owners = root["mid_owners"]
+    if preferred > 0:
+        owner = owner_of(preferred)
+        if owner in (0, userid):
+            owners[str(preferred)] = userid
+            root["next_mid"] = max(_int(root.get("next_mid"), 14751), preferred + 1)
+            return preferred
+
+    candidate = max(_int(root.get("next_mid"), 14751), 1)
+    while owner_of(candidate) not in (0, userid):
+        candidate += 1
+    owners[str(candidate)] = userid
+    root["next_mid"] = candidate + 1
+    return candidate
+
+
+def _seller_pool(npc_id):
+    seller = _HOUSE_SELLERS.get(npc_id)
+    if seller is None:
+        return []
+    if seller["tier"] == "basic":
+        return [value for value in _HOUSE_TEMPLATES.values() if value["cost"] <= 16000]
+    if seller["tier"] == "premium":
+        return [value for value in _HOUSE_TEMPLATES.values() if value["cost"] >= 32000]
+    return list(_HOUSE_TEMPLATES.values())
+
+
+def _house_offers(userid, npc_id, day, refresh_round):
+    pool = _seller_pool(npc_id)
+    if not pool:
+        return []
+    chosen = []
+    # 引导使用 yangzhou001；始终保留最便宜房契，避免随机列表阻断新手流程。
+    if _HOUSE_SELLERS[npc_id]["tier"] == "basic":
+        chosen.append(_HOUSE_TEMPLATES["yangzhou001"])
+    seed = "%s:%s:%s:%s" % (userid, npc_id, day, refresh_round)
+    counter = 0
+    while len(chosen) < min(_HOUSE_STORE_SIZE, len(pool)):
+        digest = hashlib.sha256((seed + ":" + str(counter)).encode("utf-8")).digest()
+        candidate = pool[int.from_bytes(digest[:8], "big") % len(pool)]
+        if candidate["fqId"] not in {value["fqId"] for value in chosen}:
+            chosen.append(candidate)
+        counter += 1
+    return [{"fqId": value["fqId"], "cost": value["cost"]} for value in chosen]
+
+
+def _archive_house(state, userid):
+    archive = state.get_archive(userid)
+    homeland = archive.get("Homeland") if isinstance(archive, dict) else None
+    house = homeland.get("fq") if isinstance(homeland, dict) else None
+    if isinstance(house, dict) and house.get("fqId") and _int(house.get("mid"), 0) > 0:
+        return copy.deepcopy(house)
+    return None
+
+
+def _sync_house_archive(state, userid, house, yinpiao):
+    """Keep the downloaded RoleData consistent with server homeland/currency state."""
+    archive = state.get_archive(userid)
+    if not isinstance(archive, dict):
+        return None
+    archive["yinpiao"] = max(_int(yinpiao), 0)
+    homeland = archive.get("Homeland")
+    if not isinstance(homeland, dict):
+        homeland = {}
+        archive["Homeland"] = homeland
+    homeland["fq"] = copy.deepcopy(house)
+
+    items = archive.get("items")
+    if not isinstance(items, list):
+        items = []
+        archive["items"] = items
+    contract = next(
+        (item for item in items if isinstance(item, dict) and item.get("itemId") == "fq100"),
+        None,
+    )
+    if contract is None:
+        next_id = max(
+            [_int(item.get("id"), 0) for item in items if isinstance(item, dict)] or [0]
+        ) + 1
+        items.append({"id": next_id, "itemId": "fq100", "count": 1})
+    else:
+        contract["count"] = max(_int(contract.get("count"), 0), 1)
+    return state.put_archive(userid, archive)
+
+
 def _user_bucket(ctx, userid, create=True):
     state = ctx["state"]
     with state._lock:
@@ -238,6 +401,7 @@ def _user_bucket(ctx, userid, create=True):
             if not create:
                 return None
             house = _seed_house(ctx, userid)
+            house["mid"] = _allocate_mid(root, userid, house.get("mid"))
             mid = str(house["mid"])
             bucket = {
                 "house": house,
@@ -251,7 +415,7 @@ def _user_bucket(ctx, userid, create=True):
                 "updated_at": int(time.time()),
             }
             root["users"][key] = bucket
-            root["mid_owners"].setdefault(mid, userid)
+            root["mid_owners"][mid] = userid
             state._changed()
         _spec, changed = _ensure_layout(bucket)
         if changed:
@@ -359,7 +523,234 @@ def _map_data(ctx, userid, bucket):
 
 @route(["GET", "POST"], "get_home_switch")
 def get_home_switch(ctx):
-    return build_response_body({"open": True, "yinpiao": 0})
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+
+    state = ctx["state"]
+    reward = 0
+    with state.defer_saves():
+        state.ensure_account(userid)
+        root = state._normalize_homeland(state._state)
+        key = str(userid)
+        record = root["home_switch"].get(key)
+        if not isinstance(record, dict):
+            # 升级前已经持有房契的旧档视为领过引导奖励，避免迁移后重复发放。
+            reward = 0 if _archive_house(state, userid) else _HOME_OPEN_REWARD_YINPIAO
+            if reward:
+                balance = _currency_balance(ctx, userid, "yinpiao")
+                _set_currency_balance(ctx, userid, "yinpiao", balance + reward)
+            root["home_switch"][key] = {
+                "opened_at": int(time.time()),
+                "reward": reward,
+            }
+            state._changed()
+    # yinpiao 是本次实际发放数，不是余额；重试必须返回 0，避免客户端重复提示。
+    return build_response_body({"open": True, "yinpiao": reward})
+
+
+@route(["POST"], "get_house_store_list")
+def get_house_store_list(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body(ctx)
+    npc_id = str(body.get("npcId") or "").strip()
+    if npc_id not in _HOUSE_SELLERS:
+        return build_response_body({}, errcode=404, errmsg="house seller not found")
+    is_refresh = str(body.get("is_refresh") or "N").strip().upper()
+    if is_refresh not in ("Y", "N"):
+        return build_response_body({}, errcode=400, errmsg="invalid refresh flag")
+
+    state = ctx["state"]
+    now = int(time.time())
+    day = time.strftime("%Y-%m-%d", time.localtime(now))
+    remove_yb = 0
+    with state._lock:
+        root = state._normalize_homeland(state._state)
+        user_stores = root["house_stores"].setdefault(str(userid), {})
+        entry = user_stores.get(npc_id)
+        if not isinstance(entry, dict) or entry.get("day") != day:
+            entry = {"day": day, "refresh_round": 0, "last_refresh_at": 0}
+            user_stores[npc_id] = entry
+        if (
+            is_refresh == "Y"
+            and now - _int(entry.get("last_refresh_at"), 0)
+            >= _HOUSE_REFRESH_REPLAY_SECONDS
+        ):
+            entry["refresh_round"] = max(_int(entry.get("refresh_round"), 0), 0) + 1
+            entry["last_refresh_at"] = now
+        offers = _house_offers(userid, npc_id, day, entry.get("refresh_round", 0))
+        entry["offers"] = [value["fqId"] for value in offers]
+        entry["updated_at"] = now
+        bucket = root["users"].get(str(userid))
+        state_house = bucket.get("house") if isinstance(bucket, dict) else None
+        is_buy = bool(
+            isinstance(state_house, dict)
+            and state_house.get("fqId")
+            and _int(state_house.get("mid"), 0) > 0
+        )
+        if not is_buy:
+            is_buy = _archive_house(state, userid) is not None
+        state._changed()
+
+    return build_response_body({
+        "list": offers,
+        "isBuy": is_buy,
+        "point": _currency_balance(ctx, userid, "yinpiao"),
+        # 当前版本免费刷新；仍返回客户端固定读取的两个元宝字段。
+        "costYb": 0,
+        "removeYb": remove_yb,
+    })
+
+
+@route(["POST"], "buy_homeland")
+def buy_homeland(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body(ctx)
+    npc_id = str(body.get("npcId") or "").strip()
+    fq_id = str(body.get("fqId") or "").strip()
+    seller = _HOUSE_SELLERS.get(npc_id)
+    template = _HOUSE_TEMPLATES.get(fq_id)
+    allowed_ids = {value["fqId"] for value in _seller_pool(npc_id)}
+    if seller is None:
+        return build_response_body({}, errcode=404, errmsg="house seller not found")
+    if template is None or fq_id not in allowed_ids:
+        return build_response_body({}, errcode=404, errmsg="house contract not sold here")
+
+    state = ctx["state"]
+    now = int(time.time())
+    with state.defer_saves():
+        root = state._normalize_homeland(state._state)
+        receipt = root["purchase_receipts"].get(str(userid))
+        if (
+            isinstance(receipt, dict)
+            and receipt.get("npcId") == npc_id
+            and receipt.get("fqId") == fq_id
+            and now - _int(receipt.get("created_at"), 0) < _HOUSE_PURCHASE_REPLAY_SECONDS
+            and isinstance(receipt.get("data"), dict)
+        ):
+            return build_response_body(copy.deepcopy(receipt["data"]))
+
+        balance = _currency_balance(ctx, userid, "yinpiao")
+        cost = max(_int(template.get("cost"), 0), 0)
+        if balance < cost:
+            return build_response_body(
+                {"point": balance, "cost": cost},
+                errcode=1,
+                errmsg="银票不足",
+            )
+
+        state.ensure_account(userid)
+        key = str(userid)
+        bucket = root["users"].get(key)
+        if not isinstance(bucket, dict):
+            bucket = {
+                "house": {},
+                "lands": {},
+                "rooms": [],
+                "employees": {},
+                "employee_lists": {},
+                "dispatch": {},
+                "furniture": [],
+                "version": 0,
+            }
+            root["users"][key] = bucket
+        old_house = bucket.get("house")
+        if not isinstance(old_house, dict) or not old_house:
+            old_house = _archive_house(state, userid) or {}
+
+        mid = _allocate_mid(root, userid, old_house.get("mid"))
+        placed = bool(str(old_house.get("dpId") or "").strip())
+        house = {
+            "id": "fq100",
+            "fqId": fq_id,
+            "name": template["name"],
+            "houseName": old_house.get("houseName") or "普通房屋",
+            "type": "房契",
+            "mid": mid,
+            "mapId": seller["mapId"],
+            "location": (
+                old_house.get("location") or seller["location"]
+                if placed
+                else seller["location"]
+            ),
+            "hxId": template["hxId"],
+            "roomnum": template["roomnum"],
+            "isDispose": bool(old_house.get("isDispose", False)),
+            "isRename": bool(old_house.get("isRename", False)),
+            "status": _int(old_house.get("status"), 0),
+            "uid": userid,
+        }
+        # 已经安置的家园更换房屋时保留地皮和地址关系。
+        for field in ("dpId", "dpRoomId", "fbId", "loc_mark", "loc_sort", "desc", "extra"):
+            if field in old_house:
+                house[field] = copy.deepcopy(old_house[field])
+
+        bucket["house"] = house
+        bucket["rooms"] = copy.deepcopy(_hx_spec(template["hxId"])["rooms"])
+        employees = bucket.get("employees")
+        if not isinstance(employees, dict):
+            employees = {}
+            bucket["employees"] = employees
+        room_prefix = _hx_spec(template["hxId"])["roomPrefix"]
+        default_fj = _default_employee_fjid(_hx_spec(template["hxId"]))
+        for employee in employees.values():
+            if not isinstance(employee, dict):
+                continue
+            employee["mid"] = mid
+            if not str(employee.get("fjId") or "").startswith(room_prefix):
+                employee["fjId"] = default_fj
+        for field, default in (
+            ("lands", {}),
+            ("employee_lists", {}),
+            ("dispatch", {}),
+            ("furniture", []),
+        ):
+            if not isinstance(bucket.get(field), type(default)):
+                bucket[field] = copy.deepcopy(default)
+        bucket["version"] = max(_int(bucket.get("version"), 0), 0) + 1
+        bucket["updated_at"] = now
+
+        # 清理该玩家可能遗留的旧 mid 索引，再登记当前房屋。
+        for value, owner in list(root["mid_owners"].items()):
+            if _int(owner, 0) == userid and value != str(mid):
+                root["mid_owners"].pop(value, None)
+        root["mid_owners"][str(mid)] = userid
+
+        new_balance = balance - cost
+        account = state._state["accounts"].setdefault(key, {"userid": userid})
+        currencies = account.get("currencies")
+        if not isinstance(currencies, dict):
+            currencies = {}
+            account["currencies"] = currencies
+        currencies["yinpiao"] = new_balance
+        account["updated_at"] = now
+        saved_archive = _sync_house_archive(state, userid, house, new_balance)
+
+        response = {
+            "mid": mid,
+            "location": house["location"],
+            "remove_point": cost,
+            "point": new_balance,
+            "fqId": fq_id,
+            "mapId": seller["mapId"],
+            "hxId": template["hxId"],
+            "roomnum": template["roomnum"],
+            "isBuy": True,
+        }
+        if isinstance(saved_archive, dict) and "dataVer" in saved_archive:
+            response["dataVer"] = _int(saved_archive.get("dataVer"), 0)
+        root["purchase_receipts"][key] = {
+            "npcId": npc_id,
+            "fqId": fq_id,
+            "created_at": now,
+            "data": copy.deepcopy(response),
+        }
+        state._changed()
+        return build_response_body(response)
 
 
 @route(["POST"], "get_house_info")
@@ -386,6 +777,52 @@ def get_user_map(ctx):
     if error:
         return build_response_body({}, errcode=403, errmsg=error)
     return build_response_body(_map_data(ctx, userid, bucket))
+
+
+@route(["POST"], "get_common_fuben")
+def get_common_fuben(ctx):
+    """Return houses placed on a public homeland city map.
+
+    The client calls this while entering fb301-fb304 and expects
+    ``data.usermap`` even when no player has claimed a plot yet.
+    """
+    fb_id = str(_body(ctx).get("fbId") or "").strip()
+    if not fb_id:
+        return build_response_body({}, errcode=400, errmsg="fbId required")
+
+    usermaps = []
+    state = ctx["state"]
+    with state._lock:
+        root = state._normalize_homeland(state._state)
+        for key, bucket in root["users"].items():
+            if not isinstance(bucket, dict):
+                continue
+            house = bucket.get("house")
+            if not isinstance(house, dict):
+                continue
+            dp_id = str(house.get("dpId") or "").strip()
+            house_fb_id = str(
+                house.get("fbId") or house.get("mapId") or ""
+            ).strip()
+            if not dp_id or house_fb_id != fb_id:
+                continue
+
+            spec = _hx_spec(house.get("hxId"))
+            uid = _int(house.get("uid"), _int(key, 0))
+            usermaps.append({
+                "mid": _int(house.get("mid"), 0),
+                "uid": uid,
+                "name": house.get("name") or house.get("houseName") or "家园",
+                "desc": house.get("desc") or "",
+                "entryRoom": house.get("entryRoom") or spec["entryRoom"],
+                "dpId": dp_id,
+                "dpRoomId": house.get("dpRoomId") or "",
+                "fqId": house.get("fqId") or "",
+                "hxId": spec["hxId"],
+            })
+
+    usermaps.sort(key=lambda value: (value["dpId"], value["mid"], value["uid"]))
+    return build_response_body({"usermap": usermaps})
 
 
 @route(["POST"], "rename_home")
