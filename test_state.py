@@ -69,6 +69,8 @@ from handlers.homeland import (
     get_house_store_list,
     get_npc_store_list,
     get_user_map,
+    putin_furniture,
+    upload_furniture_extra,
     update_employee_data,
     update_employee_extra,
 )
@@ -3106,7 +3108,15 @@ class StateStoreTest(unittest.TestCase):
         })
         self.assertEqual(first["errcode"], 0)
         self.assertEqual(first["data"]["defaultZhongCheng"], loyalty + 10)
-        self.assertEqual(first["data"]["trait"], {})
+        self.assertEqual(first["data"]["trait"], [])
+        self.assertIs(first["data"]["level_up"], False)
+        self.assertEqual(first["data"]["tip"], "")
+        self.assertEqual(first["data"]["activity"], {
+            "ssyjf": 0,
+            "znqjf": 0,
+            "daily_point": 0,
+        })
+        self.assertEqual(first["data"]["day_limit"], 0)
         yinpiao = view_currency_by_type({
             "state": store,
             "headers": {"userid": str(userid)},
@@ -3222,6 +3232,138 @@ class StateStoreTest(unittest.TestCase):
             "headers": {"userid": str(userid)},
             "body": {"currency_type": "yinpiao"},
         })["data"]["number"], 0)
+
+    def test_putin_furniture_persists_map_version_and_consumes_inventory(self):
+        userid = 9048162393
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "Furniture Owner",
+                "items": [{"id": 1, "itemId": "jiaren005", "count": 2}],
+            }},
+        }, autosave=False)
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(base_ctx)["data"]
+        mapped = get_user_map(dict(base_ctx, body={"mid": house["mid"]}))["data"]
+        room_id = next(
+            room["fjId"] for room in mapped["maproom"]
+            if room["roomType"] == "tsfangjian009"
+        )
+        body = {
+            "mid": house["mid"],
+            "fjId": room_id,
+            "jjId": "jiaren005",
+            "extra": {"durable": 9999},
+            "ver": mapped["ver"],
+        }
+
+        placed = putin_furniture(dict(base_ctx, body=body))
+        replay = putin_furniture(dict(base_ctx, body=body))
+
+        self.assertEqual(placed["errcode"], 0)
+        self.assertEqual(replay["data"], placed["data"])
+        self.assertNotEqual(placed["data"]["ver"], mapped["ver"])
+        self.assertEqual(placed["data"]["furn_info"], {
+            "fid": 500001,
+            "jjId": "jiaren005",
+            "fjId": room_id,
+            "mid": house["mid"],
+            "itype": 24,
+            "name": "鲁班奇偶",
+            "special": 1,
+            "extra": {"durable": 9999},
+            "isInit": 0,
+        })
+        self.assertEqual(store.get_archive(userid)["items"][0]["count"], 1)
+        refreshed = get_user_map(dict(base_ctx, body={"mid": house["mid"]}))["data"]
+        self.assertEqual(refreshed["ver"], placed["data"]["ver"])
+        self.assertEqual(refreshed["roomfurniture"], [placed["data"]["furn_info"]])
+
+        stale = putin_furniture(dict(base_ctx, body=dict(
+            body, jjId="zhuozi001", extra={},
+        )))
+        self.assertEqual(stale["errcode"], 409)
+
+    def test_putin_furniture_rejects_invalid_room_item_and_missing_inventory(self):
+        userid = 9048162394
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {"items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)["data"]
+        mapped = get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]
+        room_id = mapped["maproom"][0]["fjId"]
+
+        missing_room = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": "missing", "jjId": "zhuozi001",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(missing_room["errcode"], 404)
+        unknown = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": room_id, "jjId": "not_furniture",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(unknown["errcode"], 404)
+        no_inventory = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": room_id, "jjId": "zhuozi001",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(no_inventory["errcode"], 404)
+        self.assertEqual(
+            get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]["roomfurniture"],
+            [],
+        )
+
+    def test_upload_furniture_extra_is_persistent_and_atomic(self):
+        userid = 9048162395
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)["data"]
+        with store._lock:
+            bucket = store._state["homeland"]["users"][str(userid)]
+            bucket["version"] = 7
+            bucket["furniture"] = [
+                {"fid": 500001, "jjId": "jiaren005", "extra": {"durable": 9999}},
+                {"fid": 500002, "jjId": "xianglu001", "extra": {}},
+            ]
+
+        rejected = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [
+                {"fid": 500001, "attr": {"durable": 10}},
+                {"fid": 999999, "attr": {"durable": 0}},
+            ],
+        }))
+        self.assertEqual(rejected["errcode"], 404)
+        self.assertEqual(bucket["furniture"][0]["extra"], {"durable": 9999})
+
+        uploaded = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [
+                {"fid": 500001, "attr": {"durable": 321}},
+                {"fid": "500002", "attr": {"fireTime": 123, "xiangId": "xiang1"}},
+            ],
+        }))
+        self.assertEqual(uploaded["errcode"], 0)
+        mapped = get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]
+        self.assertEqual(mapped["roomfurniture"][0]["extra"], {"durable": 321})
+        self.assertEqual(mapped["roomfurniture"][1]["extra"], {
+            "fireTime": 123,
+            "xiangId": "xiang1",
+        })
+        # Mutable furniture attributes do not advance the structural map ver;
+        # the client neither sends nor consumes a version for this endpoint.
+        self.assertEqual(bucket["version"], 7)
+
+        cleared = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [{"fid": 500002, "attr": {}}],
+        }))
+        self.assertEqual(cleared["errcode"], 0)
+        self.assertEqual(bucket["furniture"][1]["extra"], {})
 
     def test_concurrent_account_ids_are_unique(self):
         store = StateStore()

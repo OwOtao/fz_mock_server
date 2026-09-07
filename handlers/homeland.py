@@ -2,6 +2,9 @@
 
 import copy
 import hashlib
+import json
+import os
+import re
 import time
 
 from handlers.basic import _currency_balance, _set_currency_balance
@@ -170,6 +173,64 @@ _FURNITURE_STOCK_BY_SUFFIX = {
     ),
 }
 _FURNITURE_STORE_CITY_PREFIXES = ("yangzhou", "suzhou", "xiangyang", "changan")
+
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_FURNITURE_ITEMS_PATH = os.path.join(_ROOT, "item_json", "homeland.json")
+_FURNITURE_CONFIG_PATH = os.path.join(
+    _ROOT, "fzjh_lua", "assets", "res", "script", "others", "familylist.lua"
+)
+_FURNITURE_METADATA = None
+
+
+def _load_furniture_metadata():
+    """Load the client furniture ids without parsing the 1 MB Lua table.
+
+    The response contract needs the numeric ``itype`` used by
+    ``FurnitureModel:addFurTypeCount``. Those values only exist in
+    familylist.lua, whose relevant fields have a stable ASCII shape even in
+    older, mojibake resource dumps.
+    """
+    global _FURNITURE_METADATA
+    if _FURNITURE_METADATA is not None:
+        return _FURNITURE_METADATA
+
+    names = {}
+    try:
+        with open(_FURNITURE_ITEMS_PATH, "r", encoding="utf-8") as handle:
+            items = json.load(handle)
+        if isinstance(items, dict):
+            names = {
+                str(item_id): str((value or {}).get("name") or item_id)
+                for item_id, value in items.items()
+                if isinstance(value, dict)
+            }
+    except (OSError, ValueError, TypeError):
+        names = {}
+
+    metadata = {}
+    try:
+        with open(_FURNITURE_CONFIG_PATH, "r", encoding="utf-8", errors="ignore") as handle:
+            raw = handle.read()
+        type_rows = list(re.finditer(
+            r'\["itype"\]=(\d+),\["jjId"\]=\[\[([^\]]+)\]\]', raw
+        ))
+        for index, match in enumerate(type_rows):
+            itype, item_id = match.groups()
+            end = type_rows[index + 1].start() if index + 1 < len(type_rows) else len(raw)
+            special_match = re.search(
+                r'\["special"\]=\[\[([NY])\]\]', raw[match.end():end]
+            )
+            is_special = bool(special_match and special_match.group(1) == "Y")
+            metadata[item_id] = {
+                "itype": int(itype),
+                "name": names.get(item_id, item_id),
+                "special": 1 if is_special else 0,
+            }
+    except OSError:
+        pass
+
+    _FURNITURE_METADATA = metadata
+    return _FURNITURE_METADATA
 
 
 # 房间方向链接字段, 与真实服务端 get_user_map.maproom 一致(缺省用空串而非缺键)
@@ -588,6 +649,13 @@ def _employee_payload(employee, default_fjid=None):
     return value
 
 
+def _homeland_version(bucket):
+    value = str(bucket.get("version") or "1")
+    if len(value) < 16:
+        value = hashlib.md5(value.encode("utf-8")).hexdigest()
+    return value
+
+
 def _map_data(ctx, userid, bucket):
     spec, stale = _ensure_layout(bucket)
     if stale:
@@ -618,9 +686,7 @@ def _map_data(ctx, userid, bucket):
     loc_mark = house.get("loc_mark") or [2, 2, 20]
     loc_sort = _int(house.get("loc_sort"), 2)
     # ver 必须是字符串(真实服务端下发 md5), 客户端直接存入 sCk_ver.homeland
-    ver = str(bucket.get("version") or "1")
-    if len(ver) < 16:
-        ver = hashlib.md5(ver.encode()).hexdigest()
+    ver = _homeland_version(bucket)
     return {
         "ver": ver,
         "owner": _role_name(ctx, userid),
@@ -651,6 +717,35 @@ def _map_data(ctx, userid, bucket):
         "roomperson": employees,
         "roomfurniture": copy.deepcopy(bucket.get("furniture") or []),
     }
+
+
+def _archive_furniture_item(archive, item_id):
+    items = archive.get("items") if isinstance(archive, dict) else None
+    if not isinstance(items, list):
+        return None, None
+    for index, item in enumerate(items):
+        if (
+            isinstance(item, dict)
+            and str(item.get("itemId") or "") == item_id
+            and _int(item.get("count"), 0) > 0
+        ):
+            return items, index
+    return items, None
+
+
+def _take_archive_furniture(state, userid, item_id):
+    """Remove one placed furniture item from the persisted RoleData."""
+    archive = state.get_archive(userid)
+    items, index = _archive_furniture_item(archive, item_id)
+    if index is None:
+        return None
+    item = items[index]
+    count = _int(item.get("count"), 0)
+    if count <= 1:
+        items.pop(index)
+    else:
+        item["count"] = count - 1
+    return state.put_archive(userid, archive)
 
 
 @route(["GET", "POST"], "get_home_switch")
@@ -1058,6 +1153,162 @@ def get_common_fuben(ctx):
     return build_response_body({"usermap": usermaps})
 
 
+@route(["POST"], "putin_furniture")
+def putin_furniture(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+
+    body = _body(ctx)
+    bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
+    if error:
+        return build_response_body({}, errcode=403, errmsg=error)
+
+    fj_id = str(body.get("fjId") or "").strip()
+    item_id = str(body.get("jjId") or "").strip()
+    if not fj_id:
+        return build_response_body({}, errcode=400, errmsg="fjId required")
+    if not item_id:
+        return build_response_body({}, errcode=400, errmsg="jjId required")
+
+    room_ids = {
+        str(room.get("fjId") or "")
+        for room in bucket.get("rooms") or []
+        if isinstance(room, dict)
+    }
+    if fj_id not in room_ids:
+        return build_response_body({}, errcode=404, errmsg="room not found")
+
+    metadata = _load_furniture_metadata().get(item_id)
+    if not isinstance(metadata, dict):
+        return build_response_body({}, errcode=404, errmsg="furniture not found")
+
+    requested_ver = str(body.get("ver") or "").strip()
+    extra = copy.deepcopy(body.get("extra"))
+    if extra is None:
+        extra = ""
+    signature = {
+        "mid": _int(body.get("mid"), 0),
+        "fjId": fj_id,
+        "jjId": item_id,
+        "extra": extra,
+        "ver": requested_ver,
+    }
+    state = ctx["state"]
+    with state.defer_saves():
+        receipt = bucket.get("last_furniture_put")
+        if (
+            isinstance(receipt, dict)
+            and receipt.get("signature") == signature
+            and isinstance(receipt.get("data"), dict)
+        ):
+            return build_response_body(copy.deepcopy(receipt["data"]))
+
+        current_ver = _homeland_version(bucket)
+        if requested_ver and requested_ver != current_ver:
+            return build_response_body(
+                {"ver": current_ver}, errcode=409, errmsg="homeland version conflict"
+            )
+        if _take_archive_furniture(state, userid, item_id) is None:
+            return build_response_body({}, errcode=404, errmsg="furniture item not found")
+
+        furniture = bucket.setdefault("furniture", [])
+        if not isinstance(furniture, list):
+            furniture = []
+            bucket["furniture"] = furniture
+        fid = max(
+            [_int(value.get("fid"), 0) for value in furniture if isinstance(value, dict)]
+            + [500000]
+        ) + 1
+        furn_info = {
+            "fid": fid,
+            "jjId": item_id,
+            "fjId": fj_id,
+            "mid": _int((bucket.get("house") or {}).get("mid"), 0),
+            "itype": _int(metadata.get("itype"), 0),
+            "name": str(metadata.get("name") or item_id),
+            "special": _int(metadata.get("special"), 0),
+            "extra": extra,
+            "isInit": 0,
+        }
+        furniture.append(furn_info)
+        bucket["version"] = max(_int(bucket.get("version"), 0), 0) + 1
+        bucket["updated_at"] = int(time.time())
+        data = {
+            "furn_info": copy.deepcopy(furn_info),
+            "ver": _homeland_version(bucket),
+        }
+        bucket["last_furniture_put"] = {
+            "signature": signature,
+            "data": copy.deepcopy(data),
+        }
+        state._changed()
+    return build_response_body(data)
+
+
+@route(["POST"], "upload_furniture_extra")
+def upload_furniture_extra(ctx):
+    """Replace the persisted extra attributes of placed furniture.
+
+    The client sends a batch shaped as ``[{fid, attr}, ...]`` for mutable
+    special-furniture state such as training-dummy durability and incense.
+    Validate the whole batch before applying it so a bad fid cannot leave a
+    partially updated homeland.
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+
+    body = _body(ctx)
+    updates = body.get("attr")
+    if not isinstance(updates, list):
+        return build_response_body({}, errcode=400, errmsg="attr must be a list")
+
+    bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
+    if error:
+        return build_response_body({}, errcode=403, errmsg=error)
+
+    state = ctx["state"]
+    with state.defer_saves():
+        furniture = bucket.get("furniture")
+        if not isinstance(furniture, list):
+            furniture = []
+
+        by_fid = {
+            str(value.get("fid")): value
+            for value in furniture
+            if isinstance(value, dict) and value.get("fid") not in (None, "")
+        }
+        pending = []
+        for update in updates:
+            if not isinstance(update, dict):
+                return build_response_body(
+                    {}, errcode=400, errmsg="invalid furniture extra"
+                )
+            fid = update.get("fid")
+            attr = update.get("attr")
+            if fid in (None, "") or isinstance(fid, bool) or not isinstance(attr, dict):
+                return build_response_body(
+                    {}, errcode=400, errmsg="invalid furniture extra"
+                )
+            target = by_fid.get(str(fid))
+            if target is None:
+                return build_response_body(
+                    {"fid": fid}, errcode=404, errmsg="furniture not found"
+                )
+            pending.append((target, copy.deepcopy(attr)))
+
+        for target, attr in pending:
+            # This is replacement, not a merge: the incense client clears its
+            # state by explicitly uploading an empty table.
+            target["extra"] = attr
+        if pending:
+            bucket["updated_at"] = int(time.time())
+            state._changed()
+
+    return build_response_body({})
+
+
 @route(["POST"], "rename_home")
 def rename_home(ctx):
     userid = _userid(ctx)
@@ -1271,13 +1522,20 @@ def update_employee_data(ctx):
     employee["defaultZhongCheng"] = max(0, _int(employee.get("defaultZhongCheng"), 0) + zc_val)
     with ctx["state"]._lock:
         ctx["state"]._changed()
-    spec, _stale = _ensure_layout(bucket)
-    payload = _employee_payload(employee, _default_employee_fjid(spec))
-    payload.setdefault("trait", {})
-    payload.setdefault("activity", {})
-    if zc_type == "chat":
-        payload.setdefault("day_limit", 0)
-        payload.setdefault("level_up", 0)
+    # Real-server capture contract. The client treats ``trait`` as a list,
+    # ``level_up`` as a boolean, and always reads all six fields below.
+    payload = {
+        "level_up": False,
+        "tip": "",
+        "trait": [],
+        "defaultZhongCheng": employee["defaultZhongCheng"],
+        "activity": {
+            "ssyjf": 0,
+            "znqjf": 0,
+            "daily_point": 0,
+        },
+        "day_limit": 0,
+    }
     return build_response_body(payload)
 
 
