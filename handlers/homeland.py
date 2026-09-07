@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+from itertools import chain, product
 
 from handlers.basic import _currency_balance, _set_currency_balance
 from handlers.familytype_data import HX_TABLE
@@ -613,6 +614,7 @@ def _user_bucket(ctx, userid, create=True):
         _spec, changed = _ensure_layout(bucket)
         if changed:
             state._changed()
+        _ensure_village_addresses(state, userid)
         return bucket
 
 
@@ -654,6 +656,66 @@ def _homeland_version(bucket):
     if len(value) < 16:
         value = hashlib.md5(value.encode("utf-8")).hexdigest()
     return value
+
+
+def _location_mark(value):
+    """The client sends three 1-based indices, not a village template id."""
+    if not isinstance(value, list) or len(value) != 3:
+        return None
+    if any(isinstance(v, bool) or not isinstance(v, (int, str)) for v in value):
+        return None
+    mark = [_int(v, 0) for v in value]
+    return mark if all(1 <= v <= limit for v, limit in zip(mark, (16, 20, 26))) else None
+
+
+def _ensure_village_addresses(state, preferred_userid=None):
+    """Migrate village addresses under the state lock, reserving existing plots first.
+
+    fb206-fb209 each have flag1 plots 1..14 (not 1..20). Legacy maps
+    advertised [2, 2, 20]/2 without saving it; try that address first.
+    Prioritize the caller among legacy houses so an already-open map can exit.
+    """
+    with state.defer_saves():
+        root = state._normalize_homeland(state._state)
+        occupied, pending = set(), []
+        for key, bucket in sorted(root["users"].items()):
+            house = bucket.get("house") if isinstance(bucket, dict) else None
+            if not isinstance(house, dict) or _int(house.get("mid"), 0) <= 0:
+                continue
+            if str(house.get("dpId") or "").strip():
+                continue
+            mark = _location_mark(house.get("loc_mark"))
+            slot = _int(house.get("loc_sort"), 0)
+            address = tuple(mark or []) + (slot,)
+            valid = mark is not None and 1 <= slot <= 14 and address not in occupied
+            if valid:
+                occupied.add(address)
+            if not valid or house.get("loc_mark") != mark or type(house.get("loc_sort")) is not int:
+                pending.append((key, bucket, mark, slot, valid))
+
+        pending.sort(key=lambda row: (row[0] != str(preferred_userid), row[0]))
+        for key, bucket, mark, slot, valid in pending:
+            house = bucket["house"]
+            if not valid:
+                preferred_mark = mark or [2, 2, 20]
+                preferred_slot = slot if 1 <= slot <= 14 else 2
+                marks = chain([tuple(preferred_mark)], product(range(1, 17), range(1, 21), range(1, 27)))
+                slots = [preferred_slot] + [n for n in range(1, 15) if n != preferred_slot]
+                address = next(
+                    m + (n,) for m in marks for n in slots if m + (n,) not in occupied
+                )
+                mark, slot = list(address[:3]), address[3]
+                occupied.add(address)
+            house["loc_mark"], house["loc_sort"] = mark, slot
+            bucket["updated_at"] = int(time.time())
+            # Update only address fields in the contract, without touching money/items.
+            archive = state.get_archive(_int(key))
+            homeland = archive.get("Homeland") if isinstance(archive, dict) else None
+            contract = homeland.get("fq") if isinstance(homeland, dict) else None
+            if isinstance(contract, dict) and _int(contract.get("mid")) == _int(house.get("mid")):
+                contract["loc_mark"], contract["loc_sort"] = list(mark), slot
+                state.put_archive(_int(key), archive)
+            state._changed()
 
 
 def _map_data(ctx, userid, bucket):
@@ -1018,6 +1080,7 @@ def buy_homeland(ctx):
                 house[field] = copy.deepcopy(old_house[field])
 
         bucket["house"] = house
+        _ensure_village_addresses(state, userid)
         bucket["rooms"] = copy.deepcopy(_hx_spec(template["hxId"])["rooms"])
         employees = bucket.get("employees")
         if not isinstance(employees, dict):
@@ -1334,7 +1397,35 @@ def get_location_map(ctx):
     userid = _userid(ctx)
     if userid <= 0:
         return build_response_body({}, errcode=552, errmsg="userid not found")
-    return build_response_body({"list": [], "owner": _role_name(ctx, userid)})
+    mark = _location_mark(_body(ctx).get("loc_mark"))
+    if mark is None:
+        return build_response_body({}, errcode=400, errmsg="invalid loc_mark")
+    state = ctx["state"]
+    houses = []
+    with state.defer_saves():
+        _ensure_village_addresses(state, userid)
+        root = state._normalize_homeland(state._state)
+        for key, bucket in root["users"].items():
+            house = bucket.get("house") if isinstance(bucket, dict) else None
+            if not isinstance(house, dict) or _int(house.get("mid"), 0) <= 0:
+                continue
+            if str(house.get("dpId") or "").strip() or house.get("loc_mark") != mark:
+                continue
+            spec = _hx_spec(house.get("hxId"))
+            houses.append({
+                "mid": _int(house["mid"]),
+                "uid": _int(key),
+                "loc_mark": list(mark),
+                "loc_sort": house["loc_sort"],
+                "name": house.get("name") or house.get("houseName") or "家园",
+                "desc": house.get("desc") or "",
+                "dsc": house.get("desc") or "",
+                "entryRoom": spec["entryRoom"],
+                "fqId": house.get("fqId") or "",
+                "hxId": spec["hxId"],
+            })
+    houses.sort(key=lambda house: (house["loc_sort"], house["mid"]))
+    return build_response_body({"list": houses, "owner": _role_name(ctx, userid)})
 
 
 @route(["GET", "POST"], "get_location_max")
