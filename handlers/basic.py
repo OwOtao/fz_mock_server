@@ -3061,7 +3061,14 @@ def get_devote_list(ctx):
 
 @route(["GET"], "challengemap_unfinished")
 def challengemap_unfinished(ctx):
-    return _ok({"status": 0})
+    from handlers.challenge_map import challengemap_unfinished as handle
+    return handle(ctx)
+
+
+@route(["GET"], "get_user_anecdote")
+def get_user_anecdote(ctx):
+    from handlers.challenge_map import get_user_anecdote as handle
+    return handle(ctx)
 
 
 SPRING_FESTIVAL_ACTIONS = [

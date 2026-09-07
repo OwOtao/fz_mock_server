@@ -12,3 +12,4 @@ from handlers import fist  # noqa: F401
 from handlers import teacher_build  # noqa: F401
 from handlers import homeland  # noqa: F401
 from handlers import har_91  # noqa: F401
+from handlers import challenge_map  # noqa: F401

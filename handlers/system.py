@@ -338,6 +338,7 @@ def _game_user_info_payload(ctx, userid):
         "jiayuantch": True,
         "hometch": {"switchs": 0},
         "task": {},
+        "challengeMapCompleted": sorted((account.get("challenge_map") or {}).get("completed", {})),
     }
 
 
