@@ -744,6 +744,66 @@ def get_luck_box_list(ctx):
     return _ok(data)
 
 
+def _luck_box_current_list(ctx, userid):
+    bucket = _feature_bucket(ctx, "luck_box", userid)
+    index = _as_int(bucket.get("refresh_index"), -1)
+    filename = "%03d_get_luck_box_list.json" % (146 + index) if index >= 0 else "151_get_luck_box_list.json"
+    return bucket, _capture_data(filename)
+
+
+@route(["POST"], "buy_luck_box_good")
+def buy_luck_box_good(ctx):
+    userid, error = _require_user(ctx)
+    if error:
+        return error
+    body = _body(ctx)
+    rid = _as_int(body.get("rid"), -1)
+    activity_id = str(body.get("activity_id") or "tianyuanqihe")
+    if activity_id != "tianyuanqihe" or rid < 0:
+        return build_response_body({}, errcode=400, errmsg="invalid luck box request")
+    with ctx["state"] ._lock:
+        bucket, data = _luck_box_current_list(ctx, userid)
+        limit = max(_as_int(data.get("buy_limit"), 30), 0)
+        times = max(_as_int(bucket.get("buy_times"), 0), 0)
+        if times >= limit:
+            return build_response_body({}, errcode=1, errmsg="buy limit reached")
+        goods = next((item for item in data.get("list") or [] if _as_int(item.get("rid"), -1) == rid), None)
+        if goods is None:
+            return build_response_body({}, errcode=404, errmsg="luck box good not found")
+        cost = max(_as_int(goods.get("dis_cost"), _as_int(goods.get("buy_cost"), 0)), 0)
+        balance = _get_yuanbao_balance(ctx, userid)
+        if balance < cost:
+            return build_response_body({}, errcode=1, errmsg="元宝不足")
+        _set_currency_balance(ctx, userid, "yuanbao", balance - cost)
+        bucket["buy_times"] = times + 1
+        bucket.setdefault("purchased", {})[str(rid)] = bucket["purchased"].get(str(rid), 0) + 1
+        bucket["updated_at"] = int(time.time())
+        ctx["state"]._changed()
+        reward = {"id": str(goods.get("id") or ""), "num": max(_as_int(goods.get("number"), 1), 1)}
+        return _ok({
+            "rid": rid,
+            "reward": [reward],
+            "buy_times": bucket["buy_times"],
+            "remove_yuanbao": cost,
+            "yuanbao": balance - cost,
+            "dataVer": _data_version(ctx, userid, body.get("dataVer")),
+            "currencyVersion": _currency_version(ctx, userid, body.get("currencyVersion")),
+        })
+
+
+@route(["POST"], "get_luck_box_good")
+def get_luck_box_good(ctx):
+    userid, error = _require_user(ctx)
+    if error:
+        return error
+    rid = _as_int(_body(ctx).get("rid"), -1)
+    _bucket, data = _luck_box_current_list(ctx, userid)
+    goods = next((item for item in data.get("list") or [] if _as_int(item.get("rid"), -1) == rid), None)
+    if goods is None:
+        return build_response_body({}, errcode=404, errmsg="luck box good not found")
+    return _ok(copy.deepcopy(goods))
+
+
 @route(["GET"], "get_payMask_gift_info")
 def get_pay_mask_gift_info(ctx):
     _userid_value, error = _require_user(ctx)

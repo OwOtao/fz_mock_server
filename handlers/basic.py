@@ -2941,6 +2941,46 @@ def add_training_task_point(ctx):
         })
 
 
+# The client records completion of several activities through a legacy
+# ``add_record/<event>`` GET endpoint.  Route matching supports a prefix, so
+# keeping one handler here also covers newer event suffixes such as
+# ``songxin_333_unInherit`` without requiring a release for every task id.
+@route(["GET"], "add_record")
+def add_record(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+
+    tail = str((ctx.get("route_tail") or [""])[0] or "").strip()
+    event = tail.split("_", 1)[0].lower()
+    # lunjian is a historical battle record rather than a limited-time task.
+    # It still needs an acknowledgement because the client does not inspect
+    # the response body, only the protocol status.
+    if event == "lunjian":
+        return _ok({"recorded": True, "type": tail or event})
+
+    if event in TRAINING_TASK_RULES:
+        with ctx["state"]._lock:
+            bucket = _training_bucket(ctx, userid)
+            required, score = TRAINING_TASK_RULES[event]
+            task = bucket["tasks"].get(event) or {"count": 0, "completed": False}
+            count = min(max(_as_int(task.get("count"), 0), 0), required)
+            if not task.get("completed"):
+                count = min(count + 1, required)
+                completed = count >= required
+                bucket["tasks"][event] = {"count": count, "completed": completed}
+                if completed:
+                    bucket["point"] += score
+                    bucket["completion_times"] += 1
+                bucket["updated_at"] = int(time.time())
+                ctx["state"]._changed()
+        return _ok({"recorded": True, "type": tail or event})
+
+    # Unknown record types are intentionally idempotent: older clients send
+    # optional records that newer servers may not know yet.
+    return _ok({"recorded": True, "type": tail or event})
+
+
 @route(["GET"], "get_daily_point")
 def get_daily_point(ctx):
     return _ok({"point": 0})
