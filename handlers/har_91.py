@@ -459,6 +459,17 @@ _TRAINING_TASKS = {
 _TRAINING_INITIAL = ("tiaoxi", "jina", "smketou")
 _TRAINING_REFRESHED = ("nanyang", "paihangbang", "meirijifen")
 
+# 天缘奇盒的第一档残页来自玩家当前门派的顶级残页固定奖励（Items.lua
+# 中各门派 ``*4`` 宝箱的 rwId1）。未列出的门派沿用抓包中的默认残页。
+_LUCK_BOX_TOP_FRAGMENT = {
+    "huashan": (852, "pozhaocanye"),
+    "xingxiu": (2602, "xingxiu_gaoji_canye"),
+    "shaolin": (801, "shaolin_gaoji_canye"),
+    "wudang": (802, "wudang_gaoji_canye"),
+    "emei": (803, "emei_gaoji_canye"),
+    "gaibang": (804, "gaibang_gaoji_canye"),
+}
+
 
 def _choose_training_tasks(pool, preferred):
     allowed = [str(value) for value in pool if str(value) in _TRAINING_TASKS]
@@ -740,6 +751,15 @@ def get_luck_box_list(ctx):
         index = _as_int(bucket.get("refresh_index"), -1)
     filename = "%03d_get_luck_box_list.json" % (146 + index) if index >= 0 else "151_get_luck_box_list.json"
     data = _capture_data(filename)
+    menpai = str(body.get("menpai") or "").strip().lower()
+    fragment = _LUCK_BOX_TOP_FRAGMENT.get(menpai)
+    if fragment:
+        for item in data.get("list") or []:
+            if _as_int(item.get("rtype"), 0) == 1:
+                item["rid"] = fragment[0]
+                item["id"] = fragment[1]
+                item["state"] = 0
+                break
     data["buy_times"] = _as_int(bucket.get("buy_times"))
     return _ok(data)
 
