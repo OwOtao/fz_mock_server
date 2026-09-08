@@ -3193,6 +3193,39 @@ def get_spring_festival_status(ctx):
     return _ok(action)
 
 
+# 师门同门(舍友)亲密度。
+#
+# 客户端链路: FamilyGroup:getGroupMembers(get_user_group) ->
+# FamilyGroup:getAllMembersIntimacy(get_all_intimacy)。后者用 ipairs 遍历 data
+# 并把 userid -> intimacy 建表, HuPengYinBanLayer(师门任务-同门页签)还会
+# assert(false, "为什么下发的亲密度列表没有这个同门") 校验同门列表中的每个 userid
+# 都能取到亲密度。因此两个接口必须共用同一份成员来源, 且 data 必须是数组。
+INTIMACY_DEFAULT = 0
+
+
+def _group_members(ctx, userid):
+    """师门同门成员列表(get_user_group 与 get_all_intimacy 共用)。
+
+    客户端会把每个成员的 family/teacherId/teacherName 覆盖成自己的师门信息,
+    且只消费 userid 与 name(同门页签另加 id=intimacy), 所以这里只下发这两个字段。
+    """
+    role = ctx["state"].get_archive(userid) or {}
+    return [{
+        "userid": userid,
+        "name": role.get("name") or "玩家%s" % userid,
+    }]
+
+
+def _intimacy_values(ctx, userid):
+    """读取 {对方userid(str): 亲密度}, 只读且缺省为空表(不写状态)。"""
+    with ctx["state"]._lock:
+        root = ctx["state"]._state.get("intimacy")
+        bucket = root.get(str(userid)) if isinstance(root, dict) else None
+        if not isinstance(bucket, dict):
+            return {}
+        return dict(bucket)
+
+
 @route(["POST"], "get_user_group")
 def get_user_group(ctx):
     userid = _userid(ctx)
@@ -3203,12 +3236,7 @@ def get_user_group(ctx):
         requested_userid = 0
     if userid <= 0 or requested_userid != userid:
         return build_response_body([], errcode=552, errmsg="userid not found")
-    role = ctx["state"].get_archive(userid) or {}
-    name = role.get("name") or "玩家%s" % userid
-    return _ok([{
-        "userid": userid,
-        "name": name,
-    }])
+    return _ok(_group_members(ctx, userid))
 
 
 @route(["GET"], "get_group_rank")
@@ -3228,6 +3256,24 @@ def get_group_rank(ctx):
         "kongfu": max(kongfu, 0),
         "prestige": prestige,
     }])
+
+
+@route(["GET", "POST"], "get_all_intimacy")
+def get_all_intimacy(ctx):
+    """获取全部同门(舍友)的亲密度。
+
+    客户端 FamilyGroup:getAllMembersIntimacy 要求:
+      * data 为数组(ipairs 遍历), 每项至少含 userid 与 intimacy;
+      * 覆盖 get_user_group 下发的每一个同门, 否则师门任务同门页签会 assert 失败。
+    """
+    userid = _userid(ctx)
+    if userid <= 0 or ctx["state"].get_account(userid) is None:
+        return build_response_body([], errcode=552, errmsg="userid not found")
+    values = _intimacy_values(ctx, userid)
+    return _ok([{
+        "userid": member["userid"],
+        "intimacy": max(_as_int(values.get(str(member["userid"])), INTIMACY_DEFAULT), 0),
+    } for member in _group_members(ctx, userid)])
 
 
 @route(["GET"], "get_help_document")

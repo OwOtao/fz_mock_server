@@ -356,17 +356,74 @@ def login(ctx):
 
 @route(["GET"], "get_archive_list")
 def get_archive_list(ctx):
+    """存档列表(客户端 ArchiveLayer)。
+
+    ArchiveLayer:createOneArchiveItem 会无条件读这些字段, 少一个就会让整行渲染
+    报错 -> 界面空白/点不动:
+      Text_name  <- name         Text_menpai <- menpai
+      Text_exp   <- math.floor(exp)  (必须是数字, nil 会抛错)
+      Text_year  <- year("YYYY-MM")   Text_time <- time("HH:MM:SS")
+      HeadDataHeadViewPresenter <- head/looks/sex/portrait/polymorph
+      panel:releaseFunc -> changeArchive(params.index, params.userid)
+                           -> switch_archive/<index>
+    """
+    return build_response_body(_archive_list_entries(ctx))
+
+
+def _archive_list_entries(ctx):
+    from handlers.basic import _ranking_family  # 延迟导入, 避免与 basic 形成循环依赖
+
     values = ctx["state"].list_archives()
-    return build_response_body(values)
+    entries = []
+    for index, item in enumerate(values, start=1):
+        userid = item.get("userid")
+        role = ctx["state"].get_archive(userid) or {}
+        created = role.get("createTime")
+        if not isinstance(created, (int, float)) or created <= 0:
+            created = item.get("updated_at")
+        year, clock = "", ""
+        if isinstance(created, (int, float)) and created > 0:
+            stamp = time.localtime(created)
+            year = time.strftime("%Y-%m", stamp)
+            clock = time.strftime("%H:%M:%S", stamp)
+        entry = dict(item)
+        entry["index"] = index
+        entry["name"] = item.get("name") or ("存档%s" % userid)
+        entry["menpai"] = _ranking_family(role)
+        entry["exp"] = _num_or_zero(role.get("exp", item.get("exp")))
+        entry["lv"] = _num_or_zero(role.get("lv", item.get("lv")))
+        entry["year"] = year
+        entry["time"] = clock
+        for key in ("head", "looks", "sex", "portrait", "polymorph"):
+            entry[key] = role.get(key)
+        entries.append(entry)
+    return entries
+
+
+def _num_or_zero(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 @route(["GET"], "switch_archive")
 def switch_archive(ctx):
     target = _route_tail(ctx)
     try:
-        userid = int(target)
+        value = int(target)
     except (TypeError, ValueError):
-        userid = 0
+        value = 0
+    userid = value
+    if userid <= 0 or ctx["state"].get_archive(userid) is None:
+        # 客户端传的是存档位序号: ArchiveLayer:changeArchive(params.index, userid)
+        # -> switch_archive/<index>; 这里按列表顺序回查, 同时保留按 userid 切换的旧用法。
+        values = ctx["state"].list_archives()
+        if 1 <= value <= len(values):
+            try:
+                userid = int(values[value - 1].get("userid") or 0)
+            except (TypeError, ValueError):
+                userid = 0
     if userid <= 0 or ctx["state"].get_archive(userid) is None:
         return build_response_body({}, errcode=404, errmsg="archive not found")
     device_uuid = ctx.get("headers", {}).get("uuid") or ""

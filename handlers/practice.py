@@ -17,10 +17,13 @@
 from __future__ import annotations
 
 import copy
+import logging
 import time
 
 from protocol import build_response_body
 from server import route
+
+log = logging.getLogger("mock_server")
 
 
 def _header_userid(ctx):
@@ -72,6 +75,14 @@ XINSHEN_ITEM_EFFECTS = {
     "minditem3": 200,
     "minditem4": 500,
 }
+# 网络物品(服务器物品)持有上限, 即 getItemCount 下发的 limit。
+#
+# 客户端 RoleUseItem_XinShenLiHe:__canUseItem 用它判断"打开后数量超出上限",
+# 因此这个字段必须存在且是数字, 否则客户端直接 error("该心神道具未设置上限")。
+# 抓包里没有 getItemCount 的真实响应: 线上存档的心神道具停在 999, 猜测真实上限为
+# 999; 但 mock 服务端默认放宽到 9999, 避免存档刚好卡在 999 时心神礼盒打不开。
+# 需要严格复刻时把这里改成 999 即可。
+XINSHEN_ITEM_LIMIT = 9999
 
 
 def _practice_bucket(ctx, userid):
@@ -180,8 +191,32 @@ def _restore_xinshen(bucket, restore):
     curr, max_v, start_time = _settle_xinshen_recovery(bucket)
     restore = max(_as_int(restore, 0), 0)
     xin = bucket["xinShen"]
-    xin["curr"] = min(curr + restore, max_v)
+    # 同样不截断: curr 可能因为客户端用心神道具而已经超过上限
+    xin["curr"] = curr + restore
     xin["recoverStartTime"] = int(time.time()) if xin["curr"] >= max_v else start_time
+    return xin["curr"], max_v
+
+
+def _align_xinshen_with_client(bucket, reported):
+    """按客户端上报的当前心神对齐服务端状态。
+
+    客户端(2.1.01)用心神回复道具时不做上限截断(见 use_item 注释), 所以它上报的
+    当前值可以超过心神上限; mock 服务端只把 curr 抬到上报值, 不再"顺便"升级心神
+    上限等级 —— 上限仍由服务端等级决定, 与客户端下次 getXinShenValue 拉到的值一致。
+    """
+    reported = max(_as_int(reported, 0), 0)
+    if reported <= 0:
+        return None
+    xin = bucket.setdefault("xinShen", {
+        "curr": DEFAULT_XINSHEN_MAX,
+        "max": DEFAULT_XINSHEN_MAX,
+        "level": 1,
+    })
+    max_v = max(_as_int(xin.get("max"), DEFAULT_XINSHEN_MAX), 1)
+    if reported > max(_as_int(xin.get("curr"), 0), 0):
+        xin["curr"] = reported
+        if reported >= max_v:
+            xin["recoverStartTime"] = int(time.time())
     return xin["curr"], max_v
 
 
@@ -189,15 +224,17 @@ def _settle_xinshen_recovery(bucket, now=None):
     now = int(time.time()) if now is None else max(_as_int(now, 0), 0)
     xin = bucket.setdefault("xinShen", {"curr": DEFAULT_XINSHEN_MAX, "max": DEFAULT_XINSHEN_MAX})
     max_v = max(_as_int(xin.get("max"), DEFAULT_XINSHEN_MAX), 1)
-    curr = max(0, min(_as_int(xin.get("curr"), max_v), max_v))
+    # 允许 curr 超过 max(客户端用心神道具时不截断, 见 use_item 注释),
+    # 因此这里不能把超上限的值压回上限, 只做下限保护。
+    curr = max(_as_int(xin.get("curr"), 0), 0)
     start_time = max(_as_int(xin.get("recoverStartTime"), now), 0)
     if start_time > now:
         start_time = now
     if curr >= max_v:
-        xin["curr"] = max_v
+        xin["curr"] = curr
         xin["max"] = max_v
         xin["recoverStartTime"] = now
-        return max_v, max_v, now
+        return curr, max_v, now
     periods = (now - start_time) // XINSHEN_RECOVER_INTERVAL
     if periods > 0:
         curr = min(curr + periods * XINSHEN_RECOVER_VALUE, max_v)
@@ -392,7 +429,12 @@ def lian_gong_start(ctx):
     action = body.get("actionData") if isinstance(body.get("actionData"), dict) else {}
     bucket = _practice_bucket(ctx, userid)
     select_tili = _as_int(action.get("selectTiLi"), 0)
-    xinshen_cost = _as_int(action.get("xinShenCost") or action.get("xinshen"), 0)
+    # xinShenCost 可能为 0(客户端心神不足时成本算 0), 不能用 or 回退到 xinshen
+    cost_value = action.get("xinShenCost")
+    if cost_value is None:
+        cost_value = action.get("xinshen")
+    xinshen_cost = _as_int(cost_value, 0)
+    _align_xinshen_with_client(bucket, action.get("xinshen"))
     ok_tili, curr_tili, max_tili = _cost_tili(bucket, select_tili)
     if not ok_tili:
         return build_response_body(
@@ -539,7 +581,11 @@ def xiu_lian_start(ctx):
     action = body.get("actionData") if isinstance(body.get("actionData"), dict) else {}
     bucket = _practice_bucket(ctx, userid)
     select_tili = _as_int(action.get("selectTiLi"), 0)
-    xinshen_cost = _as_int(action.get("xinShenCost") or action.get("xinshen"), 0)
+    cost_value = action.get("xinShenCost")
+    if cost_value is None:
+        cost_value = action.get("xinshen")
+    xinshen_cost = _as_int(cost_value, 0)
+    _align_xinshen_with_client(bucket, action.get("xinshen"))
     ok_tili, curr_tili, max_tili = _cost_tili(bucket, select_tili)
     if not ok_tili:
         return build_response_body(
@@ -768,7 +814,12 @@ def use_item(ctx):
         if curr >= max_xin:
             return build_response_body({}, errcode=400, errmsg="xinshen is full")
 
-        next_curr = min(curr + effect, max_xin)
+        # 与客户端保持一致: 2.1.01 的 XinShenRecoveryPresenter 用心神回复道具时是
+        #   local xinshen = self.__xinshen + itemIdData.effect
+        # (APK 里没有 math.min 上限截断, 仓库 fzjh_lua 副本那一行是更新过的版本),
+        # 所以客户端显示值可以超过心神上限; 服务端同样不截断, 否则下一次
+        # getXinShenValue 会把客户端那一屏的数值压回上限, 两边对不上。
+        next_curr = curr + effect
         recover_start_time = max(
             _as_int(xin.get("recoverStartTime"), int(time.time())),
             0,
@@ -799,6 +850,175 @@ def use_item(ctx):
             state_store.put_archive(userid, role, data_ver=data_ver)
 
     return build_response_body(result)
+
+
+def _item_map(bucket):
+    item_map = bucket.setdefault("itemMap", {})
+    return item_map if isinstance(item_map, dict) else {}
+
+
+def _server_item_count(bucket, item_id):
+    """服务器物品(心神道具)在 practice.itemMap 中的数量。"""
+    item = _item_map(bucket).get(item_id)
+    return max(_as_int((item or {}).get("count"), 0), 0) if isinstance(item, dict) else 0
+
+
+def _set_server_item_count(bucket, item_id, value):
+    """写回 practice.itemMap 中的数量, 兼容历史脏数据。"""
+    item = _item_map(bucket).get(item_id)
+    if not isinstance(item, dict):
+        item = {}
+        _item_map(bucket)[item_id] = item
+    item["count"] = max(_as_int(value, 0), 0)
+    return item["count"]
+
+
+def _inventory_item_count(state_store, userid, item_id):
+    """邮件/兑换发放到 inventory_items 的普通网络物品数量。"""
+    with state_store._lock:
+        inventory = (state_store._state.get("inventory_items") or {}).get(str(userid))
+        return max(_as_int((inventory or {}).get(item_id), 0), 0)
+
+
+def _bag_item_count(archive, item_id):
+    """存档背包(archive["items"])中的数量, 客户端礼盒/兑换券这类普通道具走这里。"""
+    total = 0
+    for item in (archive or {}).get("items") or []:
+        if isinstance(item, dict) and str(item.get("itemId")) == item_id:
+            total += max(_as_int(item.get("count"), 0), 0)
+    return total
+
+
+def _take_from_bag(archive, item_id, number):
+    """从存档背包扣除并写回列表, 返回实际扣除数量。"""
+    remaining = max(_as_int(number, 0), 0)
+    kept = []
+    for item in (archive or {}).get("items") or []:
+        if remaining > 0 and isinstance(item, dict) and str(item.get("itemId")) == item_id:
+            count = max(_as_int(item.get("count"), 0), 0)
+            take = min(count, remaining)
+            if take:
+                remaining -= take
+                item["count"] = count - take
+                if item["count"] <= 0:
+                    continue
+        kept.append(item)
+    archive["items"] = kept
+    return max(_as_int(number, 0), 0) - remaining
+
+
+@route(["POST"], "getItemCount")
+def get_item_count(ctx):
+    """服务器物品数量查询(心神道具)。
+
+    客户端 RoleUseItem_XinShenLiHe:__canUseItem 的硬依赖:
+      * data.limit 缺失会直接 error("该心神道具未设置上限, 道具id:...")
+      * data.count + 礼盒内数量 > data.limit 时提示"打开后XX数量超出上限, 打开失败"
+    所以这里必须返回 {itemId, count, limit}, 且 limit 为数字。
+    """
+    userid = _header_userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    item_id = str(_body_dict(ctx).get("itemId") or "")
+    if not item_id:
+        return build_response_body({}, errcode=400, errmsg="invalid item id")
+    state_store = ctx["state"]
+    bucket = _practice_bucket(ctx, userid)
+    archive = state_store.get_archive(userid)
+    count = (
+        _server_item_count(bucket, item_id)
+        + _inventory_item_count(state_store, userid, item_id)
+        + _bag_item_count(archive, item_id)
+    )
+    return build_response_body({
+        "itemId": item_id,
+        "count": count,
+        "limit": XINSHEN_ITEM_LIMIT,
+    })
+
+
+@route(["POST"], "addItemCount")
+def add_item_count(ctx):
+    """发放服务器物品(心神道具), 返回 dataVer 供客户端 __saveAction 更新版本。"""
+    userid = _header_userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body_dict(ctx)
+    item_id = str(body.get("itemId") or "")
+    count = _as_int(body.get("count"), 0)
+    if not item_id or count == 0:
+        return build_response_body({}, errcode=400, errmsg="invalid item")
+    state_store = ctx["state"]
+    with state_store._lock:
+        server_data_ver = _data_ver(ctx, userid)
+        request_data_ver = max(_as_int(body.get("dataVer"), 0), 0)
+        bucket = _practice_bucket(ctx, userid)
+        current = _server_item_count(bucket, item_id)
+        new_count = min(max(current + count, 0), XINSHEN_ITEM_LIMIT)
+        _set_server_item_count(bucket, item_id, new_count)
+        data_ver = max(server_data_ver, request_data_ver) + 1
+        _save_bucket(ctx, userid, bucket)
+        role = state_store.get_archive(userid)
+        if isinstance(role, dict):
+            role["dataVer"] = data_ver
+            system = role.get("serverActionSystem")
+            if isinstance(system, dict):
+                system["dataVersion"] = data_ver
+            state_store.put_archive(userid, role, data_ver=data_ver)
+    return build_response_body({
+        "dataVer": data_ver,
+        "itemId": item_id,
+        "count": new_count,
+        "limit": XINSHEN_ITEM_LIMIT,
+    })
+
+
+@route(["POST"], "employ_materials")
+def employ_materials(ctx):
+    """checkItemIsCanUse: 校验并直接消耗物品(客户端所有礼盒/兑换券使用前都会调)。
+
+    消耗顺序: practice.itemMap -> inventory_items -> 存档背包。
+    服务器完全没有该物品记录时按放行处理: 网络物品的发放途径(mock 未覆盖的
+    活动/线上存档)不会落库, 一律拦成"物品不足"会导致道具根本用不了。
+    """
+    userid = _header_userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body_dict(ctx)
+    item_id = str(body.get("itemId") or "")
+    number = max(_as_int(body.get("number"), 0), 0)
+    if not item_id or number <= 0:
+        return build_response_body({}, errcode=400, errmsg="invalid item")
+    state_store = ctx["state"]
+    with state_store._lock:
+        bucket = _practice_bucket(ctx, userid)
+        archive = state_store.get_archive(userid)
+        archive = archive if isinstance(archive, dict) else {}
+        server_count = _server_item_count(bucket, item_id)
+        inventory_count = _inventory_item_count(state_store, userid, item_id)
+        bag_count = _bag_item_count(archive, item_id)
+        if server_count + inventory_count + bag_count <= 0:
+            log.warning("employ_materials: 服务器无物品记录, 放行 itemId=%s userid=%s",
+                        item_id, userid)
+            return build_response_body({"itemId": item_id, "number": number})
+        if server_count + inventory_count + bag_count < number:
+            return build_response_body({}, errcode=1, errmsg="物品不足")
+        remaining = number
+        if server_count:
+            take = min(server_count, remaining)
+            _set_server_item_count(bucket, item_id, server_count - take)
+            remaining -= take
+        if remaining and inventory_count:
+            take = min(inventory_count, remaining)
+            inventory = (state_store._state.get("inventory_items") or {}).setdefault(str(userid), {})
+            inventory[item_id] = inventory_count - take
+            remaining -= take
+        if remaining:
+            _take_from_bag(archive, item_id, remaining)
+        _save_bucket(ctx, userid, bucket)
+        if archive:
+            state_store.put_archive(userid, archive)
+    return build_response_body({"itemId": item_id, "number": number})
 
 
 @route(["POST"], "getXinShenRecoverStartTime")

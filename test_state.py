@@ -23,6 +23,7 @@ from handlers.basic import (
     delete_email,
     delete_processed_emails,
     get_all_email_rewards,
+    get_all_intimacy,
     get_devote_list,
     get_devote_point,
     get_email_info,
@@ -52,7 +53,16 @@ from handlers.basic import (
     upgrade_user_bag,
     view_currency_by_type,
 )
-from handlers.practice import get_xin_shen_value, recover_xin_shen_value
+from handlers.practice import (
+    add_item_count,
+    employ_materials,
+    get_item_count,
+    get_xin_shen_value,
+    lian_gong_start,
+    recover_xin_shen_value,
+    use_item,
+    xiu_lian_start,
+)
 from handlers.familytype_data import HX_TABLE
 from handlers.homeland import (
     add_employee,
@@ -77,10 +87,12 @@ from handlers.homeland import (
 from handlers.system import (
     create_account,
     download_user_file_2,
+    get_archive_list,
     get_email,
     get_game_user_info_2,
     login_device,
     send_email,
+    switch_archive,
 )
 from handlers.teacher_build import (
     get_teacher_build_info,
@@ -1662,6 +1674,88 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(response["errcode"], 409)
         self.assertEqual(len(store.snapshot()["accounts"]), 1)
 
+    def test_archive_list_payload_matches_client_layer_fields(self):
+        """切换存档: get_archive_list 必须带上 ArchiveLayer 无条件读取的字段。
+
+        客户端 ArchiveLayer:createOneArchiveItem 里:
+          setString(params.name/menpai/year/time)、math.floor(params.exp)、
+          点击 -> changeArchive(params.index, params.userid) -> switch_archive/<index>
+        任何一个字段缺失都会让整行渲染报错(界面空白/点击无反应)。
+        """
+        userid = 1000000002
+        other = 1000000003
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {"userid": userid},
+                str(other): {"userid": other},
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "name": "江湖小虾",
+                    "lv": 205,
+                    "exp": 909709,
+                    "family": {"name": "huashan", "level": 4},
+                    "createTime": 1788192930,
+                    "looks": 16,
+                    "sex": "男",
+                },
+                # 缺 name/lv/exp 的脏存档也要能正常下发, 不能抛错
+                str(other): {"userid": other},
+            },
+        }, autosave=False)
+
+        listed = get_archive_list({"state": store, "headers": {"userid": str(userid)}})
+        self.assertEqual(listed["errcode"], 0)
+        entries = {int(item["userid"]): item for item in listed["data"]}
+        self.assertEqual(set(entries), {userid, other})
+
+        first = entries[userid]
+        self.assertEqual(first["index"], 1)
+        self.assertEqual(first["name"], "江湖小虾")
+        self.assertEqual(first["menpai"], "华山")
+        self.assertIsInstance(first["exp"], float)
+        self.assertIsInstance(first["lv"], float)
+        self.assertEqual(first["year"], time.strftime("%Y-%m", time.localtime(1788192930)))
+        self.assertEqual(first["time"], time.strftime("%H:%M:%S", time.localtime(1788192930)))
+        for key in ("head", "looks", "sex", "portrait", "polymorph"):
+            self.assertIn(key, first)
+
+        second = entries[other]
+        self.assertEqual(second["index"], 2)
+        self.assertEqual(second["name"], "存档%s" % other)
+        self.assertIsInstance(second["exp"], float)
+        self.assertIsInstance(second["lv"], float)
+        self.assertIsInstance(second["menpai"], str)
+        self.assertIsInstance(second["year"], str)
+        self.assertIsInstance(second["time"], str)
+
+        # 客户端点击时发的是存档位序号
+        switched = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": ["2"],
+        })
+        self.assertEqual(switched["errcode"], 0)
+        self.assertEqual(switched["data"]["userid"], other)
+        self.assertEqual(store.get_active_archive("uuid-archive")["userid"], other)
+
+        # 旧的按 userid 切换用法保持可用
+        legacy = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": [str(userid)],
+        })
+        self.assertEqual(legacy["errcode"], 0)
+        self.assertEqual(store.get_active_archive("uuid-archive")["userid"], userid)
+
+        missing = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": ["99"],
+        })
+        self.assertEqual(missing["errcode"], 404)
+
     def test_seed_import_and_switch(self):
         with tempfile.TemporaryDirectory() as directory:
             seed = os.path.join(directory, "RoleData.json")
@@ -1859,6 +1953,50 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(bad_type["errcode"], 4)
         bad_point = add_devote_point(dict(base_ctx, body={"type": 2, "point": 0}))
         self.assertEqual(bad_point["errcode"], 4)
+
+    def test_get_all_intimacy_covers_every_group_member(self):
+        """师门任务-同门页签: get_all_intimacy 必须覆盖 get_user_group 的每个同门。
+
+        客户端 HuPengYinBanLayer 会 assert(false, "为什么下发的亲密度列表没有这个同门"),
+        所以两个接口的 userid 集合必须一致, 且 data 必须是数组(ipairs 遍历)。
+        """
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"name": "同门测试", "exp": 0})
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        group = get_user_group(dict(base_ctx, body={
+            "userid": userid,
+            "tid": "fenglao",
+            "menpai": "huashan",
+            "isCache": 0,
+        }))
+        self.assertEqual(group["errcode"], 0)
+        self.assertIsInstance(group["data"], list)
+        self.assertTrue(group["data"])
+
+        intimacy = get_all_intimacy(dict(base_ctx))
+        self.assertEqual(intimacy["errcode"], 0)
+        self.assertIsInstance(intimacy["data"], list)
+        self.assertEqual(len(intimacy["data"]), len(group["data"]))
+
+        by_userid = {str(item["userid"]): item["intimacy"] for item in intimacy["data"]}
+        for member in group["data"]:
+            # 客户端: intimacyList[roleData.userid] ~= nil, 且直接参与数值比较
+            self.assertIn(str(member["userid"]), by_userid)
+            self.assertIsInstance(by_userid[str(member["userid"])], int)
+            self.assertGreaterEqual(by_userid[str(member["userid"])], 0)
+        self.assertEqual(by_userid[str(userid)], 0)
+
+        # 亲密度只读: 读取不应污染状态
+        with store._lock:
+            self.assertNotIn("intimacy", store._state)
+
+        # 未建号 -> 552; 缺 userid 头 -> 552
+        missing = get_all_intimacy({"state": store, "headers": {}})
+        self.assertEqual(missing["errcode"], 552)
+        unknown = get_all_intimacy({"state": store, "headers": {"userid": "999999999"}})
+        self.assertEqual(unknown["errcode"], 552)
 
     def test_shop_exchange_goods_deducts_points_and_enforces_limit(self):
         userid = 9048162383
@@ -2093,6 +2231,245 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(response["data"]["curr"], 110)
         self.assertEqual(response["data"]["time"], 1300)
         self.assertEqual(response["data"]["dataVer"], 4)
+
+    def test_xin_shen_gift_box_uses_server_item_interfaces(self):
+        """心神礼盒 22xinshengiftbox: getItemCount -> employ_materials -> addItemCount。
+
+        客户端 RoleUseItem_XinShenLiHe 依赖 getItemCount 的 count/limit 做上限预检,
+        再调 employ_materials 消耗礼盒, 最后用 addItemCount 发放凝心露/聚心丹。
+        """
+        from handlers.practice import XINSHEN_ITEM_LIMIT
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {
+                str(userid): {
+                    "itemMap": {
+                        "minditem3": {"count": 995},
+                        "minditem4": {"count": XINSHEN_ITEM_LIMIT},
+                    },
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "name": "礼盒测试",
+                    "dataVer": 7,
+                    "items": [
+                        {"id": 1, "itemId": "22xinshengiftbox", "count": 2},
+                        {"id": 2, "itemId": "xinggongsan", "count": 5},
+                    ],
+                },
+            },
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        # 1. getItemCount: 礼盒内容物 凝心露*3 / 聚心丹*2 的上限预检数据
+        three = get_item_count(dict(ctx, body={"itemId": "minditem3", "dataVer": 7, "codeVer": 1}))
+        self.assertEqual(three["errcode"], 0)
+        self.assertEqual(three["data"]["count"], 995)
+        self.assertEqual(three["data"]["limit"], XINSHEN_ITEM_LIMIT)
+        self.assertLessEqual(three["data"]["count"] + 3, three["data"]["limit"])
+
+        four = get_item_count(dict(ctx, body={"itemId": "minditem4", "dataVer": 7, "codeVer": 1}))
+        self.assertEqual(four["data"]["count"], XINSHEN_ITEM_LIMIT)
+        # 客户端: itemData.count + 2 > itemData.limit -> "打开后聚心丹数量超出上限，打开失败"
+        self.assertGreater(four["data"]["count"] + 2, four["data"]["limit"])
+
+        # 2. employ_materials(checkItemIsCanUse): 从背包扣掉礼盒
+        used = employ_materials(dict(ctx, body={"itemId": "22xinshengiftbox", "number": 1}))
+        self.assertEqual(used["errcode"], 0)
+        archive = store.get_archive(userid)
+        box = next(i for i in archive["items"] if i["itemId"] == "22xinshengiftbox")
+        self.assertEqual(box["count"], 1)
+
+        # 3. addItemCount: 发放凝心露*3 / 聚心丹*2, 返回 dataVer 供 __saveAction
+        added = add_item_count(dict(ctx, body={
+            "itemId": "minditem3", "count": 3, "dataVer": 7, "codeVer": 1,
+        }))
+        self.assertEqual(added["errcode"], 0)
+        self.assertEqual(added["data"]["count"], 998)
+        self.assertIs(type(added["data"]["dataVer"]), int)
+        self.assertGreater(added["data"]["dataVer"], 7)
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem3"]["count"], 998)
+        self.assertEqual(store.get_archive(userid)["dataVer"], added["data"]["dataVer"])
+
+        # 发放数量受上限约束
+        capped = add_item_count(dict(ctx, body={
+            "itemId": "minditem4", "count": 2, "dataVer": added["data"]["dataVer"], "codeVer": 1,
+        }))
+        self.assertEqual(capped["data"]["count"], XINSHEN_ITEM_LIMIT)
+
+    def test_get_item_count_limit_gates_gift_box_overflow(self):
+        """limit=999(线上存档观察到的上限)时, 礼盒预检会拦下超上限的开箱。"""
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {str(userid): {"itemMap": {
+                "minditem3": {"count": 999},
+                "minditem4": {"count": 995},
+            }}},
+            "archives": {str(userid): {"userid": userid, "items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.XINSHEN_ITEM_LIMIT", 999):
+            three = get_item_count(dict(ctx, body={"itemId": "minditem3"}))
+            four = get_item_count(dict(ctx, body={"itemId": "minditem4"}))
+        # 凝心露*3 会溢出 -> 客户端提示"打开后凝心露数量超出上限，打开失败"
+        self.assertGreater(three["data"]["count"] + 3, three["data"]["limit"])
+        # 聚心丹*2 不溢出 -> 允许开箱
+        self.assertLessEqual(four["data"]["count"] + 2, four["data"]["limit"])
+
+    def test_item_count_and_employ_materials_error_paths(self):
+        from handlers.practice import XINSHEN_ITEM_LIMIT
+        userid = 88
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {str(userid): {"itemMap": {"minditem1": {"count": 1}}}},
+            "inventory_items": {str(userid): {"familyToken": 2}},
+            "archives": {str(userid): {"userid": userid, "items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        # 未持有的物品: count=0 但 limit 仍要有值(客户端缺 limit 会 error)
+        missing = get_item_count(dict(ctx, body={"itemId": "minditem2"}))
+        self.assertEqual(missing["data"]["count"], 0)
+        self.assertEqual(missing["data"]["limit"], XINSHEN_ITEM_LIMIT)
+        self.assertEqual(get_item_count(dict(ctx, body={}))["errcode"], 400)
+        self.assertEqual(get_item_count({"state": store, "headers": {}})["errcode"], 552)
+
+        # 数量不足 -> errcode=1 + 中文提示(客户端 PopText)
+        not_enough = employ_materials(dict(ctx, body={"itemId": "minditem1", "number": 3}))
+        self.assertEqual(not_enough["errcode"], 1)
+        self.assertEqual(not_enough["errmsg"], "物品不足")
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem1"]["count"], 1)
+
+        # inventory_items 里的网络物品也能消耗
+        token = employ_materials(dict(ctx, body={"itemId": "familyToken", "number": 2}))
+        self.assertEqual(token["errcode"], 0)
+        self.assertEqual(store.snapshot()["inventory_items"][str(userid)]["familyToken"], 0)
+
+        # 服务器无记录的物品放行(线上存档/未落库的发放途径), 否则道具无法使用
+        unknown = employ_materials(dict(ctx, body={"itemId": "22xinshengiftbox", "number": 1}))
+        self.assertEqual(unknown["errcode"], 0)
+        self.assertEqual(employ_materials(dict(ctx, body={"itemId": "x", "number": 0}))["errcode"], 400)
+
+    def test_lian_gong_start_aligns_xinshen_with_client_report(self):
+        """练功: 客户端上报心神(可能超过上限)高于 mock 自建值时不报 xinshen not enough。
+
+        线上抓包场景: 服务端 400/400(1 级), 客户端 actionData.xinshen=520
+        (用心神道具时客户端不截断), 一次练功 xinShenCost=456
+        -> 旧实现直接 errcode=400 "xinshen not enough"。
+        """
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 400, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "actionData": {
+                    "xinShenCost": 456,
+                    "xinshen": 520,
+                    "selectTiLi": 90,
+                    "duration": 18077,
+                    "skillId": "disartBlazClaw",
+                },
+                "codeVer": 1,
+                "dataVer": 90,
+            },
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            started = lian_gong_start(ctx)
+        self.assertEqual(started["errcode"], 0, started)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        # 对齐到客户端上报值后扣掉练功消耗; 上限等级不动(不再"顺便"升级)
+        self.assertEqual(xin["curr"], 520 - 456)
+        self.assertEqual(xin["max"], 400)
+        self.assertEqual(xin["level"], 1)
+        self.assertEqual(store.snapshot()["practice"][str(userid)]["lianGong"]["state"], 1)
+
+        # 修炼走同一条对齐逻辑
+        again = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 400, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx2 = dict(ctx, state=again, body=dict(ctx["body"], actionData={
+            "xinShenCost": 456, "xinshen": 520, "selectTiLi": 0, "duration": 18077,
+        }))
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            xiu = xiu_lian_start(ctx2)
+        self.assertEqual(xiu["errcode"], 0, xiu)
+
+    def test_use_item_keeps_xinshen_above_max_like_client(self):
+        """心神回复道具: 与客户端一致, 不把心神截断到上限。
+
+        2.1.01 客户端 XinShenRecoveryPresenter 里是 `curr + effect`(无 math.min),
+        所以显示值能超过上限; 服务端若截断, 下次 getXinShenValue 会把客户端那一屏
+        的数值压回去, 两边对不上。
+        """
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 20, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "itemMap": {"minditem4": {"count": 2}},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"itemId": "minditem4", "dataVer": 1, "codeVer": 1},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            used = use_item(ctx)
+        self.assertEqual(used["errcode"], 0, used)
+        self.assertEqual(used["data"]["curr"], 20 + 500)  # 聚心丹 500
+        self.assertEqual(used["data"]["max"], 400)
+        self.assertEqual(used["data"]["count"], 1)
+
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            current = get_xin_shen_value(dict(ctx, body={"codeVer": 1, "dataVer": 2}))
+        # 恢复结算不会把超上限的值压回上限
+        self.assertEqual(current["data"]["curr"], 520)
+        self.assertEqual(current["data"]["max"], 400)
+
+        # 已达上限后继续用道具 -> 服务端拒绝(客户端此时也会提示"已达到心神上限")
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            full = use_item(dict(ctx, body={"itemId": "minditem4", "dataVer": 2, "codeVer": 1}))
+        self.assertEqual(full["errcode"], 400)
+        self.assertEqual(full["errmsg"], "xinshen is full")
+
+    def test_lian_gong_start_zero_xinshen_cost_is_not_charged(self):
+        """xinShenCost=0 时不能因 `or` 回退而扣掉客户端上报的整份心神。"""
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 300, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "actionData": {"xinShenCost": 0, "xinshen": 300, "selectTiLi": 0},
+                "codeVer": 1,
+                "dataVer": 1,
+            },
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            started = lian_gong_start(ctx)
+        self.assertEqual(started["errcode"], 0, started)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        self.assertEqual(xin["curr"], 300)
 
     def test_homeland_house_employee_and_dispatch_state_persist(self):
         userid = 9048162373
