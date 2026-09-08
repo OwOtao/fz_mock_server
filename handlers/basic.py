@@ -3030,13 +3030,15 @@ def _devote_bucket(ctx, userid):
             "dev_point": 0,
             "day": today,
             "today_point": 0,
+            "qingan_count": 0,
         })
         changed = False
         if bucket.get("day") != today:
             bucket["day"] = today
             bucket["today_point"] = 0
+            bucket["qingan_count"] = 0
             changed = True
-        for key in ("dev_point", "today_point"):
+        for key in ("dev_point", "today_point", "qingan_count"):
             value = max(_as_int(bucket.get(key), 0), 0)
             if bucket.get(key) != value:
                 bucket[key] = value
@@ -3052,39 +3054,58 @@ def get_devote_point(ctx):
     if userid <= 0:
         return build_response_body({}, errcode=552, errmsg="userid not found")
     bucket = _devote_bucket(ctx, userid)
-    return _ok({"dev_point": bucket["dev_point"]})
+    return _ok({"dev_point": bucket["dev_point"], "has_reward": "N"})
+
+
+# 请安(type=1)贡献点由服务端定额发放: 上游抓包为 500, 按需求调整为 1500/日。
+QINGAN_DAILY_POINT = 1500
 
 
 @route(["POST"], "add_devote_point")
 def add_devote_point(ctx):
+    """师门贡献点获取。
+
+    type=1 请安(每日一次, 贡献点服务端定额, 客户端 point 传 0)
+    type=2 每日挑战任务 / 3 飞贼任务 / 4,5 其他(贡献点由客户端上报)
+    重复请安返回 errcode=3, 客户端提示"你今天已经请过安了！"。
+    """
     userid = _userid(ctx)
     if userid <= 0:
         return build_response_body({}, errcode=552, errmsg="userid not found")
     body = _body(ctx)
     devote_type = _as_int(body.get("type"), 0)
     point = _as_int(body.get("point"), 0)
-    if devote_type not in (1, 2, 3, 4, 5) or point <= 0:
-        return build_response_body({}, errcode=3, errmsg="type or point is invalid")
+    if devote_type not in (1, 2, 3, 4, 5) or (devote_type != 1 and point <= 0):
+        return build_response_body({}, errcode=4, errmsg="类型错误")
     with ctx["state"]._lock:
         bucket = _devote_bucket(ctx, userid)
+        if devote_type == 1:
+            if _as_int(bucket.get("qingan_count"), 0) >= 1:
+                return build_response_body({}, errcode=3, errmsg="今日已请过安")
+            point = QINGAN_DAILY_POINT
         remaining = max(DEVOTE_DAILY_LIMIT - bucket["today_point"], 0)
         if remaining <= 0:
             return build_response_body({
                 "get_point": 0,
                 "dev_point": bucket["dev_point"],
-                "msg": "当日师门贡献点已达上限",
-            }, errcode=2, errmsg="daily devote point limit reached")
+                "msg": "已达到当日贡献点获取上限",
+            }, errcode=3, errmsg="已达到当日贡献点获取上限")
         actual_point = min(point, remaining)
         bucket["dev_point"] += actual_point
         bucket["today_point"] += actual_point
+        if devote_type == 1:
+            bucket["qingan_count"] = _as_int(bucket.get("qingan_count"), 0) + 1
         bucket["updated_at"] = int(time.time())
         ctx["state"]._changed()
         total_point = bucket["dev_point"]
-    return _ok({
+    result = {
         "get_point": actual_point,
         "dev_point": total_point,
-        "msg": "师门贡献点 +%s" % actual_point,
-    })
+        "msg": "获得师门贡献点%s" % actual_point,
+    }
+    if devote_type == 1:
+        result["special_time"] = False
+    return _ok(result)
 
 
 @route(["POST"], "get_devote_list")

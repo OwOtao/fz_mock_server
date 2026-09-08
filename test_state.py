@@ -1817,6 +1817,49 @@ class StateStoreTest(unittest.TestCase):
         self.assertEqual(rank["data"][0]["kongfu"], 0)
         self.assertEqual(rank["data"][0]["prestige"], 100)
 
+    def test_qingan_grants_daily_devote_point_once_per_day(self):
+        from handlers.basic import QINGAN_DAILY_POINT
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        # 请安: 客户端 point=0, 贡献点由服务端定额发放
+        greeted = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(greeted["errcode"], 0)
+        self.assertEqual(greeted["data"]["get_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(greeted["data"]["dev_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(greeted["data"]["msg"], "获得师门贡献点%s" % QINGAN_DAILY_POINT)
+        self.assertFalse(greeted["data"]["special_time"])
+
+        current = get_devote_point(dict(base_ctx))
+        self.assertEqual(current["data"]["dev_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(current["data"]["has_reward"], "N")
+
+        # 同日重复请安 -> errcode=3(客户端提示"你今天已经请过安了！")且不加分
+        again = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(again["errcode"], 3)
+        self.assertEqual(get_devote_point(dict(base_ctx))["data"]["dev_point"], QINGAN_DAILY_POINT)
+
+        # 其他类型不受请安次数影响, 仍按客户端上报加分
+        task = add_devote_point(dict(base_ctx, body={"type": 2, "point": 100}))
+        self.assertEqual(task["errcode"], 0)
+        self.assertEqual(task["data"]["get_point"], 100)
+        self.assertEqual(task["data"]["dev_point"], QINGAN_DAILY_POINT + 100)
+
+        # 跨天重置: 篡改日期标记后请安次数与今日上限恢复
+        with store._lock:
+            store._state["devote"][str(userid)]["day"] = "2000-01-01"
+        next_day = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(next_day["errcode"], 0)
+        self.assertEqual(next_day["data"]["get_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(next_day["data"]["dev_point"], QINGAN_DAILY_POINT * 2 + 100)
+
+        # 非法类型 / type!=1 且 point<=0 -> errcode=4
+        bad_type = add_devote_point(dict(base_ctx, body={"type": 9, "point": 100}))
+        self.assertEqual(bad_type["errcode"], 4)
+        bad_point = add_devote_point(dict(base_ctx, body={"type": 2, "point": 0}))
+        self.assertEqual(bad_point["errcode"], 4)
+
     def test_shop_exchange_goods_deducts_points_and_enforces_limit(self):
         userid = 9048162383
         store = StateStore(initial={
