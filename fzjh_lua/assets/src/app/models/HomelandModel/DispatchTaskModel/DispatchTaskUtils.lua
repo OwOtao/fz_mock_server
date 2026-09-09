@@ -14,6 +14,7 @@ function DispatchTaskUtils:init()
     activityTaskRelations = {
         ["task1"] = {
             relationId = "task1",
+            configTaskId = false,
             traitBufferName = "daniaoCDReduce",
             reward = {
                 {
@@ -30,6 +31,7 @@ function DispatchTaskUtils:init()
         },
         ["task2"] = {
             relationId = "task2",
+            configTaskId = false,
             traitBufferName = "xipanziCDReduce",
             reward = {
                 {
@@ -46,6 +48,7 @@ function DispatchTaskUtils:init()
         },
         ["task16"] = {
             relationId = "task16",
+            configTaskId = "task16",
             traitBufferName = "feizeiCDReduce",
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
@@ -57,30 +60,33 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task16Config = LiLianTaskHelper:getTaskConfigInfo("task16", confVer)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task16Config.jobreward1,lv))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, taskConfig.jobreward1, lv))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task16Config = LiLianTaskHelper:getTaskConfigInfo("task16", confVer)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task16Config.jobreward2))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, taskConfig.jobreward2))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "yueli",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        return LiLianTaskHelper:getTaskConfigInfo("task16", confVer).jobreward4
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return taskConfig.jobreward4
                     end
                 }
             }
         },
         ["task17"] = {
             relationId = "task17",
+            configTaskId = "task17",
             traitBufferName = "nanyangCDReduce",
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
@@ -92,30 +98,33 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task17Config = LiLianTaskHelper:getTaskConfigInfo("task17", confVer)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task17Config.jobreward1,lv))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, taskConfig.jobreward1, lv))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task17Config = LiLianTaskHelper:getTaskConfigInfo("task17", confVer)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task17Config.jobreward2))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, taskConfig.jobreward2))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "yueli",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        return LiLianTaskHelper:getTaskConfigInfo("task17", confVer).jobreward4
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return taskConfig.jobreward4
                     end
                 }
             }
         },
         ["task19"] = {
             relationId = "task19",
+            configTaskId = "task19",
             traitBufferName = "songxinCDReduce",
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
@@ -127,23 +136,26 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task19Config = LiLianTaskHelper:getTaskConfigInfo("task19", confVer)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task19Config.jobreward2))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, taskConfig.jobreward2))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "money",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task19Config = LiLianTaskHelper:getTaskConfigInfo("task19", confVer)
-                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, task19Config.jobreward3))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, taskConfig.jobreward3))
+                        end
                     end
                 }
             }
         },
         ["task20"] = {
             relationId = "task20",
+            configTaskId = "task20",
             traitBufferName = "etuCDReduce",
             specialReward = {
                 --@desc 兼容原主线任务特殊奖励结构
@@ -155,23 +167,26 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task20Config = LiLianTaskHelper:getTaskConfigInfo("task20", confVer)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task20Config.jobreward2))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, taskConfig.jobreward2))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "money",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task20Config = LiLianTaskHelper:getTaskConfigInfo("task20", confVer)
-                        return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, task20Config.jobreward3))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("suiyin2")(exp, fy, sklv, taskConfig.jobreward3))
+                        end
                     end
                 }
             }
         },
         ["task21"] = {
             relationId = "task21",
+            configTaskId = "task21",
             traitBufferName = "gusiCDReduce",
             specialReward = {
                 _taskItems = {"atassitem13"}
@@ -181,17 +196,19 @@ function DispatchTaskUtils:init()
                 {
                     type = "属性",
                     name = "exp",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task21Config = LiLianTaskHelper:getTaskConfigInfo("task21", confVer)
-                        return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, task21Config.jobreward1,lv))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("jingyan2")(exp, fy, sklv, taskConfig.jobreward1, lv))
+                        end
                     end
                 },
                 {
                     type = "属性",
                     name = "pot",
-                    value = function(lv, exp, fy, sklv, confVer)
-                        local task21Config = LiLianTaskHelper:getTaskConfigInfo("task21", confVer)
-                        return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, task21Config.jobreward2))
+                    value = function(lv, exp, fy, sklv, taskConfig)
+                        return function()
+                            return math.floor(Formula:getFormula("qianneng2")(exp, fy, sklv, taskConfig.jobreward2))
+                        end
                     end
                 }
             }
@@ -223,6 +240,17 @@ function DispatchTaskUtils:getTaskById(taskId)
     end
 
     return dispatchTasklist[taskId]
+end
+
+function DispatchTaskUtils:getActivityTaskConfig(taskId, confVer, configTaskId)
+    local taskRelation = activityTaskRelations[taskId]
+    configTaskId = configTaskId or (taskRelation and taskRelation.configTaskId)
+
+    if not configTaskId then
+        return nil
+    end
+
+    return LiLianTaskHelper:getTaskConfigInfo(configTaskId, confVer)
 end
 
 function DispatchTaskUtils:getDispatchTaskList()
@@ -270,7 +298,11 @@ function DispatchTaskUtils:getTaskTime(taskId, confVer)
 
     local taskTime = d_task.tasktime
     if taskTime == "activemaxtime" then
-        taskTime = LiLianTaskHelper:getTaskConfigInfo(taskId, confVer).maxtime
+        local taskConfig = assert(
+            self:getActivityTaskConfig(taskId, confVer),
+            "DispatchTaskUtils:getTaskTime 主动任务配置未声明，taskId:" .. tostring(taskId)
+        )
+        taskTime = taskConfig.maxtime
     end
 
     taskTime = tonumber(taskTime)
@@ -313,11 +345,11 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId, confVer)
             roleTask = role:getTask(taskId)
         end
     else
-        print("------------------------------------",roleTaskId)
+        print("------------------------------------", roleTaskId)
         roleTask = role:getTask(roleTaskId)
 
         if roleTask == nil then
-            print("role task is nil ",roleTaskId)
+            print("role task is nil ", roleTaskId)
             local tempTask = {
                 state = TASK_STATE_IDLE,
                 startTime = 0,
@@ -327,10 +359,9 @@ function DispatchTaskUtils:getDispatchTaskRelationRoleTask(taskId, confVer)
                 zCount = 0
             }
             role:setTask(taskId, tempTask)
-            
+
             roleTask = role:getTask(taskId)
         end
-        
     end
 
     if not roleTask then
@@ -350,7 +381,10 @@ function DispatchTaskUtils:getActivityTaskSpecialItems(taskId, specialReward, co
         return specialReward._taskItems
     end
 
-    local taskConfig = LiLianTaskHelper:getTaskConfigInfo(Helper:getDef(specialReward._taskId, taskId), confVer)
+    local taskConfig = assert(
+        self:getActivityTaskConfig(taskId, confVer, specialReward._taskId),
+        "DispatchTaskUtils:getActivityTaskSpecialItems 主动任务配置未声明，taskId:" .. tostring(taskId)
+    )
     return Helper:getDef(string.split(taskConfig.taskitem, ";"), {})
 end
 
@@ -361,7 +395,8 @@ end
 --@taskId:任务ID
 --@taskCount: 今天还能完成的次数
 --@estTime: 预计完成时间
-function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTime, confVer)
+--@dispatchCountLimit: 仆人本次可派遣次数上限
+function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTime, confVer, dispatchCountLimit)
     local player = User:getRole()
 
     local taskRelation = activityTaskRelations[taskId]
@@ -381,10 +416,14 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
         ["属性"] = {},
         ["物品"] = {},
         ["day"] = {},
-        
         --@desc 活动奖励。
-        ["activity"] = {},
+        ["activity"] = {}
     }
+
+    local taskConfig = self:getActivityTaskConfig(taskId, confVer)
+    --@desc 家园派遣一次性完成本次派遣次数；可派遣次数上限受仆人功夫和忠诚度影响。
+    dispatchCountLimit = dispatchCountLimit or taskCount
+    local dispatchCount = taskCount
 
     --@desc 普通奖励
     for i, reward in ipairs(taskRelation.reward) do
@@ -394,9 +433,19 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 local exp = player:getAttr("exp")
                 local sklv = player:getKongfu()
                 local fy = player:getFinalAttr("luck")
-                estRewardList["属性"][reward.name] = reward.value(lv, exp, fy, sklv, confVer) * taskCount
+                local rewardValue = reward.value(lv, exp, fy, sklv, taskConfig)
+                if type(rewardValue) == "function" then
+                    estRewardList["属性"][reward.name] =
+                        math.floor(
+                        rewardValue() * 1 *
+                            ((dispatchCountLimit - math.max(0, taskConfig.autoTaskTimes - (dispatchCountLimit - dispatchCount))) * 1 +
+                                math.max(0, taskConfig.autoTaskTimes - (dispatchCountLimit - dispatchCount)) * taskConfig.autoTaskParam) * (dispatchCount/dispatchCountLimit)
+                    )
+                else
+                    estRewardList["属性"][reward.name] = tonumber(rewardValue) * 1 * taskCount
+                end
             elseif type(reward.value) == "number" then
-                estRewardList["属性"][reward.name] = tonumber(reward.value) * taskCount
+                estRewardList["属性"][reward.name] = tonumber(reward.value) * 1 * taskCount
             else
                 assert(false, "传值出错，value只能是number 和 function，传了" .. type(reward.value))
             end
@@ -422,13 +471,13 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 for k, v in pairs(taskItems) do
                     tempCount = tempCount + 1
                 end
-    
+
                 print("---------------------------", player:getDayFlag(taskRelation.specialReward._flag))
                 specialCount = tempCount - player:getDayFlag(taskRelation.specialReward._flag)
             else
                 specialCount = 1
             end
-    
+
             for i = 1, specialCount do
                 local tempIndex = 1
                 if taskRelation.specialReward._flag then
@@ -436,10 +485,10 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 end
                 estRewardList["物品"][taskItems[tempIndex]] = 1
             end
-            
+
             --@desc 判断是否有特殊奖励
             estRewardList.isSp = 1
-    
+
             print("========== 加入特殊奖励 ==============")
             Helper:print_lua_table(estRewardList)
             print("============== end  =================\n")
@@ -449,7 +498,7 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
     end
 
     if taskRelation.dayReward then
-        for i,day_reward in ipairs(taskRelation.dayReward) do
+        for i, day_reward in ipairs(taskRelation.dayReward) do
             local _flag = day_reward._flag
 
             --@desc 今天领取过的次数
@@ -462,7 +511,7 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
                 r_count = taskCount
             end
 
-            if r_count > 0 and day_reward:condi()  then
+            if r_count > 0 and day_reward:condi() then
                 local temp = {
                     flag = day_reward._flag,
                     count = r_count
@@ -470,25 +519,24 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
 
                 local total_value = 0
                 if type(day_reward.value) == "function" then
-
                     local t_count = today_count
-                    for i=1,r_count do
-                        local a_value = day_reward:value(t_count,true,confVer)
+                    for i = 1, r_count do
+                        local a_value = day_reward:value(t_count, true, confVer)
                         total_value = total_value + a_value
                         t_count = t_count + 1
                     end
                 elseif type(day_reward.value) == "number" then
                     total_value = day_reward.value * r_count
                 else
-                    assert(false,"每日奖励银票数值配置出错："..self.id)
+                    assert(false, "每日奖励银票数值配置出错：" .. self.id)
                 end
-                
+
                 temp.t_value = total_value
 
                 if estRewardList["day"][day_reward._type] == nil then
                     estRewardList["day"][day_reward._type] = {}
                 end
-                table.insert(estRewardList["day"][day_reward._type],temp)
+                table.insert(estRewardList["day"][day_reward._type], temp)
             end
         end
         print("========== 加入每日奖励 ==============")
@@ -499,10 +547,10 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
     --@RefType [src.app.models.task.ActivityTaskRewardConf#ActivityTaskRewardConf]
     local ActivityTaskRewardConf = require("app.models.task.ActivityTaskRewardConf")
     local roleTask = player:getTask(taskId)
-    local dCount = Helper:getDef(roleTask.dCount,0)
+    local dCount = Helper:getDef(roleTask.dCount, 0)
     --@desc 模拟完成次数
-    for i=1,taskCount do
-        local activity_rewards = ActivityTaskRewardConf:getTaskLocalReward(taskId,{dCount = dCount})
+    for i = 1, taskCount do
+        local activity_rewards = ActivityTaskRewardConf:getTaskLocalReward(taskId, {dCount = dCount})
         if MapIsEmpty(activity_rewards) == false then
             for _, reward in ipairs(activity_rewards) do
                 table.insert(estRewardList.activity, reward)
@@ -510,8 +558,8 @@ function DispatchTaskUtils:getActivityTaskReward(role, taskId, taskCount, estTim
         end
         dCount = dCount + 1
     end
-    
-    print("========== 加入活动奖励 ==============")
+
+    print("========== 加入活动奖励后 ==============")
     Helper:print_lua_table(estRewardList)
     print("============== end  =================\n")
 
@@ -533,17 +581,10 @@ function DispatchTaskUtils:getNormalTaskReward(role, taskId)
         return false
     end
 
-
     --@RefType [src.app.models.role.Role#Role]
     local player = User:getRole()
 
-    local rewardArray =
-        RewardManager:getRewardArrayWithRewardSchemeWithoutRestriction(
-        dispatchTask.reward,
-        player:getAttr("exp"),
-        player:getFinalAttr("luck"),
-        player:getKongfu()
-    )
+    local rewardArray = RewardManager:getRewardArrayWithRewardSchemeWithoutRestriction(dispatchTask.reward, player:getAttr("exp"), player:getFinalAttr("luck"), player:getKongfu())
 
     -- print("-----------------------------------")
     -- Helper:print_lua_table(rewardArray)
@@ -590,7 +631,7 @@ function DispatchTaskUtils:getFinishSpeed(role, taskId)
     local speedState
 
     local speedRate = math.random(1, 100)
-    local delayRate = (250/(z + 999) + 25 / (k1 - k2 + 100)) * 100
+    local delayRate = (250 / (z + 999) + 25 / (k1 - k2 + 100)) * 100
     local normalRate = 0.5 * 100
     local upRate = delayRate - normalRate
 
@@ -722,7 +763,7 @@ function DispatchTaskUtils:createZhiTiao(map, npcId)
 
     --设置房间能否拆除和改造状态
     local HomelandRoomUtil = require("app.models.HomelandModel.HomelandRoomUtil")
-    HomelandRoomUtil:setRoomCanChangStatus(map,roomId,1)
+    HomelandRoomUtil:setRoomCanChangStatus(map, roomId, 1)
 
     if map:checkRoleIsInRoom(roomId, npc.id) then
         map:removeRoomRole(roomId, npc.id)
@@ -769,11 +810,11 @@ function DispatchTaskUtils:deleteRewardPackage(map, npcId)
 
         --设置房间能否拆除和改造状态
         local HomelandRoomUtil = require("app.models.HomelandModel.HomelandRoomUtil")
-        HomelandRoomUtil:setRoomCanChangStatus(map,roomId,nil)
+        HomelandRoomUtil:setRoomCanChangStatus(map, roomId, nil)
     end
 
     -- --设置地图状态事件
-    map:deleteOneMapLock("dispatch"..npcId)
+    map:deleteOneMapLock("dispatch" .. npcId)
 end
 
 --@desc: 创建包裹模板
@@ -818,8 +859,8 @@ end
 --@desc:生成奖励包裹
 --@author:Liang SongQiang
 --@time:2018-06-05 10:24:07
-function DispatchTaskUtils:createReawdPackage(map, npcId,roomId)
-    local template = self:initReawdPackageTemplate(npcId,roomId)
+function DispatchTaskUtils:createReawdPackage(map, npcId, roomId)
+    local template = self:initReawdPackageTemplate(npcId, roomId)
 
     if not roomId then
         assert(false, "没有房间ID，请检查代码 " .. npcId)
@@ -831,7 +872,7 @@ function DispatchTaskUtils:createReawdPackage(map, npcId,roomId)
 
     --设置房间能否拆除和改造状态
     local HomelandRoomUtil = require("app.models.HomelandModel.HomelandRoomUtil")
-    HomelandRoomUtil:setRoomCanChangStatus(map,roomId,1)
+    HomelandRoomUtil:setRoomCanChangStatus(map, roomId, 1)
 end
 
 --@desc:领取奖励后把NPC重新加入房间
@@ -897,7 +938,6 @@ function DispatchTaskUtils:createReward(dReward)
     return rewards
 end
 
-
 --@desc: 领取奖励
 --@author:Liang SongQiang
 --@time:2018-06-05 10:25:36
@@ -911,7 +951,7 @@ function DispatchTaskUtils:getReward(dReward)
     do
         --@desc 检查背包是否已满
         local checkList = {}
-        for _,reward in ipairs(rewards) do
+        for _, reward in ipairs(rewards) do
             if reward.type == "物品" then
                 if checkList[reward.name] == nil then
                     checkList[reward.name] = reward.value
@@ -921,84 +961,94 @@ function DispatchTaskUtils:getReward(dReward)
             end
         end
         if MapIsEmpty(checkList) == false then
-            if not role:checkCanBuyTwoOrMoreThings(checkList,false) then
+            if not role:checkCanBuyTwoOrMoreThings(checkList, false) then
                 ret = false
                 msg = "您的背包空间不足，无法打开包裹。"
-                return ret,msg
+                return ret, msg
             end
         end
     end
 
-	local taskId = dReward.taskId
+    local taskId = dReward.taskId
 
     local day_reward_map = dReward.reward["day"]
 
     if MapIsEmpty(day_reward_map) == false then
-		local yinpiao_reward_list= day_reward_map["yinpiao"]
-		if not MapIsEmpty(yinpiao_reward_list) then
-			local add_value = 0
-			for i,reward in ipairs(yinpiao_reward_list) do
-				add_value = add_value + Helper:getDef(reward.t_value,0)
-			end
+        local yinpiao_reward_list = day_reward_map["yinpiao"]
+        if not MapIsEmpty(yinpiao_reward_list) then
+            local add_value = 0
+            for i, reward in ipairs(yinpiao_reward_list) do
+                add_value = add_value + Helper:getDef(reward.t_value, 0)
+            end
 
-			HttpManagerEx:updateCurrencyByType("add","yinpiao",add_value,taskId, function(status, errcode, errmsg, data)
-				if status == 200 then
-					if errcode == 0 then
-						PopText("银票".."+"..tostring(add_value))
-					elseif errcode == 2 then
-						--@银票已经领取,不打断流程
-					else
-						ret = false
-						msg = errmsg
-					end
-				else
-					ret = false
-					msg = errmsg
-				end
-			end, IS_SHOW_WAITING)
-		end
+            HttpManagerEx:updateCurrencyByType(
+                "add",
+                "yinpiao",
+                add_value,
+                taskId,
+                function(status, errcode, errmsg, data)
+                    if status == 200 then
+                        if errcode == 0 then
+                            PopText("银票" .. "+" .. tostring(add_value))
+                        elseif errcode == 2 then
+                            --@银票已经领取,不打断流程
+                        else
+                            ret = false
+                            msg = errmsg
+                        end
+                    else
+                        ret = false
+                        msg = errmsg
+                    end
+                end,
+                IS_SHOW_WAITING
+            )
+        end
     end
-	
-	if ret == true then
-		if MapIsEmpty(day_reward_map) == false then
-			for _type,reward_list in pairs(day_reward_map) do
-				switch(_type,{
-					["pijuan"] = function ()
-						local add_value = 0
-						for i,reward in ipairs(reward_list) do
-							add_value = add_value + Helper:getDef(reward.t_value,0)
-						end
-						role:addAttr("pijuan",add_value)
-					end,
-				})
-			end
-		end
-		
-		for _,reward in ipairs(rewards) do
-			if reward.type == "属性" then
-				role:addAttr(reward.name, reward.value)
-				PopText(role:getCHAttrName(reward.name) .. " + " .. reward.value)
-			elseif reward.type == "物品" then
-				role:addItemCount(reward.name, reward.value)
-				local item = Item:getOneItemByKey(reward.name)
-				PopText("你获得了" .. item.name .. " X" .. reward.value)
-	
-				if reward.flagName ~= nil then
-					role:setDayFlag(reward.flagName,role:getDayFlag(reward.flagName) + reward.flagValue)
-				end
-	
-				if reward.dayFlagName ~= nil then
-					role:setDayFlag(reward.dayFlagName,role:getDayFlag(reward.dayFlagName) + reward.dayFlagValue)
-				end
-	
-				if reward.inheritFlag ~= nil then
-					role:setInheritFlag(reward.inheritFlag,role:getInheritFlag(reward.inheritFlag) + reward.inheritFlagValue)
-				end
-			end
-		end
-	end
 
-    return ret,msg
+    if ret == true then
+        if MapIsEmpty(day_reward_map) == false then
+            for _type, reward_list in pairs(day_reward_map) do
+                switch(
+                    _type,
+                    {
+                        ["pijuan"] = function()
+                            local add_value = 0
+                            for i, reward in ipairs(reward_list) do
+                                add_value = add_value + Helper:getDef(reward.t_value, 0)
+                            end
+                            role:addAttr("pijuan", add_value)
+                        end
+                    }
+                )
+            end
+        end
+
+        for _, reward in ipairs(rewards) do
+            if reward.type == "属性" then
+                role:addAttr(reward.name, reward.value)
+                PopText(role:getCHAttrName(reward.name) .. " + " .. reward.value)
+            elseif reward.type == "物品" then
+                role:addItemCount(reward.name, reward.value)
+                local item = Item:getOneItemByKey(reward.name)
+                PopText("你获得了" .. item.name .. " X" .. reward.value)
+
+                if reward.flagName ~= nil then
+                    role:setDayFlag(reward.flagName, role:getDayFlag(reward.flagName) + reward.flagValue)
+                end
+
+                if reward.dayFlagName ~= nil then
+                    role:setDayFlag(reward.dayFlagName, role:getDayFlag(reward.dayFlagName) + reward.dayFlagValue)
+                end
+
+                if reward.inheritFlag ~= nil then
+                    role:setInheritFlag(reward.inheritFlag, role:getInheritFlag(reward.inheritFlag) + reward.inheritFlagValue)
+                end
+            end
+        end
+    end
+
+    return ret, msg
 end
 
 --@desc: 派遣完成主动任务时更新主动任务历练任务的奖励物品数量
@@ -1009,7 +1059,7 @@ function DispatchTaskUtils:updateActivityTaskRewardsCount(taskId, roleTask)
     if not activityTaskRelations[taskId] then
         return
     end
-    
+
     local startTime = roleTask.startTime
 
     local nowTime = GetTime()
@@ -1031,13 +1081,13 @@ function DispatchTaskUtils:updateActivityTaskRewardsCount(taskId, roleTask)
 
     if not MapIsEmpty(roleTask.reward.day) then
         local day_reward_map = roleTask.reward.day
-        for _type,day_reward in pairs(day_reward_map) do
-            for i,reward in ipairs(day_reward) do
+        for _type, day_reward in pairs(day_reward_map) do
+            for i, reward in ipairs(day_reward) do
                 local today_count = role:getDayFlag(reward.flag)
 
                 -- print("更新主动任务 ："..taskId.." 每日奖励次数",today_count,reward.count)
 
-                role:setDayFlag(reward.flag,today_count + reward.count)
+                role:setDayFlag(reward.flag, today_count + reward.count)
             end
         end
     end
@@ -1049,7 +1099,7 @@ function DispatchTaskUtils:getTaskTraitBufferName(taskId)
     if activityTaskRelations[taskId] then
         buffName = activityTaskRelations[taskId].traitBufferName
     end
-    
+
     return buffName
 end
 
@@ -1069,4 +1119,3 @@ function DispatchTaskUtils:clearNpcDispatchTaskList(npcId)
 end
 
 return DispatchTaskUtils
-000000000000000
