@@ -3210,10 +3210,28 @@ def _group_members(ctx, userid):
     且只消费 userid 与 name(同门页签另加 id=intimacy), 所以这里只下发这两个字段。
     """
     role = ctx["state"].get_archive(userid) or {}
-    return [{
-        "userid": userid,
-        "name": role.get("name") or "玩家%s" % userid,
-    }]
+    family = role.get("menpai") or role.get("real_menpai") or role.get("family")
+    if isinstance(family, dict):
+        family = family.get("name") or family.get("id")
+    family = str(family or "").strip().lower()
+    members = []
+    for entry in ctx["state"].list_archives():
+        try:
+            member_id = int(entry.get("userid") or 0)
+        except (TypeError, ValueError):
+            continue
+        if member_id <= 0:
+            continue
+        member_role = ctx["state"].get_archive(member_id) or {}
+        member_family = member_role.get("menpai") or member_role.get("real_menpai") or member_role.get("family")
+        if isinstance(member_family, dict):
+            member_family = member_family.get("name") or member_family.get("id")
+        if family and str(member_family or "").strip().lower() != family:
+            continue
+        members.append({"userid": member_id, "name": member_role.get("name") or entry.get("name") or "玩家%s" % member_id})
+    if not any(member["userid"] == userid for member in members):
+        members.insert(0, {"userid": userid, "name": role.get("name") or "玩家%s" % userid})
+    return members
 
 
 def _intimacy_values(ctx, userid):
