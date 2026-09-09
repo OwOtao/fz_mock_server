@@ -1,0 +1,33 @@
+{
+  "index": 79,
+  "startedDateTime": "2026-09-09T01:09:42.904485Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_archive_list",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2512BPNDAC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfangd0b80cf7aa09ea3538329b0d\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.02\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "14318",
+    "nouce": "ZsByEb",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "33ba349458797ef00a2db02a2559fe73",
+    "time": "1788916041.0045",
+    "timezone": "8",
+    "userid": "9048712612",
+    "uuid": "guanfangd0b80cf7aa09ea3538329b0d",
+    "ver": "2.1.02",
+    "vercode": "465a4a483033e61270723493a15f9fe6f6fbbcdaf2c0",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2512BPNDAC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":1,\"data\":{\"userid\":9048712612,\"name\":\"雾观山\",\"menpai\":\"伏龙山\",\"dsc\":\"HIY傲视群雄\",\"lv\":491,\"sex\":\"男\",\"looks\":41,\"kongfu\":416.77777777778,\"exp\":12176466.583656,\"year\":\"2026-09-09\",\"time\":\"09:09:44\",\"portrait\":{\"id\":\"mianju1010\",\"lv\":1},\"polymorph\":{\"qi\":100,\"endTime\":0,\"cdTime\":0,\"keepTime\":0,\"pLooks\":0,\"lastLooks\":0,\"_yirongSelectList\":[],\"sex\":\"男\",\"age\":0}},\"yuanbao\":300,\"rand_t\":1788916184.3299}",
+  "response_plain_pretty": "{\n  \"errcode\": 1,\n  \"data\": {\n    \"userid\": 9048712612,\n    \"name\": \"雾观山\",\n    \"menpai\": \"伏龙山\",\n    \"dsc\": \"HIY傲视群雄\",\n    \"lv\": 491,\n    \"sex\": \"男\",\n    \"looks\": 41,\n    \"kongfu\": 416.77777777778,\n    \"exp\": 12176466.583656,\n    \"year\": \"2026-09-09\",\n    \"time\": \"09:09:44\",\n    \"portrait\": {\n      \"id\": \"mianju1010\",\n      \"lv\": 1\n    },\n    \"polymorph\": {\n      \"qi\": 100,\n      \"endTime\": 0,\n      \"cdTime\": 0,\n      \"keepTime\": 0,\n      \"pLooks\": 0,\n      \"lastLooks\": 0,\n      \"_yirongSelectList\": [],\n      \"sex\": \"男\",\n      \"age\": 0\n    }\n  },\n  \"yuanbao\": 300,\n  \"rand_t\": 1788916184.3299\n}"
+}

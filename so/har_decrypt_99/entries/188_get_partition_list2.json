@@ -1,0 +1,33 @@
+{
+  "index": 188,
+  "startedDateTime": "2026-09-09T01:07:00.268367Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_partition_list2",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2512BPNDAC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfangd0b80cf7aa09ea3538329b0d\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.02\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "14318",
+    "nouce": "lbmWnc",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "01a33e6533bae6d2b4f2589781dfb848",
+    "time": "1788916001.0003",
+    "timezone": "8",
+    "userid": "9048712612",
+    "uuid": "guanfangd0b80cf7aa09ea3538329b0d",
+    "ver": "2.1.02",
+    "vercode": "465a4a48303322cfa7d90cd0ff783ec4cae68e0199de",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2512BPNDAC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "��\u0018\u001b~�\u001c�����������i���\u0005�*\u001b�Z��v(M��n;�F`�R�\u0001�.%�\nڹ� A^��x/�B���\u001dVo����$�2��#�\u0004j���-�0�p\u0011q�C˒��\u001dc��\u0012\u0010��\u001f�\u0010�tL,\u0002&\\�/!�#�K�0��\u0019v���\b���\t1_��e�6e}�C�����s�����\f�b����B�\t�^���\u0015�v�\u0002�\u0010�^�<�ٓ�REd�O~V��ǢJ��%�O�\u001b�C�N\u0013Z���������W��s}'��R��=U\u0000T\u001fd�˞mV��\u0019�)���֑�`T^�_h��?)2�YE�Kcl��\u0003�-l\t�b�֒�e��Ě �k#Ժ\u0007?ѱ\u001f��D�k\u0013�\"R�B�8I�\rs��>��W\u0000*�WtZ9�e\u0013��F��w�a���ߝ��\u0001����b�A\u0004\u001a��\u0003�Vt��}�D�=iSY�zd]\\��?�����2�n��\u0010�2���PDG\b܊r-6\u0017,�#�Y��k�ԕ�k����jz!��2�XK��6��n�M�r�`.�\u0015�{�pw3���\u0011;0�\bC�ޚAY!����\u0004u;���HM\u0013P\u001fu�A�1\u001d/�t�>��\"9��\r��j�\u001d�Sl폓\f)�Ƹ\u0015m\u0012î�\u0018k�DH>R�\u0013+GQ<-B��\u0018/���ȅr��2��H4���Wm��^�Q?�-S��r����\u0006\u0003�-��׵|��1�hL]�v��Ϭ��fYn�n0\u0004Vi�ژ\"+-��Y��'M}\u0001�7�p\u001a���\ty�꛷R���;T�\u001f���YR���ur?�p�\u0006\u0011������g�)����D�\u0016�'���,�A�*'\u0003��\u0004�/�\u001fTG��Hz��*y�X/4�V_���\u0001��zR�_�7)r\u0016|\u000b7m�G��(a�*~*:قi-Tݩ�r��\u0001��0�W��\f�E���SL];G��e$k���1O��y��n\u0011,gF���&���0s�\u0013ͱנ*+�N�UoD���h\u001c��\u0019��)��ͦ��\u0012�ר�r��\t6Ʉ�\u001f�9\u0011���v�\u0010r\u0015D�P�Y���?b\u001e�z���\u0000���~���\u0016\u001d\u0019���G�:/���K/�;+4v��q\u0004.\"D/�/\r\\?��Y�\u0019Us\u001d\u0004)#���5��:%ws�\u0005��\u0017[\u0006��_q����@n��hͣ\u001bn\u0010$�'W�#Kإy2�oC\u000b7��)�B�\u0016�\u000e8Q�\u0004��\u0003�^\r_�\u0018\b��3�\br]�҈\u0007�\"��q�<A���u�(�\u0016`y�jM��*GY\u0019E\u00065\u000e��56X�]ZA���Zp7Y6��",
+  "response_plain_pretty": "��\u0018\u001b~�\u001c�����������i���\u0005�*\u001b�Z��v(M��n;�F`�R�\u0001�.%�\nڹ� A^��x/�B���\u001dVo����$�2��#�\u0004j���-�0�p\u0011q�C˒��\u001dc��\u0012\u0010��\u001f�\u0010�tL,\u0002&\\�/!�#�K�0��\u0019v���\b���\t1_��e�6e}�C�����s�����\f�b����B�\t�^���\u0015�v�\u0002�\u0010�^�<�ٓ�REd�O~V��ǢJ��%�O�\u001b�C�N\u0013Z���������W��s}'��R��=U\u0000T\u001fd�˞mV��\u0019�)���֑�`T^�_h��?)2�YE�Kcl��\u0003�-l\t�b�֒�e��Ě �k#Ժ\u0007?ѱ\u001f��D�k\u0013�\"R�B�8I�\rs��>��W\u0000*�WtZ9�e\u0013��F��w�a���ߝ��\u0001����b�A\u0004\u001a��\u0003�Vt��}�D�=iSY�zd]\\��?�����2�n��\u0010�2���PDG\b܊r-6\u0017,�#�Y��k�ԕ�k����jz!��2�XK��6��n�M�r�`.�\u0015�{�pw3���\u0011;0�\bC�ޚAY!����\u0004u;���HM\u0013P\u001fu�A�1\u001d/�t�>��\"9��\r��j�\u001d�Sl폓\f)�Ƹ\u0015m\u0012î�\u0018k�DH>R�\u0013+GQ<-B��\u0018/���ȅr��2��H4���Wm��^�Q?�-S��r����\u0006\u0003�-��׵|��1�hL]�v��Ϭ��fYn�n0\u0004Vi�ژ\"+-��Y��'M}\u0001�7�p\u001a���\ty�꛷R���;T�\u001f���YR���ur?�p�\u0006\u0011������g�)����D�\u0016�'���,�A�*'\u0003��\u0004�/�\u001fTG��Hz��*y�X/4�V_���\u0001��zR�_�7)r\u0016|\u000b7m�G��(a�*~*:قi-Tݩ�r��\u0001��0�W��\f�E���SL];G��e$k���1O��y��n\u0011,gF���&���0s�\u0013ͱנ*+�N�UoD���h\u001c��\u0019��)��ͦ��\u0012�ר�r��\t6Ʉ�\u001f�9\u0011���v�\u0010r\u0015D�P�Y���?b\u001e�z���\u0000���~���\u0016\u001d\u0019���G�:/���K/�;+4v��q\u0004.\"D/�/\r\\?��Y�\u0019Us\u001d\u0004)#���5��:%ws�\u0005��\u0017[\u0006��_q����@n��hͣ\u001bn\u0010$�'W�#Kإy2�oC\u000b7��)�B�\u0016�\u000e8Q�\u0004��\u0003�^\r_�\u0018\b��3�\br]�҈\u0007�\"��q�<A���u�(�\u0016`y�jM��*GY\u0019E\u00065\u000e��56X�]ZA���Zp7Y6��"
+}

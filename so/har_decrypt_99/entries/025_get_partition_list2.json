@@ -1,0 +1,32 @@
+{
+  "index": 25,
+  "startedDateTime": "2026-09-09T01:11:48.005334Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/v5/get_partition_list2",
+  "method": "GET",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "age": "-2",
+    "channel": "guanfang",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2512BPNDAC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfangd0b80cf7aa09ea3538329b0d\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.02\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "hotver": "14318",
+    "nouce": "fKJYdB",
+    "package": "",
+    "pkname": "com.xhtt.app.fzjh",
+    "pksig": "37d64950145294856b4ce293fde9edc4",
+    "platform": "android",
+    "sig": "a2d2143c42b58aaa867d41aa2ae34477",
+    "time": "1788916298.0003",
+    "timezone": "8",
+    "userid": "0",
+    "uuid": "guanfangd0b80cf7aa09ea3538329b0d",
+    "ver": "2.1.02",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2512BPNDAC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":{\"list\":[{\"id\":7,\"partition_name\":\"taptap_4\",\"platform\":\"android\",\"channel\":\"taptap\",\"channel_num\":4,\"partition_title\":\"HIW墨羽惊鸿 [新服]\",\"partition_desc\":\"玄翎掠夜星如雨，墨羽惊鸿影似霜。\",\"is_open\":\"Y\",\"should_select_migrate\":true},{\"id\":6,\"partition_name\":\"taptap_3\",\"platform\":\"android\",\"channel\":\"taptap\",\"channel_num\":3,\"partition_title\":\"HIR丹凤朝阳 [3服]\",\"partition_desc\":\"盛代鸣时原是瑞，高岗立处自成威。\",\"is_open\":\"Y\",\"should_select_migrate\":true},{\"id\":4,\"partition_name\":\"taptap_2\",\"platform\":\"android\",\"channel\":\"taptap\",\"channel_num\":2,\"partition_title\":\"LIME白鹤亮翅 [2服]\",\"partition_desc\":\"白鹤唳空晴眇眇，丹沙流涧暮潺潺。\",\"is_open\":\"Y\",\"should_select_migrate\":true},{\"id\":3,\"partition_name\":\"taptap\",\"platform\":\"android\",\"channel\":\"taptap\",\"channel_num\":1,\"partition_title\":\"YEL苍松迎客 [1服]\",\"partition_desc\":\"暮雪苍松迎客来，春风芳草故人行。\",\"is_open\":\"Y\",\"should_select_migrate\":true}],\"user\":{\"active_partition\":0}},\"rand_t\":1788916309.2802}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": {\n    \"list\": [\n      {\n        \"id\": 7,\n        \"partition_name\": \"taptap_4\",\n        \"platform\": \"android\",\n        \"channel\": \"taptap\",\n        \"channel_num\": 4,\n        \"partition_title\": \"HIW墨羽惊鸿 [新服]\",\n        \"partition_desc\": \"玄翎掠夜星如雨，墨羽惊鸿影似霜。\",\n        \"is_open\": \"Y\",\n        \"should_select_migrate\": true\n      },\n      {\n        \"id\": 6,\n        \"partition_name\": \"taptap_3\",\n        \"platform\": \"android\",\n        \"channel\": \"taptap\",\n        \"channel_num\": 3,\n        \"partition_title\": \"HIR丹凤朝阳 [3服]\",\n        \"partition_desc\": \"盛代鸣时原是瑞，高岗立处自成威。\",\n        \"is_open\": \"Y\",\n        \"should_select_migrate\": true\n      },\n      {\n        \"id\": 4,\n        \"partition_name\": \"taptap_2\",\n        \"platform\": \"android\",\n        \"channel\": \"taptap\",\n        \"channel_num\": 2,\n        \"partition_title\": \"LIME白鹤亮翅 [2服]\",\n        \"partition_desc\": \"白鹤唳空晴眇眇，丹沙流涧暮潺潺。\",\n        \"is_open\": \"Y\",\n        \"should_select_migrate\": true\n      },\n      {\n        \"id\": 3,\n        \"partition_name\": \"taptap\",\n        \"platform\": \"android\",\n        \"channel\": \"taptap\",\n        \"channel_num\": 1,\n        \"partition_title\": \"YEL苍松迎客 [1服]\",\n        \"partition_desc\": \"暮雪苍松迎客来，春风芳草故人行。\",\n        \"is_open\": \"Y\",\n        \"should_select_migrate\": true\n      }\n    ],\n    \"user\": {\n      \"active_partition\": 0\n    }\n  },\n  \"rand_t\": 1788916309.2802\n}"
+}

@@ -494,6 +494,29 @@ _STORE_LIMITED_ITEMS = [
     },
 ]
 
+# 不在任何商店列表里、但客户端会单独走 get_goods/get_goods_2 查询的商品。
+# 数据取自 so/har_decrypt_99/entries/076_cundangwei.json（9-9 抓包，2.1.02）。
+# cundangwei(存档位) 由 ArchiveLayer:buyOneArchiveItem -> PopYuanBaoBuyItemLayer
+# -> YuanBaoPayLayer.buyStoreItem -> getGoodsInfo 拉取；缺失时客户端弹
+# “获得商品数据出错..”，无法购买额外存档位。
+_VIRTUAL_STORE_ITEMS = [
+    {
+        "id": 7,
+        "itemId": "cundangwei",
+        "itype": 1,
+        "inde": 3,
+        "name": "存档位",
+        "price": 300,
+        "number": 1,
+        "dsc1": "",
+        "dsc2": "",
+        "share": "",
+        "icon": "",
+        "to": 0,
+        "from": 0,
+    },
+]
+
 
 def _pack_reward(name, price, image, number, item_id):
     return {"name": name, "price": price, "imagePath": image, "number": number, "itemId": item_id}
@@ -682,7 +705,7 @@ def _find_store_item(item_key):
     key = str(item_key or "")
     if not key:
         return None
-    for item in _STORE_TEST_ITEMS + _STORE_LEVEL_ITEMS + _STORE_LIMITED_ITEMS:
+    for item in _STORE_TEST_ITEMS + _STORE_LEVEL_ITEMS + _STORE_LIMITED_ITEMS + _VIRTUAL_STORE_ITEMS:
         if str(item.get("itemId")) == key or str(item.get("id")) == key:
             return dict(item)
     return None
@@ -745,6 +768,10 @@ def _goods_detail(item, expired_time=None):
         "share": str(item.get("share") or ""),
         "available": True,
         "itype": item.get("itype"),
+        # 抓包中商品详情带 inde/to/from（cundangwei: inde=3, to=0, from=0）
+        "inde": _as_int(item.get("inde"), 0),
+        "to": str(item.get("to")) if item.get("to") is not None else None,
+        "from": str(item.get("from")) if item.get("from") is not None else None,
         "number": _as_int(item.get("number"), 1),
         "Inventory": _as_int(item.get("Inventory"), -1),
         "quota": _as_int(item.get("quota"), -1),

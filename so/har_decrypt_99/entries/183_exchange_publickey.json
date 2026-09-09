@@ -1,0 +1,30 @@
+{
+  "index": 183,
+  "startedDateTime": "2026-09-09T01:07:07.610158Z",
+  "url": "https://android.fzjh.xiaohoutiaotiao.com/api/service/exchange_publickey",
+  "method": "POST",
+  "status": 200,
+  "request_headers": {
+    "Accept-Encoding": "identity",
+    "uuid": "guanfangd0b80cf7aa09ea3538329b0d",
+    "ver": "2.1.02",
+    "hotver": "0",
+    "device": "{\"dev_name\":\"ld_generic_x86_64\",\"dev_model\":\"2512BPNDAC\",\"dev_systemName\":\"android 34\",\"dev_systemVersion\":\"14\",\"dev_idfv\":\"guanfangd0b80cf7aa09ea3538329b0d\",\"dev_net\":\"WWAN\",\"app_name\":\"æ¾ç½®æ±æ¹\",\"app_version\":\"2.1.02\",\"app_build\":\"android-25\",\"app_channel\":\"guanfang\",\"imei\":\"\",\"oaid\":\"\"}",
+    "platform": "android",
+    "channel": "guanfang",
+    "package": "com.xhtt.app.fzjh",
+    "userid": "",
+    "time": "0.000100",
+    "sig": "2bd05ec8b855517e2368349f17512000",
+    "nouce": "fgDZRD",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 14; 2512BPNDAC Build/UQ1A.240205.04271925)",
+    "Host": "android.fzjh.xiaohoutiaotiao.com",
+    "Connection": "Keep-Alive",
+    "Content-Length": "0"
+  },
+  "request_plain": "",
+  "request_plain_pretty": "",
+  "response_plain": "{\"errcode\":0,\"data\":\"[{\\\"k\\\":\\\"0228482afef78be8b948ad8b08b24da7\\\",\\\"h\\\":\\\"FZJH02\\\"},{\\\"k\\\":\\\"25c5ee1661224ddf1845ca1d8afc0aae\\\",\\\"h\\\":\\\"FZJH03\\\",\\\"i\\\":\\\"PcIQIZifRalhZ88n\\\"},{\\\"k\\\":\\\"0228482afef78be8b948ad8b08b24da7\\\",\\\"h\\\":\\\"FXXF03\\\"}]\"}",
+  "response_plain_pretty": "{\n  \"errcode\": 0,\n  \"data\": \"[{\\\"k\\\":\\\"0228482afef78be8b948ad8b08b24da7\\\",\\\"h\\\":\\\"FZJH02\\\"},{\\\"k\\\":\\\"25c5ee1661224ddf1845ca1d8afc0aae\\\",\\\"h\\\":\\\"FZJH03\\\",\\\"i\\\":\\\"PcIQIZifRalhZ88n\\\"},{\\\"k\\\":\\\"0228482afef78be8b948ad8b08b24da7\\\",\\\"h\\\":\\\"FXXF03\\\"}]\"\n}"
+}
