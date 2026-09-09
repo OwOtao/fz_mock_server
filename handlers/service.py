@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import binascii
+import hashlib
 import json
 import logging
+import pathlib
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 
 import config
+import jm_crypto
 from protocol import build_raw_response, build_response_body, make_nonce, sign_response
 from server import route
 
@@ -205,7 +209,113 @@ def check_update(ctx):
 
 @route(["GET"], "v1/getMd5List")
 def get_md5_list(ctx):
-    return _proxy_update_response(ctx, "getMd5List")
+    response = _proxy_update_response(ctx, "getMd5List")
+    if getattr(config, "MD5_OVERRIDE_ENABLED", False):
+        response = _apply_md5_override(response)
+    return response
+
+
+# ---------------------------------------------------------------------------
+# getMd5List 覆盖: 用本地 debug 目录的文件 md5 替换上游清单里的同名项
+# ---------------------------------------------------------------------------
+
+def _jhhu01_cipher(body, op):
+    """上游 JHHU01 组: magic + AES-256-CBC(明文用 '0' 补齐到 16 字节倍数)。"""
+    magic = config.UPDATE_JHHU01_MAGIC
+    if op == "dec":
+        raw = binascii.unhexlify(body.decode("ascii").strip().lower())
+        if not raw.startswith(magic):
+            raise ValueError("unexpected magic %r" % raw[:6])
+        payload = raw[len(magic):]
+        payload = payload[: len(payload) - (len(payload) % 16)]
+        plain = jm_crypto._aes_cbc(payload, config.UPDATE_JHHU01_KEY,
+                                   config.UPDATE_JHHU01_IV, "dec")
+        return plain.rstrip(b"0")
+    pad = (16 - len(body) % 16) % 16
+    return (magic + jm_crypto._aes_cbc(body + b"0" * pad, config.UPDATE_JHHU01_KEY,
+                                       config.UPDATE_JHHU01_IV, "enc")).hex().encode("ascii")
+
+
+def _debug_file_md5(path):
+    """清单里的 md5 = 热更文件(加密后 hex 文本)的 md5。"""
+    data = path.read_bytes()
+    if data[:len(config.UPDATE_JHHU01_MAGIC)] != config.UPDATE_JHHU01_MAGIC:
+        data = _jhhu01_cipher(data, "enc")
+    return hashlib.md5(data).hexdigest()
+
+
+def _md5_overrides():
+    """{清单键名: md5} —— debug 目录 + config.MD5_OVERRIDE_EXTRA_FILES。
+
+    键名 = MD5_OVERRIDE_KEY_PREFIX + debug 目录相对路径; 额外文件按 config 里的键名。
+    """
+    overrides = {}
+    root = pathlib.Path(str(getattr(config, "MD5_OVERRIDE_DIR", "") or ""))
+    prefix = str(getattr(config, "MD5_OVERRIDE_KEY_PREFIX", "") or "").strip("/")
+    if root.is_dir():
+        for path in sorted(root.rglob("*")):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(root).as_posix()
+            key = "%s/%s" % (prefix, rel) if prefix else rel
+            try:
+                overrides[key] = _debug_file_md5(path)
+            except OSError as error:
+                log.warning("md5 override: read failed %s: %s", path, error)
+    else:
+        log.warning("md5 override: dir not found: %s", root)
+
+    extra = getattr(config, "MD5_OVERRIDE_EXTRA_FILES", None) or {}
+    base = pathlib.Path(config.__file__).resolve().parent
+    if isinstance(extra, dict):
+        for key, rel in extra.items():
+            path = base / str(rel)
+            if not path.is_file():
+                log.warning("md5 override: extra file not found: %s", path)
+                continue
+            try:
+                overrides[str(key)] = _debug_file_md5(path)
+            except OSError as error:
+                log.warning("md5 override: read failed %s: %s", path, error)
+    return overrides
+
+
+def _apply_md5_override(response):
+    """解密上游清单 -> 替换同名 md5 -> 重新加密返回。失败时原样返回。"""
+    body = response.get("body") if isinstance(response, dict) else None
+    if not isinstance(body, bytes) or not body:
+        return response
+    try:
+        payload = json.loads(_jhhu01_cipher(body, "dec").decode("utf-8"))
+    except (ValueError, TypeError, binascii.Error, UnicodeDecodeError) as error:
+        log.warning("md5 override: decrypt failed: %s: %s", type(error).__name__, error)
+        return response
+
+    overrides = _md5_overrides()
+    if not overrides:
+        return response
+
+    replaced = []
+    data = payload.get("data") if isinstance(payload, dict) else None
+    if isinstance(data, dict):
+        for name in ("originalMd5List", "deployMd5List"):
+            table = data.get(name)
+            if not isinstance(table, dict):
+                continue
+            for key, value in overrides.items():
+                if key in table and table[key] != value:
+                    table[key] = value
+                    replaced.append("%s:%s" % (name, key))
+    if not replaced:
+        log.info("md5 override: 清单里没有匹配的 debug 文件 (本地 %d 个)", len(overrides))
+        return response
+
+    log.info("md5 override: 替换 %d 项 %s", len(replaced), replaced[:10])
+    new_body = _jhhu01_cipher(
+        json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8"), "enc")
+    headers = dict(response.get("headers") or {})
+    headers["Content-Length"] = str(len(new_body))
+    return build_raw_response(new_body, response.get("status_code", 200), headers)
 
 
 def _proxy_failure():

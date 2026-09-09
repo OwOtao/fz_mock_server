@@ -1,4 +1,9 @@
+import hashlib
 import json
+import os
+import pathlib
+import secrets
+import shutil
 import threading
 import time
 import unittest
@@ -19,12 +24,17 @@ class UpstreamHandler(BaseHTTPRequestHandler):
     request_headers = None
     body = b"\x00\xffupdate\x80payload"
     valid_body = b"4a4848553032abcdef"
+    md5_body = None
 
     def do_GET(self):
         type(self).request_path = self.path
         type(self).request_headers = {key.lower(): value for key, value in self.headers.items()}
-        status = 200 if "valid200" in self.path else 418
-        body = self.valid_body if status == 200 else self.body
+        serve_md5 = bool(type(self).md5_body) and "md5list" in self.path.lower()
+        status = 200 if ("valid200" in self.path or serve_md5) else 418
+        if status == 200 and serve_md5:
+            body = type(self).md5_body
+        else:
+            body = self.valid_body if status == 200 else self.body
         self.send_response(status)
         self.send_header("Content-Type", "application/octet-stream")
         self.send_header("X-Upstream", "preserved")
@@ -672,6 +682,136 @@ class UpdateProxyTest(unittest.TestCase):
                     urllib.request.OpenerDirector, "open", side_effect=error):
                 result = service._proxy_update_response({}, "checkUpdate")
                 self.assertEqual(result["status_code"], 502)
+
+    # --- getMd5List 覆盖开关 -------------------------------------------------
+
+    def _md5_temp_dir(self):
+        """工作区内的临时目录。
+
+        不用 tempfile.mkdtemp/TemporaryDirectory: 它们以 0700 创建目录, 在受限
+        沙箱里该目录不可写; 用默认权限的 mkdir 就没问题。
+        """
+        base = pathlib.Path(__file__).resolve().parent
+        for _ in range(50):
+            candidate = base / (".tmp_md5_override_%s" % secrets.token_hex(4))
+            try:
+                candidate.mkdir()
+            except FileExistsError:
+                continue
+            return str(candidate)
+        raise RuntimeError("cannot create temp dir")
+
+    def _md5_payload(self):
+        return {"errcode": 0, "data": {
+            "originalMd5List": {
+                "src/app/views/layer/DebugLayer/DebugLayer.lua": "0" * 32,
+                "src/app/views/layer/DebugLayer/DebugHelper.lua": "1" * 32,
+                "src/app/views/layer/MainLayer.lua": "4" * 32,
+                "res/Anim/1.png": "2" * 32,
+            },
+            "deployMd5List": {
+                "src/app/views/layer/DebugLayer/DebugLayer.lua": "3" * 32,
+                "src/app/views/layer/MainLayer.lua": "5" * 32,
+            },
+        }}
+
+    def _encrypted_md5_body(self):
+        return service._jhhu01_cipher(
+            json.dumps(self._md5_payload(), separators=(",", ":")).encode("utf-8"), "enc")
+
+    def test_md5_override_disabled_passes_upstream_body_through(self):
+        body = self._encrypted_md5_body()
+        with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", False), \
+                mock.patch.object(UpstreamHandler, "md5_body", body):
+            response = self.fetch("getMd5List")
+            try:
+                got = response.read()
+            finally:
+                response.close()
+        self.assertEqual(got, body)
+
+    def test_md5_override_replaces_matching_debug_files_only(self):
+        body = self._encrypted_md5_body()
+        directory = self._md5_temp_dir()
+        try:
+            root = pathlib.Path(directory)
+            (root / "DebugLayer.lua").write_bytes(b"local DebugLayer = 1\n")
+            (root / "NotInList.lua").write_bytes(b"local X = 2\n")
+            expected = {
+                name: hashlib.md5(
+                    service._jhhu01_cipher((root / name).read_bytes(), "enc")).hexdigest()
+                for name in ("DebugLayer.lua", "NotInList.lua")
+            }
+            with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                    mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
+                    mock.patch.object(UpstreamHandler, "md5_body", body):
+                response = self.fetch("getMd5List")
+                try:
+                    got = response.read()
+                finally:
+                    response.close()
+        finally:
+            shutil.rmtree(directory, ignore_errors=True)
+
+        self.assertNotEqual(got, body)  # 重新加密过
+        payload = json.loads(service._jhhu01_cipher(got, "dec").decode("utf-8"))
+        original = payload["data"]["originalMd5List"]
+        deploy = payload["data"]["deployMd5List"]
+        key = "src/app/views/layer/DebugLayer/DebugLayer.lua"
+        self.assertEqual(original[key], expected["DebugLayer.lua"])
+        self.assertEqual(deploy[key], expected["DebugLayer.lua"])
+        # 清单里没有的键不新增
+        self.assertNotIn("src/app/views/layer/DebugLayer/NotInList.lua", original)
+        self.assertNotIn("src/app/views/layer/DebugLayer/NotInList.lua", deploy)
+        # 不相关的键保持原样
+        self.assertEqual(original["res/Anim/1.png"], "2" * 32)
+        self.assertEqual(
+            original["src/app/views/layer/DebugLayer/DebugHelper.lua"], "1" * 32)
+
+    def test_md5_override_includes_extra_files(self):
+        """MD5_OVERRIDE_EXTRA_FILES 里的文件(如打过补丁的 MainLayer.lua)也要替换。"""
+        directory = self._md5_temp_dir()
+        try:
+            extra = pathlib.Path(directory) / "MainLayer.lua"
+            extra.write_bytes(b"local MainLayer = class('MainLayer')\n")
+            expected = hashlib.md5(
+                service._jhhu01_cipher(extra.read_bytes(), "enc")).hexdigest()
+            rel = os.path.relpath(extra, pathlib.Path(config.__file__).resolve().parent)
+            with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                    mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
+                    mock.patch.object(config, "MD5_OVERRIDE_EXTRA_FILES",
+                                      {"src/app/views/layer/MainLayer.lua": rel}), \
+                    mock.patch.object(UpstreamHandler, "md5_body", self._encrypted_md5_body()):
+                response = self.fetch("getMd5List")
+                try:
+                    got = response.read()
+                finally:
+                    response.close()
+        finally:
+            shutil.rmtree(directory, ignore_errors=True)
+
+        payload = json.loads(service._jhhu01_cipher(got, "dec").decode("utf-8"))
+        self.assertEqual(
+            payload["data"]["deployMd5List"]["src/app/views/layer/MainLayer.lua"], expected)
+        self.assertEqual(
+            payload["data"]["originalMd5List"]["src/app/views/layer/MainLayer.lua"], expected)
+
+    def test_md5_override_keeps_original_body_when_decrypt_fails(self):
+        body = b"4a4848553031" + b"00" * 16  # 魔数对但内容不是 JSON
+        directory = self._md5_temp_dir()
+        try:
+            (pathlib.Path(directory) / "DebugLayer.lua").write_bytes(b"local DebugLayer = 1\n")
+            with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                    mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
+                    mock.patch.object(UpstreamHandler, "md5_body", body):
+                response = self.fetch("getMd5List")
+                try:
+                    got = response.read()
+                finally:
+                    response.close()
+        finally:
+            shutil.rmtree(directory, ignore_errors=True)
+        self.assertEqual(got, body)
 
 
 if __name__ == "__main__":

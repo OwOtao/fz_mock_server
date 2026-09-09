@@ -40,6 +40,29 @@ SEED_ROLEDATA_PATH = _os.path.join(DATA_DIR, "seed", "RoleData.json")
 SEED_IMPORT_ON_START = True
 # 后续注册账号扩展预留: 新注册默认空号(不克隆种子档)
 REGISTER_CLONE_SEED = False
+
+# ---------------------------------------------------------------------------
+# getMd5List 覆盖开关 (热更新文件 md5 清单)
+# ---------------------------------------------------------------------------
+# False: 原样转发上游响应(原逻辑)。
+# True : 先解密上游 getMd5List 响应, 把 debug 目录里同名文件的 md5 替换进去
+#        (只替换清单里已有的键, 不新增), 再按同一格式加密返回给客户端。
+MD5_OVERRIDE_ENABLED = True
+# 本地文件目录(相对路径直接接到下面的键名前缀后)
+MD5_OVERRIDE_DIR = _os.path.join(_ROOT, "debug")
+# 清单里的键名前缀: debug 目录对应 src/app/views/layer/DebugLayer/xxx.lua
+MD5_OVERRIDE_KEY_PREFIX = "src/app/views/layer/DebugLayer"
+# 额外需要覆盖 md5 的热更文件: {清单键名: 本地明文路径(相对本目录)}
+# 例: 打过补丁的 MainLayer.lua(无条件显示调试按钮); 不覆盖的话客户端更新检查会换回官方版本
+MD5_OVERRIDE_EXTRA_FILES = {
+    "src/app/views/layer/MainLayer.lua": "patched/MainLayer.lua",
+}
+# 上游 2.1.01 响应/热更文件用的 JM 组: JHHU01
+#   key 为 32 字节 ASCII(AES-256), IV 固定 16 字节, 明文用 ASCII '0' 补齐到 16 字节倍数。
+# 注意: 清单里的 md5 是"加密后 hex 文本"的 md5, 不是明文源码的 md5。
+UPDATE_JHHU01_MAGIC = b"JHHU01"
+UPDATE_JHHU01_KEY = b"9B5A96B0F4A1EC60DB88349E3B926765"
+UPDATE_JHHU01_IV = b"34857d973953e44a"
 ADMIN_API_TOKEN = _os.getenv("MOCK_ADMIN_API_TOKEN", "")
 MOCK_DEVICE_UUID = _os.getenv(
     "MOCK_DEVICE_UUID",
