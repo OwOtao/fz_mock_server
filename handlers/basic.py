@@ -2523,16 +2523,21 @@ def _prestige_bucket(ctx, userid):
             "title": [],
             "upper": False,
         })
-        # 若角色档里已有声望字段, 用作初值
-        role = ctx["state"].get_archive(userid) if userid > 0 else None
-        if isinstance(role, dict) and int(bucket.get("total") or 0) == 0:
-            for field in ("prestige", "shengwang", "familyPrestige"):
-                if role.get(field) is not None:
-                    try:
-                        bucket["total"] = int(role.get(field) or 0)
+        # 若角色档/账号货币里已有声望字段, 用作初值。
+        # 账号 currencies 不受客户端上传 RoleData 覆盖, 因此优先参考它,
+        # 避免重启后再上传旧档把服务端发放的声望清零。
+        if userid > 0 and int(bucket.get("total") or 0) == 0:
+            account = ctx["state"].get_account(userid) or {}
+            currencies = account.get("currencies")
+            account_value = _as_int((currencies or {}).get("prestige"), 0) if isinstance(currencies, dict) else 0
+            role = ctx["state"].get_archive(userid)
+            archive_value = 0
+            if isinstance(role, dict):
+                for field in ("prestige", "shengwang", "familyPrestige"):
+                    if role.get(field) is not None:
+                        archive_value = _as_int(role.get(field), 0)
                         break
-                    except (TypeError, ValueError):
-                        pass
+            bucket["total"] = max(account_value, archive_value, 0)
         ctx["state"]._changed()
         return bucket
 

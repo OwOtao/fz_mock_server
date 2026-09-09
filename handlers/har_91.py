@@ -17,6 +17,7 @@ import time
 from handlers.basic import (
     _currency_balance,
     _get_yuanbao_balance,
+    _prestige_bucket,
     _set_currency_balance,
     _training_bucket,
     get_game_activity as _fallback_game_activity,
@@ -870,6 +871,87 @@ def get_sachet_attic_new_list(ctx):
 def get_spend_reward_list(ctx):
     _userid_value, error = _require_user(ctx)
     return error or _ok(_capture_data("085_jianghumibao1.json"))
+
+
+# ---------------------------------------------------------------------------
+# 货币发放: add_currency_number
+# ---------------------------------------------------------------------------
+
+# 单次发放上限，防止客户端上报异常数值污染存档
+_CURRENCY_ADD_LIMIT = 1000000
+
+
+def _add_currency_value(ctx, userid, currency_id, amount):
+    """把 amount 加到指定货币上，返回 (实际增加量, 增加后总量)。
+
+    走 handlers.basic._set_currency_balance，保证与 view_currency_by_type /
+    _currency_balance 读写同一处（账号 currencies + 角色档镜像），随 StateStore 落盘。
+    """
+    before = _currency_balance(ctx, userid, currency_id)
+    after = before + amount
+    _set_currency_balance(ctx, userid, currency_id, after)
+    return amount, after
+
+
+@route(["POST"], "add_currency_number")
+def add_currency_number(ctx):
+    """挂机/活动奖励的货币发放。
+
+    请求: {"currency": {"prestige": 427}, "addType": "guajiTask", "params": ...}
+    响应: {"currency": {"prestige": {"value": 427, "count": 427, "desc": ""}},
+           "buff": {"shimenbuff1": 0}}
+
+    客户端（TeacherGuaJiTaskUtil / FestivalModule / CommonResults 等）只消费
+    currency[名称].value（本次增加量，>0 时弹提示）、.count（增加后总量）、.desc
+    以及 buff.shimenbuff1（掌门令师门声望加成）。
+    """
+    userid, error = _require_user(ctx)
+    if error:
+        return error
+    body = _body(ctx)
+    currency = body.get("currency")
+    if not isinstance(currency, dict) or not currency:
+        return build_response_body({}, errcode=400, errmsg="invalid currency payload")
+
+    result = {}
+    for name, raw_amount in currency.items():
+        currency_id = str(name or "").strip()
+        if not currency_id:
+            continue
+        amount = max(min(_as_int(raw_amount, 0), _CURRENCY_ADD_LIMIT), 0)
+        if amount <= 0:
+            # 客户端会忽略 value<=0 的条目，但仍需回传结构
+            result[currency_id] = {
+                "value": 0,
+                "count": _currency_balance(ctx, userid, currency_id),
+                "desc": "",
+            }
+            continue
+        if currency_id == "prestige":
+            # 师门声望由 _prestige_bucket 统一维护（get_user_prestige 读同一份），
+            # 同时镜像到角色档/账号，保证 view_currency_by_type 也能读到。
+            bucket = _prestige_bucket(ctx, userid)
+            bucket["total"] = _as_int(bucket.get("total")) + amount
+            bucket["today"] = _as_int(bucket.get("today")) + amount
+            with ctx["state"]._lock:
+                ctx["state"]._state.setdefault("prestige", {})[str(userid)] = bucket
+                ctx["state"]._changed()
+            _set_currency_balance(ctx, userid, currency_id, bucket["total"])
+            added, total = amount, bucket["total"]
+        else:
+            added, total = _add_currency_value(ctx, userid, currency_id, amount)
+        result[currency_id] = {
+            "value": added,
+            "count": total,
+            "desc": "",
+        }
+
+    # 掌门令(shimenbuff1)的额外声望加成目前没有服务端加成来源，按 0 下发，
+    # 客户端 `data.buff.shimenbuff1 > 0` 时不弹“掌门令生效”提示。
+    return _ok({
+        "currency": result,
+        "buff": {"shimenbuff1": 0},
+    })
 
 
 @route(["GET"], "get_zhenpinge_lottery_list")
