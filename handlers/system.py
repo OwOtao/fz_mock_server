@@ -143,10 +143,20 @@ def create_account(ctx):
 @route(["POST"], "create_role")
 def create_role(ctx):
     requested = _requested_userid(ctx)
-    userid = requested if requested > 0 else None
+    archive, record = _extract_archive(ctx.get("body"))
+    embedded = 0
+    if isinstance(archive, dict):
+        try:
+            embedded = int(archive.get("userid") or archive.get("userId") or 0)
+        except (TypeError, ValueError):
+            embedded = 0
+    userid = requested if requested > 0 else (embedded or None)
     userid = ctx["state"].ensure_account(userid)["userid"]
+    archive = dict(archive) if isinstance(archive, dict) else {"userid": userid}
+    archive["userid"] = userid
     if ctx["state"].get_archive(userid) is None:
-        ctx["state"].put_archive(userid, {"userid": userid})
+        ctx["state"].put_archive(userid, archive, record=record)
+    _bind_active_archive(ctx, userid)
     return build_response_body({"userid": userid})
 
 
@@ -414,11 +424,18 @@ def switch_archive(ctx):
         value = int(target)
     except (TypeError, ValueError):
         value = 0
-    userid = value
+    values = ctx["state"].list_archives()
+    userid = 0
+    if 1 <= value <= len(values):
+        try:
+            userid = int(values[value - 1].get("userid") or 0)
+        except (TypeError, ValueError):
+            userid = 0
+    if userid <= 0:
+        userid = value
     if userid <= 0 or ctx["state"].get_archive(userid) is None:
         # 客户端传的是存档位序号: ArchiveLayer:changeArchive(params.index, userid)
         # -> switch_archive/<index>; 这里按列表顺序回查, 同时保留按 userid 切换的旧用法。
-        values = ctx["state"].list_archives()
         if 1 <= value <= len(values):
             try:
                 userid = int(values[value - 1].get("userid") or 0)
