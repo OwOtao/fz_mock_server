@@ -17,6 +17,14 @@ _root.handlers.clear()
 
 _formatter = logging.Formatter(_LOG_FMT)
 
+# Windows 控制台默认 GBK: device 头里带有已是乱码的 UTF-8 字节时, StreamHandler
+# 会抛 UnicodeEncodeError(日志丢失 + stderr 刷栈)。改成遇错替换字符即可。
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
 _console = logging.StreamHandler(sys.stdout)
 _console.setFormatter(_formatter)
 _root.addHandler(_console)

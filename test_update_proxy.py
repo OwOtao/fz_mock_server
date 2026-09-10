@@ -715,9 +715,10 @@ class UpdateProxyTest(unittest.TestCase):
             },
         }}
 
-    def _encrypted_md5_body(self):
-        return service._jhhu01_cipher(
-            json.dumps(self._md5_payload(), separators=(",", ":")).encode("utf-8"), "enc")
+    def _encrypted_md5_body(self, magic=b"JHHU01"):
+        return service._update_cipher(
+            json.dumps(self._md5_payload(), separators=(",", ":")).encode("utf-8"),
+            "enc", magic)
 
     def test_md5_override_disabled_passes_upstream_body_through(self):
         body = self._encrypted_md5_body()
@@ -739,7 +740,8 @@ class UpdateProxyTest(unittest.TestCase):
             (root / "NotInList.lua").write_bytes(b"local X = 2\n")
             expected = {
                 name: hashlib.md5(
-                    service._jhhu01_cipher((root / name).read_bytes(), "enc")).hexdigest()
+                    service._update_cipher((root / name).read_bytes(), "enc", b"JHHU01")
+                ).hexdigest()
                 for name in ("DebugLayer.lua", "NotInList.lua")
             }
             with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
@@ -754,7 +756,7 @@ class UpdateProxyTest(unittest.TestCase):
             shutil.rmtree(directory, ignore_errors=True)
 
         self.assertNotEqual(got, body)  # 重新加密过
-        payload = json.loads(service._jhhu01_cipher(got, "dec").decode("utf-8"))
+        payload = json.loads(service._update_cipher(got, "dec").decode("utf-8"))
         original = payload["data"]["originalMd5List"]
         deploy = payload["data"]["deployMd5List"]
         key = "src/app/views/layer/DebugLayer/DebugLayer.lua"
@@ -775,7 +777,7 @@ class UpdateProxyTest(unittest.TestCase):
             extra = pathlib.Path(directory) / "MainLayer.lua"
             extra.write_bytes(b"local MainLayer = class('MainLayer')\n")
             expected = hashlib.md5(
-                service._jhhu01_cipher(extra.read_bytes(), "enc")).hexdigest()
+                service._update_cipher(extra.read_bytes(), "enc", b"JHHU01")).hexdigest()
             rel = os.path.relpath(extra, pathlib.Path(config.__file__).resolve().parent)
             with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
                     mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
@@ -790,11 +792,95 @@ class UpdateProxyTest(unittest.TestCase):
         finally:
             shutil.rmtree(directory, ignore_errors=True)
 
-        payload = json.loads(service._jhhu01_cipher(got, "dec").decode("utf-8"))
+        payload = json.loads(service._update_cipher(got, "dec").decode("utf-8"))
         self.assertEqual(
             payload["data"]["deployMd5List"]["src/app/views/layer/MainLayer.lua"], expected)
         self.assertEqual(
             payload["data"]["originalMd5List"]["src/app/views/layer/MainLayer.lua"], expected)
+
+    def test_md5_override_extra_files_can_differ_per_version(self):
+        """MD5_OVERRIDE_EXTRA_FILES 的值可以是 {版本: 路径}: 按响应版本取对应补丁。"""
+        directory = self._md5_temp_dir()
+        try:
+            base = pathlib.Path(directory)
+            patches = {version: base / ("MainLayer.%s.lua" % version)
+                       for version in ("2.1.01", "2.1.02")}
+            for version, path in patches.items():
+                path.write_bytes(("local MainLayer = '%s'\n" % version).encode())
+            rels = {version: os.path.relpath(path, pathlib.Path(config.__file__).resolve().parent)
+                    for version, path in patches.items()}
+            mapping = {"src/app/views/layer/MainLayer.lua": rels}
+            key = "src/app/views/layer/MainLayer.lua"
+            expected = {}
+            for magic, version in ((b"JHHU01", "2.1.01"), (b"JHHU02", "2.1.02")):
+                expected[magic] = hashlib.md5(
+                    service._update_cipher(patches[version].read_bytes(), "enc", magic)
+                ).hexdigest()
+                with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                        mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
+                        mock.patch.object(config, "MD5_OVERRIDE_EXTRA_FILES", mapping), \
+                        mock.patch.object(UpstreamHandler, "md5_body",
+                                          self._encrypted_md5_body(magic)):
+                    response = self.fetch("getMd5List")
+                    try:
+                        got = response.read()
+                    finally:
+                        response.close()
+                payload = json.loads(service._update_cipher(got, "dec").decode("utf-8"))
+                self.assertEqual(payload["data"]["deployMd5List"][key], expected[magic],
+                                 "版本 %s" % version)
+        finally:
+            shutil.rmtree(directory, ignore_errors=True)
+        self.assertNotEqual(expected[b"JHHU01"], expected[b"JHHU02"])
+
+    def test_md5_override_uses_2_1_02_group_for_jhhu02(self):
+        """2.1.02 的响应是 JHHU02: 按同一组算 md5 并按 JHHU02 加密回去。
+
+        同一个文件在 2.1.01/2.1.02 清单里的 md5 不同(密文形态不同), 不能混用。
+        """
+        body = self._encrypted_md5_body(b"JHHU02")
+        directory = self._md5_temp_dir()
+        try:
+            root = pathlib.Path(directory)
+            (root / "DebugLayer.lua").write_bytes(b"local DebugLayer = 1\n")
+            md5_102 = hashlib.md5(
+                service._update_cipher((root / "DebugLayer.lua").read_bytes(),
+                                       "enc", b"JHHU02")).hexdigest()
+            md5_101 = hashlib.md5(
+                service._update_cipher((root / "DebugLayer.lua").read_bytes(),
+                                       "enc", b"JHHU01")).hexdigest()
+            self.assertNotEqual(md5_101, md5_102)
+            with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                    mock.patch.object(config, "MD5_OVERRIDE_DIR", directory), \
+                    mock.patch.object(config, "MD5_OVERRIDE_EXTRA_FILES", {}), \
+                    mock.patch.object(UpstreamHandler, "md5_body", body):
+                response = self.fetch("getMd5List")
+                try:
+                    got = response.read()
+                finally:
+                    response.close()
+        finally:
+            shutil.rmtree(directory, ignore_errors=True)
+
+        self.assertTrue(got.lower().startswith(b"4a4848553032"))  # JHHU02
+        payload = json.loads(service._update_cipher(got, "dec").decode("utf-8"))
+        key = "src/app/views/layer/DebugLayer/DebugLayer.lua"
+        self.assertEqual(payload["data"]["originalMd5List"][key], md5_102)
+        self.assertEqual(payload["data"]["deployMd5List"][key], md5_102)
+
+    def test_md5_override_passes_through_unconfigured_group(self):
+        """响应魔数不在 UPDATE_CIPHER_GROUPS 里时原样返回(不碰 body)。"""
+        body = self._encrypted_md5_body(b"JHHU02")
+        only_0101 = {b"JHHU01": config.UPDATE_CIPHER_GROUPS[b"JHHU01"]}
+        with mock.patch.object(config, "MD5_OVERRIDE_ENABLED", True), \
+                mock.patch.object(config, "UPDATE_CIPHER_GROUPS", only_0101), \
+                mock.patch.object(UpstreamHandler, "md5_body", body):
+            response = self.fetch("getMd5List")
+            try:
+                got = response.read()
+            finally:
+                response.close()
+        self.assertEqual(got, body)
 
     def test_md5_override_keeps_original_body_when_decrypt_fails(self):
         body = b"4a4848553031" + b"00" * 16  # 魔数对但内容不是 JSON

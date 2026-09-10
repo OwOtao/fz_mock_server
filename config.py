@@ -53,16 +53,31 @@ MD5_OVERRIDE_DIR = _os.path.join(_ROOT, "debug")
 # 清单里的键名前缀: debug 目录对应 src/app/views/layer/DebugLayer/xxx.lua
 MD5_OVERRIDE_KEY_PREFIX = "src/app/views/layer/DebugLayer"
 # 额外需要覆盖 md5 的热更文件: {清单键名: 本地明文路径(相对本目录)}
-# 例: 打过补丁的 MainLayer.lua(无条件显示调试按钮); 不覆盖的话客户端更新检查会换回官方版本
+# 值也可以是 {版本: 路径}(按响应魔数对应的版本取值), 便于 2.1.01/2.1.02 各放一份补丁;
+# 版本对应的路径不存在时自动跳过。不覆盖的话客户端更新检查会把文件换回官方版本。
 MD5_OVERRIDE_EXTRA_FILES = {
-    "src/app/views/layer/MainLayer.lua": "patched/MainLayer.lua",
+    "src/app/views/layer/MainLayer.lua": {
+        "2.1.01": "patched/MainLayer.lua",
+        "2.1.02": "patched/MainLayer.2.1.02.lua",
+    },
 }
-# 上游 2.1.01 响应/热更文件用的 JM 组: JHHU01
+# 上游更新接口(getMd5List/checkUpdate)响应与热更文件按客户端版本用不同 JM 组:
+#   2.1.01 -> 魔数 JHHU01, 2.1.02 -> 魔数 JHHU02
 #   key 为 32 字节 ASCII(AES-256), IV 固定 16 字节, 明文用 ASCII '0' 补齐到 16 字节倍数。
-# 注意: 清单里的 md5 是"加密后 hex 文本"的 md5, 不是明文源码的 md5。
+# 注意: 清单里的 md5 是"加密后 hex 文本"的 md5, 不是明文源码的 md5, 而且随版本组变化
+#      (同一个文件在 2.1.01/2.1.02 清单里的 md5 不同)。
+UPDATE_CIPHER_GROUPS = {
+    b"JHHU01": (b"9B5A96B0F4A1EC60DB88349E3B926765", b"34857d973953e44a"),
+    b"JHHU02": (b"cbIhHHuYQIJ1JkwlLupIvNIvdQDfNxSF", b"PcIQIZifRalhZ88n"),
+}
+# 客户端版本 -> 加密组魔数(热更目录 updatePath_android_<版本>; 供推送工具选版本用)
+UPDATE_VERSION_MAGIC = {
+    "2.1.01": b"JHHU01",
+    "2.1.02": b"JHHU02",
+}
+# 兼容旧名(2.1.01)
 UPDATE_JHHU01_MAGIC = b"JHHU01"
-UPDATE_JHHU01_KEY = b"9B5A96B0F4A1EC60DB88349E3B926765"
-UPDATE_JHHU01_IV = b"34857d973953e44a"
+UPDATE_JHHU01_KEY, UPDATE_JHHU01_IV = UPDATE_CIPHER_GROUPS[UPDATE_JHHU01_MAGIC]
 ADMIN_API_TOKEN = _os.getenv("MOCK_ADMIN_API_TOKEN", "")
 MOCK_DEVICE_UUID = _os.getenv(
     "MOCK_DEVICE_UUID",

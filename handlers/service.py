@@ -218,36 +218,77 @@ def get_md5_list(ctx):
 # ---------------------------------------------------------------------------
 # getMd5List 覆盖: 用本地 debug 目录的文件 md5 替换上游清单里的同名项
 # ---------------------------------------------------------------------------
+# 2.1.01 的上游响应用 JHHU01, 2.1.02 用 JHHU02(见 config.UPDATE_CIPHER_GROUPS);
+# 覆盖时按响应体自己的魔数选组, 并用同一组算 md5 / 重新加密。
 
-def _jhhu01_cipher(body, op):
-    """上游 JHHU01 组: magic + AES-256-CBC(明文用 '0' 补齐到 16 字节倍数)。"""
-    magic = config.UPDATE_JHHU01_MAGIC
+
+def _update_cipher_groups():
+    groups = {}
+    for magic, value in (getattr(config, "UPDATE_CIPHER_GROUPS", None) or {}).items():
+        try:
+            key, iv = value
+        except (TypeError, ValueError):
+            log.warning("update cipher: bad group for %r", magic)
+            continue
+        groups[magic] = (key, iv)
+    return groups
+
+
+def _detect_update_magic(body):
+    """按魔数识别响应/文件属于哪个版本的加密组(最长匹配)。
+
+    body 可以是原始字节, 也可以是 hex 文本(设备上的热更文件就是 hex 文本)。
+    """
+    if not isinstance(body, (bytes, bytearray)):
+        return None
+    lowered = bytes(body).lower()
+    for magic in sorted(_update_cipher_groups(), key=len, reverse=True):
+        if bytes(body)[:len(magic)] == magic:
+            return magic
+        if lowered[:len(magic) * 2] == binascii.hexlify(magic):
+            return magic
+    return None
+
+
+def _update_cipher(body, op, magic=None):
+    """上游更新组: magic + AES-256-CBC(明文用 '0' 补齐到 16 字节倍数)。
+
+    op="dec" 时按 body 的魔数自动选组并返回明文;
+    op="enc" 时必须给出 magic(或明文前已带魔数), 返回 hex 文本。
+    """
+    groups = _update_cipher_groups()
     if op == "dec":
         raw = binascii.unhexlify(body.decode("ascii").strip().lower())
-        if not raw.startswith(magic):
+        detected = _detect_update_magic(raw)
+        if detected is None:
             raise ValueError("unexpected magic %r" % raw[:6])
-        payload = raw[len(magic):]
+        key, iv = groups[detected]
+        payload = raw[len(detected):]
         payload = payload[: len(payload) - (len(payload) % 16)]
-        plain = jm_crypto._aes_cbc(payload, config.UPDATE_JHHU01_KEY,
-                                   config.UPDATE_JHHU01_IV, "dec")
+        plain = jm_crypto._aes_cbc(payload, key, iv, "dec")
         return plain.rstrip(b"0")
+    if magic is None:
+        magic = _detect_update_magic(body)
+    if magic not in groups:
+        raise ValueError("unknown update magic %r" % magic)
+    key, iv = groups[magic]
     pad = (16 - len(body) % 16) % 16
-    return (magic + jm_crypto._aes_cbc(body + b"0" * pad, config.UPDATE_JHHU01_KEY,
-                                       config.UPDATE_JHHU01_IV, "enc")).hex().encode("ascii")
+    return (magic + jm_crypto._aes_cbc(body + b"0" * pad, key, iv, "enc")).hex().encode("ascii")
 
 
-def _debug_file_md5(path):
-    """清单里的 md5 = 热更文件(加密后 hex 文本)的 md5。"""
+def _file_md5(path, magic):
+    """清单里的 md5 = 热更文件(加密后 hex 文本)的 md5; 已加密的文件按原样取 md5。"""
     data = path.read_bytes()
-    if data[:len(config.UPDATE_JHHU01_MAGIC)] != config.UPDATE_JHHU01_MAGIC:
-        data = _jhhu01_cipher(data, "enc")
+    if _detect_update_magic(data) is None:
+        data = _update_cipher(data, "enc", magic)
     return hashlib.md5(data).hexdigest()
 
 
-def _md5_overrides():
+def _md5_overrides(magic):
     """{清单键名: md5} —— debug 目录 + config.MD5_OVERRIDE_EXTRA_FILES。
 
     键名 = MD5_OVERRIDE_KEY_PREFIX + debug 目录相对路径; 额外文件按 config 里的键名。
+    md5 用当前响应所属版本的加密组(magic)计算。
     """
     overrides = {}
     root = pathlib.Path(str(getattr(config, "MD5_OVERRIDE_DIR", "") or ""))
@@ -259,39 +300,58 @@ def _md5_overrides():
             rel = path.relative_to(root).as_posix()
             key = "%s/%s" % (prefix, rel) if prefix else rel
             try:
-                overrides[key] = _debug_file_md5(path)
-            except OSError as error:
+                overrides[key] = _file_md5(path, magic)
+            except (OSError, ValueError) as error:
                 log.warning("md5 override: read failed %s: %s", path, error)
     else:
         log.warning("md5 override: dir not found: %s", root)
 
     extra = getattr(config, "MD5_OVERRIDE_EXTRA_FILES", None) or {}
     base = pathlib.Path(config.__file__).resolve().parent
+    version = _version_for_magic(magic)
     if isinstance(extra, dict):
-        for key, rel in extra.items():
+        for key, value in extra.items():
+            rel = value
+            if isinstance(value, dict):  # {版本: 路径}
+                rel = value.get(version) or value.get(magic.decode())
+            if not rel:
+                continue
             path = base / str(rel)
             if not path.is_file():
-                log.warning("md5 override: extra file not found: %s", path)
+                log.warning("md5 override: extra file not found: %s (版本 %s)", path, version)
                 continue
             try:
-                overrides[str(key)] = _debug_file_md5(path)
-            except OSError as error:
+                overrides[str(key)] = _file_md5(path, magic)
+            except (OSError, ValueError) as error:
                 log.warning("md5 override: read failed %s: %s", path, error)
     return overrides
 
 
+def _version_for_magic(magic):
+    """魔数 -> 客户端版本(如 JHHU01 -> 2.1.01), 用于按版本挑额外文件。"""
+    for version, value in (getattr(config, "UPDATE_VERSION_MAGIC", None) or {}).items():
+        if value == magic:
+            return version
+    return None
+
+
 def _apply_md5_override(response):
-    """解密上游清单 -> 替换同名 md5 -> 重新加密返回。失败时原样返回。"""
+    """解密上游清单 -> 替换同名 md5 -> 用同一版本的组重新加密返回。失败时原样返回。"""
     body = response.get("body") if isinstance(response, dict) else None
     if not isinstance(body, bytes) or not body:
         return response
+    magic = _detect_update_magic(body)
+    if magic is None:
+        log.warning("md5 override: 未知魔数 %r, 原样返回", body[:6])
+        return response
     try:
-        payload = json.loads(_jhhu01_cipher(body, "dec").decode("utf-8"))
+        plain = _update_cipher(body, "dec", magic)
+        payload = json.loads(plain.decode("utf-8"))
     except (ValueError, TypeError, binascii.Error, UnicodeDecodeError) as error:
         log.warning("md5 override: decrypt failed: %s: %s", type(error).__name__, error)
         return response
 
-    overrides = _md5_overrides()
+    overrides = _md5_overrides(magic)
     if not overrides:
         return response
 
@@ -307,12 +367,15 @@ def _apply_md5_override(response):
                     table[key] = value
                     replaced.append("%s:%s" % (name, key))
     if not replaced:
-        log.info("md5 override: 清单里没有匹配的 debug 文件 (本地 %d 个)", len(overrides))
+        log.info("md5 override: 清单里没有匹配的本地文件 (本地 %d 个, 组=%s)",
+                 len(overrides), magic.decode())
         return response
 
-    log.info("md5 override: 替换 %d 项 %s", len(replaced), replaced[:10])
-    new_body = _jhhu01_cipher(
-        json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8"), "enc")
+    log.info("md5 override: 组=%s 替换 %d 项 %s",
+             magic.decode(), len(replaced), replaced[:10])
+    new_body = _update_cipher(
+        json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8"),
+        "enc", magic)
     headers = dict(response.get("headers") or {})
     headers["Content-Length"] = str(len(new_body))
     return build_raw_response(new_body, response.get("status_code", 200), headers)
