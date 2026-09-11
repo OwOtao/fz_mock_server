@@ -89,8 +89,20 @@ python -m unittest test_state test_update_proxy test_har_91 -v
 | `STATE_AUTOSAVE` | 状态自动落盘 | `True` |
 | `SEED_IMPORT_ON_START` | 启动时导入种子档 | `True` |
 | `UPDATE_UPSTREAM_BASE` | 更新代理上游地址 | `http://update.xiaohoutiaotiao.com/v1` |
+| `MOCK_SHUTDOWN_TIMEOUT` | 优雅关闭时等待在途请求的最长秒数（环境变量，非 config.py） | `5.0` |
 
 运行时数据统一写入 `mock_server/data/` 目录（`state.json`、`archives/`、`seed/`），已在 `.gitignore` 中忽略。
+
+## 优雅关闭
+
+`python run.py` 收到 `Ctrl+C`（SIGINT）、SIGTERM 或关闭窗口（SIGBREAK）时会优雅关闭：
+
+1. 停止 accept 循环并关闭监听 socket，端口可立即重新绑定；
+2. 等待在途请求处理完（最长 `MOCK_SHUTDOWN_TIMEOUT` 秒），超时则断开剩余连接；
+3. 落盘登录/存档状态（`state.json` 与 `data/archives`）；
+4. flush 并关闭日志文件句柄（`server.log`）。
+
+关闭过程中再按一次 `Ctrl+C` 会立即强制退出。
 
 ## 加密协议
 
