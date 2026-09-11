@@ -10,6 +10,7 @@
 - **商城系统**：限时礼包、武林卷轴、直购道具，支持购买与元宝扣减
 - **签到系统**：49 天赛季制签到、元宝补签、累计奖励领取
 - **家园系统**：多户型数据（从 `familytype.lua` 自动提取）、管家、房间布局
+- **拳脚系统**：五分支数据、修行任务列表与周冷却、挂机/加速/完成结算、解锁标记
 - **活动系统**：20 项活动总表、限时历练、十周年登录奖励、天缘奇盒、易金圩市、通武积市等
 - **远端仓储**：藏衣阁/玄兵洞清单、MD5 版本冲突、入库出库与客户端数据分页
 - **更新代理**：`checkUpdate` / `getMd5List` 透传至上游更新服务器
@@ -34,7 +35,7 @@ mock_server/
 │   ├── practice.py         # 修炼
 │   ├── daily_task.py       # 每日任务
 │   ├── hangup.py           # 挂机
-│   ├── fist.py             # 拳脚
+│   ├── fist.py             # 拳脚（五分支/修行任务/加速结算）
 │   ├── teacher_build.py    # 师门
 │   ├── black_market.py     # 黑市
 │   ├── familytype_data.py  # 户型数据（自动生成）
@@ -71,9 +72,15 @@ python run.py
 ### 运行测试
 
 ```bash
-python -m pytest test_state.py test_update_proxy.py test_har_91.py -v
+python -m pytest test_state.py test_update_proxy.py test_har_91.py test_fist.py -v
 # 或
-python -m unittest test_state test_update_proxy test_har_91 -v
+python -m unittest test_state test_update_proxy test_har_91 test_fist -v
+```
+
+拳脚系统的端到端验证（自起临时服务与临时存档，不影响 `data/` 里的真实存档）：
+
+```bash
+python _test_fist_e2e.py
 ```
 
 ## 配置说明
