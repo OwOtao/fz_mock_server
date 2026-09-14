@@ -4,12 +4,14 @@ import copy
 import hashlib
 import json
 import os
+import random
 import re
 import time
 from itertools import chain, product
 
 from handlers.basic import _currency_balance, _set_currency_balance
 from handlers.familytype_data import HX_TABLE
+from handlers.role_trait_data import TRAIT_NEED, USABLE_TRAIT_IDS
 from protocol import build_response_body
 from server import route
 
@@ -1451,8 +1453,67 @@ def get_all_rooms(ctx):
     return build_response_body({"list": copy.deepcopy(bucket.get("rooms") or spec["rooms"])})
 
 
+def _store_employee_list(bucket, npc_id, values):
+    """保存客户端上传的招募列表, 并按官方契约补齐 hid/state 后返回。
+
+    客户端 PuRenModel/MenKeModel/GuanJiaModel:refresh 拿到 save_employee_list 的响应后
+    直接 `for i = 1, #data` 只保留 `data[i].state == 0` 的条目, 因此:
+      * 响应 data 必须是"数组本身"——返回 {"list": [...]} 会让 `#data == 0`, 列表永远空白;
+      * 每条要补服务端分配的 `hid`(客户端 employeeNpc 用 `npc.hid` 回调 add_employee)
+        与 `state = 0`(0 可雇佣 / 1 已雇佣)。
+    hid 用递增序号分配, 列表整批刷新后旧 hid 自然失效, 不会误命中新条目。
+    """
+    seq = max(_int(bucket.get("employee_hid_seq"), 0), 0)
+    entries = []
+    for value in values:
+        if not isinstance(value, dict):
+            continue
+        entry = copy.deepcopy(value)
+        seq += 1
+        entry["hid"] = seq
+        entry["state"] = 0
+        entries.append(entry)
+    bucket["employee_hid_seq"] = seq
+    bucket.setdefault("employee_lists", {})[str(npc_id)] = entries
+    return entries
+
+
+def _find_list_entry(bucket, npc_id, hid):
+    """按 hid 反查招募列表条目; 先查当前 npcId 的列表, 再兜底查其它列表。"""
+    if hid <= 0:
+        return None
+    lists = bucket.get("employee_lists") or {}
+    keys = [str(npc_id)]
+    keys += [key for key in lists if str(key) != str(npc_id)]
+    for key in keys:
+        for entry in lists.get(key) or []:
+            if isinstance(entry, dict) and _int(entry.get("hid"), 0) == hid:
+                return entry
+    return None
+
+
+def _charge_employee_price(ctx, userid, price, unit):
+    """雇佣扣费(银票/元宝); 返回 (是否成功, errcode, errmsg)。"""
+    price = max(_int(price, 0), 0)
+    currency_id = str(unit or "yinpiao")
+    if price <= 0 or currency_id not in ("yinpiao", "yuanbao"):
+        # 价格为 0 或单位未知时不扣费, 避免凭猜测写坏存档
+        return True, 0, ""
+    balance = _currency_balance(ctx, userid, currency_id)
+    if balance < price:
+        return False, 2, ("银票不足" if currency_id == "yinpiao" else "元宝不足")
+    _set_currency_balance(ctx, userid, currency_id, balance - price)
+    return True, 0, ""
+
+
 @route(["POST"], "save_employee_list")
 def save_employee_list(ctx):
+    """雇佣列表保存(生成/刷新)。请求 {type, npcId, list}; type 1 普通生成 / 2 花元宝刷新。
+
+    注意 body 里没有 mid, 所以只能按 userid 归属校验。本客户端(assets/src)里所有
+    refresh 调用点都传 1, `needCost == 2` 的分支是死代码, 因此 type=2 的元宝消耗
+    没有任何可依据的价格, 不在这里凭空扣费。
+    """
     userid = _userid(ctx)
     if userid <= 0:
         return build_response_body({}, errcode=552, errmsg="userid not found")
@@ -1462,11 +1523,12 @@ def save_employee_list(ctx):
         return build_response_body({}, errcode=403, errmsg=error)
     npc_id = str(body.get("npcId") or "0")
     values = body.get("list") if isinstance(body.get("list"), list) else []
-    bucket.setdefault("employee_lists", {})[npc_id] = copy.deepcopy(values)
+    entries = _store_employee_list(bucket, npc_id, values)
     bucket["updated_at"] = int(time.time())
     with ctx["state"]._lock:
         ctx["state"]._changed()
-    return build_response_body({"list": copy.deepcopy(values), "shenshi": {}})
+    # 客户端 refresh 直接遍历 data 数组, 不读 data.list
+    return build_response_body(copy.deepcopy(entries))
 
 
 @route(["GET"], "get_employee_list")
@@ -1481,6 +1543,7 @@ def get_employee_list(ctx):
     if error:
         return build_response_body({}, errcode=403, errmsg=error)
     values = bucket.setdefault("employee_lists", {}).get(npc_id, [])
+    # 这里客户端读 data.list / data.shenshi(与 save_employee_list 的数组响应不同)
     return build_response_body({"list": copy.deepcopy(values), "shenshi": {}})
 
 
@@ -1493,11 +1556,32 @@ def add_employee(ctx):
     bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
     if error:
         return build_response_body({}, errcode=403, errmsg=error)
+    npc_id = str(body.get("npcId") or "0")
+    hid = _int(body.get("hid"), 0)
     pushed = body.get("push_data") if isinstance(body.get("push_data"), dict) else {}
-    obj_id = str(body.get("objId") or pushed.get("objId") or "")
+    entry = _find_list_entry(bucket, npc_id, hid)
+    if hid > 0 and entry is None:
+        # 列表已被整批刷新或家园档被清空: 这条 errmsg 会直接弹给玩家
+        return build_response_body({}, errcode=404, errmsg="招募列表已刷新，请重新打开招募界面")
+    if entry is not None:
+        # 商店雇佣(hid != 0)时客户端只传 hid: 管家固定传 {} (GuanJiaModel.lua:332),
+        # 仆人/门客列表项也只回传 hid, 所以必须以服务端保存的条目为基准,
+        # 否则雇到的人会变成默认的"小四/moban001", 玩家看到的名字职业全丢。
+        source = copy.deepcopy(entry)
+        source.pop("hid", None)
+        source.pop("state", None)
+        source.update(copy.deepcopy(pushed))
+    else:
+        # hid == 0: 初始管家(带完整 push_data)或副本产出的仆人/门客
+        source = copy.deepcopy(pushed)
+    charged, code, message = _charge_employee_price(
+        ctx, userid, source.get("price"), source.get("price_unit"))
+    if not charged:
+        return build_response_body({}, errcode=code, errmsg=message)
+    obj_id = str(body.get("objId") or source.get("objId") or "")
     if not obj_id:
         return build_response_body({}, errcode=400, errmsg="objId required")
-    employee = copy.deepcopy(pushed)
+    employee = source
     employee["objId"] = obj_id
     employee["rwId"] = obj_id
     employee["job"] = employee.get("job") or employee.get("jobType") or ("guanjia001" if _int(body.get("npcId"), 0) == 0 else "puren001")
@@ -1510,6 +1594,10 @@ def add_employee(ctx):
             if key != obj_id and _is_steward(existing):
                 employees.pop(key, None)
     employees[obj_id] = employee
+    if entry is not None:
+        # 已雇佣的条目保留在列表里并置 state = 1: 客户端只取 state == 0,
+        # 门客那边还会据此提示"你今天已经招募了一名门客"。
+        entry["state"] = 1
     bucket["updated_at"] = int(time.time())
     with ctx["state"]._lock:
         ctx["state"]._changed()
@@ -1744,3 +1832,260 @@ def get_guaike_reward(ctx):
         "level_up": False,
         "trait": {},
     })
+
+
+# ---------------------------------------------------------------------------
+# 调试/GM 接口: DebugLayer/TestLayer.lua「家园」面板
+#
+# 客户端(TestLayer.lua / DebugLayer)对这些按钮只判断 status==200 && errcode==0,
+# 仅 test_homeland/5 会读 data(ipairs 数组, 每项需含 name/rwId/mid)。因此这里以
+# "真实改动家园状态"为准, 不做数值合法性校验(本来就是作弊按钮), 状态改动后统一
+# bump 版本号, 让客户端缓存的 user_fb_<mid> 地图失效并重新拉取。
+# ---------------------------------------------------------------------------
+
+# test_homeland/<type> 的 type 语义(逐条对照 TestLayer.lua 调用点):
+#   1 所有仆人忠诚度 +loyal            body {mid, loyal}
+#   2 删除所有仆人(含派遣)             body {mid}
+#   3 随机解锁所有仆人特性(每人最多 3 个) body {mid, loyal}
+#   4 删除家园相关数据(房契/仆人/地皮)   body {mid}
+#   5 查看所有仆人 -> 返回数组          body {mid}
+#   6 清除地皮缴费/回收状态(客户端未调用, 按 7/8 的反操作实现)
+#   7 地皮进入缴费状态                  body {mid, datime}
+#   8 地皮进入回收倒计时                body {mid, datime}
+# 7/8 只是把官方"地皮到期时间"落到 house 上; mock 未模拟地皮副本与回收流程,
+# 所以除 7 之后接 8 之外没有别的处理器读取它(客户端也只判断 errcode)。
+_TEST_HOMELAND_TYPES = frozenset((1, 2, 3, 4, 5, 6, 7, 8))
+# make_servant_change 的 type: naoshi 闹事 / leave 仆人离开 / wild 门客云游
+# (leave 与 wild 都是"从府中消失", 差别只在官方推送的 Affair 文案, mock 统一按移除处理)
+_SERVANT_CHANGE_TYPES = ("naoshi", "leave", "wild")
+_SERVANT_EVENT_LOG_LIMIT = 20
+
+
+def _touch_homeland(ctx, bucket):
+    """状态改动后 bump 版本, 客户端据此丢弃 user_fb_<mid> 缓存并重新 get_user_map。"""
+    bucket["version"] = max(_int(bucket.get("version"), 0), 0) + 1
+    bucket["updated_at"] = int(time.time())
+    with ctx["state"]._lock:
+        ctx["state"]._changed()
+
+
+def _find_employee_key(bucket, rw_id):
+    """按 rwId/objId 定位仆人; add_employee 存的 key 就是 objId, 但旧档可能不一致。"""
+    employees = bucket.get("employees") or {}
+    if rw_id in employees:
+        return rw_id
+    for key, employee in employees.items():
+        if not isinstance(employee, dict):
+            continue
+        if rw_id in (str(employee.get("rwId") or ""), str(employee.get("objId") or "")):
+            return key
+    return None
+
+
+def _random_role_traits(employee):
+    """随机挑 3 个互不相同的可用特性, 门槛与客户端 getTexingList 一致(特点值 traitVal)。"""
+    value = max(_int(employee.get("traitVal"), 0), 0)
+    pool = [trait_id for trait_id in USABLE_TRAIT_IDS
+            if TRAIT_NEED.get(trait_id, 0) <= value]
+    if not pool:
+        pool = list(USABLE_TRAIT_IDS)
+    chosen = random.sample(pool, min(3, len(pool)))
+    while len(chosen) < 3:
+        chosen.append("")
+    return chosen
+
+
+def _clear_archive_homeland(state, userid):
+    """对齐客户端 test_homeland/4 成功后本地清空的字段(TestLayer.lua:531-551)。
+
+    客户端会自行删掉背包里的房契/地契/邀请函道具, 服务端只需清掉家园档与镜像的
+    房契道具, 否则下次下发 RoleData 时 fq 还在, 地图仍会打开。
+    """
+    archive = state.get_archive(userid)
+    if not isinstance(archive, dict):
+        return False
+    homeland = archive.get("Homeland")
+    if isinstance(homeland, dict):
+        for key in ("fq", "dq", "yq", "dinner"):
+            homeland.pop(key, None)
+    items = archive.get("items")
+    if isinstance(items, list):
+        archive["items"] = [
+            item for item in items
+            if not (isinstance(item, dict) and str(item.get("itemId") or "") == "fq100")
+        ]
+    for key in ("homeLandRoleData", "DispatchTask"):
+        archive.pop(key, None)
+    state.put_archive(userid, archive)
+    return True
+
+
+def _reset_homeland(ctx, userid):
+    """test_homeland/4: 删除该玩家的全部家园数据, 并释放 mid。
+
+    mid 只做记录(客户端传的是本地房契的 mid); 官方这个按钮是"清档", 所以即使
+    本地 mid 与服务端不一致也照删, 避免玩家卡在打不开又删不掉的状态。
+    """
+    state = ctx["state"]
+    with state._lock:
+        root = state._normalize_homeland(state._state)
+        bucket = root["users"].pop(str(userid), None)
+        mid = 0
+        if isinstance(bucket, dict):
+            mid = _int((bucket.get("house") or {}).get("mid"), 0)
+        if mid <= 0:
+            mid = next(
+                (_int(key, 0) for key, owner in root["mid_owners"].items()
+                 if _int(owner, 0) == userid),
+                0,
+            )
+        if mid > 0 and _int(root["mid_owners"].get(str(mid)), 0) == userid:
+            root["mid_owners"].pop(str(mid), None)
+        state._changed()
+    _clear_archive_homeland(state, userid)
+    return {"mid": mid, "had_homeland": bool(bucket)}
+
+
+@route(["POST"], "test_homeland")
+def test_homeland(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    tail = ctx.get("route_tail") or []
+    kind = _int(tail[0] if tail else 0, 0)
+    if kind not in _TEST_HOMELAND_TYPES:
+        return build_response_body({}, errcode=400, errmsg="unknown test type")
+    body = _body(ctx)
+    if kind == 4:
+        return build_response_body(_reset_homeland(ctx, userid))
+
+    bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
+    if error:
+        return build_response_body({}, errcode=403, errmsg=error)
+    house = bucket.get("house") or {}
+    mid = _int(house.get("mid"), 0)
+
+    if kind == 1:
+        loyal = max(_int(body.get("loyal"), 0), 0)
+        for employee in (bucket.get("employees") or {}).values():
+            if isinstance(employee, dict):
+                employee["defaultZhongCheng"] = (
+                    max(_int(employee.get("defaultZhongCheng"), 0), 0) + loyal
+                )
+        _touch_homeland(ctx, bucket)
+        return build_response_body({"mid": mid, "loyal": loyal})
+
+    if kind == 2:
+        removed = len(bucket.get("employees") or {})
+        bucket["employees"] = {}
+        bucket["dispatch"] = {}
+        bucket["employee_lists"] = {}
+        _touch_homeland(ctx, bucket)
+        return build_response_body({"mid": mid, "deleted": removed})
+
+    if kind == 3:
+        changed = 0
+        for employee in (bucket.get("employees") or {}).values():
+            if not isinstance(employee, dict):
+                continue
+            trait1, trait2, trait3 = _random_role_traits(employee)
+            employee["trait1"], employee["trait2"], employee["trait3"] = trait1, trait2, trait3
+            changed += 1
+        _touch_homeland(ctx, bucket)
+        return build_response_body({"mid": mid, "changed": changed})
+
+    if kind == 5:
+        spec, _stale = _ensure_layout(bucket)
+        default_fj = _default_employee_fjid(spec)
+        npcs = []
+        for employee in (bucket.get("employees") or {}).values():
+            payload = _employee_payload(employee, default_fj)
+            # 客户端 npcFunc 用 npc.rwId 调 updateEmployRoleData, 用 npc.mid 做归属校验,
+            # npc.name 只用于按钮标题。
+            payload["mid"] = mid
+            payload["rwId"] = str(payload.get("rwId") or payload.get("objId") or "")
+            payload["name"] = str(payload.get("name") or "仆人")
+            npcs.append(payload)
+        return build_response_body(npcs)
+
+    if kind in (7, 8):
+        datime = max(_int(body.get("datime"), 0), 0)
+        house["land_state"] = "paying" if kind == 7 else "recycle"
+        house["land_datime"] = datime
+        house["land_change_at"] = int(time.time()) + datime
+        _touch_homeland(ctx, bucket)
+        return build_response_body({"mid": mid, "datime": datime})
+
+    # kind == 6: 客户端没有按钮, 按 7/8 的反操作实现(清除缴费/回收状态)
+    for key in ("land_state", "land_datime", "land_change_at"):
+        house.pop(key, None)
+    _touch_homeland(ctx, bucket)
+    return build_response_body({"mid": mid})
+
+
+@route(["POST"], "make_servant_change")
+def make_servant_change(ctx):
+    """setPuRenStatus: 设置单个仆人状态。
+
+    请求 {mid, rwId, type, time}; type: naoshi 闹事 / leave 仆人离开 / wild 门客云游。
+    - naoshi: extra.naoshi = 1(客户端 HomelandRoleUtil:getRoleCurrStatus 显示"闹事")。
+    - leave/wild: 从府中移除该仆人(官方由 Affair「仆人离开」消息通知, mock 未做 event 推送),
+      同时清掉其派遣记录。
+    time 是官方用来延时生效的秒数, DebugLayer 三个按钮都传 0; mock 立即生效, 只把预期
+    时间记进 extra/house 便于观察。
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    body = _body(ctx)
+    bucket, error = _owned_bucket(ctx, userid, body.get("mid"))
+    if error:
+        return build_response_body({}, errcode=403, errmsg=error)
+    change_type = str(body.get("type") or "").strip()
+    if change_type not in _SERVANT_CHANGE_TYPES:
+        return build_response_body({}, errcode=400, errmsg="unknown change type")
+    rw_id = str(body.get("rwId") or body.get("objId") or "")
+    key = _find_employee_key(bucket, rw_id)
+    if key is None:
+        return build_response_body({}, errcode=404, errmsg="employee not found")
+    employee = bucket["employees"][key]
+    delay = max(_int(body.get("time"), 0), 0)
+    now = int(time.time())
+    if change_type == "naoshi":
+        extra = _employee_extra(employee)
+        extra["naoshi"] = 1
+        extra["naoshi_at"] = now + delay
+    else:
+        bucket["employees"].pop(key, None)
+        bucket.get("dispatch", {}).pop(key, None)
+        events = bucket.setdefault("servant_events", [])
+        events.append({
+            "rwId": str(employee.get("rwId") or key),
+            "name": str(employee.get("name") or ""),
+            "type": change_type,
+            "at": now + delay,
+        })
+        del events[:-_SERVANT_EVENT_LOG_LIMIT]
+    _touch_homeland(ctx, bucket)
+    return build_response_body({"mid": _int((bucket.get("house") or {}).get("mid"), 0),
+                                "rwId": rw_id, "type": change_type})
+
+
+@route(["POST"], "set_auction_time")
+def set_auction_time(ctx):
+    """DebugLayer「竞拍过期时间为 0 / 3 分钟」: 请求 {time}(秒)。
+
+    mock 没有实现地皮竞拍子系统(lands 恒为空, get_location_* 只回村落地址), 这里把
+    官方要设置的剩余竞拍时间落到 homeland 根节点供后续实现读取; 客户端不读 data。
+    """
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=552, errmsg="userid not found")
+    seconds = max(_int(_body(ctx).get("time"), 0), 0)
+    state = ctx["state"]
+    with state._lock:
+        root = state._normalize_homeland(state._state)
+        root["auction_time"] = seconds
+        root["auction_end"] = int(time.time()) + seconds
+        state._changed()
+    return build_response_body({"time": seconds})

@@ -4,7 +4,7 @@
 账号/存档链路，并按抓包数据补齐业务接口。接口约定来自已逆向的客户端代码
 （`BaseHttp.lua` / `GameChannelContext.lua` / `OnlineGameStrategy.lua`）与 HAR 抓包。
 
-**规模**：路由表共 **279 个唯一接口**（288 处 `@route` 注册，9 处被后加载模块覆盖，
+**规模**：路由表共 **283 个唯一接口**（292 处 `@route` 注册，9 处被后加载模块覆盖，
 见 [已知限制](#已知限制)），分布在 12 个 handler 模块；服务端运行时代码零第三方依赖。
 
 ## 功能概览
@@ -18,6 +18,7 @@
 | **商城** | 限时礼包、武林卷轴、直购道具、藏衣阁/玄兵洞清单、活动积分兑换、黑市与锻造图谱 |
 | **签到与活动** | 49 天赛季签到与补签、每日任务、20 项活动总表、限时历练、十周年登录奖励、天缘奇盒、易金圩市、通武积市 |
 | **家园** | 多户型数据（从 `familytype.lua` 自动生成）、购房/换房、管家雇员、房间家具、多城市家具商店 |
+| **家园调试面板** | `test_homeland/1..8`（忠诚度/删仆人/随机特性/删家园/仆人列表/地皮状态）、`make_servant_change`（闹事/离开/云游）、`set_auction_time`、`update_currency_by_type`（全局货币增删） |
 | **拳脚** | 五分支数据、修行任务列表与周冷却、挂机/加速/完成结算、解锁标记 |
 | **挑战副本** | 预览→确认扣费→续玩→离开，轶闻值恢复，普通通关与扫荡奖励（服务端随机），详见 [docs/challenge-map.md](docs/challenge-map.md) |
 | **师门** | 师门建筑兴建/升级、日常任务流转、捐献与名位、师门建树、同门亲密度、门派指点 |
@@ -40,13 +41,13 @@ fz_mock_server/
 ├── unpack_update.py        # 热更包解包 / 单文件解密（需 pycryptodome）
 ├── stop.ps1                # 结束占用 8080 的进程并重启服务
 ├── server.log              # 运行日志（gitignore）
-├── handlers/               # 接口处理器（12 个模块，共 288 处路由注册）
+├── handlers/               # 接口处理器（12 个模块，共 292 处路由注册）
 │   ├── system.py           #  26 账号、登录、存档上传下载/切换
 │   ├── service.py          #  38 系统服务、更新代理、md5 覆盖、埋点上报
-│   ├── basic.py            #  88 商城、签到、邮件、排行、比武、货币、神兵
+│   ├── basic.py            #  89 商城、签到、邮件、排行、比武、货币、神兵
 │   ├── har_91.py           #  32 9-1 抓包接口、活动配置与状态行为
 │   ├── practice.py         #  25 练功、修炼、心神、物品与成就
-│   ├── homeland.py         #  24 家园、雇员、家具
+│   ├── homeland.py         #  27 家园、雇员、家具、调试面板
 │   ├── teacher_build.py    #  22 师门建筑、任务、捐献、建树、指点
 │   ├── fist.py             #  12 拳脚五分支与修行链路
 │   ├── challenge_map.py    #  11 挑战副本与轶闻值恢复
@@ -54,6 +55,7 @@ fz_mock_server/
 │   ├── daily_task.py       #   3 每日任务
 │   ├── black_market.py     #   2 黑市
 │   ├── challenge_rewards.py   # 挑战奖励掷点（无路由，被 challenge_map 调用）
+│   ├── role_trait_data.py     # 角色特性表（由 _gen_trait_data.py 生成，勿手改）
 │   └── familytype_data.py     # 户型数据（由 _extract_familytype.py 生成，勿手改）
 ├── debug/                  # DebugLayer 补丁源码（getMd5List 覆盖源）
 ├── patched/                # MainLayer.lua / MainLayer.2.1.02.lua 热更补丁
@@ -94,19 +96,19 @@ python run.py
 
 ### 运行测试
 
-8 个 unittest 测试模块共 **186 个测试**，全部自起临时服务/内存状态，**不会碰 `data/` 里的真实存档**：
+9 个 unittest 测试模块共 **209 个测试**，全部自起临时服务/内存状态，**不会碰 `data/` 里的真实存档**：
 
 ```bash
 cd fz_mock_server
 # 推荐：pytest 原生收集 unittest.TestCase
 python -m pytest test_state.py test_update_proxy.py test_har_91.py test_fist.py \
   test_challenge_entry.py test_challenge_lifecycle.py test_challenge_rewards.py \
-  test_homeland_return.py -v
+  test_homeland_return.py test_homeland_debug.py -v
 
 # 等价的标准库写法（无需 pytest）
 python -m unittest test_state test_update_proxy test_har_91 test_fist \
   test_challenge_entry test_challenge_lifecycle test_challenge_rewards \
-  test_homeland_return -v
+  test_homeland_return test_homeland_debug -v
 
 # 单模块直接运行
 python test_state.py
@@ -118,7 +120,7 @@ python test_state.py
   会因为 `port or config.PORT` 落到 **8080**，与开发服务冲突。
 - **不要执行不带文件名的裸 `python -m pytest`**：默认收集会连带拉起 `test_xxtea*.py`
   与 `test_crypto.py`，它们需要本地 APK 且在导入期执行代码，会产生收集错误。
-- 上述 8 个模块只用标准库，`pytest` 仅作为收集器（`python -m unittest` 是纯标准库等价写法）。
+- 上述 9 个模块只用标准库，`pytest` 仅作为收集器（`python -m unittest` 是纯标准库等价写法）。
 
 ### 需要本地大文件的脚本
 
@@ -313,9 +315,10 @@ python _har_tool.py audit <entries_dir>
 - 不参与服务端运行，也不被任何测试引用。
 
 其余根目录 `_*.py` 为一次性分析脚本（HAR 分析、密钥探针、覆盖率审查、
-上游连通性/耗时定位、e2e 探针），共 51 个，**均不被服务端运行期引用**。
-其中 `_har_tool.py` 是最通用的一员，`_extract_familytype.py` 是唯一会重写运行期模块
-（`handlers/familytype_data.py`）的生成器。部分脚本写死了本机绝对路径。
+上游连通性/耗时定位、e2e 探针），共 55 个，**均不被服务端运行期引用**。
+其中 `_har_tool.py` 是最通用的一员；会重写运行期模块的生成器有两个：
+`_extract_familytype.py`（`handlers/familytype_data.py`）与
+`_gen_trait_data.py`（`handlers/role_trait_data.py`）。部分脚本写死了本机绝对路径。
 
 `research/so_analysis/` 下的反汇编脚本需要第三方 `capstone` 与 `pyelftools`，
 且都通过 `_paths.py` 指向 `research/binaries/libcocos2dlua_arm64_bootstrap.so`

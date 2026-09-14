@@ -1004,6 +1004,62 @@ def _set_currency_balance(ctx, userid, currency_type, value):
     return value
 
 
+# 「增加/扣除货币」通用接口: update_currency_by_type。
+# 调用方遍布全客户端(任务奖励、活动、家园派遣、DebugLayer/TestLayer 家园面板等),
+# 请求 {"action": "add"|"remove", "currency": {名称: 数量, ...}, "addType": 业务标签},
+# 响应为扁平表 {名称: 实际生效数量}——BaseResults.lua 只读 data.zjjifen
+# (功绩每日上限时回 0), 其余货币由客户端自行按本地数量弹提示。
+_CURRENCY_UPDATE_ADD_ACTIONS = frozenset(("add", "增加"))
+_CURRENCY_UPDATE_REMOVE_ACTIONS = frozenset(("remove", "del", "reduce", "sub", "扣除"))
+_CURRENCY_UPDATE_LIMIT = 100000000
+
+
+@route(["POST"], "update_currency_by_type")
+def update_currency_by_type(ctx):
+    userid = _userid(ctx)
+    if userid <= 0:
+        return build_response_body({}, errcode=550, errmsg="invalid userid")
+    body = _body(ctx)
+    action = str(body.get("action") or "").strip().lower()
+    currency = body.get("currency")
+    if isinstance(currency, list):
+        # updateCurrencyByTable 也可能把 currency 传成 {名称, 数量} 数组
+        merged = {}
+        for value in currency:
+            if isinstance(value, dict):
+                merged.update(value)
+        currency = merged
+    if not isinstance(currency, dict) or not currency:
+        return build_response_body({}, errcode=400, errmsg="invalid currency payload")
+    if action not in _CURRENCY_UPDATE_ADD_ACTIONS | _CURRENCY_UPDATE_REMOVE_ACTIONS:
+        return build_response_body({}, errcode=400, errmsg="invalid action")
+    adding = action in _CURRENCY_UPDATE_ADD_ACTIONS
+
+    applied = {}
+    for name, raw_amount in currency.items():
+        currency_id = str(name or "").strip()
+        if not currency_id:
+            continue
+        amount = min(max(_as_int(raw_amount, 0), 0), _CURRENCY_UPDATE_LIMIT)
+        if amount <= 0:
+            applied[currency_id] = 0
+            continue
+        balance = _currency_balance(ctx, userid, currency_id)
+        limit = _CURRENCY_LIMITS.get(currency_id)
+        if adding:
+            remaining = balance + amount
+            if limit is not None:
+                remaining = min(remaining, limit)
+            # 回传实际生效数量(受上限约束时小于请求值), 与功绩上限回 0 的语义一致
+            applied[currency_id] = max(remaining - balance, 0)
+        else:
+            # 扣除时按真实余额封顶, 避免把存档写成负数
+            remaining = max(balance - amount, 0)
+            applied[currency_id] = min(amount, balance)
+        _set_currency_balance(ctx, userid, currency_id, remaining)
+    return _ok(applied)
+
+
 @route(["POST"], "view_currency_by_type")
 def view_currency_by_type(ctx):
     userid = _userid(ctx)
