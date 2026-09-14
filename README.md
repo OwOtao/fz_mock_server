@@ -280,6 +280,9 @@ handler 抛异常会被捕获并返回 `errcode=500`，不会中断服务。
 - [docs/challenge-map.md](docs/challenge-map.md)：挑战副本规则、持久化与验证
 - [docs/har91_coverage_audit.md](docs/har91_coverage_audit.md) /
   [docs/har99_coverage_audit.md](docs/har99_coverage_audit.md)：9-1 / 9-9 抓包接口覆盖率审查
+- [docs/httpmanager_coverage_audit.md](docs/httpmanager_coverage_audit.md)：客户端 Http 层
+  （`fzjh_lua/.../extends/Http/`）全量接口 vs 路由表覆盖比对，含 394 个未实现接口的家族清单与优先级建议
+  （由 `scripts/audits/_audit_httpmanager_coverage.py` 生成，口径测试见 `tests/test_httpmanager_audit.py`）
 
 ## 工具
 
