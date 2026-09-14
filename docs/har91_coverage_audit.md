@@ -3,7 +3,7 @@
 - 审查对象：`so/har_decrypt_91/entries/`（210 个已解密条目，全部来自游戏后端）
 - 审查范围：排除第三方 SDK（穿山甲 / 字节 apmplus / alog / toblog / webcast 等）
 - 审查时间基线：commit `14daa45` 之后
-- 审查脚本：
+- 审查脚本（位于 `scripts/audits/`）：
   - `_audit_har91_coverage.py`：URL → 路由覆盖率
   - `_audit_har91_runtime.py`：逐条调用 handler 冒烟
   - `_audit_inventory_coverage.py`：客户端全量接口清单对照

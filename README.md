@@ -55,22 +55,37 @@ fz_mock_server/
 │   ├── daily_task.py       #   3 每日任务
 │   ├── black_market.py     #   2 黑市
 │   ├── challenge_rewards.py   # 挑战奖励掷点（无路由，被 challenge_map 调用）
-│   ├── role_trait_data.py     # 角色特性表（由 _gen_trait_data.py 生成，勿手改）
-│   └── familytype_data.py     # 户型数据（由 _extract_familytype.py 生成，勿手改）
+│   ├── role_trait_data.py     # 角色特性表（由 scripts/gen/_gen_trait_data.py 生成，勿手改）
+│   └── familytype_data.py     # 户型数据（由 scripts/gen/_extract_familytype.py 生成，勿手改）
+├── tests/                  # 自足 unittest（无需服务、不碰 data/）
+│   ├── test_*.py           # 12 个模块：状态/更新/抓包/拳脚/挑战/家园/口径审查
+│   └── legacy/             #  6 个需本地 APK 的历史脚本（test_crypto / test_xxtea* / verify_key）
+├── scripts/                # 开发与排查脚本（均非运行期依赖）
+│   ├── audits/             #  13 覆盖率与一致性审查（离线可跑）
+│   ├── har/                #  17 HAR 解密/查看/重放/密钥分析
+│   ├── update/             #  35 热更 checkUpdate / getMd5List / 上游诊断
+│   ├── verify/             #  11 针对运行中服务的端到端验证（会写 data/）
+│   ├── probes/             #  10 一次性数据探针与查看器
+│   └── gen/                #   3 由客户端资源生成 handlers 数据表
 ├── debug/                  # DebugLayer 补丁源码（getMd5List 覆盖源）
+├── DebugLayer/             # DebugLayer 明文源（tools/encrypt_debug.py 的输入，未入 git）
 ├── patched/                # MainLayer.lua / MainLayer.2.1.02.lua 热更补丁
 ├── item_json/              # 客户端表导出的 JSON 参考数据（无运行期引用）
 ├── fzjh_lua/               # 客户端反编译 Lua 源码 + 协议字典（参考）
 ├── so/                     # HAR 抓包、解密产物、so 库与导出函数明细
-├── tools/                  # 解密/推送工具 + Frida hook 与启动器
+├── tools/                  # 解密/推送/重加密工具 + Frida hook 与启动器
 ├── research/               # 密钥爆破、so 反汇编、样本
-├── docs/                   # 密钥、原生分析、挑战副本与覆盖率审查文档
+├── docs/                   # 密钥、原生分析、挑战副本、覆盖率审查与流程文档
 ├── archives/               # 早期布局遗留存档（当前配置不再读写）
 ├── data/                   # 运行期数据：state.json + archives/（gitignore）
-├── test_*.py               # 14 个 unittest 测试与手动脚本
-├── verify_*.py             # 7 个针对运行中服务的端到端验证脚本
-└── _*.py                   # 51 个临时/一次性分析脚本（非运行期依赖）
+└── .diagnostics/           # 调试期截图与上游样本（gitignore）
 ```
+
+> 归类说明：**运行期模块平铺在根目录**（`server` / `config` / `handlers` 之间按顶层模块名
+> 互相 import），开发脚本一律收进 `tests/` 与 `scripts/`。脚本内用 `__file__` 向上定位
+> mock_server 根，因此既可在仓库根也可在任意 cwd 直接 `python scripts/<组>/<脚本>.py` 运行；
+> 少数按 cwd 相对路径读文件的脚本（如 `scripts/audits/_check_routes.py`）仍需在
+> `mock_server/` 下执行。
 
 ## 快速开始
 
@@ -101,25 +116,26 @@ python run.py
 ```bash
 cd fz_mock_server
 # 推荐：pytest 原生收集 unittest.TestCase
-python -m pytest test_state.py test_update_proxy.py test_har_91.py test_fist.py \
-  test_challenge_entry.py test_challenge_lifecycle.py test_challenge_rewards.py \
-  test_homeland_return.py test_homeland_debug.py -v
+python -m pytest tests/test_state.py tests/test_update_proxy.py tests/test_har_91.py \
+  tests/test_fist.py tests/test_challenge_entry.py tests/test_challenge_lifecycle.py \
+  tests/test_challenge_rewards.py tests/test_homeland_return.py tests/test_homeland_debug.py -v
 
 # 等价的标准库写法（无需 pytest）
-python -m unittest test_state test_update_proxy test_har_91 test_fist \
-  test_challenge_entry test_challenge_lifecycle test_challenge_rewards \
-  test_homeland_return test_homeland_debug -v
+python -m unittest tests.test_state tests.test_update_proxy tests.test_har_91 \
+  tests.test_fist tests.test_challenge_entry tests.test_challenge_lifecycle \
+  tests.test_challenge_rewards tests.test_homeland_return tests.test_homeland_debug -v
 
-# 单模块直接运行
-python test_state.py
+# 单模块直接运行（脚本自带 sys.path 处理，任意 cwd 均可）
+python tests/test_state.py
 ```
 
 注意事项：
 
-- **请先停掉 `python run.py`**：`test_update_proxy.py` 里的 `create_server(..., 0, ...)`
+- **请先停掉 `python run.py`**：`tests/test_update_proxy.py` 里的 `create_server(..., 0, ...)`
   会因为 `port or config.PORT` 落到 **8080**，与开发服务冲突。
-- **不要执行不带文件名的裸 `python -m pytest`**：默认收集会连带拉起 `test_xxtea*.py`
-  与 `test_crypto.py`，它们需要本地 APK 且在导入期执行代码，会产生收集错误。
+- **不要执行不带文件名的裸 `python -m pytest`**：默认收集会连带拉起 `tests/legacy/` 下的
+  `test_xxtea*.py` 与 `test_crypto.py`，它们需要本地 APK 且在导入期执行代码，会产生收集错误。
+  （`tests/legacy/` 无 `__init__.py`，`python -m unittest discover -s tests` 不会递归进去。）
 - 上述 9 个模块只用标准库，`pytest` 仅作为收集器（`python -m unittest` 是纯标准库等价写法）。
 
 ### 需要本地大文件的脚本
@@ -129,10 +145,10 @@ python test_state.py
 
 | 脚本 | 依赖 |
 |------|------|
-| `test_crypto.py` | `tools/frida/fzjh_base.apk` |
-| `test_xxtea.py` / `test_xxtea_enc.py` / `test_xxtea_var.py` / `test_xxtea_var2.py` | 写死本机 APK 路径的 XXTEA 密钥爆破分析 |
-| `verify_key.py` | 同上；亦可不带文件直接解密密文 |
-| `verify_archive_flow.py` | `data/seed/RoleData.json`（种子档） |
+| `tests/legacy/test_crypto.py` | `tools/frida/fzjh_base.apk` |
+| `tests/legacy/test_xxtea.py` / `test_xxtea_enc.py` / `test_xxtea_var.py` / `test_xxtea_var2.py` | 写死本机 APK 路径的 XXTEA 密钥爆破分析 |
+| `tests/legacy/verify_key.py` | 同上；亦可不带文件直接解密密文 |
+| `scripts/verify/verify_archive_flow.py` | `data/seed/RoleData.json`（种子档） |
 
 ### 端到端验证脚本
 
@@ -141,18 +157,20 @@ python test_state.py
 `96xxxxxxxx`、`97xxxxxxxx`），不再使用时请手动清理 `data/archives/` 与 `data/state.json`。
 
 ```bash
-python test_client.py            # 模拟客户端全链路（账号/存档/邮件/比武，含真实存档变更）
-python verify_join_family.py     # 拜师与隐藏门派
-python verify_sect_guidance.py   # 师门指点
-python verify_teacher_build.py   # 师门任务与建筑兴建
-python verify_teacher_build_flow.py  # 师门任务流转 + 捐献/名位升级
-python verify_teacher_feat.py    # 师门建树
+python scripts/verify/test_client.py            # 模拟客户端全链路（账号/存档/邮件/比武）
+python scripts/verify/verify_join_family.py     # 拜师与隐藏门派
+python scripts/verify/verify_sect_guidance.py   # 师门指点
+python scripts/verify/verify_teacher_build.py   # 师门任务与建筑兴建
+python scripts/verify/verify_teacher_build_flow.py  # 师门任务流转 + 捐献/名位升级
+python scripts/verify/verify_teacher_feat.py    # 师门建树
 ```
 
 自带临时服务、不影响真实数据的专项验证：
 
 ```bash
-python _test_fist_e2e.py         # 拳脚系统端到端（临时服务 + 临时存档，端口 MOCK_FIST_E2E_PORT）
+python scripts/verify/_test_fist_e2e.py         # 拳脚系统端到端（临时服务 + 临时存档，端口 MOCK_FIST_E2E_PORT）
+python scripts/verify/_test_shop_info_e2e.py    # 活动充值积分兑换
+python scripts/verify/_test_zhao_upgrade_matters.py  # 续卷链路
 ```
 
 ## 配置说明
@@ -305,8 +323,8 @@ python lua_to_json.py
 python unpack_update.py <input> [output]
 
 # 通用 HAR 解密与覆盖率审查
-python _har_tool.py decrypt <har_path> <out_dir>
-python _har_tool.py audit <entries_dir>
+python scripts/har/_har_tool.py decrypt <har_path> <out_dir>
+python scripts/har/_har_tool.py audit <entries_dir>
 ```
 
 `tools/frida/` 下是 Frida hook 脚本（`.js`）与启动器（`run_*.py`，7 个），用于 dump
@@ -317,11 +335,21 @@ python _har_tool.py audit <entries_dir>
 - `tools/frida/` 下的 APK / SO / Frida server 均已被 `.gitignore` 排除，当前不存在；
 - 不参与服务端运行，也不被任何测试引用。
 
-其余根目录 `_*.py` 为一次性分析脚本（HAR 分析、密钥探针、覆盖率审查、
-上游连通性/耗时定位、e2e 探针），共 55 个，**均不被服务端运行期引用**。
-其中 `_har_tool.py` 是最通用的一员；会重写运行期模块的生成器有两个：
-`_extract_familytype.py`（`handlers/familytype_data.py`）与
-`_gen_trait_data.py`（`handlers/role_trait_data.py`）。部分脚本写死了本机绝对路径。
+`scripts/` 下共 89 个开发脚本（HAR 分析、密钥探针、覆盖率审查、上游连通性/耗时定位、
+e2e 探针、数据表生成），**均不被服务端运行期引用**，按功能分为 6 个子目录：
+
+| 子目录 | 用途 | 代表 |
+|--------|------|------|
+| `scripts/audits/` | 覆盖率与一致性审查（离线可跑） | `_audit_httpmanager_coverage.py`、`_check_dup_routes.py`、`_list_routes.py` |
+| `scripts/har/` | HAR 解密/查看/重放/密钥分析 | `_har_tool.py`、`decrypt_har_91.py`、`_show_har_entry.py` |
+| `scripts/update/` | 热更 `checkUpdate`/`getMd5List`/上游诊断 | `_probe_getmd5list.py`、`_verify_md5_override.py`、`_trace_proxy_path.py` |
+| `scripts/verify/` | 针对运行中服务的端到端验证 | `test_client.py`、`verify_teacher_build.py` |
+| `scripts/probes/` | 一次性数据探针与查看器 | `_peek_shoplist.py`、`_show.py`、`_grep.py` |
+| `scripts/gen/` | 由客户端资源生成 handlers 数据表 | `_extract_familytype.py`、`_gen_trait_data.py` |
+
+其中 `scripts/har/_har_tool.py` 是最通用的一员；会重写运行期模块的生成器在
+`scripts/gen/`：`_extract_familytype.py`（→ `handlers/familytype_data.py`）与
+`_gen_trait_data.py`（→ `handlers/role_trait_data.py`）。部分脚本写死了本机绝对路径。
 
 `research/so_analysis/` 下的反汇编脚本需要第三方 `capstone` 与 `pyelftools`，
 且都通过 `_paths.py` 指向 `research/binaries/libcocos2dlua_arm64_bootstrap.so`
@@ -337,6 +365,11 @@ python _har_tool.py audit <entries_dir>
   需要临时端口的测试必须同时 `mock.patch.object(config, "PORT", 0)`。
 - **存档根目录**：`archives/` 与根 `state.json` 是早期布局的遗留文件，
   当前配置实际读写 `data/` 下的同名路径。
+- **`debug/` 与 `DebugLayer/` 内容重复**：两者 15 个同名文件字节完全相同，
+  `DebugLayer/` 另多一个 `MainLayer.lua`。运行期只读 `debug/`
+  （`config.MD5_OVERRIDE_DIR`，被 `tools/push_hotupdate.py` 引用），
+  `DebugLayer/` 是 `tools/encrypt_debug.py` 的明文源且未入 git。合并需同时改
+  `config.py`，当前保持两份并存。
 - **开发服务与测试抢端口**：`test_update_proxy.py` 会绑定 8080（原因见上），
   跑测试前需停掉 `python run.py`。
 - **`.gitignore` 覆盖范围有限**：被忽略的只有运行期数据（`data/`、`state.json`、

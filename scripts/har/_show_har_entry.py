@@ -1,0 +1,32 @@
+# -*- coding: utf-8 -*-
+"""Usage: python _show_har_entry.py <har> <substring-of-url> [req|resp|both]"""
+
+# --- 归类后补充: 保证 mock_server 根目录在 sys.path 上 ---
+import os as _reorg_os, sys as _reorg_sys
+_REORG_ROOT = _reorg_os.path.dirname(_reorg_os.path.dirname(_reorg_os.path.dirname(_reorg_os.path.abspath(__file__))))
+if _REORG_ROOT not in _reorg_sys.path:
+    _reorg_sys.path.insert(0, _REORG_ROOT)
+import json
+import sys
+
+name, needle = sys.argv[1], sys.argv[2]
+part = sys.argv[3] if len(sys.argv) > 3 else "both"
+har = json.load(open("so/" + name, encoding="utf-8"))
+for i, e in enumerate(har["log"]["entries"]):
+    url = e["request"]["url"]
+    if needle not in url:
+        continue
+    print("=" * 16, i, url)
+    if part in ("req", "both"):
+        print("METHOD:", e["request"]["method"])
+        for h in e["request"]["headers"]:
+            print("  H %s: %s" % (h["name"], h["value"]))
+        pd = e["request"].get("postData", {})
+        if pd:
+            print("  BODY(%s): %s" % (pd.get("mimeType"), (pd.get("text") or "")[:2000]))
+    if part in ("resp", "both"):
+        print("STATUS:", e["response"]["status"])
+        for h in e["response"]["headers"]:
+            print("  H %s: %s" % (h["name"], h["value"]))
+        text = e["response"].get("content", {}).get("text", "")
+        print("  RESP:", (text or "")[:600])

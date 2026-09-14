@@ -3,7 +3,7 @@
 - 审查对象：`so/ProxyPin9-9_09_12_12.har`（234 条目，2.1.02 客户端）
 - 解密产物：`so/har_decrypt_99/`（entries 134 个 + decrypted.har + summary.md）
 - 审查范围：排除第三方 SDK
-- 工具：`_har_tool.py`（decrypt / audit）、`_audit_har_diff.py`（两次抓包对比）
+- 工具：`scripts/har/_har_tool.py`（decrypt / audit）、`scripts/audits/_audit_har_diff.py`（两次抓包对比）
 
 ## 结论
 
@@ -127,12 +127,12 @@
 ## 复核命令
 
 ```powershell
-python _har_tool.py decrypt so\ProxyPin9-9_09_12_12.har so\har_decrypt_99
-python _har_tool.py audit so\har_decrypt_99\entries
-python _audit_har_diff.py
-python _audit_har91_runtime.py so\har_decrypt_99\entries
-python _verify_add_currency_number.py
-python _verify_cundangwei.py
+python scripts\har\_har_tool.py decrypt so\ProxyPin9-9_09_12_12.har so\har_decrypt_99
+python scripts\har\_har_tool.py audit so\har_decrypt_99\entries
+python scripts\audits\_audit_har_diff.py
+python scripts\audits\_audit_har91_runtime.py so\har_decrypt_99\entries
+python scripts\probes\_verify_add_currency_number.py
+python scripts\probes\_verify_cundangwei.py
 ```
 
 `_verify_add_currency_number.py` 覆盖 6 组用例：抓包样本重放、连续发放累加、回读（`get_user_prestige` / `view_currency_by_type`）、其他货币入库、落盘重启 + 角色档镜像、异常入参。

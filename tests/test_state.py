@@ -1,0 +1,3813 @@
+# -*- coding: utf-8 -*-
+
+
+# --- 归类后补充: 保证 mock_server 根目录在 sys.path 上 ---
+import os as _reorg_os, sys as _reorg_sys
+_REORG_ROOT = _reorg_os.path.dirname(_reorg_os.path.dirname(_reorg_os.path.abspath(__file__)))
+if _REORG_ROOT not in _reorg_sys.path:
+    _reorg_sys.path.insert(0, _REORG_ROOT)
+import json
+import os
+import tempfile
+import threading
+import time
+import unittest
+from unittest import mock
+
+import config
+import protocol
+from archive_store import ArchiveStore
+
+from handlers.basic import (
+    add_training_task_point,
+    add_devote_point,
+    admin_send_email,
+    buy_goods,
+    buy_matters,
+    challengemap_unfinished,
+    check_goods_valid,
+    delete_email,
+    delete_processed_emails,
+    get_all_email_rewards,
+    get_all_intimacy,
+    get_devote_list,
+    get_devote_point,
+    get_email_info,
+    get_email_reward,
+    get_email_rewards_list,
+    get_sign_list,
+    get_sign_prize,
+    get_shop_info,
+    get_spring_festival_list,
+    get_spring_festival_status,
+    get_group_rank,
+    get_goods,
+    get_goods_2,
+    get_board,
+    get_limit_package,
+    get_rank_list,
+    get_store_list,
+    get_user_group,
+    get_zhao_upgrade_matters,
+    is_changed_name,
+    matters_shop_info,
+    mask_upgrade,
+    read_email,
+    shop_exchange_goods,
+    update_username,
+    zhao_upgrade,
+    upgrade_user_bag,
+    view_currency_by_type,
+)
+from handlers.practice import (
+    add_item_count,
+    employ_materials,
+    get_item_count,
+    get_xin_shen_value,
+    lian_gong_start,
+    recover_xin_shen_value,
+    use_item,
+    xiu_lian_start,
+)
+from handlers.familytype_data import HX_TABLE
+from handlers.homeland import (
+    add_employee,
+    buy_homeland,
+    buy_npc_goods,
+    delete_employee,
+    get_common_fuben,
+    get_employee_data,
+    get_employee_list,
+    get_affair_list,
+    get_guaike_reward,
+    get_home_switch,
+    get_house_info,
+    get_house_store_list,
+    get_npc_store_list,
+    get_user_map,
+    putin_furniture,
+    upload_furniture_extra,
+    update_employee_data,
+    update_employee_extra,
+)
+from handlers.system import (
+    create_account,
+    download_user_file_2,
+    get_archive_list,
+    get_email,
+    get_game_user_info_2,
+    login_device,
+    send_email,
+    switch_archive,
+)
+from handlers.teacher_build import (
+    get_teacher_build_info,
+    get_teacher_build_items,
+    get_teacher_build_list,
+)
+from state import StateStore
+
+
+class StateStoreTest(unittest.TestCase):
+    def test_state_save_retries_transient_replace_permission_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] <= 2:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"):
+                store.mutate(
+                    lambda value: value.update({"replace_retry_probe": "saved"}) or "saved"
+                )
+
+            self.assertEqual(replace_mock.call_count, 3)
+            self.assertEqual(sleep_mock.call_count, 2)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                self.assertEqual(json.load(handle)["replace_retry_probe"], "saved")
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
+    def test_state_save_cleans_temp_after_replace_retry_exhausted(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+
+            with mock.patch(
+                "state.os.replace",
+                side_effect=PermissionError(5, "file remains locked", state_path),
+            ) as replace_mock, mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"), mock.patch("state.log.exception"):
+                with self.assertRaises(PermissionError):
+                    store.mutate(
+                        lambda value: value.update({"replace_retry_probe": "unsaved"})
+                    )
+
+            self.assertEqual(replace_mock.call_count, 5)
+            self.assertEqual(sleep_mock.call_count, 4)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                self.assertNotIn("replace_retry_probe", json.load(handle))
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
+    def test_archive_save_retries_transient_replace_permission_error(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            archive_store = ArchiveStore(os.path.join(temp_dir, "archives"))
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] <= 2:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("archive_store.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("archive_store.time.sleep") as sleep_mock, \
+                    mock.patch("archive_store.log.warning"):
+                archive_store.save(1000000001, {
+                    "userid": 1000000001,
+                    "name": "retry archive",
+                    "items": [],
+                }, data_ver=2)
+
+            self.assertEqual(replace_mock.call_count, 3)
+            self.assertEqual(sleep_mock.call_count, 2)
+            self.assertEqual(archive_store.load(1000000001)["role"]["name"], "retry archive")
+            self.assertFalse(
+                any(
+                    name.startswith(".archive-")
+                    for name in os.listdir(archive_store.root_dir)
+                )
+            )
+
+    def test_mail_claim_coalesces_state_autosaves(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            userid = store.ensure_account()["userid"]
+            store.put_archive(userid, {
+                "userid": userid,
+                "items": [],
+                "currencyVersion": 1,
+                "dataVer": 1,
+            }, data_ver=1)
+            mail = store.add_mail(userid, {
+                "title": "合并写入测试",
+                "content": "领取",
+                "rewards": {"net_items": [{"id": "retry-item", "num": 2}]},
+            })
+
+            real_replace = os.replace
+            replaced_targets = []
+
+            def recording_replace(source, target):
+                replaced_targets.append(os.path.normcase(os.path.abspath(target)))
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=recording_replace):
+                response = get_email_reward({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "body": {"email_id": mail["mail_id"]},
+                })
+
+            normalized_state_path = os.path.normcase(os.path.abspath(state_path))
+            normalized_archive_path = os.path.normcase(os.path.abspath(
+                store.archive_store.path_for(userid)
+            ))
+            self.assertEqual(response["errcode"], 0)
+            self.assertEqual(replaced_targets.count(normalized_state_path), 1)
+            self.assertEqual(replaced_targets.count(normalized_archive_path), 1)
+            self.assertEqual(len(replaced_targets), 2)
+            self.assertTrue(store.get_mail(userid, mail["mail_id"])["claimed"])
+            self.assertEqual(store.get_inventory_item_count(userid, "retry-item"), 2)
+
+    def test_read_email_recovers_from_transient_state_file_lock(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            userid = store.ensure_account()["userid"]
+            mail = store.add_mail(userid, {
+                "title": "读取重试测试",
+                "content": "临时占用后仍可读取",
+            })
+            real_replace = os.replace
+            attempts = {"count": 0}
+
+            def flaky_replace(source, target):
+                attempts["count"] += 1
+                if attempts["count"] == 1:
+                    raise PermissionError(5, "file is temporarily locked", target)
+                return real_replace(source, target)
+
+            with mock.patch("state.os.replace", side_effect=flaky_replace) as replace_mock, \
+                    mock.patch("state.time.sleep") as sleep_mock, \
+                    mock.patch("state.log.warning"):
+                response = read_email({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "body": {"id": mail["mail_id"]},
+                })
+
+            self.assertEqual(response["errcode"], 0)
+            self.assertEqual(replace_mock.call_count, 2)
+            sleep_mock.assert_called_once_with(0.02)
+            with open(state_path, "r", encoding="utf-8") as handle:
+                persisted = json.load(handle)
+            persisted_mail = persisted["mail"][str(userid)][0]
+            self.assertTrue(persisted_mail["read"])
+
+    def test_concurrent_state_mutations_keep_complete_valid_json(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state_path = os.path.join(temp_dir, "state.json")
+            store = StateStore(json_path=state_path)
+            store.save()
+            worker_count = 6
+            writes_per_worker = 5
+            barrier = threading.Barrier(worker_count)
+            failures = []
+
+            def write_values(worker_index):
+                try:
+                    barrier.wait()
+                    for write_index in range(writes_per_worker):
+                        key = "%d-%d" % (worker_index, write_index)
+
+                        def update(value, item_key=key):
+                            value.setdefault("concurrent_write_probe", {})[item_key] = True
+                            return item_key
+
+                        store.mutate(update)
+                except BaseException as exc:
+                    failures.append(exc)
+
+            threads = [
+                threading.Thread(target=write_values, args=(index,))
+                for index in range(worker_count)
+            ]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+
+            self.assertEqual(failures, [])
+            with open(state_path, "r", encoding="utf-8") as handle:
+                persisted = json.load(handle)
+            self.assertEqual(
+                len(persisted["concurrent_write_probe"]),
+                worker_count * writes_per_worker,
+            )
+            self.assertFalse(
+                any(name.startswith(".state-") for name in os.listdir(temp_dir))
+            )
+
+    def test_store_main_items_match_capture(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        category = listed["data"]["list"][1]
+        self.assertEqual(category["classId"], "store_goods")
+        self.assertEqual(category["name"], "商城")
+        self.assertEqual(
+            [item["itemId"] for item in category["items"]],
+            [
+                "xiyanshui", "dundifu", "fenshenfu", "guanfugongwen",
+                "byfenshenfu", "jingxinwan", "jingmai105", "shimenbuff1",
+                "yuhuiling", "drxiang02", "diligent",
+            ],
+        )
+        self.assertEqual(
+            [item["price"] for item in category["items"]],
+            [50, 10, 10, 300, 1800, 50, 100, 1200, 1800, 10, 250],
+        )
+        self.assertEqual(category["items"][0]["name"], "RAN洗颜水")
+        self.assertEqual(category["items"][0]["id"], 3)
+        self.assertEqual(category["items"][4]["number"], 0)
+        self.assertEqual(category["items"][4]["share"], "(当前角色绑定)")
+        self.assertEqual(category["items"][4]["expired_time"], 0)
+        self.assertIn("\n入梦概率：40%\n", category["items"][9]["dsc1"])
+        self.assertEqual(category["items"][10]["to"], "0")
+
+        detail = get_goods(dict(base_ctx, route_tail=["byfenshenfu"]))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["id"], "11")
+        self.assertEqual(detail["data"]["price"], 1800)
+        self.assertEqual(detail["data"]["share"], "(当前角色绑定)")
+        self.assertEqual(detail["data"]["expired_time"], 0)
+
+    def test_monthly_clone_talisman_accumulates_and_replays_purchase(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+        duration = 30 * 24 * 60 * 60
+        first_now = 1800000000
+
+        with mock.patch("handlers.basic.time.time", return_value=first_now):
+            first = buy_goods(dict(
+                base_ctx,
+                route_tail=["byfenshenfu"],
+                body={
+                    "id": 11,
+                    "itemId": "byfenshenfu",
+                    "quantity": 1,
+                    "client_trans_id": "monthly-clone-1",
+                    "discount": 0,
+                },
+            ))
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["expired_time"], first_now + duration)
+        self.assertEqual(first["data"]["total_yuanbao"], 8199)
+
+        second_ctx = dict(
+            base_ctx,
+            route_tail=["byfenshenfu"],
+            body={
+                "id": 11,
+                "itemId": "byfenshenfu",
+                "quantity": 1,
+                "client_trans_id": "monthly-clone-2",
+                "discount": 0,
+            },
+        )
+        with mock.patch("handlers.basic.time.time", return_value=first_now + 10):
+            second = buy_goods(second_ctx)
+            replay = buy_goods(second_ctx)
+        expected_expiry = first_now + duration * 2
+        self.assertEqual(second["data"]["expired_time"], expected_expiry)
+        self.assertEqual(replay["data"]["expired_time"], expected_expiry)
+        self.assertEqual(second["data"]["total_yuanbao"], 6399)
+        self.assertEqual(replay["data"]["total_yuanbao"], 6399)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 6399)
+        self.assertEqual(len(store.snapshot()["orders"]), 2)
+
+        listed = get_store_list(base_ctx)
+        self.assertEqual(listed["data"]["list"][1]["items"][4]["expired_time"], expected_expiry)
+        detail = get_goods(dict(base_ctx, route_tail=["byfenshenfu"]))
+        self.assertEqual(detail["data"]["expired_time"], expected_expiry)
+        with mock.patch("handlers.basic.time.time", return_value=expected_expiry - 1):
+            active = check_goods_valid(dict(
+                base_ctx,
+                body={"itemIds": ["byfenshenfu"]},
+            ))
+        self.assertEqual(active["data"][0]["number"], 1)
+        with mock.patch("handlers.basic.time.time", return_value=expected_expiry + 1):
+            expired = check_goods_valid(dict(
+                base_ctx,
+                body={"itemIds": ["byfenshenfu"]},
+            ))
+        self.assertEqual(expired["data"][0]["number"], 0)
+
+    def test_monthly_clone_talisman_rebuilds_previous_successful_orders(self):
+        userid = 12345
+        duration = 30 * 24 * 60 * 60
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "yuanbao": 5000}},
+            "orders": {
+                "trans-1": {
+                    "userid": userid,
+                    "status": "success",
+                    "item_id": "byfenshenfu",
+                    "quantity": 1,
+                    "created_at": 1700000000,
+                },
+                "trans-2": {
+                    "userid": userid,
+                    "status": "success",
+                    "payload": {"itemId": "byfenshenfu"},
+                    "quantity": 1,
+                    "created_at": 1700000010,
+                },
+            },
+        }, autosave=False)
+        listed = get_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(
+            listed["data"]["list"][1]["items"][4]["expired_time"],
+            1700000000 + duration * 2,
+        )
+
+    def test_get_goods_2_returns_fenshenfu_and_uses_resource_price(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        detail = get_goods_2(dict(
+            base_ctx,
+            route_tail=["fenshenfu"],
+            body={"mark": {"isFreeSingle": False}},
+        ))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["id"], "5")
+        self.assertEqual(detail["data"]["itemId"], "fenshenfu")
+        self.assertEqual(detail["data"]["name"], "分身符")
+        self.assertEqual(detail["data"]["price"], 10)
+        self.assertEqual(
+            detail["data"]["others"],
+            {"mark": {"isFreeSingle": False}},
+        )
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["fenshenfu"],
+            body={
+                "id": 5,
+                "itemId": "fenshenfu",
+                "quantity": 1,
+                "client_trans_id": "buy-fenshenfu",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 10)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9989)
+
+    def test_store_limited_items_match_capture_and_open_package(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        limited_category = listed["data"]["list"][0]
+        self.assertEqual(limited_category["classId"], "xianshi_goods")
+        self.assertEqual(limited_category["name"], "限时")
+        self.assertEqual(len(limited_category["items"]), 17)
+        self.assertEqual(
+            [item["itemId"] for item in limited_category["items"][:4]],
+            ["libao1425", "libao1426", "libao1427", "libao1428"],
+        )
+        self.assertEqual(
+            [item["price"] for item in limited_category["items"][:4]],
+            [588, 588, 488, 388],
+        )
+        self.assertEqual(limited_category["items"][0]["name"], "限时礼包(桂秋)")
+        self.assertEqual(limited_category["items"][6]["client_exp"][0]["v1"], "19")
+        self.assertEqual(limited_category["items"][-1]["itemId"], "xinshoulibao1")
+        self.assertEqual(limited_category["items"][-1]["price"], 0)
+
+        package = get_limit_package(dict(base_ctx, route_tail=["libao1425"]))
+        self.assertEqual(package["errcode"], 0)
+        self.assertEqual(package["data"]["price"], 588)
+        self.assertEqual(package["data"]["id"], 1529)
+        self.assertEqual(package["data"]["limit_num"], 15)
+        self.assertEqual(package["data"]["beyond"], 500)
+        self.assertGreater(package["data"]["end_time"], int(time.time()))
+        self.assertEqual(
+            package["data"]["list"],
+            [
+                {"name": "兵器武学录", "price": 0, "imagePath": "Image/UI/StoreUI/shujuan6.png", "number": 1, "itemId": "2021bingqicanpian1"},
+                {"name": "行功散", "price": 0, "imagePath": "Image/UI/StoreUI/shenlishan.png", "number": 5, "itemId": "xinggongsan"},
+                {"name": "潜能丹", "price": 0, "imagePath": "Image/UI/StoreUI/qiannengdan.png", "number": 5, "itemId": "qiannengdan"},
+                {"name": "RED醉梦生NOR", "price": 500, "imagePath": "Image/UI/StoreUI/juhuajiu100.png", "number": 2, "itemId": "jiu106"},
+            ],
+        )
+
+        # 每个限时礼包都有明细, 未收录的返回 404
+        for item in limited_category["items"]:
+            if item["itemId"] == "xinshoulibao1":
+                continue
+            detail = get_limit_package(dict(base_ctx, route_tail=[item["itemId"]]))
+            self.assertEqual(detail["errcode"], 0, item["itemId"])
+            self.assertTrue(detail["data"]["list"])
+        missing = get_limit_package(dict(base_ctx, route_tail=["libao9999"]))
+        self.assertEqual(missing["errcode"], 404)
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["libao1436"],
+            body={
+                "id": 8495,
+                "itemId": "libao1436",
+                "quantity": 1,
+                "client_trans_id": "buy-libao-1436",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 100)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9899)
+
+    def test_store_level_items_match_capture_and_use_real_price(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        listed = get_store_list(base_ctx)
+        categories = listed["data"]["list"]
+        level_category = categories[2]
+        self.assertEqual(level_category["classId"], "fuben_goods")
+        self.assertEqual(level_category["name"], "关卡")
+        self.assertEqual(
+            [item["itemId"] for item in level_category["items"]],
+            ["volume_2", "volume_3", "volume_4", "volume_5", "volume_6", "volume_7"],
+        )
+        self.assertEqual(
+            [item["price"] for item in level_category["items"]],
+            [100, 200, 150, 150, 100, 100],
+        )
+
+        detail = get_goods(dict(base_ctx, route_tail=["volume_3"]))
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["name"], "柳玄风卷(上)")
+        self.assertEqual(detail["data"]["price"], 200)
+        self.assertEqual(
+            detail["data"]["dsc1"],
+            "购买后可开启【柳玄风卷上】第一章至第十章。",
+        )
+
+        purchased = buy_goods(dict(
+            base_ctx,
+            route_tail=["volume_3"],
+            body={
+                "id": 4136,
+                "itemId": "volume_3",
+                "quantity": 1,
+                "client_trans_id": "buy-volume-3",
+                "discount": 0,
+            },
+        ))
+        self.assertEqual(purchased["errcode"], 0)
+        self.assertEqual(purchased["data"]["remove_yuanbao"], 200)
+        self.assertEqual(purchased["data"]["total_yuanbao"], 9799)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9799)
+
+    def test_add_training_task_point_accumulates_and_is_idempotent(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "smketou", "taskList": ["guaji", "smketou"]},
+        }
+
+        first = add_training_task_point(ctx)
+        second = add_training_task_point(ctx)
+        third = add_training_task_point(ctx)
+        replay = add_training_task_point(ctx)
+
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["progress"], 1)
+        self.assertFalse(first["data"]["completed"])
+        self.assertEqual(second["data"]["progress"], 2)
+        self.assertEqual(third["data"]["added_point"], 1)
+        self.assertTrue(third["data"]["completed"])
+        self.assertEqual(third["data"]["point"], 1)
+        self.assertEqual(third["data"]["completion_times"], 1)
+        self.assertEqual(replay["data"]["added_point"], 0)
+        self.assertEqual(replay["data"]["point"], 1)
+        self.assertEqual(replay["data"]["completion_times"], 1)
+
+        bucket = store.snapshot()["activity_users"][str(userid)]["limited_time_experience"]
+        self.assertEqual(bucket["tasks"]["smketou"]["count"], 3)
+        self.assertTrue(bucket["tasks"]["smketou"]["completed"])
+
+    def test_add_training_task_point_is_noop_for_inactive_task(self):
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        response = add_training_task_point({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "guaji", "taskList": []},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertFalse(response["data"]["accepted"])
+        self.assertFalse(response["data"]["completed"])
+        self.assertEqual(response["data"]["added_point"], 0)
+        self.assertEqual(response["data"]["point"], 0)
+
+        invalid = add_training_task_point({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"tid": "guaji", "taskList": "guaji"},
+        })
+        self.assertEqual(invalid["errcode"], 400)
+
+    def test_account_archive_isolation_and_copying(self):
+        store = StateStore()
+        account = store.ensure_account()
+        userid = account["userid"]
+        archive = store.put_archive(userid, {"name": "角色", "exp": 10})
+        archive["exp"] = 99
+        self.assertEqual(store.get_archive(userid)["exp"], 10)
+        other = store.ensure_account()
+        self.assertIsNone(store.get_archive(other["userid"]))
+
+    def test_device_email_and_order(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.set_email_code(userid, " Test@Example.COM ", "123456", "bind")
+        self.assertEqual(store.get_email(userid)["email"], "")
+        store.validate_email_code(userid, "test@example.com", "123456")
+        device = store.bind_device(userid, "TEST@example.com", "123456")
+        self.assertTrue(device["bound"])
+        self.assertEqual(store.get_email(userid)["email"], "test@example.com")
+        self.assertEqual(store.get_account(userid)["email"], "test@example.com")
+        self.assertEqual(store.get_userid_by_email(" test@EXAMPLE.com "), userid)
+        order = store.create_order(userid, {"item_id": "item-1"})
+        self.assertEqual(store.get_order(order["trans_id"])["status"], "pending")
+        updated = store.update_order(order["order_id"], {"status": "success"})
+        self.assertEqual(updated["status"], "success")
+
+    def test_get_email_returns_legacy_numeric_binding_flags(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        unbound = get_email(ctx)
+        self.assertEqual(unbound["errcode"], 0)
+        self.assertIs(type(unbound["data"]["is_bind"]), int)
+        self.assertIs(type(unbound["data"]["is_logout"]), int)
+        self.assertEqual(unbound["data"]["is_bind"], 0)
+        self.assertEqual(unbound["data"]["is_logout"], 0)
+
+        store.bind_device(userid, "rank@example.com")
+        bound = get_email(ctx)
+        self.assertEqual(bound["data"]["email"], "rank@example.com")
+        self.assertEqual(bound["data"]["is_bind"], 1)
+        self.assertEqual(bound["data"]["is_logout"], 0)
+
+        store.unbind_device(userid)
+        logged_out = get_email(ctx)
+        self.assertEqual(logged_out["data"]["is_bind"], 0)
+        self.assertEqual(logged_out["data"]["is_logout"], 1)
+
+    def test_ranking_name_state_and_legacy_board_contract(self):
+        store = StateStore()
+        userid = store.ensure_account(defaults={"name": "无名小辈"})["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "name": "无名小辈",
+            "lv": 175,
+            "exp": 577763,
+            "money": 600000000,
+            "gold": 6000000,
+            "kongfu": 59.9,
+            "sex": "男",
+            "looks": 18,
+            "family": {"name": "youxia"},
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        initial = is_changed_name(ctx)
+        self.assertEqual(initial["errcode"], 0)
+        self.assertFalse(initial["data"]["changed"])
+
+        renamed = update_username(dict(ctx, body={"name": "哈基米"}))
+        self.assertEqual(renamed["errcode"], 0)
+        self.assertEqual(store.get_account(userid)["name"], "哈基米")
+        self.assertTrue(store.get_account(userid)["ranking_name_changed"])
+
+        changed = is_changed_name(ctx)
+        self.assertEqual(changed["errcode"], 1)
+        self.assertTrue(changed["data"]["changed"])
+
+        response = get_rank_list(dict(ctx, body={"page": 1}))
+        self.assertEqual(response["errcode"], 0)
+        self.assertIsInstance(response["data"], list)
+        board = response["data"][0]
+        self.assertEqual(board["title"], "高手榜")
+        self.assertEqual(board["type"], "total_board")
+        self.assertEqual(board["header"], ["名次", "昵称", "武学造诣"])
+        self.assertEqual(board["board_type"], "default")
+        self.assertEqual(board["total_page"], 1)
+        self.assertEqual(board["nums"], 10)
+        self.assertEqual(board["body"]["list"][0]["name"], "哈基米")
+        self.assertEqual(board["body"]["list"][0]["sort"], 1)
+        self.assertEqual(board["body"]["list"][0]["dsc"], "ALS勉勉强强")
+        self.assertEqual(board["body"]["list"][0]["menpai"], "江湖浪人")
+        self.assertEqual(board["body"]["list"][0]["real_menpai"], "江湖浪人")
+
+        page = get_board(dict(ctx, body={"page": 1}, route_tail=["default"]))
+        self.assertEqual(page["errcode"], 0)
+        self.assertEqual(page["data"]["title"], "高手榜")
+        self.assertEqual(page["data"]["body"]["list"][0]["userid"], userid)
+
+    def test_email_binding_is_unique(self):
+        store = StateStore()
+        first = store.ensure_account()["userid"]
+        second = store.ensure_account()["userid"]
+        store.bind_device(first, "User@Example.com")
+        store.unbind_device(first)
+        self.assertEqual(store.get_userid_by_email("user@example.com"), first)
+        with self.assertRaisesRegex(ValueError, "email already bound"):
+            store.bind_device(second, " user@example.COM ")
+
+    def test_verify_code_checks_target_and_expiry(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.set_email_code(userid, "user@example.com", "123456", "login", expires_at=100)
+        with self.assertRaisesRegex(ValueError, "invalid verify target"):
+            store.validate_email_code(userid, "other@example.com", "123456", now=99)
+        with self.assertRaisesRegex(ValueError, "invalid verify code"):
+            store.validate_email_code(userid, "user@example.com", "000000", now=99)
+        with self.assertRaisesRegex(ValueError, "verify code expired"):
+            store.validate_email_code(userid, "user@example.com", "123456", now=100)
+
+    def test_sending_code_does_not_change_bound_email(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.bind_device(userid, "old@example.com")
+        response = send_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"email": " New@Example.COM ", "event_type": 1},
+        })
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(store.get_email(userid)["email"], "old@example.com")
+        self.assertEqual(store.get_account(userid)["email"], "old@example.com")
+        store.validate_email_code(userid, "new@example.com", "123456")
+
+    def test_legacy_device_email_binding_is_migrated(self):
+        initial = {
+            "version": 2,
+            "accounts": {"42": {"userid": 42}},
+            "devices": {
+                "42": {
+                    "userid": 42,
+                    "email": " Legacy@Example.COM ",
+                    "bound": True,
+                }
+            },
+        }
+        store = StateStore(initial=initial)
+        self.assertEqual(store.get_userid_by_email("legacy@example.com"), 42)
+        self.assertEqual(store.get_email(42)["email"], "legacy@example.com")
+        self.assertEqual(store.snapshot()["version"], StateStore.VERSION)
+
+    def test_email_login_maps_uuid_for_download(self):
+        store = StateStore()
+        original = store.ensure_account()["userid"]
+        current = store.ensure_account()["userid"]
+        store.put_archive(original, {"userid": original, "name": "原角色"})
+        store.put_archive(current, {"userid": current, "name": "当前角色"})
+        store.bind_device(original, "user@example.com")
+        store.set_email_code(current, " USER@example.com ", "123456", "2")
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(current), "uuid": "device-1"},
+            "body": {"email": "User@Example.com", "verify_code": "123456"},
+        })
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["userid"], original)
+        download = download_user_file_2({
+            "state": store,
+            "headers": {"userid": str(current), "uuid": "device-1"},
+        })
+        self.assertEqual(download["data"][0]["userid"], original)
+
+    def test_legacy_transfer_binds_unowned_email_with_mock_code(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"userid": userid, "name": "当前角色"})
+
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "legacy-transfer"},
+            "body": {"email": " New@Example.COM ", "verify_code": 123456},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["userid"], userid)
+        self.assertEqual(store.get_email(userid)["email"], "new@example.com")
+        self.assertTrue(store.get_email(userid)["is_bind"])
+        self.assertEqual(store.get_userid_by_email("new@example.com"), userid)
+        self.assertEqual(store.get_active_archive("legacy-transfer")["userid"], userid)
+
+    def test_legacy_transfer_does_not_replace_pending_verify_target(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"userid": userid, "name": "当前角色"})
+        store.set_email_code(
+            userid,
+            "expected@example.com",
+            "123456",
+            "login",
+            expires_at=int(time.time()) + 60,
+        )
+
+        response = login_device({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "legacy-transfer"},
+            "body": {"email": "other@example.com", "verify_code": 123456},
+        })
+
+        self.assertEqual(response["errcode"], 400)
+        self.assertEqual(response["errmsg"], "invalid verify target")
+        self.assertIsNone(store.get_userid_by_email("other@example.com"))
+
+    def test_admin_mail_delivery_and_reward_claim_are_idempotent(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        body = {
+            "request_id": "grant-20260820-1",
+            "userid": userid,
+            "title": "后台奖励",
+            "content": "请领取附件",
+            "rewards": {
+                "loc_items": [{"id": "huashancanye", "num": 1}],
+                "net_items": [{"id": "jiu106", "num": 2}],
+                "net_attrs": [{"id": "yuanbao", "num": 100}],
+                "new_currencys": [{"id": "yinpiao", "num": 50}],
+            },
+        }
+        ctx = {"state": store, "headers": {}, "body": body}
+        sent = admin_send_email(ctx)
+        replay = admin_send_email(ctx)
+        self.assertEqual(sent["errcode"], 0)
+        self.assertEqual(replay["data"]["mail_id"], sent["data"]["mail_id"])
+        self.assertTrue(replay["data"]["replayed"])
+        self.assertEqual(len(store.list_mail(userid)), 1)
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(email["state"], 1)
+        self.assertEqual(email["is_get"], 1)
+        self.assertEqual(email["loc_items"][0]["state"], 0)
+        self.assertTrue(email["loc_items"][0]["onlyId"])
+        self.assertEqual(email["net_items"][0]["id"], "jiu106")
+        detail = read_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": email["id"]},
+        })
+        self.assertEqual(detail["errcode"], 0)
+        self.assertEqual(detail["data"]["contents"], "请领取附件")
+        self.assertEqual(detail["data"]["is_get"], 1)
+        self.assertEqual(detail["data"]["net_items"][0]["name"], "jiu106")
+        self.assertEqual(detail["data"]["net_attrs"][0]["state"], 0)
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "id": email["id"],
+                "retrievables": [email["loc_items"][0]["onlyId"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        }
+        claimed = get_email_reward(claim_ctx)
+        claimed_again = get_email_reward(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertTrue(claimed_again["data"]["replayed"])
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 2)
+        account = store.get_account(userid)
+        self.assertEqual(
+            account["yuanbao"],
+            100,
+        )
+        self.assertEqual(
+            account["currencies"]["yinpiao"],
+            50,
+        )
+        archive = store.get_archive(userid)
+        jiu = next(item for item in archive["items"] if item["itemId"] == "jiu106")
+        self.assertEqual(jiu["count"], 2)
+        self.assertEqual(archive["yuanbao"], 100)
+        self.assertEqual(archive["yinpiao"], 50)
+        self.assertEqual(archive["currencyVersion"], claimed["data"]["currencyVersion"])
+        self.assertEqual(archive["dataVer"], claimed["data"]["dataVer"])
+        self.assertEqual(
+            claimed["data"]["is_get"],
+            2,
+        )
+        self.assertIn("dataVer", claimed["data"])
+        self.assertIn("currencyVersion", claimed["data"])
+
+    def test_mail_reward_accepts_empty_retrievables_for_server_rewards(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-empty-retrievables",
+                "userid": userid,
+                "title": "网络附件",
+                "content": "领取",
+                "rewards": {
+                    "net_items": [{"id": "jiu106", "num": 2}],
+                    "net_attrs": [{"id": "yuanbao", "num": 3}],
+                },
+            },
+        })
+        mail_id = sent["data"]["mail_id"]
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(email["is_get"], 1)
+        self.assertIsInstance(email["net_items"][0]["state"], int)
+        self.assertTrue(email["net_items"][0]["onlyId"])
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": mail_id, "retrievables": []},
+        })
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(store.get_archive(userid)["items"][0]["count"], 2)
+
+    def test_mail_reward_routes_xinshen_item_to_practice_item_map(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-mail-minditem2",
+                "userid": userid,
+                "title": "心神道具",
+                "content": "领取谧心丸",
+                "rewards": {
+                    "net_items": [
+                        {"id": "minditem2", "name": "谧心丸", "num": 3},
+                        {"id": "jiu106", "name": "醉梦生", "num": 2},
+                    ],
+                },
+            },
+        })
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": sent["data"]["mail_id"], "retrievables": []},
+        }
+
+        claimed = get_email_reward(claim_ctx)
+        replay = get_email_reward(claim_ctx)
+
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(
+            [item["id"] for item in claimed["data"]["net_items"]],
+            ["minditem2", "jiu106"],
+        )
+        item_map = store.snapshot()["practice"][str(userid)]["itemMap"]
+        self.assertEqual(item_map["minditem2"]["count"], 3)
+        self.assertEqual(store.get_inventory_item_count(userid, "minditem2"), 0)
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 2)
+        archive_items = store.get_archive(userid)["items"]
+        self.assertNotIn("minditem2", {item["itemId"] for item in archive_items})
+        self.assertEqual(
+            next(item for item in archive_items if item["itemId"] == "jiu106")["count"],
+            2,
+        )
+        self.assertTrue(replay["data"]["replayed"])
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            3,
+        )
+
+    def test_admin_mail_routes_money_and_gold_to_client_applied_attrs(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "money": 10,
+            "gold": 20,
+            "currencyVersion": 1,
+            "dataVer": 1,
+        }, data_ver=1)
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-money-gold",
+                "userid": userid,
+                "title": "本地货币奖励",
+                "content": "领取",
+                "rewards": {
+                    "net_attrs": [
+                        {"id": "yuanbao", "num": 30},
+                        {"id": "money", "num": 100},
+                    ],
+                    "new_currencys": [
+                        {"id": "yinpiao", "num": 40},
+                        {"id": "gold", "num": 200},
+                    ],
+                },
+            },
+        })
+        mail_id = sent["data"]["mail_id"]
+
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual(
+            [(reward["id"], reward["num"]) for reward in email["loc_attrs"]],
+            [("money", 100), ("gold", 200)],
+        )
+        self.assertEqual([reward["id"] for reward in email["net_attrs"]], ["yuanbao"])
+        self.assertEqual([reward["id"] for reward in email["new_currencys"]], ["yinpiao"])
+
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "id": mail_id,
+                "retrievables": [reward["onlyId"] for reward in email["loc_attrs"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        })
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual([reward["id"] for reward in claimed["data"]["loc_attrs"]], ["money", "gold"])
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["money"], 110)
+        self.assertEqual(archive["gold"], 220)
+        self.assertNotIn("money", store.get_account(userid)["currencies"])
+        self.assertNotIn("gold", store.get_account(userid)["currencies"])
+
+    def test_bulk_mail_preview_and_claim_follow_client_reward_protocol(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "userid": userid,
+            "items": [],
+            "money": 0,
+            "gold": 0,
+            "yuanbao": 0,
+            "yinpiao": 0,
+            "currencyVersion": 1,
+            "dataVer": 1,
+        }, data_ver=1)
+
+        first = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-first",
+                "userid": userid,
+                "title": "第一封",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [{"id": "xinggongsan", "num": 2}],
+                    "loc_attrs": [{"id": "money", "num": 11}],
+                    "net_items": [{"id": "jiu106", "num": 3}],
+                    "net_attrs": [{"id": "yuanbao", "num": 5}],
+                    "new_currencys": [{"id": "yinpiao", "num": 7}],
+                },
+            },
+        })
+        second = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-second",
+                "userid": userid,
+                "title": "第二封",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [{"id": "xinggongsan", "num": 4}],
+                    "loc_attrs": [{"id": "gold", "num": 13}],
+                    "net_items": [{"id": "jiu106", "num": 4}],
+                    "net_attrs": [{"id": "yuanbao", "num": 6}],
+                    "new_currencys": [{"id": "yinpiao", "num": 8}],
+                },
+            },
+        })
+
+        preview = get_email_rewards_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(preview["errcode"], 0)
+        reward_data = preview["data"]
+        self.assertEqual(set(reward_data), {
+            "loc_items", "net_items", "loc_attrs", "net_attrs",
+            "new_currencys", "title_items",
+        })
+        self.assertEqual([item["num"] for item in reward_data["loc_items"]], [2, 4])
+        self.assertEqual(len({item["onlyId"] for item in reward_data["loc_items"]}), 2)
+        self.assertTrue(all(item.get("name") == "jiu106" for item in reward_data["net_items"]))
+
+        retrievables = [
+            item["onlyId"]
+            for key in ("loc_items", "loc_attrs")
+            for item in reward_data[key]
+        ]
+        claim_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "retrievables": retrievables,
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        }
+        claimed = get_all_email_rewards(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        claimed_data = claimed["data"]
+        self.assertEqual(
+            {item["id"] for item in claimed_data["is_getList"]},
+            {first["data"]["mail_id"], second["data"]["mail_id"]},
+        )
+        self.assertEqual(sum(item["num"] for item in claimed_data["loc_items"]), 6)
+        self.assertEqual(sum(item["num"] for item in claimed_data["net_items"]), 7)
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 7)
+        self.assertEqual(store.get_inventory_item_count(userid, "xinggongsan"), 0)
+
+        account = store.get_account(userid)
+        self.assertEqual(account["yuanbao"], 11)
+        self.assertEqual(account["currencies"]["yinpiao"], 15)
+        archive = store.get_archive(userid)
+        self.assertEqual(next(item for item in archive["items"] if item["itemId"] == "jiu106")["count"], 7)
+        self.assertEqual(archive["money"], 11)
+        self.assertEqual(archive["gold"], 13)
+        self.assertEqual(archive["yuanbao"], 11)
+        self.assertEqual(archive["yinpiao"], 15)
+        self.assertEqual(archive["dataVer"], claimed_data["dataVer"])
+        self.assertEqual(archive["currencyVersion"], claimed_data["currencyVersion"])
+        self.assertTrue(all(item["claimed"] for item in store.list_mail(userid)))
+
+        replay = get_all_email_rewards(claim_ctx)
+        self.assertEqual(replay["errcode"], 0)
+        self.assertEqual(replay["data"]["is_getList"], [])
+        self.assertTrue(all(not replay["data"][key] for key in (
+            "loc_items", "net_items", "loc_attrs", "net_attrs",
+            "new_currencys", "title_items",
+        )))
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 7)
+        self.assertEqual(store.get_account(userid)["yuanbao"], 11)
+
+    def test_bulk_mail_claim_keeps_unselected_local_items_retrievable(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "bulk-mail-partial",
+                "userid": userid,
+                "title": "背包筛选",
+                "content": "领取",
+                "rewards": {
+                    "loc_items": [
+                        {"id": "item-a", "num": 1},
+                        {"id": "item-b", "num": 1},
+                    ],
+                    "net_attrs": [{"id": "yuanbao", "num": 9}],
+                },
+            },
+        })
+        headers = {"userid": str(userid)}
+        preview = get_email_rewards_list({"state": store, "headers": headers})["data"]
+
+        first_claim = get_all_email_rewards({
+            "state": store,
+            "headers": headers,
+            "body": {
+                "retrievables": [preview["loc_items"][0]["onlyId"]],
+                "dataVer": 1,
+                "currencyVersion": 1,
+            },
+        })
+        self.assertEqual(first_claim["errcode"], 0)
+        self.assertEqual(first_claim["data"]["is_getList"], [])
+        self.assertEqual([item["id"] for item in first_claim["data"]["loc_items"]], ["item-a"])
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9)
+        self.assertFalse(store.get_mail(userid, sent["data"]["mail_id"])["claimed"])
+
+        remaining = get_email_rewards_list({"state": store, "headers": headers})["data"]
+        self.assertEqual([item["id"] for item in remaining["loc_items"]], ["item-b"])
+        self.assertEqual(remaining["net_attrs"], [])
+        second_claim = get_all_email_rewards({
+            "state": store,
+            "headers": headers,
+            "body": {"retrievables": [remaining["loc_items"][0]["onlyId"]]},
+        })
+        self.assertEqual(
+            second_claim["data"]["is_getList"][0]["id"],
+            sent["data"]["mail_id"],
+        )
+        self.assertTrue(store.get_mail(userid, sent["data"]["mail_id"])["claimed"])
+        self.assertEqual(store.get_account(userid)["yuanbao"], 9)
+
+    def test_bulk_mail_claim_routes_xinshen_items_once(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        headers = {"userid": str(userid)}
+        for index, count in enumerate((2, 4), start=1):
+            admin_send_email({
+                "state": store,
+                "headers": {},
+                "body": {
+                    "request_id": "bulk-mail-minditem2-%d" % index,
+                    "userid": userid,
+                    "title": "心神道具%d" % index,
+                    "content": "批量领取谧心丸",
+                    "rewards": {
+                        "net_items": [
+                            {"id": "minditem2", "name": "谧心丸", "num": count},
+                        ],
+                    },
+                },
+            })
+
+        preview = get_email_rewards_list({"state": store, "headers": headers})["data"]
+        self.assertEqual(
+            [(item["id"], item["name"], item["num"]) for item in preview["net_items"]],
+            [("minditem2", "谧心丸", 2), ("minditem2", "谧心丸", 4)],
+        )
+
+        claim_ctx = {
+            "state": store,
+            "headers": headers,
+            "body": {"retrievables": []},
+        }
+        claimed = get_all_email_rewards(claim_ctx)
+        replay = get_all_email_rewards(claim_ctx)
+
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(sum(item["num"] for item in claimed["data"]["net_items"]), 6)
+        self.assertEqual(len(claimed["data"]["is_getList"]), 2)
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            6,
+        )
+        self.assertEqual(store.get_inventory_item_count(userid, "minditem2"), 0)
+        self.assertNotIn(
+            "minditem2",
+            {item["itemId"] for item in store.get_archive(userid)["items"]},
+        )
+        self.assertEqual(replay["data"]["net_items"], [])
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem2"]["count"],
+            6,
+        )
+
+    def test_bulk_mail_claim_rejects_expired_mail_without_partial_credit(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        active = store.add_mail(userid, {
+            "title": "有效邮件",
+            "content": "领取",
+            "expired_time": int(time.time()) + 60,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 2}]},
+        })
+        expired = store.add_mail(userid, {
+            "title": "过期邮件",
+            "content": "领取",
+            "expired_time": int(time.time()) - 1,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 3}]},
+        })
+
+        response = get_all_email_rewards({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"retrievables": []},
+        })
+        self.assertEqual(response["errcode"], 2)
+        self.assertEqual(response["data"]["expired_ids"], [expired["mail_id"]])
+        self.assertEqual(store.get_inventory_item_count(userid, "jiu106"), 0)
+        self.assertFalse(store.get_mail(userid, active["mail_id"])["claimed"])
+        self.assertFalse(store.get_mail(userid, expired["mail_id"])["claimed"])
+
+    def test_queued_mail_reclassifies_legacy_money_and_gold_rewards(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.add_mail(userid, {
+            "title": "旧格式奖励",
+            "content": "领取",
+            "rewards": {
+                "net_attrs": [{"id": "money", "num": 7}],
+                "new_currencys": [{"id": "gold", "num": 9}],
+            },
+        })
+
+        info = get_email_info({"state": store, "headers": {"userid": str(userid)}})
+        email = info["data"]["emailList"][0]
+        self.assertEqual([reward["id"] for reward in email["loc_attrs"]], ["money", "gold"])
+        self.assertEqual(email["net_attrs"], [])
+        self.assertEqual(email["new_currencys"], [])
+
+    def test_admin_mail_requires_configured_token(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        body = {
+            "request_id": "grant-token-1",
+            "userid": userid,
+            "title": "后台奖励",
+            "content": "请领取附件",
+        }
+        with mock.patch.object(config, "ADMIN_API_TOKEN", "secret"):
+            denied = admin_send_email({"state": store, "headers": {}, "body": body})
+            allowed = admin_send_email({
+                "state": store,
+                "headers": {"x-admin-token": "secret"},
+                "body": body,
+            })
+        self.assertEqual(denied["errcode"], 403)
+        self.assertEqual(allowed["errcode"], 0)
+
+    def test_parse_request_json_accepts_wrapped_and_messy_payloads(self):
+        payload = {
+            "request_id": "grant-messy-1",
+            "userid": 9048162373,
+            "title": "测试奖励",
+            "content": "请领取附件",
+        }
+        dumped = json.dumps(payload, ensure_ascii=False)
+        cases = [
+            protocol.parse_request_json("\ufeff" + dumped + ",", content_type="application/json"),
+            protocol.parse_request_json('callback(%s);' % dumped, content_type="application/json"),
+            protocol.parse_request_json(json.dumps(dumped, ensure_ascii=False), content_type="application/json"),
+            protocol.parse_request_json(json.dumps({"data": dumped}, ensure_ascii=False), content_type="application/json"),
+        ]
+        utf16 = protocol.parse_request_json(
+            protocol.decode_request_body(dumped.encode("utf-16"))[0],
+            content_type="application/json",
+        )
+        cases.append(utf16)
+        for parsed in cases:
+            self.assertEqual(parsed.get("request_id"), "grant-messy-1")
+            self.assertEqual(parsed.get("userid"), 9048162373)
+        trailing = protocol.parse_request_json(
+            '{\n'
+            '  "request_id": "<<$timestamp>>",\n'
+            '  "userid": 9048162373,\n'
+            '  "title": "测试奖励",\n'
+            '  "content": "这是一封通过发送的测试邮件，请领取附件。",\n'
+            '  "sender": "后台测试",\n'
+            '  "expire_days": 30,\n'
+            '  "rewards": {\n'
+            '    "loc_items": [\n'
+            '      {\n'
+            '        "id": "fuyuandan",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "xiyanshui",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "shenlisan",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '      {\n'
+            '        "id": "qingshenyao",\n'
+            '        "num": 99\n'
+            '      },\n'
+            '    ],\n'
+            '    "net_attrs": [\n'
+            '      {\n'
+            '        "id": "yuanbao",\n'
+            '        "num": 1000\n'
+            '      }\n'
+            '    ],\n'
+            '    "new_currencys": [\n'
+            '      {\n'
+            '        "id": "yinpiao",\n'
+            '        "num": 500\n'
+            '      }\n'
+            '    ]\n'
+            '  }\n'
+            '}',
+            content_type="application/json",
+        )
+        self.assertEqual(trailing.get("request_id"), "<<$timestamp>>")
+        self.assertEqual(trailing.get("userid"), 9048162373)
+        self.assertEqual(len(trailing["rewards"]["loc_items"]), 4)
+
+    def test_admin_send_email_accepts_aliases_and_wrapped_body(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {"content-type": "application/json"},
+            "query": {},
+            "body": {},
+            "raw_body": json.dumps({
+                "data": {
+                    "requestId": "grant-alias-1",
+                    "user_id": userid,
+                    "subject": "别名邮件",
+                    "contents": "请领取附件",
+                }
+            }, ensure_ascii=False),
+        })
+        self.assertEqual(sent["errcode"], 0)
+        self.assertEqual(sent["data"]["userid"], userid)
+        wrapped = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "requestId": "grant-alias-2",
+                "uid": userid,
+                "title": "第二封",
+                "text": "内容",
+            },
+        })
+        self.assertEqual(wrapped["errcode"], 0)
+        self.assertEqual(len(store.list_mail(userid)), 2)
+
+    def test_mail_activity_ranking_and_biwu(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        empty_response = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(empty_response["data"]["emailList"], [])
+        self.assertEqual(empty_response["data"]["emailMaxNum"], 50)
+        mail = store.add_mail(userid, {"title": "奖励"})
+        response = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(response["data"]["emailList"][0]["id"], mail["mail_id"])
+        self.assertEqual(response["data"]["emailList"][0]["is_read"], 0)
+        self.assertEqual(response["data"]["emailList"][0]["is_get"], 0)
+        self.assertEqual(response["data"]["emailList"][0]["expired_time"], 0)
+        self.assertFalse(store.list_mail(userid)[0]["read"])
+        self.assertTrue(store.update_mail(userid, mail["mail_id"], {"read": True})["read"])
+        store.put_activity("a1", {"type": 2, "enabled": True})
+        self.assertEqual(len(store.get_activities(2)), 1)
+        store.update_activity_user(userid, "a1", {"point": 5})
+        store.upsert_ranking("default", userid, {"name": "角色", "score": 20})
+        self.assertEqual(store.get_rankings()["list"][0]["userid"], userid)
+        fight = store.add_biwu_fight(userid, {"status": "finished"})
+        self.assertEqual(store.list_biwu_fights(userid)[0]["fight_id"], fight["fight_id"])
+
+    def test_delete_single_and_processed_emails(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        plain = store.add_mail(userid, {"title": "普通邮件"})
+        claimed = store.add_mail(userid, {
+            "title": "已领取邮件",
+            "claimed": True,
+            "rewards": {"net_items": [{"id": "jiu106", "num": 1}]},
+        })
+        pending = store.add_mail(userid, {
+            "title": "未领取邮件",
+            "rewards": {"loc_items": [{"id": "innatePointSwitchbox", "num": 1}]},
+        })
+        single = delete_email({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": [pending["mail_id"]],
+        })
+        self.assertEqual(single["errcode"], 0)
+        self.assertTrue(store.get_mail(userid, pending["mail_id"])["deleted"])
+        result = delete_processed_emails({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(result["errcode"], 0)
+        self.assertEqual(
+            result["data"]["delete_ids"],
+            [plain["mail_id"], claimed["mail_id"]],
+        )
+        visible = get_email_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+        })
+        self.assertEqual(visible["data"]["emailList"], [])
+
+    def test_upgrade_bag_and_warehouse_capacity(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {
+            "money": 1000000,
+            "weight": 30,
+            "wUpCount": 0,
+            "baseCkLimit": 30,
+            "ckLimit": 40,
+            "ckUpCount": 0,
+            "dataVer": 5,
+        }, data_ver=5)
+        bag = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 1, "level": 1001},
+        })
+        self.assertEqual(bag["errcode"], 0)
+        self.assertEqual(bag["data"]["currency"], 1)
+        self.assertEqual(bag["data"]["count"], 12000)
+        role = store.get_archive(userid)
+        self.assertEqual(role["weight"], 35)
+        self.assertEqual(role["wUpCount"], 1)
+        self.assertEqual(role["money"], 988000)
+        warehouse = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 2, "level": 1001},
+        })
+        self.assertEqual(warehouse["errcode"], 0)
+        role = store.get_archive(userid)
+        self.assertEqual(role["baseCkLimit"], 35)
+        self.assertEqual(role["ckLimit"], 45)
+        self.assertEqual(role["ckUpCount"], 1)
+        self.assertEqual(role["money"], 982000)
+        conflict = upgrade_user_bag({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"type": 1, "level": 1001},
+        })
+        self.assertEqual(conflict["errcode"], 409)
+        self.assertEqual(store.get_archive(userid)["money"], 982000)
+
+    def test_device_uuid_persists_across_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            first = StateStore(path)
+            expected_uuid = "guanfangd0b80cf7aa09ea3538329b0d"
+            device_uuid = first.get_or_create_device_uuid(expected_uuid)
+            self.assertEqual(device_uuid, expected_uuid)
+            self.assertEqual(
+                first.get_or_create_device_uuid("guanfang-other"),
+                device_uuid,
+            )
+            second = StateStore(path)
+            self.assertEqual(
+                second.get_or_create_device_uuid("guanfang-other"),
+                device_uuid,
+            )
+
+    def test_json_persistence_and_corrupt_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            archives_dir = os.path.join(directory, "archives")
+            first = StateStore(path, archives_dir=archives_dir)
+            userid = first.ensure_account()["userid"]
+            first.put_archive(userid, {"userid": userid, "name": "持久化", "lv": 1})
+            self.assertTrue(os.path.isfile(os.path.join(archives_dir, "%d.json" % userid)))
+            second = StateStore(path, archives_dir=archives_dir)
+            self.assertEqual(second.get_archive(userid)["name"], "持久化")
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write("{")
+            third = StateStore(path, archives_dir=archives_dir)
+            self.assertIsNone(third.get_account(userid))
+            # 账号索引丢了, 但分文件存档仍可回放
+            self.assertEqual(third.get_archive(userid)["name"], "持久化")
+
+    def test_register_account_is_empty_by_default(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            account = store.register_account(
+                username="demo",
+                password_hash="x",
+                email=" User@Example.COM ",
+            )
+            self.assertFalse(account["has_archive"])
+            self.assertEqual(account["email"], "user@example.com")
+            self.assertEqual(store.get_userid_by_email("USER@example.com"), account["userid"])
+            self.assertIsNone(store.get_archive(account["userid"]))
+
+    def test_create_account_accepts_optional_email(self):
+        store = StateStore()
+        response = create_account({
+            "state": store,
+            "headers": {},
+            "body": {"userid": 0, "email": " New@Example.COM "},
+        })
+        userid = response["data"]["userid"]
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(store.get_account(userid)["email"], "new@example.com")
+        self.assertEqual(store.get_userid_by_email("NEW@example.com"), userid)
+        self.assertNotEqual(userid, 9048162373)
+
+    def test_empty_login_falls_back_to_seed_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            seed = os.path.join(directory, "RoleData.json")
+            with open(seed, "w", encoding="utf-8") as handle:
+                json.dump(
+                    {
+                        "userid": 9048162373,
+                        "name": "和风无声",
+                        "lv": 550,
+                        "serverActionSystem": {"dataVersion": 2, "requestId": 1},
+                    },
+                    handle,
+                    ensure_ascii=False,
+                )
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            store.import_seed_roledata(seed, overwrite=False)
+            created = create_account({
+                "state": store,
+                "headers": {"userid": "0", "uuid": "device-empty"},
+                "body": {},
+            })
+            self.assertEqual(created["errcode"], 0)
+            self.assertEqual(created["data"]["userid"], 9048162373)
+            empty = store.ensure_account(None)
+            self.assertNotEqual(empty["userid"], 9048162373)
+            recovered = create_account({
+                "state": store,
+                "headers": {"userid": str(empty["userid"])},
+                "body": {},
+            })
+            self.assertEqual(recovered["data"]["userid"], 9048162373)
+            download = download_user_file_2({
+                "state": store,
+                "headers": {"userid": str(empty["userid"])},
+            })
+            self.assertEqual(download["errcode"], 0)
+            self.assertEqual(download["data"][0]["userid"], 9048162373)
+            self.assertEqual(download["data"][0]["name"], "和风无声")
+            registered = create_account({
+                "state": store,
+                "headers": {"userid": "0"},
+                "body": {"userid": 0, "email": "new@example.com"},
+            })
+            self.assertEqual(registered["errcode"], 0)
+            self.assertNotEqual(registered["data"]["userid"], 9048162373)
+
+    def test_create_account_rejects_duplicate_email(self):
+        store = StateStore()
+        store.register_account(email="user@example.com")
+        response = create_account({
+            "state": store,
+            "headers": {},
+            "body": {"userid": 0, "email": " User@Example.COM "},
+        })
+        self.assertEqual(response["errcode"], 409)
+        self.assertEqual(len(store.snapshot()["accounts"]), 1)
+
+    def test_archive_list_payload_matches_client_layer_fields(self):
+        """切换存档: get_archive_list 必须带上 ArchiveLayer 无条件读取的字段。
+
+        客户端 ArchiveLayer:createOneArchiveItem 里:
+          setString(params.name/menpai/year/time)、math.floor(params.exp)、
+          点击 -> changeArchive(params.index, params.userid) -> switch_archive/<index>
+        任何一个字段缺失都会让整行渲染报错(界面空白/点击无反应)。
+        """
+        userid = 1000000002
+        other = 1000000003
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {"userid": userid},
+                str(other): {"userid": other},
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "name": "江湖小虾",
+                    "lv": 205,
+                    "exp": 909709,
+                    "family": {"name": "huashan", "level": 4},
+                    "createTime": 1788192930,
+                    "looks": 16,
+                    "sex": "男",
+                },
+                # 缺 name/lv/exp 的脏存档也要能正常下发, 不能抛错
+                str(other): {"userid": other},
+            },
+        }, autosave=False)
+
+        listed = get_archive_list({"state": store, "headers": {"userid": str(userid)}})
+        self.assertEqual(listed["errcode"], 0)
+        entries = {int(item["userid"]): item for item in listed["data"]}
+        self.assertEqual(set(entries), {userid, other})
+
+        first = entries[userid]
+        self.assertEqual(first["index"], 1)
+        self.assertEqual(first["name"], "江湖小虾")
+        self.assertEqual(first["menpai"], "华山")
+        self.assertIsInstance(first["exp"], float)
+        self.assertIsInstance(first["lv"], float)
+        self.assertEqual(first["year"], time.strftime("%Y-%m", time.localtime(1788192930)))
+        self.assertEqual(first["time"], time.strftime("%H:%M:%S", time.localtime(1788192930)))
+        for key in ("head", "looks", "sex", "portrait", "polymorph"):
+            self.assertIn(key, first)
+
+        second = entries[other]
+        self.assertEqual(second["index"], 2)
+        self.assertEqual(second["name"], "存档%s" % other)
+        self.assertIsInstance(second["exp"], float)
+        self.assertIsInstance(second["lv"], float)
+        self.assertIsInstance(second["menpai"], str)
+        self.assertIsInstance(second["year"], str)
+        self.assertIsInstance(second["time"], str)
+
+        # 客户端点击时发的是存档位序号
+        switched = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": ["2"],
+        })
+        self.assertEqual(switched["errcode"], 0)
+        self.assertEqual(switched["data"]["userid"], other)
+        self.assertEqual(store.get_active_archive("uuid-archive")["userid"], other)
+
+        # 旧的按 userid 切换用法保持可用
+        legacy = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": [str(userid)],
+        })
+        self.assertEqual(legacy["errcode"], 0)
+        self.assertEqual(store.get_active_archive("uuid-archive")["userid"], userid)
+
+        missing = switch_archive({
+            "state": store,
+            "headers": {"userid": str(userid), "uuid": "uuid-archive"},
+            "route_tail": ["99"],
+        })
+        self.assertEqual(missing["errcode"], 404)
+
+    def test_seed_import_and_switch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            seed = os.path.join(directory, "RoleData.json")
+            with open(seed, "w", encoding="utf-8") as handle:
+                json.dump({"userid": 9048162373, "name": "和风无声", "lv": 550, "serverActionSystem": {"dataVersion": 2, "requestId": 1}}, handle, ensure_ascii=False)
+            store = StateStore(
+                os.path.join(directory, "state.json"),
+                archives_dir=os.path.join(directory, "archives"),
+            )
+            doc = store.import_seed_roledata(seed, overwrite=False)
+            self.assertEqual(doc["userid"], 9048162373)
+            self.assertEqual(store.get_archive(9048162373)["name"], "和风无声")
+            store.set_active_archive("uuid-1", 9048162373)
+            self.assertEqual(store.get_active_archive("uuid-1")["userid"], 9048162373)
+            self.assertEqual(store.list_archives()[0]["name"], "和风无声")
+
+    def test_snapshot_and_reset(self):
+        store = StateStore()
+        store.ensure_account()
+        snapshot = store.snapshot()
+        snapshot["accounts"].clear()
+        self.assertEqual(len(store.snapshot()["accounts"]), 1)
+        store.reset()
+        self.assertEqual(store.snapshot()["accounts"], {})
+        self.assertEqual(store.ensure_account()["userid"], StateStore.DEFAULT_USER_ID)
+
+    def test_missing_api_contracts(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        challenge = challengemap_unfinished(dict(base_ctx))
+        self.assertEqual(challenge["data"], {"status": 0})
+        spring = get_spring_festival_list(dict(base_ctx))
+        self.assertIsInstance(spring["data"], list)
+        self.assertEqual(spring["data"][0]["name"], "签到活动")
+        self.assertEqual(spring["data"][0]["id"], 14)
+        self.assertEqual(spring["data"][0]["activity_id"], "qiandao")
+        self.assertEqual(spring["data"][0]["status"], 1)
+        self.assertEqual(spring["data"][0]["is_open"], 1)
+
+        chongzhi = get_spring_festival_status(dict(base_ctx, route_tail=["19"]))
+        self.assertEqual(chongzhi["errcode"], 0)
+        self.assertEqual(chongzhi["data"]["id"], 19)
+        self.assertEqual(chongzhi["data"]["name"], "充值积分兑换")
+        self.assertEqual(chongzhi["data"]["status"], 1)
+        self.assertEqual(chongzhi["data"]["is_open"], 1)
+        self.assertGreater(chongzhi["data"]["end"], int(time.time()))
+
+        shop = get_shop_info(dict(base_ctx, body={"shop_id": "zhounianqin_cz"}))
+        self.assertEqual(shop["errcode"], 0)
+        shop_info = shop["data"]["shop_info"]
+        self.assertEqual(shop_info["shop_id"], "zhounianqin_cz")
+        self.assertEqual(shop_info["is_open"], "Y")
+        self.assertEqual(shop_info["typeName"]["tuijian"]["name"], "推荐")
+        self.assertEqual(
+            {key: len(items) for key, items in shop_info["goods"].items()},
+            {"tuijian": 49, "shuxing": 16, "wuxue": 32,
+             "shenbing": 8, "guashi": 7, "mianju": 7, "default": 25},
+        )
+        first = shop_info["goods"]["tuijian"][0]
+        self.assertEqual(first["itemId"], "xinbawangqiangfa")
+        self.assertEqual(first["price"], 4000)
+        self.assertEqual(first["extra"]["limit"], 1)
+        self.assertEqual(shop["data"]["total_points"], 0)
+        self.assertFalse(shop["data"]["isDis"])
+
+        # 积分余额跟随账户变化
+        account = store.get_account(userid) or {}
+        account["currencies"] = {"chongzhijifen": 1200}
+        store.update_account(userid, account)
+        shop = get_shop_info(dict(base_ctx, body={"shop_id": "zhounianqin_cz"}))
+        self.assertEqual(shop["data"]["total_points"], 1200)
+
+        missing = get_shop_info(dict(base_ctx, body={"shop_id": "no_such_shop"}))
+        self.assertEqual(missing["errcode"], 404)
+        invalid = get_shop_info({"state": store, "headers": {}, "body": {}})
+        self.assertEqual(invalid["errcode"], 550)
+
+        sign = get_sign_list(dict(base_ctx))
+        self.assertEqual(sign["errcode"], 0)
+        self.assertEqual(
+            set(sign["data"]),
+            {
+                "beginDate", "endDate", "seasonId", "signedList",
+                "historySignCount", "prizeList", "prizeId", "yuanbao",
+                "createDate",
+            },
+        )
+        self.assertEqual(len(sign["data"]["beginDate"]), 8)
+        self.assertEqual(len(sign["data"]["endDate"]), 8)
+        self.assertIsInstance(sign["data"]["signedList"], list)
+        self.assertEqual(sign["data"]["prizeId"], 15)
+
+        today = time.strftime("%Y%m%d", time.localtime())
+        claim_ctx = dict(base_ctx, body={
+            "trans_id": "sign-today-1",
+            "date": today,
+            "item_id": "qiandao1",
+            "is_homeland": 1,
+        })
+        claimed = get_sign_prize(claim_ctx)
+        self.assertEqual(claimed["errcode"], 0)
+        self.assertEqual(claimed["data"]["daily_point"], 10)
+        self.assertIn(today, get_sign_list(dict(base_ctx))["data"]["signedList"])
+        self.assertEqual(get_sign_list(dict(base_ctx))["data"]["historySignCount"], 1)
+
+        replay = get_sign_prize(claim_ctx)
+        self.assertEqual(replay, claimed)
+        duplicate = get_sign_prize(dict(claim_ctx, body=dict(
+            claim_ctx["body"], trans_id="sign-today-2"
+        )))
+        self.assertEqual(duplicate["errcode"], 2)
+        self.assertEqual(get_sign_list(dict(base_ctx))["data"]["historySignCount"], 1)
+
+        info_ctx = dict(base_ctx, body={"familyId": "huashan"})
+        info = get_teacher_build_info(info_ctx)
+        self.assertEqual(info["data"]["guajiInfo"], {})
+        builds = get_teacher_build_list(info_ctx)
+        self.assertIsInstance(builds["data"], list)
+        self.assertEqual(builds["data"][0]["state"], 0)
+        items = get_teacher_build_items(info_ctx)
+        self.assertEqual(
+            items["data"],
+            [
+                {"itemId": "bmaterials1", "count": 0, "countLimit": 300},
+                {"itemId": "bmaterials2", "count": 0, "countLimit": 300},
+                {"itemId": "bmaterials3", "count": 0, "countLimit": 300},
+            ],
+        )
+
+        added = add_devote_point(dict(base_ctx, body={"type": 5, "point": 100}))
+        self.assertEqual(added["data"]["get_point"], 100)
+        self.assertEqual(added["data"]["dev_point"], 100)
+        current = get_devote_point(dict(base_ctx))
+        self.assertEqual(current["data"]["dev_point"], 100)
+        devote_list = get_devote_list(dict(base_ctx, body={"type": 1, "menpai": "huashan"}))
+        self.assertTrue(devote_list["data"]["list"])
+        self.assertEqual(devote_list["data"]["list"][0]["status"], 0)
+        group = get_user_group(dict(base_ctx, body={
+            "userid": userid,
+            "tid": "fenglao",
+            "menpai": "huashan",
+            "isCache": 0,
+        }))
+        self.assertEqual(group["errcode"], 0)
+        self.assertEqual(group["data"][0]["userid"], userid)
+        self.assertEqual(group["data"][0]["name"], "玩家%s" % userid)
+        rank = get_group_rank(dict(base_ctx))
+        self.assertEqual(rank["errcode"], 0)
+        self.assertIsInstance(rank["data"], list)
+        self.assertEqual(rank["data"][0]["userid"], userid)
+        self.assertEqual(rank["data"][0]["kongfu"], 0)
+        self.assertEqual(rank["data"][0]["prestige"], 100)
+
+    def test_qingan_grants_daily_devote_point_once_per_day(self):
+        from handlers.basic import QINGAN_DAILY_POINT
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        # 请安: 客户端 point=0, 贡献点由服务端定额发放
+        greeted = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(greeted["errcode"], 0)
+        self.assertEqual(greeted["data"]["get_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(greeted["data"]["dev_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(greeted["data"]["msg"], "获得师门贡献点%s" % QINGAN_DAILY_POINT)
+        self.assertFalse(greeted["data"]["special_time"])
+
+        current = get_devote_point(dict(base_ctx))
+        self.assertEqual(current["data"]["dev_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(current["data"]["has_reward"], "N")
+
+        # 同日重复请安 -> errcode=3(客户端提示"你今天已经请过安了！")且不加分
+        again = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(again["errcode"], 3)
+        self.assertEqual(get_devote_point(dict(base_ctx))["data"]["dev_point"], QINGAN_DAILY_POINT)
+
+        # 其他类型不受请安次数影响, 仍按客户端上报加分
+        task = add_devote_point(dict(base_ctx, body={"type": 2, "point": 100}))
+        self.assertEqual(task["errcode"], 0)
+        self.assertEqual(task["data"]["get_point"], 100)
+        self.assertEqual(task["data"]["dev_point"], QINGAN_DAILY_POINT + 100)
+
+        # 跨天重置: 篡改日期标记后请安次数与今日上限恢复
+        with store._lock:
+            store._state["devote"][str(userid)]["day"] = "2000-01-01"
+        next_day = add_devote_point(dict(base_ctx, body={"type": 1, "point": 0}))
+        self.assertEqual(next_day["errcode"], 0)
+        self.assertEqual(next_day["data"]["get_point"], QINGAN_DAILY_POINT)
+        self.assertEqual(next_day["data"]["dev_point"], QINGAN_DAILY_POINT * 2 + 100)
+
+        # 非法类型 / type!=1 且 point<=0 -> errcode=4
+        bad_type = add_devote_point(dict(base_ctx, body={"type": 9, "point": 100}))
+        self.assertEqual(bad_type["errcode"], 4)
+        bad_point = add_devote_point(dict(base_ctx, body={"type": 2, "point": 0}))
+        self.assertEqual(bad_point["errcode"], 4)
+
+    def test_get_all_intimacy_covers_every_group_member(self):
+        """师门任务-同门页签: get_all_intimacy 必须覆盖 get_user_group 的每个同门。
+
+        客户端 HuPengYinBanLayer 会 assert(false, "为什么下发的亲密度列表没有这个同门"),
+        所以两个接口的 userid 集合必须一致, 且 data 必须是数组(ipairs 遍历)。
+        """
+        store = StateStore(autosave=False)
+        userid = store.ensure_account()["userid"]
+        store.put_archive(userid, {"name": "同门测试", "exp": 0})
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}}
+
+        group = get_user_group(dict(base_ctx, body={
+            "userid": userid,
+            "tid": "fenglao",
+            "menpai": "huashan",
+            "isCache": 0,
+        }))
+        self.assertEqual(group["errcode"], 0)
+        self.assertIsInstance(group["data"], list)
+        self.assertTrue(group["data"])
+
+        intimacy = get_all_intimacy(dict(base_ctx))
+        self.assertEqual(intimacy["errcode"], 0)
+        self.assertIsInstance(intimacy["data"], list)
+        self.assertEqual(len(intimacy["data"]), len(group["data"]))
+
+        by_userid = {str(item["userid"]): item["intimacy"] for item in intimacy["data"]}
+        for member in group["data"]:
+            # 客户端: intimacyList[roleData.userid] ~= nil, 且直接参与数值比较
+            self.assertIn(str(member["userid"]), by_userid)
+            self.assertIsInstance(by_userid[str(member["userid"])], int)
+            self.assertGreaterEqual(by_userid[str(member["userid"])], 0)
+        self.assertEqual(by_userid[str(userid)], 0)
+
+        # 亲密度只读: 读取不应污染状态
+        with store._lock:
+            self.assertNotIn("intimacy", store._state)
+
+        # 未建号 -> 552; 缺 userid 头 -> 552
+        missing = get_all_intimacy({"state": store, "headers": {}})
+        self.assertEqual(missing["errcode"], 552)
+        unknown = get_all_intimacy({"state": store, "headers": {"userid": "999999999"}})
+        self.assertEqual(unknown["errcode"], 552)
+
+    def test_shop_exchange_goods_deducts_points_and_enforces_limit(self):
+        userid = 9048162383
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currencies": {"chongzhijifen": 5000},
+                    "currency_version": 2,
+                }
+            },
+            "archives": {
+                str(userid): {"name": "角色", "chongzhijifen": 5000, "currencyVersion": 2},
+            },
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "itemId": "xinggongsan",
+                "client_trans_id": "exchange-1",
+                "shop_id": "zhounianqin_cz",
+                "number": 3,
+                "dataVer": 1,
+                "currencyVersion": 2,
+            },
+        }
+
+        # xinggongsan: price=50, times=30
+        response = shop_exchange_goods(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(
+            response["data"]["reward"],
+            {"itemId": "xinggongsan", "number": 3, "itype": 1, "name": "行功散"},
+        )
+        self.assertEqual(response["data"]["romove_point"], 150)
+        self.assertEqual(response["data"]["total_points"], 4850)
+        self.assertFalse(response["data"]["isDis"])
+        self.assertEqual(response["data"]["currencyVersion"], 3)
+
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["chongzhijifen"], 4850)
+        self.assertEqual(store.get_account(userid)["currencies"]["chongzhijifen"], 4850)
+
+        # 幂等重放: 同 client_trans_id 返回同响应且不重复扣分
+        replay = shop_exchange_goods(dict(ctx))
+        self.assertEqual(replay, response)
+        self.assertEqual(store.get_archive(userid)["chongzhijifen"], 4850)
+
+        # 同 trans_id 不同内容 -> 409
+        conflict = shop_exchange_goods(dict(ctx, body=dict(ctx["body"], number=1)))
+        self.assertEqual(conflict["errcode"], 409)
+
+        # 商店余额同步
+        shop = get_shop_info(dict(ctx, body={"shop_id": "zhounianqin_cz"}))
+        self.assertEqual(shop["data"]["total_points"], 4850)
+
+        # 限购: xinbawangqiangfa times=1, price=4000
+        skill = shop_exchange_goods(dict(ctx, body=dict(
+            ctx["body"], itemId="xinbawangqiangfa", client_trans_id="exchange-2", number=1)))
+        self.assertEqual(skill["errcode"], 0)
+        self.assertEqual(skill["data"]["total_points"], 850)
+        again = shop_exchange_goods(dict(ctx, body=dict(
+            ctx["body"], itemId="xinbawangqiangfa", client_trans_id="exchange-3", number=1)))
+        self.assertEqual(again["errcode"], 1)
+        self.assertEqual(again["errmsg"], "您已经达到购买上限")
+        self.assertEqual(store.get_archive(userid)["chongzhijifen"], 850)
+
+        # 积分不足: mianju1029 price=1800 > 850
+        poor = shop_exchange_goods(dict(ctx, body=dict(
+            ctx["body"], itemId="mianju1029", client_trans_id="exchange-4", number=1)))
+        self.assertEqual(poor["errcode"], 1)
+        self.assertEqual(poor["errmsg"], "充值积分不足")
+
+        # 未知商品 / 未知商店 / 非法参数 / 非法 userid / 无存档
+        unknown_goods = shop_exchange_goods(dict(ctx, body=dict(
+            ctx["body"], itemId="no_such_item", client_trans_id="exchange-5")))
+        self.assertEqual(unknown_goods["errcode"], 1)
+        unknown_shop = shop_exchange_goods(dict(ctx, body=dict(
+            ctx["body"], shop_id="no_such_shop", client_trans_id="exchange-6")))
+        self.assertEqual(unknown_shop["errcode"], 404)
+        bad_request = shop_exchange_goods(dict(ctx, body={"itemId": "xinggongsan", "number": 1}))
+        self.assertEqual(bad_request["errcode"], 1)
+        invalid_user = shop_exchange_goods({"state": store, "headers": {}, "body": {}})
+        self.assertEqual(invalid_user["errcode"], 550)
+        no_archive = shop_exchange_goods({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {"itemId": "xinggongsan", "shop_id": "zhounianqin_cz",
+                     "client_trans_id": "exchange-7", "number": 1},
+        })
+        self.assertEqual(no_archive["errcode"], 404)
+
+    def test_sign_in_state_persists_across_restart(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "state.json")
+            first = StateStore(path)
+            userid = first.ensure_account()["userid"]
+            today = time.strftime("%Y%m%d", time.localtime())
+            ctx = {
+                "state": first,
+                "headers": {"userid": str(userid)},
+                "body": {
+                    "trans_id": "persisted-sign-1",
+                    "date": today,
+                    "item_id": "qiandao1",
+                },
+            }
+            self.assertEqual(get_sign_prize(ctx)["errcode"], 0)
+
+            second = StateStore(path)
+            restored = get_sign_list({
+                "state": second,
+                "headers": {"userid": str(userid)},
+            })
+            self.assertEqual(restored["data"]["signedList"], [today])
+            self.assertEqual(restored["data"]["historySignCount"], 1)
+
+    def test_legacy_teacher_build_idle_state_is_normalized(self):
+        store = StateStore(initial={
+            "accounts": {"42": {"userid": 42}},
+            "teacher_build": {
+                "42": {
+                    "families": {
+                        "huashan": {
+                            "familyId": "huashan",
+                            "guajiInfo": {"status": 0},
+                        }
+                    }
+                }
+            },
+        })
+        response = get_teacher_build_info({
+            "state": store,
+            "headers": {"userid": "42"},
+            "body": {"familyId": "huashan"},
+        })
+        self.assertEqual(response["data"]["guajiInfo"], {})
+
+    def test_xin_shen_query_settles_recovery_every_300_seconds(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.time.time", return_value=1601):
+            response = get_xin_shen_value(ctx)
+        self.assertEqual(response["data"]["curr"], 120)
+        self.assertEqual(response["data"]["max"], 400)
+        self.assertEqual(response["data"]["time"], 1600)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        self.assertEqual(xin["curr"], 120)
+        self.assertEqual(xin["recoverStartTime"], 1600)
+
+    def test_xin_shen_query_caps_at_max_and_resets_recovery_time(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 395,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            response = get_xin_shen_value(ctx)
+        self.assertEqual(response["data"]["curr"], 400)
+        self.assertEqual(response["data"]["time"], 1300)
+
+    def test_recover_xin_shen_rejects_unsafe_client_values(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        base = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"codeVer": 1, "dataVer": 1, "value": 10, "time": 1300},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            too_large = recover_xin_shen_value(dict(base, body=dict(base["body"], value=999999)))
+            stale_time = recover_xin_shen_value(dict(base, body=dict(base["body"], time=999)))
+        self.assertEqual(too_large["errcode"], 400)
+        self.assertEqual(stale_time["errcode"], 400)
+        self.assertEqual(store.snapshot()["practice"][str(userid)]["xinShen"]["curr"], 100)
+
+    def test_recover_xin_shen_accepts_one_due_server_verified_tick(self):
+        userid = 42
+        store = StateStore(initial={
+            "practice": {
+                str(userid): {
+                    "xinShen": {
+                        "curr": 100,
+                        "max": 400,
+                        "level": 1,
+                        "recoverStartTime": 1000,
+                    },
+                },
+            },
+        })
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"codeVer": 1, "dataVer": 3, "value": 10, "time": 1300},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=1300):
+            response = recover_xin_shen_value(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["curr"], 110)
+        self.assertEqual(response["data"]["time"], 1300)
+        self.assertEqual(response["data"]["dataVer"], 4)
+
+    def test_xin_shen_gift_box_uses_server_item_interfaces(self):
+        """心神礼盒 22xinshengiftbox: getItemCount -> employ_materials -> addItemCount。
+
+        客户端 RoleUseItem_XinShenLiHe 依赖 getItemCount 的 count/limit 做上限预检,
+        再调 employ_materials 消耗礼盒, 最后用 addItemCount 发放凝心露/聚心丹。
+        """
+        from handlers.practice import XINSHEN_ITEM_LIMIT
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {
+                str(userid): {
+                    "itemMap": {
+                        "minditem3": {"count": 995},
+                        "minditem4": {"count": XINSHEN_ITEM_LIMIT},
+                    },
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "name": "礼盒测试",
+                    "dataVer": 7,
+                    "items": [
+                        {"id": 1, "itemId": "22xinshengiftbox", "count": 2},
+                        {"id": 2, "itemId": "xinggongsan", "count": 5},
+                    ],
+                },
+            },
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        # 1. getItemCount: 礼盒内容物 凝心露*3 / 聚心丹*2 的上限预检数据
+        three = get_item_count(dict(ctx, body={"itemId": "minditem3", "dataVer": 7, "codeVer": 1}))
+        self.assertEqual(three["errcode"], 0)
+        self.assertEqual(three["data"]["count"], 995)
+        self.assertEqual(three["data"]["limit"], XINSHEN_ITEM_LIMIT)
+        self.assertLessEqual(three["data"]["count"] + 3, three["data"]["limit"])
+
+        four = get_item_count(dict(ctx, body={"itemId": "minditem4", "dataVer": 7, "codeVer": 1}))
+        self.assertEqual(four["data"]["count"], XINSHEN_ITEM_LIMIT)
+        # 客户端: itemData.count + 2 > itemData.limit -> "打开后聚心丹数量超出上限，打开失败"
+        self.assertGreater(four["data"]["count"] + 2, four["data"]["limit"])
+
+        # 2. employ_materials(checkItemIsCanUse): 从背包扣掉礼盒
+        used = employ_materials(dict(ctx, body={"itemId": "22xinshengiftbox", "number": 1}))
+        self.assertEqual(used["errcode"], 0)
+        archive = store.get_archive(userid)
+        box = next(i for i in archive["items"] if i["itemId"] == "22xinshengiftbox")
+        self.assertEqual(box["count"], 1)
+
+        # 3. addItemCount: 发放凝心露*3 / 聚心丹*2, 返回 dataVer 供 __saveAction
+        added = add_item_count(dict(ctx, body={
+            "itemId": "minditem3", "count": 3, "dataVer": 7, "codeVer": 1,
+        }))
+        self.assertEqual(added["errcode"], 0)
+        self.assertEqual(added["data"]["count"], 998)
+        self.assertIs(type(added["data"]["dataVer"]), int)
+        self.assertGreater(added["data"]["dataVer"], 7)
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem3"]["count"], 998)
+        self.assertEqual(store.get_archive(userid)["dataVer"], added["data"]["dataVer"])
+
+        # 发放数量受上限约束
+        capped = add_item_count(dict(ctx, body={
+            "itemId": "minditem4", "count": 2, "dataVer": added["data"]["dataVer"], "codeVer": 1,
+        }))
+        self.assertEqual(capped["data"]["count"], XINSHEN_ITEM_LIMIT)
+
+    def test_get_item_count_limit_gates_gift_box_overflow(self):
+        """limit=999(线上存档观察到的上限)时, 礼盒预检会拦下超上限的开箱。"""
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {str(userid): {"itemMap": {
+                "minditem3": {"count": 999},
+                "minditem4": {"count": 995},
+            }}},
+            "archives": {str(userid): {"userid": userid, "items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        with mock.patch("handlers.practice.XINSHEN_ITEM_LIMIT", 999):
+            three = get_item_count(dict(ctx, body={"itemId": "minditem3"}))
+            four = get_item_count(dict(ctx, body={"itemId": "minditem4"}))
+        # 凝心露*3 会溢出 -> 客户端提示"打开后凝心露数量超出上限，打开失败"
+        self.assertGreater(three["data"]["count"] + 3, three["data"]["limit"])
+        # 聚心丹*2 不溢出 -> 允许开箱
+        self.assertLessEqual(four["data"]["count"] + 2, four["data"]["limit"])
+
+    def test_item_count_and_employ_materials_error_paths(self):
+        from handlers.practice import XINSHEN_ITEM_LIMIT
+        userid = 88
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "practice": {str(userid): {"itemMap": {"minditem1": {"count": 1}}}},
+            "inventory_items": {str(userid): {"familyToken": 2}},
+            "archives": {str(userid): {"userid": userid, "items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        # 未持有的物品: count=0 但 limit 仍要有值(客户端缺 limit 会 error)
+        missing = get_item_count(dict(ctx, body={"itemId": "minditem2"}))
+        self.assertEqual(missing["data"]["count"], 0)
+        self.assertEqual(missing["data"]["limit"], XINSHEN_ITEM_LIMIT)
+        self.assertEqual(get_item_count(dict(ctx, body={}))["errcode"], 400)
+        self.assertEqual(get_item_count({"state": store, "headers": {}})["errcode"], 552)
+
+        # 数量不足 -> errcode=1 + 中文提示(客户端 PopText)
+        not_enough = employ_materials(dict(ctx, body={"itemId": "minditem1", "number": 3}))
+        self.assertEqual(not_enough["errcode"], 1)
+        self.assertEqual(not_enough["errmsg"], "物品不足")
+        self.assertEqual(
+            store.snapshot()["practice"][str(userid)]["itemMap"]["minditem1"]["count"], 1)
+
+        # inventory_items 里的网络物品也能消耗
+        token = employ_materials(dict(ctx, body={"itemId": "familyToken", "number": 2}))
+        self.assertEqual(token["errcode"], 0)
+        self.assertEqual(store.snapshot()["inventory_items"][str(userid)]["familyToken"], 0)
+
+        # 服务器无记录的物品放行(线上存档/未落库的发放途径), 否则道具无法使用
+        unknown = employ_materials(dict(ctx, body={"itemId": "22xinshengiftbox", "number": 1}))
+        self.assertEqual(unknown["errcode"], 0)
+        self.assertEqual(employ_materials(dict(ctx, body={"itemId": "x", "number": 0}))["errcode"], 400)
+
+    def test_lian_gong_start_aligns_xinshen_with_client_report(self):
+        """练功: 客户端上报心神(可能超过上限)高于 mock 自建值时不报 xinshen not enough。
+
+        线上抓包场景: 服务端 400/400(1 级), 客户端 actionData.xinshen=520
+        (用心神道具时客户端不截断), 一次练功 xinShenCost=456
+        -> 旧实现直接 errcode=400 "xinshen not enough"。
+        """
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 400, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "actionData": {
+                    "xinShenCost": 456,
+                    "xinshen": 520,
+                    "selectTiLi": 90,
+                    "duration": 18077,
+                    "skillId": "disartBlazClaw",
+                },
+                "codeVer": 1,
+                "dataVer": 90,
+            },
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            started = lian_gong_start(ctx)
+        self.assertEqual(started["errcode"], 0, started)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        # 对齐到客户端上报值后扣掉练功消耗; 上限等级不动(不再"顺便"升级)
+        self.assertEqual(xin["curr"], 520 - 456)
+        self.assertEqual(xin["max"], 400)
+        self.assertEqual(xin["level"], 1)
+        self.assertEqual(store.snapshot()["practice"][str(userid)]["lianGong"]["state"], 1)
+
+        # 修炼走同一条对齐逻辑
+        again = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 400, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx2 = dict(ctx, state=again, body=dict(ctx["body"], actionData={
+            "xinShenCost": 456, "xinshen": 520, "selectTiLi": 0, "duration": 18077,
+        }))
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            xiu = xiu_lian_start(ctx2)
+        self.assertEqual(xiu["errcode"], 0, xiu)
+
+    def test_use_item_keeps_xinshen_above_max_like_client(self):
+        """心神回复道具: 与客户端一致, 不把心神截断到上限。
+
+        2.1.01 客户端 XinShenRecoveryPresenter 里是 `curr + effect`(无 math.min),
+        所以显示值能超过上限; 服务端若截断, 下次 getXinShenValue 会把客户端那一屏
+        的数值压回去, 两边对不上。
+        """
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 20, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "itemMap": {"minditem4": {"count": 2}},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"itemId": "minditem4", "dataVer": 1, "codeVer": 1},
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            used = use_item(ctx)
+        self.assertEqual(used["errcode"], 0, used)
+        self.assertEqual(used["data"]["curr"], 20 + 500)  # 聚心丹 500
+        self.assertEqual(used["data"]["max"], 400)
+        self.assertEqual(used["data"]["count"], 1)
+
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            current = get_xin_shen_value(dict(ctx, body={"codeVer": 1, "dataVer": 2}))
+        # 恢复结算不会把超上限的值压回上限
+        self.assertEqual(current["data"]["curr"], 520)
+        self.assertEqual(current["data"]["max"], 400)
+
+        # 已达上限后继续用道具 -> 服务端拒绝(客户端此时也会提示"已达到心神上限")
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            full = use_item(dict(ctx, body={"itemId": "minditem4", "dataVer": 2, "codeVer": 1}))
+        self.assertEqual(full["errcode"], 400)
+        self.assertEqual(full["errmsg"], "xinshen is full")
+
+    def test_lian_gong_start_zero_xinshen_cost_is_not_charged(self):
+        """xinShenCost=0 时不能因 `or` 回退而扣掉客户端上报的整份心神。"""
+        userid = 1000000002
+        store = StateStore(initial={
+            "practice": {str(userid): {
+                "xinShen": {"curr": 300, "max": 400, "level": 1, "recoverStartTime": 2000},
+                "tiLi": {"curr": 100, "max": 100},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "actionData": {"xinShenCost": 0, "xinshen": 300, "selectTiLi": 0},
+                "codeVer": 1,
+                "dataVer": 1,
+            },
+        }
+        with mock.patch("handlers.practice.time.time", return_value=2000):
+            started = lian_gong_start(ctx)
+        self.assertEqual(started["errcode"], 0, started)
+        xin = store.snapshot()["practice"][str(userid)]["xinShen"]
+        self.assertEqual(xin["curr"], 300)
+
+    def test_homeland_house_employee_and_dispatch_state_persist(self):
+        userid = 9048162373
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        self.assertEqual(mid, 14750)
+        self.assertTrue(house["data"]["person"])
+
+        user_info = get_game_user_info_2(ctx)
+        self.assertEqual(user_info["errcode"], 0)
+        self.assertIs(user_info["data"]["jiayuantch"], True)
+
+        home_switch = get_home_switch(ctx)
+        self.assertEqual(home_switch["errcode"], 0)
+        self.assertIs(home_switch["data"]["open"], True)
+        self.assertIs(type(home_switch["data"]["yinpiao"]), int)
+
+        steward = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "guanjia_test_1",
+                "mid": mid,
+                "npcId": 0,
+                "push_data": {},
+            },
+        })
+        self.assertEqual(steward["errcode"], 0)
+        self.assertEqual(steward["data"]["jobType"], "guanjia001")
+
+        employee = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_test_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四"},
+            },
+        })
+        self.assertEqual(employee["errcode"], 0)
+        self.assertEqual(employee["data"]["rwId"], "puren_test_1")
+
+        updated = update_employee_extra({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "up_data": [{
+                "rwId": "puren_test_1",
+                "extra": {"stay_room_time": 4102444800},
+            }]},
+        })
+        self.assertEqual(updated["errcode"], 0)
+
+        mapped = get_user_map({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "userid": userid, "ver": 0},
+        })
+        self.assertEqual(mapped["errcode"], 0)
+        self.assertEqual(mapped["data"]["usermap"]["hxId"], "huxing002")
+        self.assertEqual(mapped["data"]["usermap"]["dirMark"], 0)
+        room_by_id = {
+            room["fjId"]: room
+            for room in mapped["data"]["maproom"]
+        }
+        self.assertEqual(room_by_id["fb320_01"]["up"], "fb320_02")
+        self.assertEqual(room_by_id["fb320_02"]["roomType"], "tsfangjian003")
+        # huxing002 布局与 familytype.lua 对齐: 全图房间数与入口
+        self.assertEqual(len(room_by_id), 9)
+        self.assertEqual(mapped["data"]["usermap"]["entryRoom"], "fb320_02")
+        self.assertEqual(
+            mapped["data"]["usermap"]["mapAppearanceIndex"].count("fb320_"), 9
+        )
+        affairs = get_affair_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"biz_type": 3, "mid": mid},
+            "route_tail": ["5"],
+        })
+        self.assertEqual(affairs["errcode"], 0)
+        self.assertEqual(affairs["data"], [])
+        self.assertEqual(
+            [person["rwId"] for person in mapped["data"]["roomperson"]],
+            ["guanjia_test_1"],
+        )
+
+        detail = get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "objId": "puren_test_1"},
+        })
+        self.assertEqual(detail["data"]["extra"]["stay_room_time"], 4102444800)
+        listed = get_employee_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["1", str(mid)],
+        })
+        self.assertEqual(listed["errcode"], 0)
+
+        deleted = delete_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "objId": "puren_test_1"},
+        })
+        self.assertEqual(deleted["errcode"], 0)
+
+    def test_common_fuben_allows_homeland_guide_without_claimed_land(self):
+        userid = 9048162380
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+
+        response = get_common_fuben({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"fbId": "fb10"},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"], {"usermap": []})
+        self.assertEqual(store._state["homeland"]["users"], {})
+
+    def test_common_fuben_returns_only_houses_on_requested_city_map(self):
+        store = StateStore(initial={
+            "homeland": {
+                "users": {
+                    "101": {"house": {
+                        "mid": 14750,
+                        "mapId": "fb10",
+                        "dpId": "yangzhou001",
+                        "dpRoomId": "fb301;fb301_12a1",
+                        "hxId": "huxing002",
+                        "name": "江湖小筑",
+                        "desc": "一处安静的宅院",
+                        "fqId": "yangzhou002",
+                    }},
+                    "102": {"house": {
+                        "mid": 14751,
+                        "mapId": "fb15",
+                        "dpId": "suzhou001",
+                        "hxId": "huxing003",
+                    }},
+                    "103": {"house": {
+                        "mid": 14752,
+                        "mapId": "fb10",
+                        "dpId": "",
+                        "hxId": "huxing002",
+                    }},
+                },
+            },
+        }, autosave=False)
+
+        response = get_common_fuben({
+            "state": store,
+            "headers": {"userid": "101"},
+            "body": {"fbId": "fb10"},
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(len(response["data"]["usermap"]), 1)
+        house = response["data"]["usermap"][0]
+        self.assertEqual(house["mid"], 14750)
+        self.assertEqual(house["uid"], 101)
+        self.assertEqual(house["dpId"], "yangzhou001")
+        self.assertEqual(house["dpRoomId"], "fb301;fb301_12a1")
+        self.assertEqual(house["entryRoom"], HX_TABLE["huxing002"]["entryRoom"])
+        self.assertEqual(house["name"], "江湖小筑")
+
+    def test_home_switch_grants_yinpiao_once_and_persists_it(self):
+        userid = 9048162381
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "角色",
+                "yinpiao": 10,
+                "items": [],
+            }},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+
+        first = get_home_switch(ctx)
+        replay = get_home_switch(ctx)
+
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"], {"open": True, "yinpiao": 1250})
+        self.assertEqual(replay["data"], {"open": True, "yinpiao": 0})
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 1260)
+        self.assertEqual(
+            store.get_account(userid)["currencies"]["yinpiao"],
+            1260,
+        )
+
+    def test_home_switch_does_not_regrant_legacy_house_owner(self):
+        userid = 9048162387
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "旧角色",
+                "yinpiao": 20,
+                "Homeland": {"fq": {
+                    "fqId": "yangzhou002",
+                    "mid": 14750,
+                }},
+            }},
+        }, autosave=False)
+
+        response = get_home_switch({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {},
+        })
+
+        self.assertEqual(response["data"], {"open": True, "yinpiao": 0})
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 20)
+
+    def test_house_store_has_client_fields_and_refresh_is_replay_safe(self):
+        userid = 9048162382
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"yinpiao": 20000},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "is_refresh": "N"},
+        }
+
+        with mock.patch("handlers.homeland.time.time", return_value=1000):
+            initial = get_house_store_list(ctx)
+        self.assertEqual(initial["errcode"], 0)
+        self.assertEqual(initial["data"]["point"], 20000)
+        self.assertIs(initial["data"]["isBuy"], False)
+        self.assertEqual(initial["data"]["costYb"], 0)
+        self.assertEqual(initial["data"]["removeYb"], 0)
+        self.assertEqual(len(initial["data"]["list"]), 6)
+        self.assertEqual(initial["data"]["list"][0], {
+            "fqId": "yangzhou001",
+            "cost": 1500,
+        })
+
+        ctx["body"]["is_refresh"] = "Y"
+        with mock.patch("handlers.homeland.time.time", return_value=1001):
+            refreshed = get_house_store_list(ctx)
+            replay = get_house_store_list(ctx)
+        self.assertEqual(refreshed["data"]["list"], replay["data"]["list"])
+        with mock.patch("handlers.homeland.time.time", return_value=1004):
+            next_refresh = get_house_store_list(ctx)
+        self.assertNotEqual(refreshed["data"]["list"], next_refresh["data"]["list"])
+
+    def test_furniture_stores_cover_all_homeland_cities_and_specialties(self):
+        userid = 9048162390
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 12345},
+            }},
+        }, autosave=False)
+        expected_sizes = {
+            "004": 30,
+            "005": 20,
+            "006": 20,
+            "007": 36,
+            "008": 29,
+            "009": 12,
+            "010": 82,
+        }
+
+        for city in ("yangzhou", "suzhou", "xiangyang", "changan"):
+            for suffix, size in expected_sizes.items():
+                response = get_npc_store_list({
+                    "state": store,
+                    "headers": {"userid": str(userid)},
+                    "route_tail": [city + suffix],
+                })
+                self.assertEqual(response["errcode"], 0)
+                self.assertEqual(response["data"]["point"], 12345)
+                self.assertEqual(response["data"]["unit"], "money")
+                self.assertEqual(len(response["data"]["list"]), size)
+                self.assertTrue(all(
+                    set(value) == {"itemId", "price", "unit"}
+                    and value["price"] > 0
+                    and value["unit"] == "money"
+                    for value in response["data"]["list"]
+                ))
+
+        basic = get_npc_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["yangzhou004"],
+        })["data"]["list"]
+        self.assertIn({"itemId": "zhuozi001", "price": 200, "unit": "money"}, basic)
+        self.assertNotIn("zhuozi007", {value["itemId"] for value in basic})
+        invalid = get_npc_store_list({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "route_tail": ["yangzhou003"],
+        })
+        self.assertEqual(invalid["errcode"], 404)
+
+    def test_buy_npc_furniture_is_persistent_and_transaction_safe(self):
+        userid = 9048162391
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 1000},
+            }},
+            "archives": {str(userid): {
+                "name": "Furniture Buyer",
+                "money": 1000,
+                "items": [],
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "npc_id": "yangzhou004",
+                "itemId": "zhuozi001",
+                "client_trans_id": "furniture-order-1",
+            },
+        }
+
+        bought = buy_npc_goods(ctx)
+        replay = buy_npc_goods(ctx)
+
+        self.assertEqual(bought["errcode"], 0)
+        self.assertEqual(replay["data"], bought["data"])
+        self.assertEqual(bought["data"]["remove_point"], 200)
+        self.assertEqual(bought["data"]["point"], 800)
+        self.assertEqual(store.get_account(userid)["currencies"]["money"], 800)
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["money"], 800)
+        self.assertEqual(
+            next(value for value in archive["items"]
+                 if value["itemId"] == "zhuozi001")["count"],
+            1,
+        )
+
+        ctx["body"]["itemId"] = "yizi001"
+        conflict = buy_npc_goods(ctx)
+        self.assertEqual(conflict["errcode"], 409)
+        self.assertFalse(any(
+            value.get("itemId") == "yizi001" for value in store.get_archive(userid)["items"]
+        ))
+
+    def test_buy_npc_furniture_rejects_wrong_seller_and_insufficient_money(self):
+        userid = 9048162392
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"money": 100},
+            }},
+            "archives": {str(userid): {"money": 100, "items": []}},
+        }, autosave=False)
+        base_ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "npc_id": "yangzhou004",
+                "itemId": "zihua001",
+                "client_trans_id": "wrong-seller",
+            },
+        }
+
+        wrong_seller = buy_npc_goods(base_ctx)
+        self.assertEqual(wrong_seller["errcode"], 404)
+        base_ctx["body"].update({
+            "itemId": "zhuozi001",
+            "client_trans_id": "insufficient-money",
+        })
+        insufficient = buy_npc_goods(base_ctx)
+        self.assertEqual(insufficient["errcode"], 1)
+        self.assertEqual(insufficient["data"], {
+            "point": 100,
+            "cost": 200,
+            "unit": "money",
+        })
+        self.assertEqual(store.get_archive(userid)["items"], [])
+        self.assertEqual(store.get_account(userid)["currencies"]["money"], 100)
+
+    def test_buy_homeland_rejects_insufficient_balance_without_creating_house(self):
+        userid = 9048162383
+        store = StateStore(initial={
+            "accounts": {str(userid): {
+                "userid": userid,
+                "currencies": {"yinpiao": 100},
+            }},
+        }, autosave=False)
+
+        response = buy_homeland({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "fqId": "yangzhou001"},
+        })
+
+        self.assertEqual(response["errcode"], 1)
+        self.assertEqual(response["errmsg"], "银票不足")
+        self.assertEqual(response["data"], {"point": 100, "cost": 1500})
+        self.assertEqual(store._state["homeland"]["users"], {})
+        self.assertEqual(
+            store.get_account(userid)["currencies"]["yinpiao"],
+            100,
+        )
+
+    def test_buy_homeland_persists_contract_and_replacement_keeps_assets(self):
+        userid = 9048162384
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "角色",
+                "yinpiao": 60000,
+                "items": [],
+                "Homeland": {"fq": []},
+            }},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"npcId": "yangzhou001", "fqId": "yangzhou001"},
+        }
+
+        with mock.patch("handlers.homeland.time.time", return_value=2000):
+            bought = buy_homeland(ctx)
+            replay = buy_homeland(ctx)
+        self.assertEqual(bought["errcode"], 0)
+        self.assertEqual(replay["data"], bought["data"])
+        self.assertEqual(bought["data"]["remove_point"], 1500)
+        self.assertEqual(bought["data"]["point"], 58500)
+        mid = bought["data"]["mid"]
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["yinpiao"], 58500)
+        self.assertEqual(archive["Homeland"]["fq"]["fqId"], "yangzhou001")
+        self.assertEqual(
+            next(item for item in archive["items"] if item["itemId"] == "fq100")["count"],
+            1,
+        )
+
+        bucket = store._state["homeland"]["users"][str(userid)]
+        bucket["house"].update({
+            "houseName": "旧宅名",
+            "dpId": "yangzhou201",
+            "dpRoomId": "fb301;fb301_01",
+            "location": "扬州央华七巷1号",
+            "isDispose": True,
+        })
+        bucket["employees"] = {
+            "guest1": {"rwId": "guest1", "fjId": "fb319_02", "mid": mid},
+        }
+        bucket["furniture"] = [{"fid": "furniture1", "fjId": "fb319_02"}]
+        ctx["body"] = {"npcId": "yangzhou002", "fqId": "yangzhou086"}
+        with mock.patch("handlers.homeland.time.time", return_value=2040):
+            replaced = buy_homeland(ctx)
+
+        self.assertEqual(replaced["errcode"], 0)
+        self.assertEqual(replaced["data"]["mid"], mid)
+        self.assertEqual(replaced["data"]["remove_point"], 32000)
+        self.assertEqual(replaced["data"]["point"], 26500)
+        bucket = store._state["homeland"]["users"][str(userid)]
+        self.assertEqual(bucket["house"]["hxId"], "huxing004")
+        self.assertEqual(bucket["house"]["houseName"], "旧宅名")
+        self.assertEqual(bucket["house"]["dpId"], "yangzhou201")
+        self.assertEqual(bucket["house"]["location"], "扬州央华七巷1号")
+        self.assertEqual(len(bucket["rooms"]), len(HX_TABLE["huxing004"]["rooms"]))
+        self.assertTrue(bucket["employees"]["guest1"]["fjId"].startswith("fb322_"))
+        self.assertEqual(bucket["furniture"], [{"fid": "furniture1", "fjId": "fb319_02"}])
+
+    def test_default_homelands_allocate_distinct_map_ids(self):
+        first_user = 9048162385
+        second_user = 9048162386
+        store = StateStore(initial={
+            "accounts": {
+                str(first_user): {"userid": first_user},
+                str(second_user): {"userid": second_user},
+            },
+        }, autosave=False)
+
+        first = get_house_info({
+            "state": store,
+            "headers": {"userid": str(first_user)},
+            "body": {},
+        })
+        second = get_house_info({
+            "state": store,
+            "headers": {"userid": str(second_user)},
+            "body": {},
+        })
+
+        self.assertEqual(first["data"]["mid"], 14750)
+        self.assertEqual(second["data"]["mid"], 14751)
+
+    def test_get_guaike_reward_grants_yinpiao_gold_and_items(self):
+        userid = 9048162374
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 10, "gold": 5, "items": []}},
+        }, autosave=False)
+        house = get_house_info({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {},
+        })
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        employee = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_gk_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四", "defaultZhongCheng": 700},
+            },
+        })
+        self.assertEqual(employee["errcode"], 0)
+
+        response = get_guaike_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "isMenKe": 1,
+                "menKeId": "puren_gk_1",
+                "mid": mid,
+                "guaikeLv": 2,
+            },
+        })
+        self.assertEqual(response["errcode"], 0)
+        data = response["data"]
+        self.assertEqual(data["yinpiao"], 200)
+        self.assertEqual(data["gold"], 100)
+        self.assertEqual(data["yueli"], 0)
+        self.assertEqual(data["weiwang"], 0)
+        self.assertEqual(data["level_up"], False)
+        self.assertEqual(data["trait"], {})
+        self.assertEqual(data["defaultZhongCheng"], 700)
+        self.assertEqual(data["activityItems"], [
+            {"itemId": "qiannengdan", "num": 1},
+            {"itemId": "jingmai102", "num": 1},
+        ])
+
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["yinpiao"], 210)
+        self.assertEqual(archive["gold"], 105)
+        item_counts = {item["itemId"]: item["count"] for item in archive["items"]}
+        self.assertEqual(item_counts["qiannengdan"], 1)
+        self.assertEqual(item_counts["jingmai102"], 1)
+
+    def test_get_user_map_returns_familytype_appearance_for_each_hxid(self):
+        userid = 9048162375
+        expected_hx = (
+            "huxing001", "huxing002", "huxing003", "huxing004",
+            "huxing005", "huxing006", "huxing008", "huxing009",
+            "huxing010", "huxing011", "huxing012",
+        )
+        self.assertEqual(tuple(sorted(HX_TABLE)), tuple(sorted(expected_hx)))
+        for hx_id in expected_hx:
+            spec = HX_TABLE[hx_id]
+            store = StateStore(initial={
+                "accounts": {str(userid): {"userid": userid}},
+                "archives": {},
+            }, autosave=False)
+            ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+            house = get_house_info(ctx)
+            self.assertEqual(house["errcode"], 0)
+            mid = house["data"]["mid"]
+            with store._lock:
+                bucket = store._normalize_homeland(store._state)["users"][str(userid)]
+                bucket["house"]["hxId"] = hx_id
+                bucket["rooms"] = [{"fjId": "room_stale", "name": "旧房间"}]
+            mapped = get_user_map({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"mid": mid, "userid": userid, "ver": 0},
+            })
+            self.assertEqual(mapped["errcode"], 0, hx_id)
+            usermap = mapped["data"]["usermap"]
+            self.assertEqual(usermap["hxId"], hx_id)
+            self.assertEqual(usermap["entryRoom"], spec["entryRoom"])
+            self.assertEqual(usermap["BGM"], spec["BGM"])
+            self.assertEqual(usermap["mapAppearance"], spec["mapAppearance"])
+            self.assertEqual(usermap["mapAppearanceIndex"], spec["mapAppearanceIndex"])
+            room_ids = [room["fjId"] for room in mapped["data"]["maproom"]]
+            self.assertEqual(len(room_ids), len(spec["rooms"]), hx_id)
+            self.assertTrue(all(fjid.startswith(spec["roomPrefix"]) for fjid in room_ids), hx_id)
+            self.assertIn(spec["entryRoom"], room_ids)
+            for room in mapped["data"]["maproom"]:
+                self.assertEqual(room["stepMusic"], "jiaobu", room["fjId"])
+            roomperson = mapped["data"]["roomperson"]
+            self.assertEqual([person["rwId"] for person in roomperson], ["guanjia1001"], hx_id)
+            self.assertIn(roomperson[0]["fjId"], room_ids)
+            self.assertEqual(roomperson[0]["job"], "guanjia001")
+
+    def test_get_user_map_includes_default_hired_steward(self):
+        userid = 9048162376
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        self.assertTrue(house["data"]["person"])
+        mid = house["data"]["mid"]
+        mapped = get_user_map({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"mid": mid, "userid": userid, "ver": 0},
+        })
+        self.assertEqual(mapped["errcode"], 0)
+        room_ids = {room["fjId"] for room in mapped["data"]["maproom"]}
+        persons = mapped["data"]["roomperson"]
+        self.assertEqual(len(persons), 1)
+        steward = persons[0]
+        self.assertEqual(steward["rwId"], "guanjia1001")
+        self.assertEqual(steward["job"], "guanjia001")
+        self.assertEqual(steward["jobType"], "guanjia001")
+        self.assertEqual(steward["name"], "权令枫")
+        self.assertEqual(steward["modal"], "moban010")
+        self.assertIn(steward["fjId"], room_ids)
+        extra = steward.get("extra") or {}
+        self.assertNotIn("stay_room_time", extra)
+
+    def test_view_currency_by_type_reads_archive_balance(self):
+        userid = 9048162377
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "currencies": {"mingbi": 8}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 321, "zongheng": 12}},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao", "currencyVersion": 1},
+        }
+        response = view_currency_by_type(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["number"], 321)
+        self.assertEqual(response["data"]["costYb"], 10)
+
+        zongheng = view_currency_by_type(dict(ctx, body={"currency_type": "zongheng"}))
+        self.assertEqual(zongheng["errcode"], 0)
+        self.assertEqual(zongheng["data"]["number"], 12)
+        self.assertEqual(zongheng["data"]["limitNumber"], 9999)
+
+        mingbi = view_currency_by_type(dict(ctx, body={"currency_type": "mingbi"}))
+        self.assertEqual(mingbi["data"]["number"], 8)
+
+        missing = view_currency_by_type(dict(ctx, body={"currency_type": "spcl"}))
+        self.assertEqual(missing["data"]["number"], 0)
+
+        empty = view_currency_by_type({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {"currency_type": "yinpiao"},
+        })
+        self.assertEqual(empty["errcode"], 0)
+        self.assertEqual(empty["data"]["number"], 0)
+        self.assertEqual(empty["data"]["costYb"], 10)
+
+    def test_view_currency_by_type_follows_email_reward_balances(self):
+        store = StateStore()
+        userid = store.ensure_account()["userid"]
+        sent = admin_send_email({
+            "state": store,
+            "headers": {},
+            "body": {
+                "request_id": "grant-view-currency",
+                "userid": userid,
+                "title": "货币奖励",
+                "content": "领取",
+                "rewards": {
+                    "net_attrs": [{"id": "yuanbao", "num": 100}],
+                    "new_currencys": [{"id": "yinpiao", "num": 50}],
+                },
+            },
+        })
+        self.assertEqual(sent["errcode"], 0)
+        mail_id = sent["data"]["mail_id"]
+        claimed = get_email_reward({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": mail_id, "dataVer": 1, "currencyVersion": 1},
+        })
+        self.assertEqual(claimed["errcode"], 0)
+
+        yinpiao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        yuanbao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yuanbao"},
+        })
+        self.assertEqual(yinpiao["data"]["number"], 50)
+        self.assertEqual(yuanbao["data"]["number"], 100)
+
+        stale = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "yuanbao": 100, "currencies": {"yinpiao": 50}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 0, "yuanbao": 0}},
+        }, autosave=False)
+        stale_yinpiao = view_currency_by_type({
+            "state": stale,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        stale_yuanbao = view_currency_by_type({
+            "state": stale,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yuanbao"},
+        })
+        self.assertEqual(stale_yinpiao["data"]["number"], 50)
+        self.assertEqual(stale_yuanbao["data"]["number"], 100)
+
+    def test_mask_upgrade_consumes_zongheng_and_is_idempotent(self):
+        userid = 9048162379
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 23,
+                    "currencies": {"zongheng": 5000},
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 23,
+                    "zongheng": 5000,
+                },
+            },
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"params": [[8, 8]], "currencyVersion": 23},
+        }
+
+        response = mask_upgrade(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["currencyVersion"], 24)
+        self.assertEqual(store.get_archive(userid)["zongheng"], 4992)
+        self.assertEqual(store.get_account(userid)["currencies"]["zongheng"], 4992)
+
+        replay = mask_upgrade(ctx)
+        self.assertEqual(replay["errcode"], 0)
+        self.assertEqual(replay["data"]["currencyVersion"], 24)
+        self.assertEqual(store.get_archive(userid)["zongheng"], 4992)
+        self.assertEqual(store.get_account(userid)["currencies"]["zongheng"], 4992)
+
+    def test_mask_upgrade_supports_legacy_conditions_and_server_currencies(self):
+        userid = 9048162380
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 7,
+                    "currencies": {
+                        "yinpiao": 20,
+                        "spcl": 10,
+                        "paymaskmake": 7,
+                    },
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 7,
+                    "yinpiao": 20,
+                    "spcl": 10,
+                    "paymaskmake": 7,
+                    "money": 1000,
+                    "items": [{"itemId": "mask-material", "count": 5}],
+                },
+            },
+        }, autosave=False)
+        response = mask_upgrade({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "params": [
+                    {"type": 6, "num": "5"},
+                    {"type": 7, "num": "3"},
+                    {"type": 11, "num": "2"},
+                    {"type": 5, "num": "100"},
+                    {"type": 1, "num": "mask-material#2"},
+                ],
+                "currencyVersion": 7,
+            },
+        })
+
+        self.assertEqual(response["errcode"], 0)
+        archive = store.get_archive(userid)
+        account = store.get_account(userid)
+        self.assertEqual(archive["yinpiao"], 15)
+        self.assertEqual(archive["spcl"], 7)
+        self.assertEqual(archive["paymaskmake"], 5)
+        self.assertEqual(account["currencies"]["yinpiao"], 15)
+        self.assertEqual(account["currencies"]["spcl"], 7)
+        self.assertEqual(account["currencies"]["paymaskmake"], 5)
+        self.assertEqual(archive["money"], 1000)
+        self.assertEqual(archive["items"][0]["count"], 5)
+
+    def test_mask_upgrade_rejects_insufficient_currency_without_partial_debit(self):
+        userid = 9048162381
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currency_version": 3,
+                    "currencies": {"zongheng": 7, "yinpiao": 50},
+                },
+            },
+            "archives": {
+                str(userid): {
+                    "userid": userid,
+                    "currencyVersion": 3,
+                    "zongheng": 7,
+                    "yinpiao": 50,
+                },
+            },
+        }, autosave=False)
+        response = mask_upgrade({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"params": [[6, 10], [8, 8]], "currencyVersion": 3},
+        })
+
+        self.assertEqual(response["errcode"], 2)
+        self.assertEqual(response["errmsg"], "雪矾不足")
+        self.assertEqual(store.get_archive(userid)["zongheng"], 7)
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 50)
+        self.assertEqual(store.get_account(userid)["currency_version"], 3)
+
+    def test_get_zhao_upgrade_matters_lists_owned_breakthrough_items(self):
+        userid = 9048162379
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currencies": {
+                        "skillUpItem01": 5,
+                        "skillUpItem24": 1,
+                        "skillUpItem99": 7,
+                        "yinpiao": 3,
+                    },
+                }
+            },
+            "archives": {str(userid): {"name": "角色", "skillUpItem08": 2}},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currencyVersion": 1},
+        }
+        response = get_zhao_upgrade_matters(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(
+            response["data"]["matters_list"],
+            [
+                {"id": "skillUpItem01", "num": 5},
+                {"id": "skillUpItem08", "num": 2},
+                {"id": "skillUpItem24", "num": 1},
+            ],
+        )
+
+        empty = get_zhao_upgrade_matters({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {},
+        })
+        self.assertEqual(empty["errcode"], 0)
+        self.assertEqual(empty["data"]["matters_list"], [])
+
+        invalid = get_zhao_upgrade_matters({
+            "state": store,
+            "headers": {},
+            "body": {},
+        })
+        self.assertEqual(invalid["errcode"], 550)
+
+    def test_zhao_upgrade_consumes_matters_and_persists_level(self):
+        userid = 9048162380
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "currencies": {"skillUpItem01": 5}}},
+            "archives": {str(userid): {"name": "角色", "skillUpItem01": 5, "currencyVersion": 3}},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"id": "100010", "zhao_id": "AblationMoonbeam", "currencyVersion": 3},
+        }
+        response = zhao_upgrade(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["reitem_list"], [{"id": "skillUpItem01", "num": 2}])
+        self.assertEqual(response["data"]["currencyVersion"], 4)
+
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["zhaoBreakData"]["AblationMoonbeam"], "100010")
+        self.assertEqual(archive["skillUpItem01"], 3)
+        self.assertEqual(store.get_account(userid)["currencies"]["skillUpItem01"], 3)
+
+        # 再突破同一招式: 已是 10 重(最高), errcode=1
+        again = zhao_upgrade(dict(ctx, body={"id": "100010", "zhao_id": "AblationMoonbeam"}))
+        self.assertEqual(again["errcode"], 1)
+
+        # 余额不足: errcode=2 且不扣减
+        poor = zhao_upgrade(dict(ctx, body={"id": "170010", "zhao_id": "AdvantageCowEnemy"}))
+        self.assertEqual(poor["errcode"], 2)
+        self.assertEqual(store.get_archive(userid)["skillUpItem01"], 3)
+
+        # 未知突破配置 / 缺参数
+        unknown = zhao_upgrade(dict(ctx, body={"id": "999999", "zhao_id": "AblationMoonbeam"}))
+        self.assertEqual(unknown["errcode"], 1)
+        missing = zhao_upgrade(dict(ctx, body={"id": "100010"}))
+        self.assertEqual(missing["errcode"], 1)
+
+        # 无存档
+        no_archive = zhao_upgrade({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {"id": "100010", "zhao_id": "AblationMoonbeam"},
+        })
+        self.assertEqual(no_archive["errcode"], 404)
+
+    def test_matters_shop_info_returns_goods_and_currency(self):
+        userid = 9048162381
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currencies": {"dmartial": 120, "skillUpItem03": 4},
+                    "currency_version": 2,
+                }
+            },
+            "archives": {str(userid): {"name": "角色"}},
+        }, autosave=False)
+        for shop_type in (1, 2):
+            response = matters_shop_info({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"type": shop_type, "currencyVersion": 2},
+            })
+            self.assertEqual(response["errcode"], 0)
+            data = response["data"]
+            self.assertEqual(data["matters_list"], [{"id": "skillUpItem03", "num": 4}])
+            self.assertEqual(len(data["goods_list"]), 24)
+            self.assertEqual(data["goods_list"][0],
+                             {"key": "skillUpItem01", "id": "skillUpItem01", "num": 1, "price": 20})
+            self.assertEqual(data["goods_list"][16]["price"], 80)
+            self.assertEqual(data["currency_number"], 120)
+            self.assertEqual(data["currency_name"], "功法学识")
+            self.assertEqual(data["yuanbao_num"], 0)
+            self.assertFalse(data["isRefreshLimit"])
+            self.assertEqual(data["currencyVersion"], 2)
+
+        invalid = matters_shop_info({
+            "state": store,
+            "headers": {},
+            "body": {},
+        })
+        self.assertEqual(invalid["errcode"], 550)
+
+    def test_buy_matters_exchanges_dmartial_for_matters(self):
+        userid = 9048162382
+        store = StateStore(initial={
+            "accounts": {
+                str(userid): {
+                    "userid": userid,
+                    "currencies": {"dmartial": 100, "skillUpItem01": 1},
+                    "currency_version": 2,
+                }
+            },
+            "archives": {str(userid): {"name": "角色", "dmartial": 100, "skillUpItem01": 1, "currencyVersion": 2}},
+        }, autosave=False)
+        ctx = {
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"goodsKey": "skillUpItem01", "currencyVersion": 2},
+        }
+        response = buy_matters(ctx)
+        self.assertEqual(response["errcode"], 0)
+        self.assertEqual(response["data"]["reward"], {"id": "skillUpItem01", "num": 1})
+        self.assertEqual(response["data"]["currencyVersion"], 3)
+
+        archive = store.get_archive(userid)
+        self.assertEqual(archive["dmartial"], 80)      # 100 - 20
+        self.assertEqual(archive["skillUpItem01"], 2)  # 1 + 1
+        self.assertEqual(store.get_account(userid)["currencies"]["dmartial"], 80)
+        self.assertEqual(store.get_account(userid)["currencies"]["skillUpItem01"], 2)
+
+        # 商人列表反映新余额
+        shop = matters_shop_info(dict(ctx, body={"type": 1, "currencyVersion": 3}))
+        self.assertEqual(shop["data"]["currency_number"], 80)
+        self.assertIn({"id": "skillUpItem01", "num": 2}, shop["data"]["matters_list"])
+
+        # 功法学识不足: errcode=2 且不扣减 (80 - 100 < 0, 用 skillUpItem17 price=80 买两次)
+        first = buy_matters(dict(ctx, body={"goodsKey": "skillUpItem17", "currencyVersion": 3}))
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(store.get_archive(userid)["dmartial"], 0)
+        poor = buy_matters(dict(ctx, body={"goodsKey": "skillUpItem17", "currencyVersion": 4}))
+        self.assertEqual(poor["errcode"], 2)
+        self.assertEqual(store.get_archive(userid)["dmartial"], 0)
+        self.assertEqual(store.get_archive(userid)["skillUpItem17"], 1)
+
+        # 未知商品 / 非法 userid / 无存档
+        unknown = buy_matters(dict(ctx, body={"goodsKey": "no_such_item"}))
+        self.assertEqual(unknown["errcode"], 1)
+        invalid = buy_matters({"state": store, "headers": {}, "body": {}})
+        self.assertEqual(invalid["errcode"], 550)
+        no_archive = buy_matters({
+            "state": StateStore(initial={"accounts": {"1": {"userid": 1}}, "archives": {}}, autosave=False),
+            "headers": {"userid": "1"},
+            "body": {"goodsKey": "skillUpItem01"},
+        })
+        self.assertEqual(no_archive["errcode"], 404)
+
+    def test_update_employee_data_give_limits_and_rejects_negative_yinpiao(self):
+        userid = 9048162378
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid, "currencies": {"yinpiao": 80}}},
+            "archives": {str(userid): {"name": "角色", "yinpiao": 0}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)
+        self.assertEqual(house["errcode"], 0)
+        mid = house["data"]["mid"]
+        obj_id = "guanjia1001"
+        employee = get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"objId": obj_id, "mid": mid},
+        })
+        self.assertEqual(employee["errcode"], 0)
+        loyalty = employee["data"]["defaultZhongCheng"]
+
+        first = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 10,
+                "currency": 30,
+            },
+        })
+        self.assertEqual(first["errcode"], 0)
+        self.assertEqual(first["data"]["defaultZhongCheng"], loyalty + 10)
+        self.assertEqual(first["data"]["trait"], [])
+        self.assertIs(first["data"]["level_up"], False)
+        self.assertEqual(first["data"]["tip"], "")
+        self.assertEqual(first["data"]["activity"], {
+            "ssyjf": 0,
+            "znqjf": 0,
+            "daily_point": 0,
+        })
+        self.assertEqual(first["data"]["day_limit"], 0)
+        yinpiao = view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })
+        self.assertEqual(yinpiao["data"]["number"], 50)
+        self.assertEqual(store.get_account(userid)["currencies"]["yinpiao"], 50)
+        self.assertEqual(store.get_archive(userid)["yinpiao"], 50)
+
+        second = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 10,
+                "currency": 30,
+            },
+        })
+        self.assertEqual(second["errcode"], 2)
+        self.assertEqual(
+            get_employee_data({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"objId": obj_id, "mid": mid},
+            })["data"]["defaultZhongCheng"],
+            loyalty + 10,
+        )
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+
+        chat = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": obj_id,
+                "mid": mid,
+                "zc_type": "chat",
+                "zc_val": 5,
+                "currency": 0,
+            },
+        })
+        self.assertEqual(chat["errcode"], 0)
+        self.assertEqual(chat["data"]["defaultZhongCheng"], loyalty + 15)
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+
+        servant = add_employee({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "npcId": 1,
+                "push_data": {"jobType": "puren001", "name": "小四", "defaultZhongCheng": 100},
+            },
+        })
+        self.assertEqual(servant["errcode"], 0)
+        overspend = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 20,
+                "currency": 999,
+            },
+        })
+        self.assertEqual(overspend["errcode"], 1)
+        self.assertEqual(overspend["errmsg"], "银票不足")
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 50)
+        self.assertGreaterEqual(
+            view_currency_by_type({
+                "state": store,
+                "headers": {"userid": str(userid)},
+                "body": {"currency_type": "yinpiao"},
+            })["data"]["number"],
+            0,
+        )
+        self.assertEqual(get_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"objId": "puren_give_1", "mid": mid},
+        })["data"]["defaultZhongCheng"], 100)
+
+        spend_all = update_employee_data({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {
+                "objId": "puren_give_1",
+                "mid": mid,
+                "zc_type": "give",
+                "zc_val": 8,
+                "currency": 50,
+            },
+        })
+        self.assertEqual(spend_all["errcode"], 0)
+        self.assertEqual(spend_all["data"]["defaultZhongCheng"], 108)
+        self.assertEqual(view_currency_by_type({
+            "state": store,
+            "headers": {"userid": str(userid)},
+            "body": {"currency_type": "yinpiao"},
+        })["data"]["number"], 0)
+
+    def test_putin_furniture_persists_map_version_and_consumes_inventory(self):
+        userid = 9048162393
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {
+                "name": "Furniture Owner",
+                "items": [{"id": 1, "itemId": "jiaren005", "count": 2}],
+            }},
+        }, autosave=False)
+        base_ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(base_ctx)["data"]
+        mapped = get_user_map(dict(base_ctx, body={"mid": house["mid"]}))["data"]
+        room_id = next(
+            room["fjId"] for room in mapped["maproom"]
+            if room["roomType"] == "tsfangjian009"
+        )
+        body = {
+            "mid": house["mid"],
+            "fjId": room_id,
+            "jjId": "jiaren005",
+            "extra": {"durable": 9999},
+            "ver": mapped["ver"],
+        }
+
+        placed = putin_furniture(dict(base_ctx, body=body))
+        replay = putin_furniture(dict(base_ctx, body=body))
+
+        self.assertEqual(placed["errcode"], 0)
+        self.assertEqual(replay["data"], placed["data"])
+        self.assertNotEqual(placed["data"]["ver"], mapped["ver"])
+        self.assertEqual(placed["data"]["furn_info"], {
+            "fid": 500001,
+            "jjId": "jiaren005",
+            "fjId": room_id,
+            "mid": house["mid"],
+            "itype": 24,
+            "name": "鲁班奇偶",
+            "special": 1,
+            "extra": {"durable": 9999},
+            "isInit": 0,
+        })
+        self.assertEqual(store.get_archive(userid)["items"][0]["count"], 1)
+        refreshed = get_user_map(dict(base_ctx, body={"mid": house["mid"]}))["data"]
+        self.assertEqual(refreshed["ver"], placed["data"]["ver"])
+        self.assertEqual(refreshed["roomfurniture"], [placed["data"]["furn_info"]])
+
+        stale = putin_furniture(dict(base_ctx, body=dict(
+            body, jjId="zhuozi001", extra={},
+        )))
+        self.assertEqual(stale["errcode"], 409)
+
+    def test_putin_furniture_rejects_invalid_room_item_and_missing_inventory(self):
+        userid = 9048162394
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+            "archives": {str(userid): {"items": []}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)["data"]
+        mapped = get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]
+        room_id = mapped["maproom"][0]["fjId"]
+
+        missing_room = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": "missing", "jjId": "zhuozi001",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(missing_room["errcode"], 404)
+        unknown = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": room_id, "jjId": "not_furniture",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(unknown["errcode"], 404)
+        no_inventory = putin_furniture(dict(ctx, body={
+            "mid": house["mid"], "fjId": room_id, "jjId": "zhuozi001",
+            "ver": mapped["ver"],
+        }))
+        self.assertEqual(no_inventory["errcode"], 404)
+        self.assertEqual(
+            get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]["roomfurniture"],
+            [],
+        )
+
+    def test_upload_furniture_extra_is_persistent_and_atomic(self):
+        userid = 9048162395
+        store = StateStore(initial={
+            "accounts": {str(userid): {"userid": userid}},
+        }, autosave=False)
+        ctx = {"state": store, "headers": {"userid": str(userid)}, "body": {}}
+        house = get_house_info(ctx)["data"]
+        with store._lock:
+            bucket = store._state["homeland"]["users"][str(userid)]
+            bucket["version"] = 7
+            bucket["furniture"] = [
+                {"fid": 500001, "jjId": "jiaren005", "extra": {"durable": 9999}},
+                {"fid": 500002, "jjId": "xianglu001", "extra": {}},
+            ]
+
+        rejected = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [
+                {"fid": 500001, "attr": {"durable": 10}},
+                {"fid": 999999, "attr": {"durable": 0}},
+            ],
+        }))
+        self.assertEqual(rejected["errcode"], 404)
+        self.assertEqual(bucket["furniture"][0]["extra"], {"durable": 9999})
+
+        uploaded = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [
+                {"fid": 500001, "attr": {"durable": 321}},
+                {"fid": "500002", "attr": {"fireTime": 123, "xiangId": "xiang1"}},
+            ],
+        }))
+        self.assertEqual(uploaded["errcode"], 0)
+        mapped = get_user_map(dict(ctx, body={"mid": house["mid"]}))["data"]
+        self.assertEqual(mapped["roomfurniture"][0]["extra"], {"durable": 321})
+        self.assertEqual(mapped["roomfurniture"][1]["extra"], {
+            "fireTime": 123,
+            "xiangId": "xiang1",
+        })
+        # Mutable furniture attributes do not advance the structural map ver;
+        # the client neither sends nor consumes a version for this endpoint.
+        self.assertEqual(bucket["version"], 7)
+
+        cleared = upload_furniture_extra(dict(ctx, body={
+            "mid": house["mid"],
+            "attr": [{"fid": 500002, "attr": {}}],
+        }))
+        self.assertEqual(cleared["errcode"], 0)
+        self.assertEqual(bucket["furniture"][1]["extra"], {})
+
+    def test_concurrent_account_ids_are_unique(self):
+        store = StateStore()
+        values = []
+        lock = threading.Lock()
+
+        def create():
+            value = store.ensure_account()["userid"]
+            with lock:
+                values.append(value)
+
+        threads = [threading.Thread(target=create) for _ in range(20)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        self.assertEqual(len(values), len(set(values)))
+
+
+if __name__ == "__main__":
+    unittest.main()
